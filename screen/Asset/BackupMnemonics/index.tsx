@@ -1,25 +1,45 @@
-import { Text } from '@rneui/themed';
+import { Button, Text, useTheme } from '@rneui/themed';
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 import Layout from '../../../components/Layout';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { useTheme } from 'react-native-paper';
 import { useTranslation } from 'react-i18next';
-const BackupMnemonics = () => {
+import { useState } from 'react';
+const BackupMnemonics = ({ navigation }) => {
   const theme = useTheme();
   const { t } = useTranslation();
-  console.log(11111, theme.colors);
+  const [mnemonics, setMnemonics] = useState([
+    'awkward',
+    'awkward',
+    'awkward',
+    'awkward',
+    'awkward',
+    'awkward',
+    'awkward',
+    'awkward',
+    'awkward',
+    'awkward',
+    'awkward',
+    'awkward',
+  ]);
+  const handleBackupMnemonics = () => {
+    navigation.navigate('verifyMnemonics');
+  };
   return (
     <Layout>
       <View style={styles.container}>
         <Text style={styles.text}>
-          {t('common.success')}
           请按顺序写下
           <Text style={styles.green}>12个单词</Text>
           并保存在安全的地方
         </Text>
         <View style={styles.card}>
-          <Text>1111</Text>
+          {mnemonics.map((item, index) => (
+            <View key={index} style={styles.cardItem}>
+              <Text style={styles.cardIndex}>{index + 1}</Text>
+              <Text>{item}</Text>
+            </View>
+          ))}
         </View>
         <View style={styles.tips}>
           <View style={styles.item}>
@@ -27,15 +47,21 @@ const BackupMnemonics = () => {
             <Text style={styles.iconText}>{t('asset.backup_tips_write')}</Text>
           </View>
           <View style={styles.item}>
-            <Icon name="close" color={theme.colors.error} style={styles.icon} />
+            <Icon name="close" color={theme.theme.colors.error} style={styles.icon} />
             <Text style={styles.iconText}>{t('asset.backup_tips_copy')}</Text>
           </View>
           <View style={styles.item}>
-            <Icon name="close" color={theme.colors.error} style={styles.icon} />
+            <Icon name="close" color={theme.theme.colors.error} style={styles.icon} />
             <Text style={styles.iconText}>{t('asset.backup_tips_screenshot')}</Text>
           </View>
         </View>
-        <Text style={styles.text}>请勿将助记词透露给任何人 助记词一旦丢失，资产将无法恢复</Text>
+        <Text style={styles.tipsBottom}>
+          <Text style={{ color: theme.theme.colors.error }}>*</Text>
+          {t('asset.backup_tips')}
+        </Text>
+      </View>
+      <View style={styles.button}>
+        <Button onPress={handleBackupMnemonics}>我已备份</Button>
       </View>
     </Layout>
   );
@@ -53,6 +79,11 @@ const styles = StyleSheet.create({
     color: '#48AE60',
   },
   card: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     width: 304,
     height: 278,
     borderRadius: 20,
@@ -62,8 +93,16 @@ const styles = StyleSheet.create({
     marginTop: 18,
     marginBottom: 16,
   },
+  cardItem: {
+    width: '30%',
+    height: 72,
+  },
+  cardIndex: {
+    fontSize: 10,
+    color: '#BCBBC1',
+    lineHeight: 14,
+  },
   tips: {
-    // flex: 1,
     display: 'flex',
     flexDirection: 'row',
   },
@@ -81,7 +120,18 @@ const styles = StyleSheet.create({
   iconText: {
     color: '#6D7278',
     fontSize: 10,
-    // textAlign:
+  },
+  tipsBottom: {
+    textAlign: 'center',
+    color: '#6D7278',
+    marginTop: 32,
+  },
+  button: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    padding: 25,
   },
 });
 export default BackupMnemonics;

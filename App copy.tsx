@@ -1,6 +1,6 @@
 import * as React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Guide from './screen/Guide';
 import Home from './screen/Home';
 import SplashScreen from './screen/SplashScreen';
@@ -26,9 +26,9 @@ function App() {
         /> */}
         {/* <Stack.Screen name="Home" component={Home} /> */}
         <Stack.Screen name="创建钱包" component={CreateWallet} />
-        <Stack.Screen name="开始备份" component={StartBackup} />
-        <Stack.Screen name="备份助记词" component={BackupMnemonics} />
-        <Stack.Screen name="验证助记词" component={VerifyMnemonics} />
+        <Stack.Screen name="startBackup" component={StartBackup} />
+        <Stack.Screen name="BackupMnemonics" component={BackupMnemonics} />
+        <Stack.Screen name="verifyMnemonics" component={VerifyMnemonics} />
       </Stack.Navigator>
     </NavigationContainer>
   );

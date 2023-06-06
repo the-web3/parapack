@@ -1,5 +1,4 @@
-import {darkColors, lightColors} from '@rneui/base';
-import {Platform} from 'react-native';
+import { darkColors, lightColors } from '@rneui/base';
 
 const customTheme = {
   primary: '#3B28CC',
@@ -40,6 +39,7 @@ export const defineTheme = {
         borderRadius: 9,
         borderWidth: 1,
         borderColor: '#D7D7FA',
+        backgroundColor: '#F8F8FF',
       },
     },
   },

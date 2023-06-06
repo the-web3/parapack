@@ -1,11 +1,10 @@
 import * as React from 'react';
-import {useState} from 'react';
+import { useState } from 'react';
 import {
   // StyleSheet,
   View,
 } from 'react-native';
-// import {Button, RadioButton, Text, TextInput} from 'react-native-paper';
-import {Button, Input, Text, makeStyles} from '@rneui/themed';
+import { Button, Input, Text, makeStyles } from '@rneui/themed';
 // import {StackNavigationProp} from '@react-navigation/stack';
 // import {RootStackParamList} from './types';
 // type ScreenNavigationProp = StackNavigationProp<
@@ -20,7 +19,7 @@ type Props = {
 const CreateWallet = (props: Props) => {
   const [text, setText] = useState<string>('');
   const handleCreateWallet = () => {
-    props?.navigation.navigate('开始备份');
+    props?.navigation.navigate('startBackup');
   };
   const styles = useStyles(props);
   return (
@@ -30,7 +29,7 @@ const CreateWallet = (props: Props) => {
         <Input
           value={text}
           // style={styles.input}
-          onChangeText={text => {
+          onChangeText={(text) => {
             const time = Date.now();
             // 复杂逻辑，输入文字不卡
             while (Date.now() - time <= 1000) {}
@@ -42,7 +41,7 @@ const CreateWallet = (props: Props) => {
         <Text style={styles.title}>设置密码</Text>
         <Input
           value={text}
-          onChangeText={text => {
+          onChangeText={(text) => {
             const time = Date.now();
             // 复杂逻辑，输入文字不卡
             while (Date.now() - time <= 1000) {}
@@ -55,7 +54,7 @@ const CreateWallet = (props: Props) => {
         <Input
           // style={styles.input}
           value={text}
-          onChangeText={text => {
+          onChangeText={(text) => {
             const time = Date.now();
             // 复杂逻辑，输入文字不卡
             while (Date.now() - time <= 1000) {}

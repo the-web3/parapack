@@ -1,11 +1,11 @@
 import * as React from 'react';
 import Layout from '../../../components/Layout';
 
-import {Button, Image, Text} from '@rneui/themed';
-import {ActivityIndicator, StyleSheet, View} from 'react-native';
-const StartBackup = ({navigation}) => {
+import { Button, Image, Text } from '@rneui/themed';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
+const StartBackup = ({ navigation }) => {
   const handleStartBackup = () => {
-    navigation.navigate('备份助记词');
+    navigation.navigate('backupMnemonics');
   };
   return (
     <Layout>
@@ -22,7 +22,7 @@ const StartBackup = ({navigation}) => {
       <Text style={styles.text}>纸密码是你找回钱包的唯一途径</Text>
       <Text style={styles.text2}>（安全起见，请不要截图形式）</Text>
       <View style={styles.button}>
-        <Button onPress={handleStartBackup}>开始备份</Button>
+        <Button onPress={handleStartBackup}>startBackup</Button>
       </View>
     </Layout>
   );
