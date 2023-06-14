@@ -31,11 +31,12 @@ export const defineTheme = {
       containerStyle: {
         paddingHorizontal: 0,
       },
-      //   inputStyle: {
-      //     padding: 0,
-      //   },
+      // inputStyle: {
+      //   paddingHorizontal: 100,
+      // },
       inputContainerStyle: {
         height: 58,
+        paddingHorizontal: 12,
         borderRadius: 9,
         borderWidth: 1,
         borderColor: '#D7D7FA',

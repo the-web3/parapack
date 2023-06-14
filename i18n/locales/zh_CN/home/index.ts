@@ -1,3 +1,1 @@
-export default {
-  success: 'Success',
-};
+export default {};
