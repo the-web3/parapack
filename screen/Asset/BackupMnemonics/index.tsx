@@ -26,7 +26,13 @@ const BackupMnemonics = ({ navigation }) => {
     navigation.navigate('verifyMnemonics');
   };
   return (
-    <Layout>
+    <Layout
+      fixedChildren={
+        <View style={styles.button}>
+          <Button onPress={handleBackupMnemonics}>我已备份</Button>
+        </View>
+      }
+    >
       <View style={styles.container}>
         <Text style={styles.text}>
           请按顺序写下
@@ -59,9 +65,6 @@ const BackupMnemonics = ({ navigation }) => {
           <Text style={{ color: theme.theme.colors.error }}>*</Text>
           {t('asset.backup_tips')}
         </Text>
-      </View>
-      <View style={styles.button}>
-        <Button onPress={handleBackupMnemonics}>我已备份</Button>
       </View>
     </Layout>
   );

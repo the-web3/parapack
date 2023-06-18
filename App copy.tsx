@@ -25,7 +25,7 @@ function App() {
           component={Guide}
         /> */}
         {/* <Stack.Screen name="Home" component={Home} /> */}
-        <Stack.Screen name="创建钱包" component={CreateWallet} />
+        <Stack.Screen name="createWallet" component={CreateWallet} />
         <Stack.Screen name="startBackup" component={StartBackup} />
         <Stack.Screen name="BackupMnemonics" component={BackupMnemonics} />
         <Stack.Screen name="verifyMnemonics" component={VerifyMnemonics} />

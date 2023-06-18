@@ -3,6 +3,7 @@ import { darkColors, lightColors } from '@rneui/base';
 const customTheme = {
   primary: '#3B28CC',
   success: '#48AE60',
+  // primary: '#000000',
 };
 
 export const defineTheme = {

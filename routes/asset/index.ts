@@ -7,76 +7,96 @@ import CoinDetail from '@screen/Asset/CoinDetail';
 import Asset from '@screen/Asset';
 import AddToken from '@screen/Asset/AddToken';
 import Swap from '@screen/Asset/Swap';
+import TokenDetail from '@screen/Asset/TokenDetail';
 const menus = [
-  // {
-  //   name: '创建钱包',
-  //   options: {
-  //     title: '创建钱包',
-  //   },
-  //   component: CreateWallet, （完成）
-  // },
-  // {
-  //   name: 'startBackup',
-  //   options: {
-  //     title: '开始备份',
-  //     // headerShown: false
-  //   },
-  //   component: StartBackup, （完成）
-  // },
-  // {
-  //   name: 'backupMnemonics',
-  //   options: {
-  //     title: '备份助记词',
-  //   },
-  //   component: BackupMnemonics, （完成）
-  // },
-  // {
-  //   name: 'verifyMnemonics',
-  //   options: {
-  //     title: '验证助记词',
-  //   },
-  //   component: VerifyMnemonics, （完成）
-  // },
-  // {
-  //   name: 'TransferPayment',
-  //   options: {
-  //     title: '转账',
-  //   },
-  //   component: TransferPayment, （完成）
-  // },
-  // {
-  //   name: 'Asset',
-  //   options: {
-  //     title: '我的资产',
-  //   },
-  //   component: Asset, （差一部分）
-  // },
-  // {
-  //   name: 'AddToken',
-  //   options: {
-  //     title: '添加币种',
-  //     headerShown: false,
-  //   },
-  //   component: AddToken, （完成）
-  // },
-  // {
-  //   name: 'Swap',
-  //   options: {
-  //     title: '闪兑',
-  //   },
-  //   component: Swap,//（完成）
-  // },
   {
-    name: 'CoinDetail',
-    options: {
-      title: '币种详情',
-    },
-    component: CoinDetail,
-  },
-  {
-    name: 'TokenDetail',
+    name: 'tokenDetail',
     options: {
       title: 'Token详情',
+      headerStyle: {
+        backgroundColor: '#3251EA', // 设置导航条的背景颜色
+        // borderBottomWidth: 0,
+      },
+      headerShadowVisible: false,
+      headerTintColor: 'white', // 设置导航条文字的颜色
+      headerTitleStyle: {
+        // fontWeight: 'bold', // 设置导航条标题的样式
+      },
+    },
+    component: TokenDetail,
+  },
+  {
+    name: 'createWallet',
+    options: {
+      title: '创建钱包',
+      headerShadowVisible: false,
+    },
+    component: CreateWallet, //（完成）
+  },
+  {
+    name: 'asset',
+    options: {
+      title: '我的资产',
+      headerShadowVisible: false,
+    },
+    component: Asset, //（差一部分）
+  },
+  {
+    name: 'startBackup',
+    options: {
+      title: '开始备份',
+      // headerShown: false
+      headerShadowVisible: false,
+    },
+    component: StartBackup, //（完成）
+  },
+  {
+    name: 'backupMnemonics',
+    options: {
+      title: '备份助记词',
+      headerShadowVisible: false,
+    },
+    component: BackupMnemonics, //（完成）
+  },
+
+  {
+    name: 'transferPayment',
+    options: {
+      title: '转账',
+      headerShadowVisible: false,
+    },
+    component: TransferPayment, //（完成）
+  },
+  {
+    name: 'addToken',
+    options: {
+      title: '添加币种',
+      // headerShown: false,
+      headerShadowVisible: false,
+    },
+    component: AddToken, //（完成）
+  },
+  {
+    name: 'swap',
+    options: {
+      title: '闪兑',
+      headerShadowVisible: false,
+    },
+    component: Swap, //（完成）
+  },
+  {
+    name: 'verifyMnemonics',
+    options: {
+      title: '验证助记词',
+      headerShadowVisible: false,
+    },
+    component: VerifyMnemonics, //（完成）
+  },
+  {
+    name: 'coinDetail',
+    options: {
+      title: '币种详情',
+      headerShadowVisible: false,
     },
     component: CoinDetail,
   },

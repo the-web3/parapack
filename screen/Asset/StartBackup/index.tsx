@@ -8,7 +8,13 @@ const StartBackup = ({ navigation }) => {
     navigation.navigate('backupMnemonics');
   };
   return (
-    <Layout>
+    <Layout
+      fixedChildren={
+        <View style={styles.button}>
+          <Button onPress={handleStartBackup}>开始备份</Button>
+        </View>
+      }
+    >
       <View style={styles.item}>
         <Image
           // source={BASE_URI}
@@ -21,9 +27,6 @@ const StartBackup = ({ navigation }) => {
       <Text style={styles.text}>如果您的手机丢失或损坏</Text>
       <Text style={styles.text}>纸密码是你找回钱包的唯一途径</Text>
       <Text style={styles.text2}>（安全起见，请不要截图形式）</Text>
-      <View style={styles.button}>
-        <Button onPress={handleStartBackup}>startBackup</Button>
-      </View>
     </Layout>
   );
 };

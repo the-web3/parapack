@@ -14,14 +14,14 @@ const Layout: FC<Props> = ({ children, fixedChildren, fixedStyle = {}, container
   const styles = useStyles(theme.theme);
   return (
     <View style={styles.container}>
-      <ScrollView
+      <View
         style={{
           ...styles.containerContent,
           ...containerStyle,
         }}
       >
         {children}
-      </ScrollView>
+      </View>
       <View
         style={{
           ...styles.fixedContainer,

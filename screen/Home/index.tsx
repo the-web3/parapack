@@ -1,4 +1,5 @@
 import Layout from '@components/Layout';
+import LayoutNormal from '@components/LayoutNormal';
 import { makeStyles } from '@rneui/base';
 import Asset from '@screen/Asset';
 import React, { useState } from 'react';
@@ -58,38 +59,38 @@ const App = (props) => {
   };
 
   return (
-    <Layout
-      fixedStyle={styles.bottom}
-      // eslint-disable-next-line react-native/no-inline-styles
-      containerStyle={{
-        paddingHorizontal: 0,
-        paddingVertical: 0,
-        marginBottom: 0,
-        height: '100%',
-      }}
-      fixedChildren={
-        <View style={styles.bar}>
-          {BAR.map((item) => {
-            const color = activeScreen !== item.title ? '#C9C9C9' : '#3B28CC';
-            return (
-              <TouchableOpacity style={styles.barItem} key={item.title} onPress={() => setActiveScreen(item.title)}>
-                <Icon name={item.icon} size={15} color={color} />
-                <Text
-                  style={{
-                    ...styles.title,
-                    color,
-                  }}
-                >
-                  {t(`common.${item.title}`)}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
-      }
+    <View
+    // fixedStyle={styles.bottom}
+
+    // containerStyle={{
+    //   paddingHorizontal: 0,
+    //   paddingVertical: 0,
+    //   marginBottom: 0,
+    //   height: '100%',
+    // }}
+    // fixedChildren={
+    //   <View style={styles.bar}>
+    //     {BAR.map((item) => {
+    //       const color = activeScreen !== item.title ? '#C9C9C9' : '#3B28CC';
+    //       return (
+    //         <TouchableOpacity style={styles.barItem} key={item.title} onPress={() => setActiveScreen(item.title)}>
+    //           <Icon name={item.icon} size={15} color={color} />
+    //           <Text
+    //             style={{
+    //               ...styles.title,
+    //               color,
+    //             }}
+    //           >
+    //             {t(`common.${item.title}`)}
+    //           </Text>
+    //         </TouchableOpacity>
+    //       );
+    //     })}
+    //   </View>
+    // }
     >
-      <View>{renderScreen()}</View>
-    </Layout>
+      {renderScreen()}
+    </View>
   );
 };
 const useStyles = makeStyles((theme) => {

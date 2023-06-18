@@ -6,6 +6,7 @@ const menus = [
     options: {
       // title: 'SplashScreen',
       headerShown: false,
+      headerShadowVisible: false,
     },
     component: SplashScreen,
   },
@@ -14,6 +15,7 @@ const menus = [
     options: {
       title: 'Guide',
       headerShown: false,
+      headerShadowVisible: false,
     },
     component: Guide,
   },

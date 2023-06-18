@@ -41,7 +41,7 @@ const TransferPayment = ({ navigation }) => {
   }, [selectMnemonics]);
 
   const handleTransferPayment = () => {
-    navigation.navigate('verifyMnemonics');
+    navigation.navigate('asset');
   };
   const handleSelect = (selectValue: string, checked: boolean) => {
     setSelectMnemonics((prev) => {
@@ -73,7 +73,21 @@ const TransferPayment = ({ navigation }) => {
   };
 
   return (
-    <Layout>
+    <Layout
+      fixedChildren={
+        <View style={styles.button}>
+          <Button
+            onPress={handleTransferPayment}
+            buttonStyle={{
+              backgroundColor: '#8B7FEA',
+              marginTop: 12,
+            }}
+          >
+            确认
+          </Button>
+        </View>
+      }
+    >
       <View style={styles.container}>
         <Text>{t('asset.backup_verify_tips')}</Text>
         <View style={styles.fillCard}>
@@ -100,9 +114,6 @@ const TransferPayment = ({ navigation }) => {
             </Text>
           ))}
         </View>
-      </View>
-      <View style={styles.button}>
-        <Button onPress={handleTransferPayment}>确认</Button>
       </View>
     </Layout>
   );

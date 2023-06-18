@@ -36,9 +36,12 @@ const TransferPayment = ({ navigation }) => {
   const theme = useTheme();
   const { t } = useTranslation();
   const [text, setText] = useState<string>('');
+  const [money, setMoney] = useState<string>('');
+  const [byte, setByte] = useState<string>('');
+  const [size, setSize] = useState<string>('');
   const [activeType, setActiveType] = useState<string>('custom');
-  const handleCreateWallet = () => {
-    navigation.navigate('verifyMnemonics');
+  const handleComfirm = () => {
+    // navigation.navigate('verifyMnemonics');
   };
   const handleSelect = (type) => {
     setActiveType(type);
@@ -47,7 +50,7 @@ const TransferPayment = ({ navigation }) => {
     <Layout
       fixedChildren={
         <View style={styles.button}>
-          <Button onPress={handleCreateWallet}>创建钱包</Button>
+          <Button onPress={handleComfirm}>确定</Button>
         </View>
       }
     >
@@ -74,12 +77,12 @@ const TransferPayment = ({ navigation }) => {
         <View>
           <Text style={styles.title}>转账金额</Text>
           <Input
-            value={text}
-            onChangeText={(text) => {
-              const time = Date.now();
-              // 复杂逻辑，输入文字不卡
-              while (Date.now() - time <= 1000) {}
-              setText(text);
+            value={money}
+            onChangeText={(money) => {
+              // const time = Date.now();
+              // // 复杂逻辑，输入文字不卡
+              // while (Date.now() - time <= 1000) {}
+              setMoney(money);
             }}
           />
         </View>
@@ -152,26 +155,26 @@ const TransferPayment = ({ navigation }) => {
               <View>
                 <Text style={styles.customTitle}>Fee per byte（sat/b）</Text>
                 <Input
-                  value={text}
+                  value={byte}
                   // style={styles.input}
-                  onChangeText={(text) => {
-                    const time = Date.now();
+                  onChangeText={(byte) => {
+                    // const time = Date.now();
                     // 复杂逻辑，输入文字不卡
-                    while (Date.now() - time <= 1000) {}
-                    setText(text);
+                    // while (Date.now() - time <= 1000) {}
+                    setByte(byte);
                   }}
                 />
               </View>
               <View>
                 <Text style={styles.customTitle}>Size（sat/b）</Text>
                 <Input
-                  value={text}
+                  value={size}
                   // style={styles.input}
-                  onChangeText={(text) => {
-                    const time = Date.now();
+                  onChangeText={(size) => {
+                    // const time = Date.now();
                     // 复杂逻辑，输入文字不卡
-                    while (Date.now() - time <= 1000) {}
-                    setText(text);
+                    // while (Date.now() - time <= 1000) {}
+                    setSize(size);
                   }}
                 />
               </View>
