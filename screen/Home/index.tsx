@@ -39,58 +39,61 @@ const BAR = [
 ];
 const App = (props) => {
   const { t } = useTranslation();
-
+  // 获取传递的参数
+  const { tab } = props.route.params;
   const styles = useStyles(props);
-  const [activeScreen, setActiveScreen] = useState('asset');
 
-  const renderScreen = () => {
-    switch (activeScreen) {
+  const renderScreen = (props) => {
+    switch (tab) {
       case 'Screen1':
-        return <Screen1 />;
+        return <Screen1 {...props} />;
       case 'Screen2':
-        return <Screen2 />;
+        return <Screen2 {...props} />;
       case 'Screen3':
-        return <Screen3 />;
+        return <Screen3 {...props} />;
       case 'asset':
-        return <Asset navigation={undefined} />;
+        return <Asset {...props} />;
       default:
         return null;
     }
   };
 
   return (
-    <View
-    // fixedStyle={styles.bottom}
-
-    // containerStyle={{
-    //   paddingHorizontal: 0,
-    //   paddingVertical: 0,
-    //   marginBottom: 0,
-    //   height: '100%',
-    // }}
-    // fixedChildren={
-    //   <View style={styles.bar}>
-    //     {BAR.map((item) => {
-    //       const color = activeScreen !== item.title ? '#C9C9C9' : '#3B28CC';
-    //       return (
-    //         <TouchableOpacity style={styles.barItem} key={item.title} onPress={() => setActiveScreen(item.title)}>
-    //           <Icon name={item.icon} size={15} color={color} />
-    //           <Text
-    //             style={{
-    //               ...styles.title,
-    //               color,
-    //             }}
-    //           >
-    //             {t(`common.${item.title}`)}
-    //           </Text>
-    //         </TouchableOpacity>
-    //       );
-    //     })}
-    //   </View>
-    // }
+    <LayoutNormal
+      fixedStyle={styles.bottom}
+      containerStyle={{
+        paddingHorizontal: 0,
+        paddingVertical: 0,
+        marginBottom: 0,
+        height: '100%',
+      }}
+      fixedChildren={
+        <View style={styles.bar}>
+          {BAR.map((item) => {
+            const color = tab !== item.title ? '#C9C9C9' : '#3B28CC';
+            return (
+              <TouchableOpacity
+                style={styles.barItem}
+                key={item.title}
+                onPress={() => props.navigation.navigate('home', { tab: item.title })}
+              >
+                <Icon name={item.icon} size={15} color={color} />
+                <Text
+                  style={{
+                    ...styles.title,
+                    color,
+                  }}
+                >
+                  {t(`common.${item.title}`)}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+      }
     >
-      {renderScreen()}
-    </View>
+      {renderScreen(props)}
+    </LayoutNormal>
   );
 };
 const useStyles = makeStyles((theme) => {

@@ -9,7 +9,7 @@ const SplashScreen = ({ navigation }) => {
     setTimeout(() => {
       // 导航到主界面或其他页面
       // navigation.navigate('createWallet');
-      navigation.navigate('Guide');
+      navigation.navigate('guide');
     }, 2000); // 2秒延迟
   }, [navigation]);
 

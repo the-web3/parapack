@@ -27,6 +27,13 @@ npx react-native run-ios
 
 ```
 
+clean android cache
+go to android folder,exec
+
+```
+./gradlew clean
+```
+
 ## build
 
 - android

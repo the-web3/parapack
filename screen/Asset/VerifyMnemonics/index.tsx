@@ -41,7 +41,7 @@ const TransferPayment = ({ navigation }) => {
   }, [selectMnemonics]);
 
   const handleTransferPayment = () => {
-    navigation.navigate('asset');
+    navigation.navigate('home', { tab: 'asset' });
   };
   const handleSelect = (selectValue: string, checked: boolean) => {
     setSelectMnemonics((prev) => {
