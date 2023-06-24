@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { ScrollView, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Image, ScrollView, TouchableOpacity, View, useColorScheme } from 'react-native';
 import { Avatar, Overlay, Tab, TabView, Text, makeStyles } from '@rneui/themed';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { useTranslation } from 'react-i18next';
 import Toast from 'react-native-toast-message';
+import { DarkTheme, DefaultTheme } from '@react-navigation/native';
 type Props = {
   fullWidth?: boolean;
   navigation: any;
@@ -35,6 +36,7 @@ const CARD_LIST = [
 ];
 const aa = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
 const Asset = (props: Props) => {
+  const mode = useColorScheme() || 'light';
   const { t } = useTranslation();
   const [priceShow, setPriceShow] = useState<boolean>(false);
   const [index, setIndex] = useState(0);
@@ -45,32 +47,33 @@ const Asset = (props: Props) => {
   };
 
   const styles = useStyles(props);
+  const iconColor = mode === 'dark' ? DefaultTheme.colors.background : DarkTheme.colors.background;
+
   return (
-    <LinearGradient colors={['#FFFFFF', '#E6E3FD']} start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }} style={styles.gradient}>
+    <LinearGradient colors={['#fff', '#E6E3FD']} start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }} style={styles.gradient}>
       <View
         style={{
           flexDirection: 'row',
-          justifyContent: 'space-between',
+          justifyContent: 'flex-end',
           alignItems: 'center',
           marginHorizontal: 22,
           paddingVertical: 12,
         }}
       >
-        <TouchableOpacity onPress={toggleOverlay}>
-          <Icon name="indent-left" size={24} color={'#000'} />
-        </TouchableOpacity>
         <View style={{ flexDirection: 'row' }}>
-          <Icon name="scan1" style={{ marginRight: 21 }} size={24} color={'#000'} />
-          <Icon name="creditcard" size={24} color={'#000'} />
+          <Icon name="scan1" style={{ marginRight: 21 }} size={24} color={iconColor} />
+          <Icon name="creditcard" size={24} color={iconColor} />
         </View>
       </View>
       <View style={styles.card}>
         <View style={styles.cardBetween}>
-          <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline' }}>
-            <Text style={styles.text}>amy的钱包</Text>
-            <Icon name="caretdown" style={{ color: '#fff', marginLeft: 8 }} />
-          </View>
-          <TouchableOpacity
+          <TouchableOpacity onPress={toggleOverlay}>
+            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline' }}>
+              <Text style={styles.text}>amy的钱包</Text>
+              <Icon name="caretdown" style={{ color: '#fff', marginLeft: 8 }} />
+            </View>
+          </TouchableOpacity>
+          {/* <TouchableOpacity
             onPress={() => {
               props?.navigation.navigate('tokenDetail');
               // props?.navigation.navigate('coinDetail');
@@ -80,7 +83,7 @@ const Asset = (props: Props) => {
               <Text style={styles.text}>详情</Text>
               <Icon name="right" style={{ color: '#fff', marginLeft: 8 }} />
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
         <View
           style={{
@@ -142,26 +145,27 @@ const Asset = (props: Props) => {
       <View style={styles.scrollContainer}>
         <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 32 }}>
           <View style={{ flex: 1 }}>
-            <Tab
-              value={index}
-              onChange={(e) => {
-                setIndex(e);
-              }}
-              dense
-              indicatorStyle={{
-                // backgroundColor: '#D8D8D8',
-                backgroundColor: '#3B28CC',
-                height: 4,
-                borderRadius: 2,
-              }}
-              titleStyle={(active: boolean) => {
-                return { fontSize: 12, marginVertical: 8, color: active ? '#3B28CC' : '#AEAEAE' };
-              }}
-            >
-              <Tab.Item>资产</Tab.Item>
-              <Tab.Item>DeFi</Tab.Item>
-              <Tab.Item>NFT</Tab.Item>
-            </Tab>
+            <TouchableOpacity activeOpacity={1}>
+              <Tab
+                value={index}
+                onChange={(e) => {
+                  setIndex(e);
+                }}
+                dense
+                indicatorStyle={{
+                  backgroundColor: '#3B28CC',
+                  height: 4,
+                  borderRadius: 2,
+                }}
+                titleStyle={(active: boolean) => {
+                  return { fontSize: 12, marginVertical: 8, color: active ? '#3B28CC' : '#AEAEAE' };
+                }}
+              >
+                <Tab.Item>资产</Tab.Item>
+                <Tab.Item>DeFi</Tab.Item>
+                <Tab.Item>NFT</Tab.Item>
+              </Tab>
+            </TouchableOpacity>
           </View>
           <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
             <TouchableOpacity
@@ -206,7 +210,7 @@ const Asset = (props: Props) => {
         <View style={{ flex: 1 }}>
           <TabView value={index} onChange={setIndex} animationType="spring">
             <TabView.Item style={{ width: '100%' }}>
-              <ScrollView style={{ paddingHorizontal: 25 }}>
+              <ScrollView style={{ paddingHorizontal: 25, marginBottom: 330 }}>
                 {aa.map((item) => (
                   <TouchableOpacity
                     key={item}
@@ -232,87 +236,49 @@ const Asset = (props: Props) => {
                         </View>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
                           <View style={{ flexDirection: 'row' }}>
-                            <Text style={styles.listPrice}>¥ 195，457</Text>
-                            <Text style={styles.green}>+1.93%</Text>
+                            <Text style={styles.listPrice}>Bitcoin</Text>
                           </View>
                           <View>
                             <Text style={{ color: '#999999' }}>¥0</Text>
                           </View>
                         </View>
                       </View>
-                      <Icon name="checkcircle" color={item === 1 ? '#3B28CC' : '#C8C8C8'} size={16} />
                     </View>
                   </TouchableOpacity>
                 ))}
               </ScrollView>
             </TabView.Item>
             <TabView.Item style={{ width: '100%' }}>
-              <ScrollView style={{ paddingHorizontal: 25 }}>
-                {aa.map((item) => (
-                  <View
-                    key={item}
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      borderBottomWidth: 1,
-                      borderColor: '#F9F9F9',
-                      paddingVertical: 10,
-                    }}
-                  >
-                    <Avatar rounded source={{ uri: 'https://randomuser.me/api/portraits/men/36.jpg' }} />
-                    <View style={{ flex: 1, marginRight: 14, marginLeft: 10 }}>
-                      <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
-                        <Text>BTC</Text>
-                        <Text>0</Text>
-                      </View>
-                      <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
-                        <View style={{ flexDirection: 'row' }}>
-                          <Text style={styles.listPrice}>¥ 195，457</Text>
-                          <Text style={styles.green}>+1.93%</Text>
-                        </View>
-                        <View>
-                          <Text style={{ color: '#999999' }}>¥0</Text>
-                        </View>
-                      </View>
-                    </View>
-                    <Icon name="checkcircle" color={item === 1 ? '#3B28CC' : '#C8C8C8'} size={16} />
+              <View>
+                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                  <View>
+                    <Image
+                      // source={BASE_URI}
+                      source={require('@assets/images/emptyRecord.png')}
+                      style={styles.img}
+                      // containerStyle={styles.item}
+                      PlaceholderContent={<ActivityIndicator />}
+                    />
                   </View>
-                ))}
-              </ScrollView>
+                  <Text style={{ fontSize: 10, marginTop: 18, marginBottom: 28, color: '#AEAEAE' }}>暂无数据</Text>
+                </View>
+              </View>
             </TabView.Item>
             <TabView.Item style={{ width: '100%' }}>
-              <ScrollView style={{ paddingHorizontal: 25 }}>
-                {aa.map((item) => (
-                  <View
-                    key={item}
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      borderBottomWidth: 1,
-                      borderColor: '#F9F9F9',
-                      paddingVertical: 10,
-                    }}
-                  >
-                    <Avatar rounded source={{ uri: 'https://randomuser.me/api/portraits/men/36.jpg' }} />
-                    <View style={{ flex: 1, marginRight: 14, marginLeft: 10 }}>
-                      <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
-                        <Text>BTC</Text>
-                        <Text>0</Text>
-                      </View>
-                      <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
-                        <View style={{ flexDirection: 'row' }}>
-                          <Text style={styles.listPrice}>¥ 195，457</Text>
-                          <Text style={styles.green}>+1.93%</Text>
-                        </View>
-                        <View>
-                          <Text style={{ color: '#999999' }}>¥0</Text>
-                        </View>
-                      </View>
-                    </View>
-                    <Icon name="checkcircle" color={item === 1 ? '#3B28CC' : '#C8C8C8'} size={16} />
+              <View>
+                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                  <View>
+                    <Image
+                      // source={BASE_URI}
+                      source={require('@assets/images/emptyRecord.png')}
+                      style={styles.img}
+                      // containerStyle={styles.item}
+                      PlaceholderContent={<ActivityIndicator />}
+                    />
                   </View>
-                ))}
-              </ScrollView>
+                  <Text style={{ fontSize: 10, marginTop: 18, marginBottom: 28, color: '#AEAEAE' }}>暂无数据</Text>
+                </View>
+              </View>
             </TabView.Item>
           </TabView>
         </View>
@@ -473,6 +439,12 @@ const useStyles = makeStyles((theme, props: Props) => {
     green: {
       color: '#5BCC47',
       fontSize: 12,
+    },
+    img: {
+      width: 156,
+      height: 102,
+      aspectRatio: 1,
+      marginTop: 50,
     },
   };
 });

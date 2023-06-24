@@ -37,10 +37,10 @@ const useStyles = makeStyles((theme: any) => {
   return {
     container: {
       position: 'relative',
-      backgroundColor: theme.colors.white,
+      backgroundColor: theme.colors.background,
     },
     containerContent: {
-      backgroundColor: theme.colors.white,
+      backgroundColor: theme.colors.background,
       height: '100%',
       minHeight: '100%',
       paddingHorizontal: 25,
@@ -56,7 +56,6 @@ const useStyles = makeStyles((theme: any) => {
       paddingHorizontal: 25,
       paddingVertical: 16,
       paddingBottom: 25,
-      backgroundColor: '#fff',
     },
   };
 });

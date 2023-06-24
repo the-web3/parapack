@@ -1,12 +1,17 @@
 import * as React from 'react';
 import { useState } from 'react';
 import {
+  ToastAndroid,
   TouchableOpacity,
   // StyleSheet,
   View,
 } from 'react-native';
 import { Button, Input, Text, makeStyles } from '@rneui/themed';
+import Layout from '@components/Layout';
+import { rules } from '@common/utils/validation';
+import useThemeColor from '@hooks/useThemeColor';
 import Icon from 'react-native-vector-icons/AntDesign';
+// import Toast from 'react-native-toast';
 // import {StackNavigationProp} from '@react-navigation/stack';
 // import {RootStackParamList} from './types';
 // type ScreenNavigationProp = StackNavigationProp<
@@ -20,32 +25,64 @@ type Props = {
 
 const CreateWallet = (props: Props) => {
   const [walletInfo, setWalletInfo] = useState<{
-    name: string;
+    walletName: string;
     password: string;
     confirmPassword: string;
     checked: boolean;
   }>({
-    name: '',
+    walletName: '',
     password: '',
     confirmPassword: '',
     checked: false,
   });
+  // const isActive = () => {
+  //   return (
+  //     setWalletInfo.walletName &&
+  //     setWalletInfo.password.length >= 8 &&
+  //     setWalletInfo.password == setWalletInfo.confirmPassword &&
+  //     setWalletInfo.checked
+  //   );
+  // };
   const handleCreateWallet = () => {
-    props?.navigation.navigate('verifyMnemonics');
+    if (!walletInfo.checked) {
+      return ToastAndroid.show('请同意条款', ToastAndroid.SHORT);
+    }
+
+    if (!rules.walletName.isVaild(walletInfo.walletName)) {
+      return ToastAndroid.show(rules.walletName.message, ToastAndroid.SHORT);
+    }
+    if (!rules.password.isVaild(walletInfo.password)) {
+      return ToastAndroid.show(rules.password.message, ToastAndroid.SHORT);
+    }
+    if (walletInfo.password !== walletInfo.confirmPassword) {
+      return ToastAndroid.show('密码不一致', ToastAndroid.SHORT);
+    }
+    // uni.navigateTo({
+    //   url: `/pages/home/backupWord?chain_name=${chain_name.value}&walletName=${walletName.value}&password=${password.value}`,
+    // });
+    props?.navigation.navigate('asset');
   };
   const styles = useStyles(props);
+  const colors = useThemeColor();
   return (
-    <View style={styles.container}>
+    <Layout
+      fixedChildren={
+        <View style={styles.button}>
+          <Button onPress={handleCreateWallet}>创建钱包</Button>
+        </View>
+      }
+    >
       <View style={styles.item}>
         <Text style={styles.title}>设置身份钱包名</Text>
         <Input
-          value={walletInfo.name}
+          value={walletInfo.walletName}
           // style={styles.input}
-          onChangeText={(name) => {
+          placeholder="大小写字母开头,大小写字母+数字+下划线"
+          onChangeText={(walletName) => {
             setWalletInfo((prev) => {
               return {
                 ...prev,
-                name,
+                walletName,
               };
             });
           }}
@@ -54,7 +91,9 @@ const CreateWallet = (props: Props) => {
       <View style={styles.item}>
         <Text style={styles.title}>设置密码</Text>
         <Input
+          secureTextEntry={true}
           value={walletInfo.password}
+          placeholder="密码不少于8位,至少包含1个字母和一个数字"
           onChangeText={(password) => {
             setWalletInfo((prev) => {
               return {
@@ -68,7 +107,9 @@ const CreateWallet = (props: Props) => {
       <View style={styles.item}>
         <Text style={styles.title}>确认密码</Text>
         <Input
+          secureTextEntry={true}
           value={walletInfo.confirmPassword}
+          placeholder="密码不少于8位,至少包含1个字母和一个数字"
           onChangeText={(confirmPassword) => {
             setWalletInfo((prev) => {
               return {
@@ -94,7 +135,7 @@ const CreateWallet = (props: Props) => {
         >
           <View
             style={{
-              borderColor: walletInfo.checked ? 'green' : '#E2E2E2',
+              borderColor: walletInfo.checked ? '#3B28CC' : '#E2E2E2',
               borderWidth: 1,
               borderRadius: 100,
               width: 14,
@@ -105,7 +146,7 @@ const CreateWallet = (props: Props) => {
               overflow: 'hidden',
             }}
           >
-            {walletInfo.checked && <Icon name="check" size={10} color={'green'} />}
+            {walletInfo.checked && <Icon name="check" size={10} color={'#3B28CC'} />}
           </View>
         </TouchableOpacity>
 
@@ -115,31 +156,17 @@ const CreateWallet = (props: Props) => {
           <Text style={styles.protocol}>《隐私政策》</Text>
         </Text>
       </View>
-
-      <View style={styles.button}>
-        <Button onPress={handleCreateWallet}>创建钱包</Button>
-      </View>
-    </View>
+    </Layout>
   );
 };
-
 const useStyles = makeStyles((theme, props: Props) => {
   // console.log(11111, theme.colors, props);
   return {
-    container: {
-      position: 'relative',
-      backgroundColor: theme.colors.white,
-      height: '100%',
-      paddingTop: 28,
-      paddingLeft: 25,
-      paddingRight: 25,
-    },
     item: {
       // marginBottom: 26,
     },
     title: {
       fontWeight: 'bold',
-      // color: '#434343',
       lineHeight: 22,
       fontSize: 16,
       marginBottom: 6,
@@ -152,13 +179,6 @@ const useStyles = makeStyles((theme, props: Props) => {
       bottom: 0,
       padding: 25,
     },
-    // container: {
-    //   background: theme.colors.white,
-    //   width: props.fullWidth ? '100%' : 'auto',
-    // },
-    // text: {
-    //   color: theme.colors.primary,
-    // },
     protocol: {
       color: '#4D6EF5',
     },

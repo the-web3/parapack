@@ -1,10 +1,11 @@
-import Layout from '@components/Layout';
 import LayoutNormal from '@components/LayoutNormal';
+import { DarkTheme, DefaultTheme } from '@react-navigation/native';
 import { makeStyles } from '@rneui/base';
+import Activity from '@screen/Activity';
 import Asset from '@screen/Asset';
-import React, { useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Platform, Text, TouchableOpacity, View } from 'react-native';
+import { Platform, StatusBar, Text, TouchableOpacity, View, useColorScheme } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 const Screen1 = () => {
   return <Text>11111</Text>;
@@ -38,19 +39,24 @@ const BAR = [
   },
 ];
 const App = (props) => {
+  const mode = useColorScheme() || 'light';
   const { t } = useTranslation();
   // 获取传递的参数
-  const { tab } = props.route.params;
+  const tab = props.route.params?.tab || 'ecology';
   const styles = useStyles(props);
 
   const renderScreen = (props) => {
     switch (tab) {
-      case 'Screen1':
+      case 'ecology':
         return <Screen1 {...props} />;
-      case 'Screen2':
-        return <Screen2 {...props} />;
-      case 'Screen3':
+      case 'activity':
+        return <Activity {...props} />;
+      case 'exchange':
         return <Screen3 {...props} />;
+      case 'exchange':
+        return <Screen3 {...props} />;
+      case 'chat':
+        return <Screen2 {...props} />;
       case 'asset':
         return <Asset {...props} />;
       default:
@@ -59,45 +65,53 @@ const App = (props) => {
   };
 
   return (
-    <LayoutNormal
-      fixedStyle={styles.bottom}
-      containerStyle={{
-        paddingHorizontal: 0,
-        paddingVertical: 0,
-        marginBottom: 0,
-        height: '100%',
-      }}
-      fixedChildren={
-        <View style={styles.bar}>
-          {BAR.map((item) => {
-            const color = tab !== item.title ? '#C9C9C9' : '#3B28CC';
-            return (
-              <TouchableOpacity
-                style={styles.barItem}
-                key={item.title}
-                onPress={() => props.navigation.navigate('home', { tab: item.title })}
-              >
-                <Icon name={item.icon} size={15} color={color} />
-                <Text
-                  style={{
-                    ...styles.title,
-                    color,
-                  }}
+    <>
+      <StatusBar
+        backgroundColor={mode === 'light' ? DefaultTheme.colors.background : DarkTheme.colors.background} // 替换为你想要的背景颜色
+        barStyle={`${mode === 'light' ? 'dark' : 'light'}-content`} // 替换为你想要的图标和文字颜色
+      />
+      <LayoutNormal
+        fixedStyle={styles.bottom}
+        containerStyle={styles.container}
+        fixedChildren={
+          <View style={styles.bar}>
+            {BAR.map((item) => {
+              const color = tab !== item.title ? '#C9C9C9' : '#3B28CC';
+              return (
+                <TouchableOpacity
+                  style={styles.barItem}
+                  key={item.title}
+                  onPress={() => props.navigation.navigate('home', { tab: item.title })}
                 >
-                  {t(`common.${item.title}`)}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
-      }
-    >
-      {renderScreen(props)}
-    </LayoutNormal>
+                  <Icon name={item.icon} size={15} color={color} />
+                  <Text
+                    style={{
+                      ...styles.title,
+                      color,
+                    }}
+                  >
+                    {t(`common.${item.title}`)}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        }
+      >
+        {renderScreen(props)}
+      </LayoutNormal>
+    </>
   );
 };
 const useStyles = makeStyles((theme) => {
   return {
+    container: {
+      paddingHorizontal: 0,
+      paddingVertical: 0,
+      marginBottom: 0,
+      height: '100%',
+      // paddingBottom: 135,
+    },
     bottom: {
       paddingHorizontal: 0,
       paddingBottom: 30,

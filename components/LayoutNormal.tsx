@@ -1,7 +1,7 @@
 import * as React from 'react';
 import type { FC } from 'react';
 import { makeStyles } from '@rneui/base';
-import { SafeAreaView, ScrollView, View } from 'react-native';
+import { SafeAreaView, View } from 'react-native';
 import { useTheme } from '@rneui/themed';
 type Props = {
   children: React.ReactNode;
@@ -9,7 +9,7 @@ type Props = {
   fixedStyle?: any;
   containerStyle?: any;
 };
-const Layout: FC<Props> = ({ children, fixedChildren, fixedStyle = {}, containerStyle = {} }) => {
+const LayoutNormal: FC<Props> = ({ children, fixedChildren, fixedStyle = {}, containerStyle = {} }) => {
   const theme = useTheme();
   const styles = useStyles(theme.theme);
   return (
@@ -37,10 +37,10 @@ const useStyles = makeStyles((theme: any) => {
   return {
     container: {
       position: 'relative',
-      backgroundColor: theme.colors.white,
+      backgroundColor: theme.colors.background,
     },
     containerContent: {
-      backgroundColor: theme.colors.white,
+      backgroundColor: theme.colors.background,
       height: '100%',
       minHeight: '100%',
       paddingHorizontal: 25,
@@ -56,8 +56,8 @@ const useStyles = makeStyles((theme: any) => {
       paddingHorizontal: 25,
       paddingVertical: 16,
       paddingBottom: 25,
-      backgroundColor: '#fff',
+      // backgroundColor: theme.colors.background,
     },
   };
 });
-export default Layout;
+export default LayoutNormal;
