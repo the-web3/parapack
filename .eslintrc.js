@@ -27,3 +27,17 @@ module.exports = {
     '@typescript-eslint/triple-slash-reference': 'off',
   },
 };
+// module.exports = {
+//   parser: 'babel-eslint',
+//   extends: [
+//     'eslint:recommended',
+//     'plugin:react/recommended',
+//     'prettier',
+//     'plugin:import/recommended',
+//   ],
+//   rules: {
+//     // ...其他规则
+//     'prettier/prettier': 'error',
+//     quotes: ['error', 'single'],
+//   },
+// };

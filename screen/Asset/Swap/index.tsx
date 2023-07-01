@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { useState } from 'react';
 import {
+  TextInput,
   // StyleSheet,
   View,
 } from 'react-native';
-import { Avatar, Button, Input, Text, makeStyles } from '@rneui/themed';
+import { Avatar, Button, Text, makeStyles } from '@rneui/themed';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Layout from '@components/Layout';
 // import {StackNavigationProp} from '@react-navigation/stack';
@@ -19,7 +20,13 @@ type Props = {
 };
 
 const Swap = (props: Props) => {
-  const [text, setText] = useState<string>('');
+  const [money, setMoney] = useState<{
+    buy: string;
+    sell: string;
+  }>({
+    buy: '0.00',
+    sell: '0.00',
+  });
   const handleSwap = () => {
     props?.navigation.navigate('startBackup');
   };
@@ -120,7 +127,36 @@ const Swap = (props: Props) => {
                     Bitcoin
                   </Text>
                 </View>
-                <Text
+                {/* <Input
+                  value={text}
+                  // style={styles.input}
+                  onChangeText={(text) => {
+                    const time = Date.now();
+                    // 复杂逻辑，输入文字不卡
+                    while (Date.now() - time <= 1000) {}
+                    setText(text);
+                  }}
+                /> */}
+                <TextInput
+                  keyboardType="numeric"
+                  style={{
+                    color: '#C8C8C8',
+                    fontSize: 26,
+                    lineHeight: 30,
+                    fontWeight: 'bold',
+                  }}
+                  onChangeText={(sell) => {
+                    setMoney((prev) => {
+                      return {
+                        ...prev,
+                        sell,
+                      };
+                    });
+                  }}
+                  placeholder="Enter text"
+                  value={money.sell}
+                />
+                {/* <Text
                   style={{
                     color: '#C8C8C8',
                     fontSize: 26,
@@ -129,7 +165,7 @@ const Swap = (props: Props) => {
                   }}
                 >
                   0.00
-                </Text>
+                </Text> */}
               </View>
             </View>
           </View>

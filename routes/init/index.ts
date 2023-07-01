@@ -1,8 +1,8 @@
-import Guide from '../../screen/Guide';
-import SplashScreen from '../../screen/SplashScreen';
+import Guide from '@screen/Guide';
+import SplashScreen from '@screen/SplashScreen';
 const menus = [
   {
-    name: 'SplashScreen',
+    name: 'splashScreen',
     options: {
       // title: 'SplashScreen',
       headerShown: false,
@@ -11,7 +11,7 @@ const menus = [
     component: SplashScreen,
   },
   {
-    name: 'Guide',
+    name: 'guide',
     options: {
       title: 'Guide',
       headerShown: false,

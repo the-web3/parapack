@@ -1,6 +1,6 @@
 import IconFont from '@assets/iconfont';
 import React, { useEffect } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar, StyleSheet, Text, View } from 'react-native';
 
 const SplashScreen = ({ navigation }) => {
   useEffect(() => {
@@ -9,17 +9,23 @@ const SplashScreen = ({ navigation }) => {
     setTimeout(() => {
       // 导航到主界面或其他页面
       // navigation.navigate('createWallet');
-      navigation.navigate('Guide');
+      navigation.navigate('home');
     }, 2000); // 2秒延迟
   }, [navigation]);
 
   return (
-    <View style={styles.container}>
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <IconFont name="a-logopeise" size={83} color="#fff" />
-        <Text style={{ color: '#fff', fontSize: 24 }}>ParaPack</Text>
+    <>
+      <StatusBar
+        backgroundColor="#3B28CC" // 替换为你想要的背景颜色
+        barStyle="light-content" // 替换为你想要的图标和文字颜色
+      />
+      <View style={styles.container}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <IconFont name="a-logopeise" size={83} color="#fff" />
+          <Text style={{ color: '#fff', fontSize: 24 }}>ParaPack</Text>
+        </View>
       </View>
-    </View>
+    </>
   );
 };
 
