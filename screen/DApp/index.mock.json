@@ -1,0 +1,114 @@
+{
+  "tokenButtons": [
+    {
+      "icon": "appstore1",
+      "name": "排行榜"
+    },
+    {
+      "icon": "appstore1",
+      "name": "最新上线"
+    },
+    {
+      "icon": "appstore1",
+      "name": "理财"
+    },
+    {
+      "icon": "appstore1",
+      "name": "Defi"
+    },
+    {
+      "icon": "appstore1",
+      "name": "排行榜"
+    },
+    {
+      "icon": "appstore1",
+      "name": "最新上线"
+    },
+    {
+      "icon": "appstore1",
+      "name": "理财"
+    },
+    {
+      "icon": "appstore1",
+      "name": "Defi"
+    }
+  ],
+  "recommendList": [
+    {
+      "img": "https://img1.baidu.com/it/u=4049022245,514596079&fm=253&fmt=auto&app=120&f=JPEG?w=889&h=500",
+      "title": "Garena Free"
+    },
+    {
+      "img": "https://img1.baidu.com/it/u=4049022245,514596079&fm=253&fmt=auto&app=120&f=JPEG?w=889&h=500",
+      "title": "Garena Free"
+    },
+    {
+      "img": "https://img1.baidu.com/it/u=4049022245,514596079&fm=253&fmt=auto&app=120&f=JPEG?w=889&h=500",
+      "title": "Garena Free"
+    },
+    {
+      "img": "https://img1.baidu.com/it/u=4049022245,514596079&fm=253&fmt=auto&app=120&f=JPEG?w=889&h=500",
+      "title": "Garena Free"
+    },
+    {
+      "img": "https://img1.baidu.com/it/u=4049022245,514596079&fm=253&fmt=auto&app=120&f=JPEG?w=889&h=500",
+      "title": "Garena Free"
+    },
+    {
+      "img": "https://img1.baidu.com/it/u=4049022245,514596079&fm=253&fmt=auto&app=120&f=JPEG?w=889&h=500",
+      "title": "Garena Free"
+    }
+  ],
+  "hotList": [
+    {
+      "avatar": "https://randomuser.me/api/portraits/men/36.jpg",
+      "title": "Bitget合约",
+      "description": "在银河系中最受欢迎的去中心化交易所平台"
+    },
+    {
+      "avatar": "https://randomuser.me/api/portraits/men/36.jpg",
+      "title": "Bitget合约",
+      "description": "在银河系中最受欢迎的去中心化交易所平台"
+    },
+    {
+      "avatar": "https://randomuser.me/api/portraits/men/36.jpg",
+      "title": "Bitget合约",
+      "description": "在银河系中最受欢迎的去中心化交易所平台"
+    },
+    {
+      "avatar": "https://randomuser.me/api/portraits/men/36.jpg",
+      "title": "Bitget合约",
+      "description": "在银河系中最受欢迎的去中心化交易所平台"
+    },
+    {
+      "avatar": "https://randomuser.me/api/portraits/men/36.jpg",
+      "title": "Bitget合约",
+      "description": "在银河系中最受欢迎的去中心化交易所平台"
+    },
+    {
+      "avatar": "https://randomuser.me/api/portraits/men/36.jpg",
+      "title": "Bitget合约",
+      "description": "在银河系中最受欢迎的去中心化交易所平台"
+    },
+    {
+      "avatar": "https://randomuser.me/api/portraits/men/36.jpg",
+      "title": "Bitget合约",
+      "description": "在银河系中最受欢迎的去中心化交易所平台"
+    },
+    {
+      "avatar": "https://randomuser.me/api/portraits/men/36.jpg",
+      "title": "Bitget合约",
+      "description": "在银河系中最受欢迎的去中心化交易所平台"
+    },
+    {
+      "avatar": "https://randomuser.me/api/portraits/men/36.jpg",
+      "title": "Bitget合约",
+      "description": "在银河系中最受欢迎的去中心化交易所平台"
+    },
+    {
+      "avatar": "https://randomuser.me/api/portraits/men/36.jpg",
+      "title": "Bitget合约",
+      "description": "在银河系中最受欢迎的去中心化交易所平台"
+    }
+  ]
+}

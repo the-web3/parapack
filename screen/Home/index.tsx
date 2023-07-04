@@ -3,13 +3,12 @@ import { DarkTheme, DefaultTheme } from '@react-navigation/native';
 import { makeStyles } from '@rneui/base';
 import Activity from '@screen/Activity';
 import Asset from '@screen/Asset';
+import { DAppScreen } from "@screen/DApp";
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Platform, StatusBar, Text, TouchableOpacity, View, useColorScheme } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
-const Screen1 = () => {
-  return <Text>11111</Text>;
-};
+
 const Screen2 = () => {
   return <Text>22222</Text>;
 };
@@ -38,21 +37,19 @@ const BAR = [
     title: 'asset',
   },
 ];
-const App = (props) => {
+const App = (props: any) => {
   const mode = useColorScheme() || 'light';
   const { t } = useTranslation();
   // 获取传递的参数
   const tab = props.route.params?.tab || 'ecology';
   const styles = useStyles(props);
 
-  const renderScreen = (props) => {
+  const renderScreen = (prop: any) => {
     switch (tab) {
       case 'ecology':
-        return <Screen1 {...props} />;
+        return <DAppScreen {...props} />;
       case 'activity':
         return <Activity {...props} />;
-      case 'exchange':
-        return <Screen3 {...props} />;
       case 'exchange':
         return <Screen3 {...props} />;
       case 'chat':

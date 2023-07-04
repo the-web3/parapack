@@ -6,6 +6,7 @@ import home from './home';
 import product from './product';
 import asset from './asset';
 import init from './init';
-const menus: any[] = [...init, ...home, ...product, ...asset];
+import DApp from './dApp'
+const menus: any[] = [...init, ...home, ...product, ...asset, ...DApp];
 
 export default menus;

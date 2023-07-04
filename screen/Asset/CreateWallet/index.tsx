@@ -9,7 +9,7 @@ import {
 import { Button, Input, Text, makeStyles } from '@rneui/themed';
 import Layout from '@components/Layout';
 import { rules } from '@common/utils/validation';
-import useThemeColor from '@hooks/useThemeColor';
+import useThemeColor from '../../../hooks/useThemeColor';
 import Icon from 'react-native-vector-icons/AntDesign';
 // import Toast from 'react-native-toast';
 // import {StackNavigationProp} from '@react-navigation/stack';
