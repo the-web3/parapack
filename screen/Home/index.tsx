@@ -1,39 +1,39 @@
+import IconFont from '@assets/iconfont';
 import LayoutNormal from '@components/LayoutNormal';
 import { DarkTheme, DefaultTheme } from '@react-navigation/native';
 import { makeStyles } from '@rneui/base';
 import Activity from '@screen/Activity';
 import Asset from '@screen/Asset';
 import { DAppScreen } from "@screen/DApp";
+import Swap from '@screen/Swap';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Platform, StatusBar, Text, TouchableOpacity, View, useColorScheme } from 'react-native';
-import Icon from 'react-native-vector-icons/AntDesign';
-
+const Screen1 = () => {
+  return <Text>11111</Text>;
+};
 const Screen2 = () => {
   return <Text>22222</Text>;
 };
-const Screen3 = () => {
-  return <Text>33333</Text>;
-};
 const BAR = [
   {
-    icon: 'appstore1',
+    icon: 'shengtaidianjiqian',
     title: 'ecology',
   },
   {
-    icon: 'appstore1',
+    icon: 'huodongdianjiqian',
     title: 'activity',
   },
   {
-    icon: 'appstore1',
-    title: 'exchange',
+    icon: 'duihuandianjiqian',
+    title: 'swap',
   },
   {
-    icon: 'appstore1',
+    icon: 'liaotiandianjiqian',
     title: 'chat',
   },
   {
-    icon: 'appstore1',
+    icon: 'zichandianjiqian',
     title: 'asset',
   },
 ];
@@ -50,8 +50,8 @@ const App = (props: any) => {
         return <DAppScreen {...props} />;
       case 'activity':
         return <Activity {...props} />;
-      case 'exchange':
-        return <Screen3 {...props} />;
+      case 'swap':
+        return <Swap {...props} />;
       case 'chat':
         return <Screen2 {...props} />;
       case 'asset':
@@ -80,7 +80,8 @@ const App = (props: any) => {
                   key={item.title}
                   onPress={() => props.navigation.navigate('home', { tab: item.title })}
                 >
-                  <Icon name={item.icon} size={15} color={color} />
+                  {/* <Icon name={item.icon} size={15} color={color} /> */}
+                  <IconFont name={item.icon} color={color} />
                   <Text
                     style={{
                       ...styles.title,
@@ -105,22 +106,22 @@ const useStyles = makeStyles((theme) => {
     container: {
       paddingHorizontal: 0,
       paddingVertical: 0,
-      marginBottom: 0,
-      height: '100%',
-      // paddingBottom: 135,
     },
     bottom: {
+      height: 50,
+      position: 'relative',
+      top: -30,
+    },
+    bar: {
+      height: 80,
+      flexDirection: 'row',
       paddingHorizontal: 0,
-      paddingBottom: 30,
-      paddingTop: 5,
+      paddingVertical: 11,
       backgroundColor: '#FFFFFF',
       borderTopLeftRadius: 24, // 左上角边框半径
       borderTopRightRadius: 24, // 右上角边框半径
       borderBottomRightRadius: 0, // 右下角边框半径
       borderBottomLeftRadius: 0, // 左下角边框半径
-      //       background: #FFFFFF;
-      // box-shadow: 0px -8px 30px 0px rgba(0,0,0,0.06);
-      // border-radius: 24px 24px 0px 0px;
       ...Platform.select({
         ios: {
           shadowColor: 'black',
@@ -133,8 +134,7 @@ const useStyles = makeStyles((theme) => {
         },
       }),
     },
-    bar: { flexDirection: 'row' },
-    barItem: { flex: 1, alignItems: 'center', paddingVertical: 10 },
+    barItem: { flex: 1, alignItems: 'center' },
     title: {
       color: '#C9C9C9',
       fontSize: 10,

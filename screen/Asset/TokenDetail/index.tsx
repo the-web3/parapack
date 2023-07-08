@@ -253,7 +253,7 @@ const TokenDetail = (props: Props) => {
                 <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                   <View>
                     <Image
-                      source={require('../../../assets/images/emptyRecord.png')}
+                      source={require('@assets/images/emptyRecord.png')}
                       style={styles.img}
                       PlaceholderContent={<ActivityIndicator />}
                     />

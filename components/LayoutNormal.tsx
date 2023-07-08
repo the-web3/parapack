@@ -22,6 +22,7 @@ const LayoutNormal: FC<Props> = ({ children, fixedChildren, fixedStyle = {}, con
       >
         {children}
       </View>
+
       <View
         style={{
           ...styles.fixedContainer,
@@ -38,24 +39,26 @@ const useStyles = makeStyles((theme: any) => {
     container: {
       position: 'relative',
       backgroundColor: theme.colors.background,
+      flex: 1,
     },
     containerContent: {
       backgroundColor: theme.colors.background,
-      height: '100%',
-      minHeight: '100%',
+      // height: '100%',
+      // minHeight: '100%',
       paddingHorizontal: 25,
       paddingVertical: 28,
       marginBottom: 10,
+      flex: 1,
     },
     fixedContainer: {
-      position: 'absolute',
-      left: 0,
-      right: 0,
-      bottom: 0,
-      marginTop: 100,
-      paddingHorizontal: 25,
-      paddingVertical: 16,
-      paddingBottom: 25,
+      // position: 'absolute',
+      // left: 0,
+      // right: 0,
+      // bottom: 0,
+      // marginTop: 100,
+      // paddingHorizontal: 25,
+      // paddingVertical: 16,
+      // paddingBottom: 25,
       // backgroundColor: theme.colors.background,
     },
   };

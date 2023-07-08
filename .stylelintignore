@@ -1,0 +1,8 @@
+/dist
+/public
+
+# 以下文件会由 ESLint 和 Prettier 校验
+**/*.js
+**/*.jsx
+**/*.ts
+**/*.tsx

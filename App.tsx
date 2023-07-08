@@ -4,7 +4,7 @@
  *
  * @format
  */
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   // StyleSheet, View,
   useColorScheme,
@@ -18,6 +18,7 @@ import i18n from './i18n';
 import { I18nextProvider } from 'react-i18next';
 import menus from './routes';
 import Toast from 'react-native-toast-message';
+import { openDatabase } from '@common/utils/sqlite';
 
 function App(): JSX.Element {
   const mode = useColorScheme() || 'light';
@@ -25,6 +26,24 @@ function App(): JSX.Element {
     ...defineTheme,
     mode,
   });
+  // const openSQL = () => {
+  //   const open = DB.isOpen();
+  //   if (!open) {
+  //     DB.openSqlite()
+  //       .then((res) => {
+  //         console.log('数据库已打开', res);
+  //         setTableData();
+  //       })
+  //       .catch((error) => {
+  //         console.log('数据库开启失败', error);
+  //       });
+  //   } else {
+  //     setTableData();
+  //   }
+  // };
+  useEffect(() => {
+    // openDatabase();
+  }, []);
 
   return (
     <I18nextProvider i18n={i18n}>

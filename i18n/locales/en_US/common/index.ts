@@ -2,7 +2,7 @@ export default {
   success: 'Success',
   ecology: 'ecology',
   activity: 'activity',
-  exchange: 'exchange',
+  swap: 'swap',
   chat: 'chat',
   asset: 'asset',
 };

@@ -76,7 +76,7 @@ const CoinDetail = (props: Props) => {
               <View style={styles.item}>
                 <Image
                   // source={BASE_URI}
-                  source={require('../../../assets/images/emptyRecord.png')}
+                  source={require('@assets/images/emptyRecord.png')}
                   style={styles.img}
                   // containerStyle={styles.item}
                   PlaceholderContent={<ActivityIndicator />}

@@ -60,6 +60,7 @@ const CreateWallet = (props: Props) => {
     // uni.navigateTo({
     //   url: `/pages/home/backupWord?chain_name=${chain_name.value}&walletName=${walletName.value}&password=${password.value}`,
     // });
+    // TODO: 钱包存sqlite
     props?.navigation.navigate('asset');
   };
   const styles = useStyles(props);

@@ -1,0 +1,9 @@
+/dist
+/public
+
+**/*.svg
+**/*-lock.*
+
+# 以下文件会由 stylelint 校验
+**/*.css
+**/*.less

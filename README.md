@@ -42,3 +42,11 @@ go to android folder,exec
 npx react-native build-android --mode=release  
 
 ```
+
+## iconfont
+
+change iconfont.json's symbol_url, exec shell
+
+```
+npx iconfont-rn
+```
