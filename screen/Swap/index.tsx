@@ -1,15 +1,17 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { TextInput, View } from 'react-native';
+import { SafeAreaView, ScrollView, TextInput, View } from 'react-native';
 import { Avatar, Button, Text, makeStyles } from '@rneui/themed';
 import Icon from 'react-native-vector-icons/AntDesign';
 import IconFont from '@assets/iconfont';
+import { CustomColors } from 'style/them';
 type Props = {
   fullWidth?: boolean;
   navigation: any;
 };
 
 const Swap = (props: Props) => {
+  const styles = useStyles();
   const [active] = useState('swap');
   const [money, setMoney] = useState<{
     buy: string;
@@ -21,9 +23,8 @@ const Swap = (props: Props) => {
   const handleSwap = () => {
     props?.navigation.navigate('startBackup');
   };
-  const styles = useStyles(props);
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.searchBar}>
         <View style={styles.tabs}>
           <Text style={active === 'swap' ? styles.activeTabsTitle : styles.tabsTitle}>兑换</Text>
@@ -32,7 +33,7 @@ const Swap = (props: Props) => {
         </View>
         <IconFont name="xiangqing" />
       </View>
-      <View style={styles.main}>
+      <ScrollView style={styles.main}>
         <View style={styles.swapCard}>
           <View>
             <View style={styles.swapCardTitle}>
@@ -44,7 +45,6 @@ const Swap = (props: Props) => {
                 ...styles.chain,
                 borderBottomWidth: 1,
                 borderColor: 'rgba(22, 20, 20, 0.45)',
-                marginBottom: 14,
                 borderStyle: 'dashed',
               }}
             >
@@ -71,8 +71,7 @@ const Swap = (props: Props) => {
               </View>
             </View>
           </View>
-
-          <View style={{ height: 3, backgroundColor: '#FFFFFF', position: 'relative' }}>
+          <View style={{ position: 'relative' }}>
             <IconFont
               name="a-Group217"
               size={30}
@@ -80,7 +79,7 @@ const Swap = (props: Props) => {
                 position: 'absolute',
                 left: '50%',
                 marginLeft: -15,
-                top: -30,
+                top: -15,
               }}
             />
           </View>
@@ -133,23 +132,24 @@ const Swap = (props: Props) => {
         <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 8, marginBottom: 14 }}>
           <Text style={{ color: '#2667FF', fontSize: 10 }}>* 跳转到支持交易的交易所</Text>
         </View>
-      </View>
-    </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
-const useStyles = makeStyles((theme, props: Props) => {
-  // console.log(11111, theme.colors, props);
+const useStyles = makeStyles((theme: CustomTheme<CustomColors>) => {
   return {
     container: {
       flex: 1,
-      backgroundColor: 'rgba(245, 245, 245, 1)',
+      backgroundColor: theme.colors.white,
     },
     main: {
       padding: 24,
+      flex: 1,
+      backgroundColor: theme.colors.grey,
     },
     searchBar: {
-      backgroundColor: '#fff',
+      backgroundColor: theme.colors.white,
       flexDirection: 'row',
       justifyContent: 'space-between',
       paddingHorizontal: 30,
@@ -179,12 +179,13 @@ const useStyles = makeStyles((theme, props: Props) => {
       borderRadius: 12,
       marginBottom: 20,
       paddingHorizontal: 24,
-      paddingVertical: 12,
+      // paddingVertical: 12,
     },
     swapCardTitle: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
+      marginTop: 12,
     },
     sell: {
       color: '#AEAEAE',
@@ -197,9 +198,8 @@ const useStyles = makeStyles((theme, props: Props) => {
     chain: {
       flexDirection: 'row',
       alignItems: 'center',
-      // borderBottomWidth: 1,
-      // borderColor: '#F9F9F9',
-      paddingVertical: 10,
+      paddingBottom: 35,
+      paddingTop: 36,
     },
     chainRight: {
       flex: 1,

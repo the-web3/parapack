@@ -1,17 +1,14 @@
 import IconFont from '@assets/iconfont';
 import LayoutNormal from '@components/LayoutNormal';
 import { DarkTheme, DefaultTheme } from '@react-navigation/native';
-import { makeStyles } from '@rneui/base';
+import { makeStyles } from '@rneui/themed';
 import Activity from '@screen/Activity';
 import Asset from '@screen/Asset';
-import { DAppScreen } from "@screen/DApp";
+import { DAppScreen } from '@screen/DApp';
 import Swap from '@screen/Swap';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Platform, StatusBar, Text, TouchableOpacity, View, useColorScheme } from 'react-native';
-const Screen1 = () => {
-  return <Text>11111</Text>;
-};
+import { StatusBar, Text, TouchableOpacity, View, useColorScheme } from 'react-native';
 const Screen2 = () => {
   return <Text>22222</Text>;
 };
@@ -42,7 +39,7 @@ const App = (props: any) => {
   const { t } = useTranslation();
   // 获取传递的参数
   const tab = props.route.params?.tab || 'ecology';
-  const styles = useStyles(props);
+  const styles = useStyles();
 
   const renderScreen = (prop: any) => {
     switch (tab) {
@@ -108,31 +105,25 @@ const useStyles = makeStyles((theme) => {
       paddingVertical: 0,
     },
     bottom: {
-      height: 50,
+      height: 70,
       position: 'relative',
       top: -30,
     },
     bar: {
-      height: 80,
+      height: 100,
       flexDirection: 'row',
       paddingHorizontal: 0,
       paddingVertical: 11,
-      backgroundColor: '#FFFFFF',
+      backgroundColor: theme.colors.background,
+      // backgroundColor: theme.colors.black,
       borderTopLeftRadius: 24, // 左上角边框半径
       borderTopRightRadius: 24, // 右上角边框半径
       borderBottomRightRadius: 0, // 右下角边框半径
       borderBottomLeftRadius: 0, // 左下角边框半径
-      ...Platform.select({
-        ios: {
-          shadowColor: 'black',
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.6,
-          shadowRadius: 4,
-        },
-        android: {
-          elevation: 4,
-        },
-      }),
+      shadowColor: theme.colors.black,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.6,
+      shadowRadius: 4,
     },
     barItem: { flex: 1, alignItems: 'center' },
     title: {

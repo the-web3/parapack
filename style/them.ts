@@ -1,5 +1,6 @@
 import { darkColors, lightColors } from '@rneui/base';
-
+// 定义一个扩展了 Colors 类型的自定义类型
+export type CustomColors = typeof defineTheme;
 const customTheme = {
   primary: '#3B28CC',
   success: '#48AE60',
@@ -21,6 +22,7 @@ export const defineTheme = {
     purple: '#D7D7FA',
     purple1: '#CDCEEE',
     purple2: '#F8F8FF',
+    grey: 'rgba(245, 245, 245, 1)',
   },
   lightColors: {
     ...lightColors,
@@ -32,6 +34,7 @@ export const defineTheme = {
     purple: '#D7D7FA',
     purple1: '#CDCEEE',
     purple2: '#F8F8FF',
+    grey: 'rgba(245, 245, 245, 1)',
   },
   components: {
     Button: {

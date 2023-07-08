@@ -1,31 +1,23 @@
 import IconFont from '@assets/iconfont';
 import { Button, Input, Image, Text } from '@rneui/themed';
 import * as React from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
-
+import { View, ScrollView, SafeAreaView } from 'react-native';
+import { makeStyles, useTheme } from '@rneui/themed';
 const Activity = ({ navigation }) => {
+  const styles = useStyles();
+  const { theme } = useTheme();
   const [arr] = React.useState(new Array(10).fill(1));
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.searchBar}>
         <Input
-          // containerStyle={{}}
-          // // disabledInputStyle={{ background: '#ddd' }}
           inputContainerStyle={styles.inputContainer}
-          // errorMessage="Oops! that's not correct."
-          // errorStyle={{}}
           errorProps={{ display: 'none' }}
           inputStyle={{
             minHeight: 17,
             fontSize: 12,
           }}
-          // // label="User Form"
-          // labelStyle={{}}
-          // labelProps={{}}
-          // // leftIcon={<Icon name="account-outline" size={20} color={'#000'} />}
-          // leftIconContainerStyle={{}}
           rightIcon={<IconFont name="a-huaban1" />}
-          // rightIconContainerStyle={{}}
           placeholder="搜索你想要了解的活动..."
         />
       </View>
@@ -68,86 +60,87 @@ const Activity = ({ navigation }) => {
         ))}
         <View style={{ height: 30 }} />
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  searchBar: {
-    paddingTop: 4,
-    paddingHorizontal: 25,
-    paddingBottom: 19,
-    backgroundColor: 'rgba(255, 255, 255, 1)',
-  },
-  inputContainer: {
-    paddingHorizontal: 11,
-    borderRadius: 8,
-    // borderWidth: 0,
-    // elevation: 5,
-    shadowColor: '#F7F7F7',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 1,
-    shadowRadius: 10,
-    height: 36,
-    borderColor: '#F7F7F7',
-  },
-  main: {
-    paddingHorizontal: 15,
-    paddingVertical: 16,
-    backgroundColor: 'rgba(245, 245, 245, 1)',
-    flex: 1,
-  },
-  card: {
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    paddingHorizontal: 15,
-    paddingVertical: 7,
-    marginBottom: 15,
-  },
-  bannerContainer: {
-    height: 94,
-  },
-  banner: {
-    width: '100%',
-    height: '100%',
-    aspectRatio: 1,
-  },
-  titleContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'nowrap',
-    alignItems: 'center',
-    marginVertical: 6,
-    justifyContent: 'space-between',
-  },
-  title: {
-    color: 'rgba(51, 51, 51, 1)',
-    flex: 1,
-    marginRight: 16,
-  },
-  time: {
-    color: 'rgba(153, 153, 153, 1)',
-  },
-  people: {
-    color: 'rgba(99, 79, 247, 1)',
-    fontWeight: '500',
-    alignItems: 'center',
-    marginLeft: 4,
-    marginRight: 13,
-  },
-  dollar: {
-    color: 'rgba(252, 183, 43, 1)',
-    fontWeight: '500',
-    alignItems: 'center',
-    marginLeft: 4,
-  },
-  btn: {
-    borderRadius: 30,
-    width: 84,
-  },
+const useStyles = makeStyles((theme) => {
+  return {
+    container: {
+      flex: 1,
+    },
+    searchBar: {
+      paddingTop: 4,
+      paddingHorizontal: 25,
+      paddingBottom: 19,
+      backgroundColor: theme.colors.white,
+    },
+    inputContainer: {
+      paddingHorizontal: 11,
+      borderRadius: 8,
+      // borderWidth: 0,
+      // elevation: 5,
+      // shadowColor: theme.colors.grey5,
+      // shadowOffset: { width: 0, height: 0 },
+      // shadowOpacity: 1,
+      // shadowRadius: 10,
+      height: 36,
+      borderColor: theme.colors.grey5,
+    },
+    main: {
+      paddingHorizontal: 15,
+      paddingVertical: 16,
+      backgroundColor: theme.colors.grey5,
+      flex: 1,
+    },
+    card: {
+      backgroundColor: theme.colors.white,
+      borderRadius: 8,
+      paddingHorizontal: 15,
+      paddingVertical: 7,
+      marginBottom: 15,
+    },
+    bannerContainer: {
+      height: 94,
+    },
+    banner: {
+      width: '100%',
+      height: '100%',
+      aspectRatio: 1,
+    },
+    titleContainer: {
+      display: 'flex',
+      flexDirection: 'row',
+      flexWrap: 'nowrap',
+      alignItems: 'center',
+      marginVertical: 6,
+      justifyContent: 'space-between',
+    },
+    title: {
+      color: 'rgba(51, 51, 51, 1)',
+      flex: 1,
+      marginRight: 16,
+    },
+    time: {
+      color: 'rgba(153, 153, 153, 1)',
+    },
+    people: {
+      color: 'rgba(99, 79, 247, 1)',
+      fontWeight: '500',
+      alignItems: 'center',
+      marginLeft: 4,
+      marginRight: 13,
+    },
+    dollar: {
+      color: 'rgba(252, 183, 43, 1)',
+      fontWeight: '500',
+      alignItems: 'center',
+      marginLeft: 4,
+    },
+    btn: {
+      borderRadius: 30,
+      width: 84,
+    },
+  };
 });
 
 export default Activity;
