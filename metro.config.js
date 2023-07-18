@@ -22,4 +22,9 @@ module.exports = {
     },
     // Rest of your transformer configuration
   },
+  resolver: {
+    extraNodeModules: {
+      crypto: require.resolve('react-native-crypto'),
+    },
+  },
 };

@@ -2,9 +2,9 @@ import * as React from 'react';
 import Layout from '@components/Layout';
 import { Button, Image, Text } from '@rneui/themed';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
-const StartBackup = ({ navigation }) => {
+const StartBackup = ({ navigation, route }: any) => {
   const handleStartBackup = () => {
-    navigation.navigate('backupMnemonics');
+    navigation.navigate('backupMnemonics', route?.params?.params);
   };
   return (
     <Layout

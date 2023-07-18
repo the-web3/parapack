@@ -1,18 +1,108 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { ActivityIndicator, Image, ScrollView, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Dimensions, Image, ScrollView, TouchableOpacity, View } from 'react-native';
 import { Avatar, Button, Tab, TabView, Text, makeStyles } from '@rneui/themed';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Layout from '@components/LayoutNormal';
+import { getAddressBalance, transferRecord } from '@api/wallet';
+import { getUniqueId } from 'react-native-device-info';
+import { Kline, getSymbolKline } from '@api/symbol';
+import { LineChart } from 'react-native-chart-kit';
 type Props = {
   fullWidth?: boolean;
   navigation: any;
+  route: any;
+};
+
+const chartConfig = {
+  // backgroundColor: '#F5F5FF',
+  backgroundGradientFrom: '#F5F5FF',
+  backgroundGradientTo: '#F5F5FF',
+  decimalPlaces: 0,
+  yAxisLabel: '$',
+  yAxisSuffix: 'k',
+  yAxisInterval: 100,
+  color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+  style: {
+    // verticalLines: {
+    //   strokeWidth: 0,
+    //   strokeDasharray: [4, 4], // 设置虚线样式
+    //   stroke: 'rgba(0, 0, 0, 0.5)',
+    // },
+    // horizontalLines: {
+    //   strokeWidth: 0,
+    //   strokeDasharray: [4, 4], // 设置虚线样式
+    //   stroke: 'rgba(0, 0, 0, 0.5)',
+    // },
+    // axisLineColor: 'red', // 坐标轴线的颜色
+    // axisLineWidth: 2, // 坐标轴线的宽度
+    // 其他样式属性
+  },
 };
 const aa = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
 const TokenDetail = (props: Props) => {
   const [index, setIndex] = useState(0);
+  const [kLine, setKLine] = useState<Kline[]>([]);
   const styles = useStyles(props);
+  const { width } = Dimensions.get('window');
+  const initData = async () => {
+    const device_id = await getUniqueId();
+    const { contract_addr: contract_address, ...rest } = props.route.params;
+    const res = await getAddressBalance({
+      device_id,
+      ...rest,
+      contract_address,
+    });
+    console.log(1111, res);
+  };
+
+  const initKLine = async () => {
+    //TODO 接口不通
+    const res = await getSymbolKline({
+      symbol: props.route.params.symbol,
+    });
+    console.log(22222, JSON.stringify(res));
+    if (res.data) {
+      setKLine(res.data.kline);
+    }
+  };
+  const getTransferRecord = async () => {
+    const { chain, contract_addr: contractAddr, symbol } = props.route.params;
+    const res = await transferRecord({
+      chain,
+      contractAddr,
+      symbol,
+      // type?: number; //类型，1=转入，0=转出
+    });
+    console.log(333333, res);
+  };
+  React.useEffect(() => {
+    initData();
+    initKLine();
+    getTransferRecord();
+  }, []);
+
+  const kLineFormat = React.useMemo(() => {
+    return {
+      labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+      datasets: [
+        {
+          data: [20, 45, 28, 80, 99, 43],
+          color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
+          strokeWidth: 2, // optional
+        },
+      ],
+      // labels: (kLine || []).map((item) => item.time) as string[],
+      // datasets: [
+      //   {
+      //     data: (kLine || []).map((item) => item.price) as string[],
+      //     color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`, // 设置折线颜色
+      //   },
+      // ],
+    };
+  }, []);
+
   return (
     <Layout
       containerStyle={{ paddingHorizontal: 0, paddingVertical: 0 }}
@@ -94,7 +184,14 @@ const TokenDetail = (props: Props) => {
           </TouchableOpacity>
         </View>
         <View style={styles.scrollContainer}>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              paddingHorizontal: 26,
+            }}
+          >
             <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
               <Text style={{ fontSize: 18 }}>128.12 =</Text>
               <Text style={{ fontSize: 14 }}>$2800.12</Text>
@@ -110,6 +207,22 @@ const TokenDetail = (props: Props) => {
               </Text>
             </TouchableOpacity>
           </View>
+          {/* <LineChart
+            data={kLineFormat}
+            height={160}
+            width={width - 52}
+            // yLabelsOffset={50}
+            // withVerticalLabels={false}
+            // withHorizontalLabels={false}
+            // withInnerLines={false}
+            withOuterLines={false}
+            yAxisInterval={2}
+            chartConfig={chartConfig}
+            bezier
+            style={{
+              paddingTop: 16,
+            }}
+          /> */}
         </View>
       </LinearGradient>
       <View style={{ paddingHorizontal: 16, marginVertical: 15 }}>
@@ -140,7 +253,6 @@ const TokenDetail = (props: Props) => {
               }}
               dense
               indicatorStyle={{
-                // backgroundColor: '#D8D8D8',
                 backgroundColor: '#3B28CC',
                 height: 4,
                 borderRadius: 2,
@@ -285,15 +397,13 @@ const useStyles = makeStyles((theme, props: Props) => {
       borderRadius: 10,
     },
     scrollContainer: {
-      paddingTop: 16,
-      // paddingHorizontal: 25,
+      paddingVertical: 16,
+      // paddingHorizontal: 26,
       borderTopLeftRadius: 20, // 左上角边框半径
       borderTopRightRadius: 20, // 右上角边框半径
       borderBottomRightRadius: 0, // 右下角边框半径
       borderBottomLeftRadius: 0, // 左下角边框半径
       backgroundColor: '#F5F5FF',
-      paddingHorizontal: 26,
-      height: 181,
       // shadowColor: '#CED8F7',
       // shadowOffset: { width: 0, height: 2 },
       // shadowOpacity: 0.6,

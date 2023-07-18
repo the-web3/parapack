@@ -103,3 +103,5 @@ export const INIT_TOKEN = {
   wallet_name: '',
   wallet_uuid: '',
 };
+
+export const SUCCESS_CODE = 200;

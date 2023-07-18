@@ -5,10 +5,7 @@
  * @format
  */
 import React, { useEffect } from 'react';
-import {
-  // StyleSheet, View,
-  useColorScheme,
-} from 'react-native';
+import { useColorScheme } from 'react-native';
 const Stack = createNativeStackNavigator();
 import { ThemeProvider, createTheme } from '@rneui/themed';
 import { DarkTheme, DefaultTheme, NavigationContainer } from '@react-navigation/native';
@@ -18,31 +15,66 @@ import i18n from './i18n';
 import { I18nextProvider } from 'react-i18next';
 import menus from './routes';
 import Toast from 'react-native-toast-message';
-import { openDatabase } from '@common/utils/sqlite';
-
+import { TABLE_MAP, createTable, openDatabase } from '@common/utils/sqlite';
+// import { getCommonHealth } from '@api/common';
+// import { getAddressBalanceParams } from '@api/wallet';
+import { getUniqueId } from 'react-native-device-info';
+import { CreateAddress, MnemonicToSeed } from 'savourlabs-wallet-sdk/wallet';
+// eslint-disable-next-line no-undef
 function App(): JSX.Element {
   const mode = useColorScheme() || 'light';
   const theme = createTheme({
     ...defineTheme,
     mode,
   });
-  // const openSQL = () => {
-  //   const open = DB.isOpen();
-  //   if (!open) {
-  //     DB.openSqlite()
-  //       .then((res) => {
-  //         console.log('数据库已打开', res);
-  //         setTableData();
-  //       })
-  //       .catch((error) => {
-  //         console.log('数据库开启失败', error);
-  //       });
-  //   } else {
-  //     setTableData();
+  const openSQL = async () => {
+    const open = await openDatabase();
+    if (open) {
+      Object.keys(TABLE_MAP).map((tabe_name) => {
+        createTable(tabe_name, {
+          query: `CREATE TABLE ${tabe_name} (${TABLE_MAP[tabe_name as keyof typeof TABLE_MAP]})`,
+        });
+      });
+      // const res = await executeQuery(`SELECT * FROM asset`);
+      // console.log(9999, res?.rows?.item(0));
+    }
+  };
+  // const getInitialData = async () => {
+  //   try {
+  //     // const res = await getCommonHealth();
+  //     // const res = await getAddressBalanceParams({
+  //     //   device_id: 'string',
+  //     //   wallet_uuid: 'string',
+  //     //   index: 0,
+  //     //   chain: 'string',
+  //     //   symbol: 'string',
+  //     //   network: 'string',
+  //     //   address: 'string',
+  //     //   contract_address: 'string',
+  //     // });
+  //     const res = await getUniqueId();
+  //     console.log(9999, res);
+  //   } catch (e) {
+  //     console.log(66666, e);
   //   }
   // };
+
   useEffect(() => {
-    // openDatabase();
+    // openSQL();
+    // getInitialData();
+    // const mnemonic = 'word';
+    // const params_1 = {
+    //   mnemonic: mnemonic,
+    //   password: '',
+    // };
+    // const seed = MnemonicToSeed(params_1);
+    // console.log(seed);
+    // const account = CreateAddress({
+    //   chain: 'eth',
+    //   seedHex: seed.toString('hex'),
+    //   index: '0',
+    // });
+    // console.log(account);
   }, []);
 
   return (

@@ -9,7 +9,26 @@ const SplashScreen = ({ navigation }) => {
     setTimeout(() => {
       // 导航到主界面或其他页面
       // navigation.navigate('createWallet');
-      navigation.navigate('home');
+      // navigation.navigate('asset', {
+      //   wallet_uuid: 'c11b420e-50e3-4723-8d0f-0cb3dca8849f',
+      // });
+      // navigation.navigate('collection');
+      // navigation.navigate('verifyMnemonics', {
+      //   params: {
+      //     wallet_name: 'Amy_123',
+      //     password: '1234567a',
+      //     mnemonic: 'indoor industry avoid little sweet month elegant tackle autumn mass vault forum',
+      //   },
+      // });
+      navigation.navigate('tokenDetail', {
+        address: '0xbF31a6ec96851d90772529015ABb4E98eABD7fa2',
+        chain: 'Ethereum',
+        contract_addr: '',
+        index: 0,
+        network: 'mainnet',
+        symbol: 'ETH',
+        wallet_uuid: 'c11b420e-50e3-4723-8d0f-0cb3dca8849f',
+      });
     }, 2000); // 2秒延迟
   }, [navigation]);
 

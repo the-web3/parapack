@@ -1,106 +1,76 @@
-// import { createEthAddress, signEthTransaction, importEthAddress } from "./eth"
-import { Decrypt, Encrypt } from '../secret';
-import { decodeMnemonic, encodeMnemonic, generateMnemonic, mnemonicToSeed, validateMnemonic } from './bip';
+import { getSymbolSupport } from '@api/symbol';
+import { createWallet } from '@api/wallet';
+import { SUCCESS_CODE } from '@common/constants';
+import { getUniqueId } from 'react-native-device-info';
+import { CreateAddress, EncodeMnemonic, MnemonicToSeed } from 'savourlabs-wallet-sdk/wallet';
+import { v4 as uuidv4 } from 'uuid';
 
-// const BitcoinSeries = ["btc", "ltc", "bsv"];
-const EthereumSeries = [
-    'eth',
-    'etc',
-    'bsc',
-    'heco',
-    'polygon',
-    'avax-c',
-    'arbi',
-    'op',
-    'zksync',
-    'metis',
-    'boba',
-    'ethereum',
-    'arbitrum',
-];
-// const CosmosSeries = ["atom", "scrt", "bnb"];
-// const EosSeries = ["eos", "waxp"];
-// const SolanaSeries = ["sol"]
+export const createImportWallet = async (params: {
+    password: any;
+    wallet_name: any;
+    mnemonic?: string;
+}): Promise<Boolean> => {
+    try {
+        const { password, wallet_name, mnemonic = '' } = params;
+        //助记词编码
+        const [device_id, mnemonic_code, symbolSupport] = await Promise.all([
+            getUniqueId(),
+            EncodeMnemonic({ mnemonic, language: 'english' }),
+            getSymbolSupport(),
+        ]);
+        const wallet_uuid = uuidv4();
+        if (symbolSupport.code === SUCCESS_CODE) {
+            const tokens = (symbolSupport.data || [])
+                ?.filter((item) => !['TRON', 'BITCOIN'].includes(item.chainName))
+                .reduce((total, supportChian) => {
+                    if (supportChian.token.length > 0) {
+                        const curTokens = supportChian.token
+                            .filter((currentToken) => currentToken.tokenDefault)
+                            .map((currentToken) => {
+                                const seed = MnemonicToSeed({
+                                    mnemonic,
+                                    password,
+                                });
+                                const account = CreateAddress({
+                                    chain: supportChian.symbol.toLowerCase(),
+                                    seedHex: seed.toString('hex'),
+                                    index: 0,
+                                    receiveOrChange: 0,
+                                    network: 'mainnet',
+                                });
+                                return {
+                                    chain: supportChian.chainName,
+                                    symbol: supportChian.symbol,
+                                    contract_addr: currentToken.contractAddr,
+                                    index: 0,
+                                    ...JSON.parse(account),
+                                };
+                            });
 
-/*
- *  Aes 加密函数
- */
-export function AesEncrypt(value: string, key: string) {
-    return Encrypt(value, key);
-}
-
-/*
- *  Aes 解密函数
- */
-export function AesDecrypt(value: string, key: string) {
-    return Decrypt(value, key);
-}
-
-/*
- * 生成助记词
- */
-export function CreateMnemonic(params: any) {
-    return generateMnemonic(params);
-}
-
-/*
- * 助记词序列化
- */
-export function EncodeMnemonic(params: any) {
-    return encodeMnemonic(params);
-}
-
-/*
- * 助记词反序列化
- */
-export function DecodeMnemonic(params: any) {
-    return decodeMnemonic(params);
-}
-
-/*
- * 助记词生成种子
- */
-export function MnemonicToSeed(params: any) {
-    return mnemonicToSeed(params);
-}
-
-/*
- * 验证助记词
- */
-export function ValidateMnemonic(params: any) {
-    return validateMnemonic(params);
-}
-
-/*
- * 生成地址函数
- * @seedHex: 助记词的 seedHex
- * @chain: 链名称
- * @index: 地址索引
- * @receiveOrChange: BTC 是否生成找零地址
- * @network: btc 生成不同格式的地址参数
- */
-// export function CreateAddress(params: any) {
-//     const {seedHex, chain, index, receiveOrChange, network }  = params
-//     // eth 系列币种
-//     if (EthereumSeries.includes(chain)) {
-//         return createEthAddress(seedHex, index)
-//     }
-// }
-
-// /*
-//  *  签名函数
-//  *  @params: 签名需要传入的参数
-//  */
-// export function SignTransaction(chain: string, params: any) {
-//     // eth 系列币种
-//     if (EthereumSeries.includes(chain)) {
-//         return signEthTransaction(params)
-//     }
-// }
-
-// export function PrivateKeyToAddress(chain:string, params: any) {
-//     // eth 系列币种
-//     if (EthereumSeries.includes(chain)) {
-//         return importEthAddress(params)
-//     }
-// }
+                        return [...total, ...curTokens];
+                    }
+                    return [...total];
+                }, []);
+            const res = await createWallet({
+                password,
+                tokens: tokens.map(({ chain, symbol, contract_addr, index, address }: any) => {
+                    return {
+                        chain,
+                        symbol,
+                        contract_addr,
+                        index,
+                        address,
+                    };
+                }),
+                mnemonic_code,
+                wallet_name,
+                wallet_uuid,
+                device_id,
+            });
+            return res.code === SUCCESS_CODE;
+        }
+    } catch (error) {
+        console.log('error', error);
+        return false;
+    }
+};
