@@ -12,7 +12,13 @@ const SplashScreen = ({ navigation }) => {
       // navigation.navigate('asset', {
       //   wallet_uuid: 'c11b420e-50e3-4723-8d0f-0cb3dca8849f',
       // });
-      // navigation.navigate('collection');
+      navigation.navigate('home', {
+        tab: 'asset',
+        // wallet_uuid: 'c11b420e-50e3-4723-8d0f-0cb3dca8849f',
+      });
+      // navigation.navigate('collection', {
+      //   toAddr: '0xbF31a6ec96851d90772529015ABb4E98eABD7fa2',
+      // });
       // navigation.navigate('verifyMnemonics', {
       //   params: {
       //     wallet_name: 'Amy_123',
@@ -20,15 +26,15 @@ const SplashScreen = ({ navigation }) => {
       //     mnemonic: 'indoor industry avoid little sweet month elegant tackle autumn mass vault forum',
       //   },
       // });
-      navigation.navigate('tokenDetail', {
-        address: '0xbF31a6ec96851d90772529015ABb4E98eABD7fa2',
-        chain: 'Ethereum',
-        contract_addr: '',
-        index: 0,
-        network: 'mainnet',
-        symbol: 'ETH',
-        wallet_uuid: 'c11b420e-50e3-4723-8d0f-0cb3dca8849f',
-      });
+      // navigation.navigate('tokenDetail', {
+      //   address: '0xbF31a6ec96851d90772529015ABb4E98eABD7fa2',
+      //   chain: 'Ethereum',
+      //   contract_addr: '',
+      //   index: 0,
+      //   network: 'mainnet',
+      //   symbol: 'ETH',
+      //   wallet_uuid: 'c11b420e-50e3-4723-8d0f-0cb3dca8849f',
+      // });
     }, 2000); // 2秒延迟
   }, [navigation]);
 

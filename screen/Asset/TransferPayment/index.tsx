@@ -1,13 +1,17 @@
-import { Button, Input, Text, useTheme } from '@rneui/themed';
+import { Button, Input, Text } from '@rneui/themed';
 import * as React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import Layout from '../../../components/Layout';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
+import { getAddressBalance, symbolGas, transfer } from '@api/wallet';
+import { getUniqueId } from 'react-native-device-info';
+import { getData } from '@common/utils/storage';
+import Picker from 'react-native-picker-select';
 const FEE_TYPE = [
   {
-    type: 'slow',
+    type: 'low',
     title: '慢',
     subTitle: '0.00073BTC',
     price: '$ 3.27',
@@ -32,19 +36,91 @@ const FEE_TYPE = [
     title: '自定义',
   },
 ];
-const TransferPayment = ({ navigation }) => {
-  const theme = useTheme();
+const TransferPayment = ({ navigation, route }) => {
   const { t } = useTranslation();
-  const [text, setText] = useState<string>('');
-  const [money, setMoney] = useState<string>('');
+  const [list, setList] = useState<any[]>([]);
+  const [wallet, setWallet] = useState<any[]>([]);
+  const [token, seToken] = useState<any[]>([]);
+  const [form, setForm] = useState({
+    fromAddr: route?.params?.address || '',
+    toAddr: route?.params?.toAddr || '',
+    amount: '',
+    symbol: route?.params?.symbol || '',
+    contractAddr: route?.params?.contractAddr || '',
+    sign: route?.params?.sign || '',
+    chain: route?.params?.chain || '',
+  });
   const [byte, setByte] = useState<string>('');
   const [size, setSize] = useState<string>('');
-  const [activeType, setActiveType] = useState<string>('custom');
-  const handleComfirm = () => {
+  const [activeType, setActiveType] = useState<string>('recommend');
+  const handleComfirm = async () => {
+    const res = await transfer(form);
+    // if (res.data) {
     // navigation.navigate('verifyMnemonics');
+    // }
   };
   const handleSelect = (type) => {
     setActiveType(type);
+  };
+  const initData = async () => {
+    const currentWalletInfo = await getData('currentWallet');
+    setWallet(JSON.parse(currentWalletInfo));
+    const { wallet_uuid, wallet_balance } = JSON.parse(currentWalletInfo);
+    const { address, contract_addr } = route?.params || {};
+    let token = wallet_balance.find((item) => item.address === address && item.contract_addr === contract_addr);
+    if (!token) {
+      token = wallet_balance[0];
+    }
+
+    seToken(token);
+    const { data } = await symbolGas({
+      chain: token.chain,
+    });
+    setList(
+      FEE_TYPE.map((item) => {
+        return {
+          ...item,
+          time: `约${data[`${item.type}Time`]}分钟`,
+          price: `$ ${data[`${item.type}Usdt`]}`,
+          subTitle: `${data[`${item.type}`]}${data.gasFeeSymbol}`,
+        };
+      })
+    );
+
+    // const device_id = await getUniqueId();
+    // const res = await getAddressBalance({
+    //   device_id,
+    //   wallet_uuid,
+    //   chain: token.chain,
+    //   symbol: token.symbol,
+    //   address: token.address,
+    //   contract_address: contract_addr,
+    // });
+    // console.log(11111, res);
+  };
+  const initGas = async () => {
+    // const { data } = await symbolGas({
+    //   chain: token.chain,
+    // });
+    // setList(
+    //   FEE_TYPE.map((item) => {
+    //     return {
+    //       ...item,
+    //       time: `约${data[`${item.type}Time`]}分钟`,
+    //       price: `$ ${data[`${item.type}Usdt`]}`,
+    //       subTitle: `${data[`${item.type}`]}${data.gasFeeSymbol}`,
+    //     };
+    //   })
+    // );
+  };
+
+  React.useEffect(() => {
+    initData();
+    initGas();
+  }, []);
+  const handleChange = (value) => {
+    console.log(11111, value);
+    // seToken()
   };
   return (
     <Layout
@@ -56,40 +132,74 @@ const TransferPayment = ({ navigation }) => {
     >
       <View style={styles.layout}>
         <View style={styles.overview}>
-          <Text style={styles.overviewTitle}>BTC 余额</Text>
+          <Text style={styles.overviewTitle}>{token?.symbol} 余额</Text>
           <Text style={styles.money}>
-            <Text style={styles.moneyStrong}>302.00 BTC</Text> ≈ $ 10.0000
+            <Text style={styles.moneyStrong}>
+              {token?.balance} {token?.symbol}
+            </Text>
+            ≈ $ {token.asset_usd}
           </Text>
         </View>
         <View>
           <Text style={styles.title}>收款账号</Text>
           <Input
-            value={text}
-            // style={styles.input}
-            onChangeText={(text) => {
-              const time = Date.now();
-              // 复杂逻辑，输入文字不卡
-              while (Date.now() - time <= 1000) {}
-              setText(text);
+            value={form.toAddr}
+            onChangeText={(toAddr) => {
+              setForm((prev) => {
+                return {
+                  ...prev,
+                  toAddr,
+                };
+              });
             }}
           />
         </View>
         <View>
-          <Text style={styles.title}>转账金额</Text>
+          <View
+            style={{
+              justifyContent: 'space-between',
+              alignItems: 'baseline',
+              flexDirection: 'row',
+            }}
+          >
+            <View>
+              <Text style={styles.title}>转账金额</Text>
+            </View>
+            <View>
+              <Picker
+                value={token?.contract_addr || ''}
+                style={pickerStyles}
+                placeholder={{}}
+                onValueChange={handleChange}
+                items={(wallet?.wallet_balance || []).map((item: any) => ({
+                  label: item.symbol,
+                  value: item.contract_addr,
+                }))}
+              >
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Text>{token.symbol}</Text>
+                  <Icon name="caretdown" style={{ marginLeft: 8 }} />
+                </View>
+              </Picker>
+            </View>
+          </View>
+
           <Input
-            value={money}
-            onChangeText={(money) => {
-              // const time = Date.now();
-              // // 复杂逻辑，输入文字不卡
-              // while (Date.now() - time <= 1000) {}
-              setMoney(money);
+            value={form.amount}
+            onChangeText={(amount) => {
+              setForm((prev) => {
+                return {
+                  ...prev,
+                  amount,
+                };
+              });
             }}
           />
         </View>
         <View>
           <Text style={styles.title}>矿工费用</Text>
           <View style={styles.group}>
-            {FEE_TYPE.map((item) => {
+            {(list || []).map((item) => {
               const style =
                 activeType === item.type
                   ? {
@@ -152,7 +262,7 @@ const TransferPayment = ({ navigation }) => {
           </View>
           {activeType === 'custom' && (
             <View style={styles.custom}>
-              <View>
+              <View style={{ flex: 1 }}>
                 <Text style={styles.customTitle}>Fee per byte（sat/b）</Text>
                 <Input
                   value={byte}
@@ -165,7 +275,7 @@ const TransferPayment = ({ navigation }) => {
                   }}
                 />
               </View>
-              <View>
+              <View style={{ flex: 1, marginLeft: 13 }}>
                 <Text style={styles.customTitle}>Size（sat/b）</Text>
                 <Input
                   value={size}
@@ -261,7 +371,8 @@ const styles = StyleSheet.create({
   },
   custom: {
     display: 'flex',
-    backgroundColor: '#F9F9F9',
+    flexDirection: 'row',
+    backgroundColor: 'rgba(249, 249, 249, 1)',
     borderRadius: 9,
     paddingVertical: 13,
     paddingHorizontal: 11,
@@ -292,6 +403,34 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     backgroundColor: '#fff',
+  },
+});
+const pickerStyles = StyleSheet.create({
+  inputIOS: {
+    fontSize: 16,
+    padding: 0,
+    height: 22,
+    lineHeight: 22,
+    // paddingVertical: 12,
+    // paddingHorizontal: 10,
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 4,
+    // color: 'black',
+    // paddingRight: 30, // to ensure the text is never behind the icon
+  },
+  inputAndroid: {
+    fontSize: 16,
+    padding: 0,
+    height: 22,
+    lineHeight: 22,
+    // paddingHorizontal: 10,
+    // paddingVertical: 8,
+    borderWidth: 0.5,
+    borderColor: 'purple',
+    borderRadius: 8,
+    // color: 'black',
+    // paddingRight: 0, // to ensure the text is never behind the icon
   },
 });
 export default TransferPayment;

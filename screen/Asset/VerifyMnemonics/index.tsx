@@ -24,7 +24,8 @@ const VerifyMnemonics = (props: Record<string, any>) => {
     return array;
   }, []);
   const mnemonics = useMemo(() => {
-    return shuffle(walletInfo.mnemonic.split(' '));
+    console.log('mnemonics', walletInfo.mnemonic);
+    return shuffle(walletInfo.mnemonic);
   }, [shuffle, walletInfo.mnemonic]);
 
   const [selectMnemonics, setSelectMnemonics] = useState([
@@ -67,7 +68,7 @@ const VerifyMnemonics = (props: Record<string, any>) => {
   }, [selectMnemonics]);
 
   const handleVerifyMnemonics = async () => {
-    const originMnemonics = walletInfo.mnemonic.split(' ');
+    const originMnemonics = walletInfo.mnemonic;
     for (let i = 0; i < selectMnemonics.length; i++) {
       const { key, value } = selectMnemonics[i];
       if (!value || originMnemonics[key] !== value) {
@@ -76,16 +77,22 @@ const VerifyMnemonics = (props: Record<string, any>) => {
     }
     // TODO: 助记词存sqlite
     setLoading(true);
-    const createSuccess = await createImportWallet(walletInfo).finally(() => {
-      setLoading(false);
-    });
+    const createSuccess = await createImportWallet({
+      ...walletInfo,
+      mnemonic: walletInfo.mnemonic.join(' '),
+    })
+      .catch((e) => {
+        console.log(111111, e);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
     if (createSuccess) {
       navigation?.navigate?.('home', { tab: 'asset' });
     }
   };
   useEffect(() => {
     setSelectMnemonics(generateRandomNumbers());
-    createImportWallet(walletInfo);
   }, []);
 
   const handleSelect = (selectValue: string, checked: boolean) => {

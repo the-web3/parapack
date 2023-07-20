@@ -24,7 +24,7 @@ export const defineTheme = {
     purple2: '#F8F8FF',
     purpleBg: 'rgba(230, 227, 253, 0.45)',
     grey: '#141414',
-    greyTitle: 'rgba(67, 67, 67, 0.45)',
+    // greyTitle: 'rgba(67, 67, 67, 0.45)',
   },
   lightColors: {
     ...lightColors,
@@ -38,7 +38,7 @@ export const defineTheme = {
     purple2: '#F8F8FF',
     purpleBg: 'rgba(230, 227, 253, 1)',
     grey: 'rgba(245, 245, 245, 1)',
-    greyTitle: 'rgba(67, 67, 67, 1)',
+    // greyTitle: 'rgba(67, 67, 67, 1)',
   },
   components: {
     Button: {
@@ -60,7 +60,7 @@ export const defineTheme = {
         fontSize: 16,
         marginBottom: 6,
         paddingLeft: 7,
-        color: 'greyTitle',
+        // color: 'greyTitle',
       },
       inputContainerStyle: {
         height: 58,

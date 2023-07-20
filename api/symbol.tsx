@@ -34,6 +34,10 @@ export interface Token {
    */
   amountUnit: number;
   /**
+   * 折合cny
+   */
+  cnyRate: string;
+  /**
    * 合约地址
    */
   contractAddr?: string;
@@ -41,6 +45,10 @@ export interface Token {
    * 合约精度
    */
   contractUnit?: number;
+  /**
+   * 24h涨跌幅
+   */
+  rose: string;
   /**
    * 默认初始化状态
    */
@@ -61,10 +69,21 @@ export interface Token {
    * 类型，1=主币，0=代币
    */
   type: number;
+  /**
+   * 折合usdt
+   */
+  usdtRate: string;
 }
+export interface SymbolSupportParams {
+  chain?: string;
+  contract_addr?: string;
+  symbol?: string;
+  tokenName?: string;
+}
+
 //开放的链及币种
-export function getSymbolSupport(): Promise<IResponse<SymbolSupportDatum[] | null>> {
-  return http.post(`/symbol/support`);
+export function getSymbolSupport(data: SymbolSupportParams): Promise<IResponse<SymbolSupportDatum[] | null>> {
+  return http.post(`/symbol/support`, data);
 }
 export interface SymbolRateDatum {
   /**

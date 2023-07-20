@@ -21,6 +21,7 @@ const BackupMnemonics = (props: any) => {
       },
     });
   };
+  console.log(8888, route?.params?.params);
   const getMnemonic = async () => {
     try {
       const wordsInfo = await CreateMnemonic({

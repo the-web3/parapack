@@ -18,16 +18,31 @@ export interface Token {
 }
 
 export interface AddressBalanceParams {
+  /**
+   * 地址
+   */
   address: string;
+  /**
+   * 链名称
+   */
   chain: string;
+  /**
+   * 合约地址
+   */
   contract_address?: string;
+  /**
+   * 设备id
+   */
   device_id: string;
-  index: number;
-  network: string;
+  /**
+   * 币名称
+   */
   symbol: string;
+  /**
+   * 钱包uuid
+   */
   wallet_uuid: string;
 }
-
 export interface AddressBalanceParamsData {
   asset_cny: string;
   asset_usd: string;
@@ -107,20 +122,26 @@ export interface DeviceBalanceData {
 }
 
 export interface DeviceBalanceTokenList {
-  wallet_balance?: WalletBalance[];
+  /**
+   * 是否备份过
+   */
+  backup: string;
   wallet_asset_cny: string;
   wallet_asset_usdt: string;
+  wallet_balance?: WalletBalance[];
   wallet_name?: string;
   wallet_uuid: string;
 }
 
 export interface WalletBalance {
-  address_list: AddressList[];
+  address: string;
   asset_cny: string;
   asset_usd: string;
   balance: string;
+  chain: string;
   contract_addr: string;
   id: number;
+  index: number;
   logo: string;
   symbol: string;
 }
