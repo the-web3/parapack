@@ -1,17 +1,33 @@
-import { Button, Text, useTheme } from '@rneui/themed';
+import { Button, Overlay, Text, useTheme } from '@rneui/themed';
 import * as React from 'react';
-import { ToastAndroid, View } from 'react-native';
+import { ActivityIndicator, ToastAndroid, TouchableOpacity, View } from 'react-native';
 import { makeStyles } from '@rneui/base';
 import Layout from '../../../components/Layout';
 import { useTranslation } from 'react-i18next';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { createImportWallet } from '@common/wallet';
 const VerifyMnemonics = (props: Record<string, any>) => {
   const theme = useTheme();
   const styles = useStyles(theme.theme);
   const { navigation, route } = props;
   const { t } = useTranslation();
-  console.log(9999, route);
-  const [mnemonics] = useState(route?.params?.mnemonics || []);
+  const [walletInfo] = useState(route?.params?.params);
+  const [loading, setLoading] = useState(false);
+
+  const shuffle = useCallback((arr: string[]) => {
+    const array = [...arr];
+    let len = array.length;
+    for (let i = len - 1; i > 0; i--) {
+      let j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }, []);
+  const mnemonics = useMemo(() => {
+    console.log('mnemonics', walletInfo.mnemonic);
+    return shuffle(walletInfo.mnemonic);
+  }, [shuffle, walletInfo.mnemonic]);
+
   const [selectMnemonics, setSelectMnemonics] = useState([
     {
       label: '第8个',
@@ -29,13 +45,9 @@ const VerifyMnemonics = (props: Record<string, any>) => {
       key: 3,
     },
   ]);
+
   const generateRandomNumbers = () => {
     const numbers: number[] = [];
-    // const numbers: {
-    //   label: string;
-    //   value: string;
-    //   key: number;
-    // }[] = [];
 
     while (numbers.length < 3) {
       const randomNumber = Math.floor(Math.random() * 12); // 生成 0 到 11 之间的随机数
@@ -51,23 +63,37 @@ const VerifyMnemonics = (props: Record<string, any>) => {
     }));
   };
 
-  useEffect(() => {
-    setSelectMnemonics(generateRandomNumbers());
-  }, []);
   const selectValue = useMemo(() => {
     return (selectMnemonics || []).map((item) => item.value);
   }, [selectMnemonics]);
 
-  const handleVerifyMnemonics = () => {
+  const handleVerifyMnemonics = async () => {
+    const originMnemonics = walletInfo.mnemonic;
     for (let i = 0; i < selectMnemonics.length; i++) {
       const { key, value } = selectMnemonics[i];
-      if (!value || mnemonics[key] !== value) {
+      if (!value || originMnemonics[key] !== value) {
         return ToastAndroid.show('助记词顺序有误', ToastAndroid.SHORT);
       }
     }
     // TODO: 助记词存sqlite
-    navigation?.navigate?.('home', { tab: 'asset' });
+    setLoading(true);
+    const createSuccess = await createImportWallet({
+      ...walletInfo,
+      mnemonic: walletInfo.mnemonic.join(' '),
+    })
+      .catch((e) => {
+        console.log(111111, e);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+    if (createSuccess) {
+      navigation?.navigate?.('home', { tab: 'asset' });
+    }
   };
+  useEffect(() => {
+    setSelectMnemonics(generateRandomNumbers());
+  }, []);
 
   const handleSelect = (selectValue: string, checked: boolean) => {
     setSelectMnemonics((prev) => {
@@ -102,15 +128,7 @@ const VerifyMnemonics = (props: Record<string, any>) => {
     <Layout
       fixedChildren={
         <View style={styles.button}>
-          <Button
-            onPress={handleVerifyMnemonics}
-            // buttonStyle={{
-            //   backgroundColor: '#8B7FEA',
-            //   marginTop: 12,
-            // }}
-          >
-            确认
-          </Button>
+          <Button onPress={handleVerifyMnemonics}>确认</Button>
         </View>
       }
     >
@@ -126,7 +144,7 @@ const VerifyMnemonics = (props: Record<string, any>) => {
         </View>
         <View style={styles.card}>
           {mnemonics.map((item, index) => (
-            <Text
+            <TouchableOpacity
               key={item}
               style={{
                 ...styles.cardItem,
@@ -136,11 +154,14 @@ const VerifyMnemonics = (props: Record<string, any>) => {
                 handleSelect(item, !selectValue.includes(item));
               }}
             >
-              {item}
-            </Text>
+              <Text>{item}</Text>
+            </TouchableOpacity>
           ))}
         </View>
       </View>
+      <Overlay isVisible={loading} overlayStyle={{ justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="blue" />
+      </Overlay>
     </Layout>
   );
 };
@@ -210,6 +231,8 @@ const useStyles = makeStyles((theme) => {
       borderColor: '#E2E2E2',
       paddingVertical: 9,
       textAlign: 'center',
+      alignItems: 'center',
+      justifyContent: 'center',
       marginBottom: 20,
       overflow: 'hidden',
     },

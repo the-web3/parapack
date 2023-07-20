@@ -19,10 +19,12 @@ export const defineTheme = {
     //   ios: darkColors.platform.ios,
     // }),
     ...customTheme,
-    purple: '#D7D7FA',
+    purple: 'rgba(215, 215, 250, 0.45)',
     purple1: '#CDCEEE',
     purple2: '#F8F8FF',
-    grey: 'rgba(245, 245, 245, 1)',
+    purpleBg: 'rgba(230, 227, 253, 0.45)',
+    grey: '#141414',
+    // greyTitle: 'rgba(67, 67, 67, 0.45)',
   },
   lightColors: {
     ...lightColors,
@@ -31,10 +33,12 @@ export const defineTheme = {
     //   ios: lightColors.platform.ios,
     // }),
     ...customTheme,
-    purple: '#D7D7FA',
+    purple: 'rgba(215, 215, 250, 1)',
     purple1: '#CDCEEE',
     purple2: '#F8F8FF',
+    purpleBg: 'rgba(230, 227, 253, 1)',
     grey: 'rgba(245, 245, 245, 1)',
+    // greyTitle: 'rgba(67, 67, 67, 1)',
   },
   components: {
     Button: {
@@ -50,6 +54,14 @@ export const defineTheme = {
       // inputStyle: {
       //   paddingHorizontal: 100,
       // },
+      labelStyle: {
+        fontWeight: 'bold',
+        lineHeight: 22,
+        fontSize: 16,
+        marginBottom: 6,
+        paddingLeft: 7,
+        // color: 'greyTitle',
+      },
       inputContainerStyle: {
         height: 58,
         paddingHorizontal: 12,

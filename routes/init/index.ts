@@ -1,3 +1,4 @@
+import ScannerScreen from '@screen/Common/ScannerScreen';
 import Guide from '@screen/Guide';
 import SplashScreen from '@screen/SplashScreen';
 const menus = [
@@ -18,6 +19,14 @@ const menus = [
       headerShadowVisible: false,
     },
     component: Guide,
+  },
+  {
+    name: 'scannerScreen',
+    options: {
+      headerShown: false,
+      headerShadowVisible: false,
+    },
+    component: ScannerScreen,
   },
 ];
 

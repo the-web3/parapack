@@ -4,8 +4,31 @@ export const databaseName = 'mydatabase.db';
 export const databaseLocation = 'default';
 let db: SQLite.SQLiteDatabase | null = null;
 
+export const TABLE_MAP = {
+  //is_del (0:not deleted 1:delete)
+  //chain table - support(0:nonsupport 1:support)
+  chain: `
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT, "name" varchar UNIQUE, "chain" varchar UNIQUE, "symbol" varchar UNIQUE, "logo" varchar, "active_logo" varchar, "is_del" int, "support" int
+    `,
+  //asset table
+  asset:
+    '"id" INTEGER PRIMARY KEY AUTOINCREMENT, "chain_id" bigInt, "name" varchar UNIQUE, "logo" varchar, "active_logo" varchar, "contract_addr" varchar, "unit" int, "is_del" int, FOREIGN KEY (chain_id) REFERENCES chain (id)',
+  //wallet table mnemonic_code is encode
+  wallet:
+    '"id" INTEGER PRIMARY KEY AUTOINCREMENT, "chain_id" bigInt, "wallet_name" varchar, "device_id" varchar, "wallet_uuid" varchar UNIQUE, "mnemonic_code" varchar, "password" varchar, "asset_usd" varchar, "asset_cny" varchar, "has_submit" int, "is_del" int, FOREIGN KEY (chain_id) REFERENCES chain (id) ',
+  //wallet asset table
+  walletAsset:
+    '"id" INTEGER PRIMARY KEY AUTOINCREMENT, "wallet_id" bigInt, "asset_id" bigInt, "balance" varchar, "asset_usd" varchar, "asset_cny" varchar, "is_del" int, UNIQUE (wallet_id, asset_id) ON CONFLICT REPLACE, FOREIGN KEY (wallet_id) REFERENCES wallet (id), FOREIGN KEY (asset_id) REFERENCES asset (id)',
+  //account table (account is equivalent to address) priv_key is encode
+  account:
+    '"id" INTEGER PRIMARY KEY AUTOINCREMENT, "wallet_id" bigInt, "address_index" int, "address" varchar, "pub_key" varchar, "priv_key" varchar, "is_del" int, UNIQUE (wallet_id, address) ON CONFLICT REPLACE, FOREIGN KEY (wallet_id) REFERENCES wallet (id)',
+  //account asset table (account is equivalent to address)
+  accountAsset:
+    '"id" INTEGER PRIMARY KEY AUTOINCREMENT, "address_id" bigInt, "asset_id" bigInt, "balance" varchar, "asset_usd" varchar, "asset_cny" varchar, "is_del" int, UNIQUE (address_id, asset_id) ON CONFLICT REPLACE, FOREIGN KEY (address_id) REFERENCES account (id) , FOREIGN KEY (asset_id) REFERENCES asset (id)',
+};
+
 export const openDatabase = () => {
-  return new Promise<void>((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     db = SQLite.openDatabase(
       {
         name: databaseName,
@@ -13,7 +36,7 @@ export const openDatabase = () => {
       },
       () => {
         console.log('数据库已打开');
-        resolve();
+        resolve(true);
       },
       (error) => {
         console.error('打开数据库时出错:', error);
@@ -30,27 +53,110 @@ export const closeDatabase = () => {
     });
   }
 };
-export const executeQuery = (query, params = []) => {
+
+export const createTable = (
+  table_name: string,
+  {
+    query,
+    params,
+  }: {
+    query: string;
+    params?: string[];
+  }
+) => {
   return new Promise((resolve, reject) => {
     if (!db) {
       reject(new Error('Database is not open'));
       return;
     }
-
     db.transaction((tx) => {
       tx.executeSql(
-        query,
-        params,
+        `SELECT name FROM sqlite_master WHERE type='table' AND name='${table_name}'`,
+        [],
+        (_, result) => {
+          if (result.rows.length === 0) {
+            // 表不存在，执行创建表的操作
+            tx.executeSql(
+              query,
+              params,
+              (tx, result) => {
+                console.log(`Table ${table_name} created successfully`);
+                resolve(result);
+              },
+              (tx, error) => {
+                console.error(`Failed to create table: ${table_name}`, error);
+                reject(error);
+              }
+            );
+          } else {
+            // 表已经存在，无需执行任何操作
+            console.log(`Table ${table_name} already exists`);
+            // resolve(result);
+          }
+        },
+        (error) => {
+          console.error('Failed to check table existence:', error);
+        }
+      );
+    });
+  });
+};
+export const deleteTable = (table_name: string) => {
+  return new Promise((resolve, reject) => {
+    if (!db) {
+      reject(new Error('Database is not open'));
+      return;
+    }
+    db.transaction((tx) => {
+      tx.executeSql(
+        `DROP TABLE IF EXISTS ${table_name}`,
+        [],
         (tx, result) => {
+          console.log(`Table ${table_name} delete successfully`);
           resolve(result);
         },
         (tx, error) => {
+          console.error('Failed to delete table:', error);
           reject(error);
         }
       );
     });
   });
 };
+
+export const executeQuery = ({
+  query,
+  params = [],
+  customExec,
+}: {
+  query?: string;
+  params?: string[];
+  customExec?: (tx: SQLite.Transaction) => void;
+}) => {
+  return new Promise((resolve, reject) => {
+    if (!db) {
+      reject(new Error('Database is not open'));
+      return;
+    }
+    db.transaction((tx) => {
+      if (customExec) {
+        customExec(tx);
+      } else if (query) {
+        tx.executeSql(
+          query,
+          params,
+          (tx, result) => {
+            resolve(result);
+          },
+          (tx, error) => {
+            reject(error);
+          }
+        );
+      }
+    });
+  });
+};
+
 // export default {
 //   dbName: 'walletData',
 //   dbPath: '_doc/walletData.db',

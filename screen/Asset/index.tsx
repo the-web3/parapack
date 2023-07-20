@@ -1,98 +1,132 @@
 import * as React from 'react';
-import { useState } from 'react';
-import {
-  ActivityIndicator,
-  Image,
-  SafeAreaView,
-  ScrollView,
-  TouchableOpacity,
-  View,
-  useColorScheme,
-} from 'react-native';
-import { Avatar, Overlay, Tab, TabView, Text, makeStyles } from '@rneui/themed';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, Image, SafeAreaView, ScrollView, TouchableOpacity, View } from 'react-native';
+import { Avatar, Overlay, Tab, TabView, Text, makeStyles, useTheme } from '@rneui/themed';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { useTranslation } from 'react-i18next';
 import Toast from 'react-native-toast-message';
-import { DarkTheme, DefaultTheme } from '@react-navigation/native';
+import IconFont from '@assets/iconfont';
+import { DeviceBalanceData, DeviceBalanceTokenList, getDeviceBalance } from '@api/wallet';
+import { getUniqueId } from 'react-native-device-info';
+import { SUCCESS_CODE } from '@common/constants';
+import { getData, storeData } from '@common/utils/storage';
 type Props = {
   fullWidth?: boolean;
   navigation: any;
+  route: any;
 };
 
 const CARD_LIST = [
   {
-    icon: 'appstore1',
+    icon: 'zhuanzhang',
     title: 'transfer',
     go: 'transferPayment',
   },
   {
-    icon: 'appstore1',
+    icon: 'erweima',
     title: 'receipt',
     go: null,
   },
   {
-    icon: 'appstore1',
+    icon: 'zhuanzhang',
     title: 'purchase',
     go: null, //purchase
   },
   {
-    icon: 'appstore1',
+    icon: 'duihuanmaduihuan',
     title: 'flash',
     go: 'swap',
   },
 ];
-const aa = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
 const Asset = (props: Props) => {
-  const mode = useColorScheme() || 'light';
+  const { theme }: { theme: CustomTheme<CustomColors> } = useTheme();
   const { t } = useTranslation();
   const [priceShow, setPriceShow] = useState<boolean>(false);
   const [index, setIndex] = useState(0);
   const [visible, setVisible] = useState(false);
+  const [walletInfo, setWalletInfo] = useState<DeviceBalanceData>();
+  const [currentWallet, setCurrentWallet] = useState<DeviceBalanceTokenList>();
 
   const toggleOverlay = () => {
     setVisible(!visible);
   };
-
+  //
   const styles = useStyles(props);
-  const iconColor = mode === 'dark' ? DefaultTheme.colors.background : DarkTheme.colors.background;
+  const getWalletInfo = async () => {
+    const currentWalletInfo = await getData('currentWallet');
+    const { wallet_uuid } = JSON.parse(currentWalletInfo);
+    const device_id = await getUniqueId();
+    const res = await getDeviceBalance({
+      device_id,
+    });
+    if (res.code === SUCCESS_CODE && res?.data) {
+      setWalletInfo(res?.data);
+      if (!(res?.data?.token_list || [])?.find((item) => item.wallet_uuid === wallet_uuid)) {
+        storeData('currentWallet', JSON.stringify(res?.data?.token_list[0]));
+        setCurrentWallet(res?.data?.token_list[0] || {});
+      } else {
+        setCurrentWallet(JSON.parse(currentWalletInfo));
+      }
+    }
+  };
 
+  useEffect(() => {
+    getWalletInfo();
+  }, []);
   return (
     <SafeAreaView>
-      <LinearGradient colors={['#fff', '#E6E3FD']} start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }} style={styles.gradient}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'flex-end',
-            alignItems: 'center',
-            marginHorizontal: 22,
-            paddingVertical: 12,
-          }}
-        >
+      <LinearGradient
+        colors={[theme.colors.background, theme.colors.purpleBg]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 1 }}
+        style={styles.gradient}
+      >
+        <View style={styles.topBar}>
           <View style={{ flexDirection: 'row' }}>
-            <Icon name="scan1" style={{ marginRight: 21 }} size={24} color={iconColor} />
-            <Icon name="creditcard" size={24} color={iconColor} />
+            <TouchableOpacity
+              onPress={() => {
+                props?.navigation.navigate('scannerScreen');
+                // props?.navigation.navigate('coinDetail');
+              }}
+            >
+              <Icon name="scan1" style={{ marginRight: 21 }} size={24} color={theme.colors.black} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                // props?.navigation.navigate('tokenDetail');
+                // props?.navigation.navigate('coinDetail');
+                props?.navigation.navigate('settingScreen', {
+                  wallet_uuid: currentWallet?.wallet_uuid,
+                });
+              }}
+            >
+              <Icon name="creditcard" size={24} color={theme.colors.black} />
+            </TouchableOpacity>
           </View>
         </View>
         <View style={styles.card}>
           <View style={styles.cardBetween}>
             <TouchableOpacity onPress={toggleOverlay}>
               <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline' }}>
-                <Text style={styles.text}>amy的钱包</Text>
+                <Text style={styles.text}>{currentWallet?.wallet_name}</Text>
                 <Icon name="caretdown" style={{ color: '#fff', marginLeft: 8 }} />
               </View>
             </TouchableOpacity>
             {/* <TouchableOpacity
-            onPress={() => {
-              props?.navigation.navigate('tokenDetail');
-              // props?.navigation.navigate('coinDetail');
-            }}
-          >
-            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline' }}>
-              <Text style={styles.text}>详情</Text>
-              <Icon name="right" style={{ color: '#fff', marginLeft: 8 }} />
-            </View>
-          </TouchableOpacity> */}
+              onPress={() => {
+                // props?.navigation.navigate('tokenDetail');
+                // props?.navigation.navigate('coinDetail');
+                props?.navigation.navigate('settingScreen', {
+                  wallet_uuid: currentWallet?.wallet_uuid,
+                });
+              }}
+            >
+              <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline' }}>
+                <Text style={styles.text}>详情</Text>
+                <Icon name="right" style={{ color: '#fff', marginLeft: 8 }} />
+              </View>
+            </TouchableOpacity> */}
           </View>
           <View
             style={{
@@ -101,7 +135,9 @@ const Asset = (props: Props) => {
             }}
           >
             <View style={styles.price}>
-              <Text style={{ color: '#fff', fontSize: 40, lineHeight: 47 }}>¥{priceShow ? '19.81' : '******'}</Text>
+              <Text style={{ color: '#fff', fontSize: 40, lineHeight: 47 }}>
+                ¥{priceShow ? currentWallet?.wallet_asset_cny || 0 : '******'}
+              </Text>
               <Icon
                 name="eyeo"
                 size={12}
@@ -118,8 +154,8 @@ const Asset = (props: Props) => {
               }}
             >
               <View style={styles.button}>
-                <Icon name="pluscircleo" size={12} style={{ marginRight: 3 }} />
-                <Text style={{ lineHeight: 18 }}>去备份</Text>
+                <Icon name="pluscircleo" size={12} style={{ marginRight: 3, color: '#000' }} />
+                <Text style={{ lineHeight: 18, color: '#000' }}>去备份</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -143,9 +179,10 @@ const Asset = (props: Props) => {
                   }
                 }}
               >
-                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline' }}>
-                  <Icon name={item.icon} size={15} style={{ marginRight: 6 }} />
-                  <Text style={{ lineHeight: 16 }}>{t(`asset.${item.title}`)}</Text>
+                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                  <IconFont name={item.icon} style={{ marginRight: 6 }} size={12} />
+                  {/* <Icon name={item.icon} size={15} style={{ marginRight: 6, color: '#000' }} /> */}
+                  <Text style={{ lineHeight: 16, color: '#000' }}>{t(`asset.${item.title}`)}</Text>
                 </View>
               </TouchableOpacity>
             ))}
@@ -182,17 +219,7 @@ const Asset = (props: Props) => {
                   props?.navigation.navigate('addToken');
                 }}
               >
-                <View
-                  style={{
-                    width: 24,
-                    height: 24,
-                    backgroundColor: '#F3F3F3',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderRadius: 6,
-                    marginRight: 6,
-                  }}
-                >
+                <View style={styles.search}>
                   <Icon name="search1" color={'#5A5A5A'} />
                 </View>
               </TouchableOpacity>
@@ -201,16 +228,7 @@ const Asset = (props: Props) => {
                   props?.navigation.navigate('addToken');
                 }}
               >
-                <View
-                  style={{
-                    width: 24,
-                    height: 24,
-                    backgroundColor: '#F3F3F3',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderRadius: 6,
-                  }}
-                >
+                <View style={styles.add}>
                   <Icon name="plus" color={'#5A5A5A'} />
                 </View>
               </TouchableOpacity>
@@ -219,36 +237,39 @@ const Asset = (props: Props) => {
           <View style={{ flex: 1 }}>
             <TabView value={index} onChange={setIndex} animationType="spring">
               <TabView.Item style={{ width: '100%' }}>
-                <ScrollView style={{ paddingHorizontal: 25, marginBottom: 330 }}>
-                  {aa.map((item) => (
+                <ScrollView style={{ paddingHorizontal: 25 }} contentContainerStyle={{ paddingBottom: 300 }}>
+                  {(currentWallet?.wallet_balance || []).map((item: any) => (
                     <TouchableOpacity
-                      key={item}
+                      key={`${item.symbol}${item.contract_addr}`}
                       onPress={() => {
-                        props?.navigation.navigate('tokenDetail');
+                        props?.navigation.navigate('tokenDetail', {
+                          address: item.address,
+                          contract_addr: item.contract_addr,
+                          chain: item.chain, //TODO
+                          index: item.index,
+                          network: 'mainnet',
+                          symbol: item.symbol,
+                          wallet_uuid: currentWallet?.wallet_uuid,
+                        });
                         // props?.navigation.navigate('coinDetail');
                       }}
                     >
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                          borderBottomWidth: 1,
-                          borderColor: '#F9F9F9',
-                          paddingVertical: 10,
-                        }}
-                      >
-                        <Avatar rounded source={{ uri: 'https://randomuser.me/api/portraits/men/36.jpg' }} />
+                      <View style={styles.assetList}>
+                        <Avatar
+                          rounded
+                          source={{ uri: item.logo || 'https://randomuser.me/api/portraits/men/36.jpg' }}
+                        />
                         <View style={{ flex: 1, marginRight: 14, marginLeft: 10 }}>
                           <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
-                            <Text>BTC</Text>
-                            <Text>0</Text>
+                            <Text>{item.symbol}</Text>
+                            <Text>{item.asset_usd}</Text>
                           </View>
                           <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
                             <View style={{ flexDirection: 'row' }}>
-                              <Text style={styles.listPrice}>Bitcoin</Text>
+                              <Text style={styles.listPrice}>{item.contract_addr}</Text>
                             </View>
                             <View>
-                              <Text style={{ color: '#999999' }}>¥0</Text>
+                              <Text style={{ color: '#999999' }}>¥{item.asset_cny}</Text>
                             </View>
                           </View>
                         </View>
@@ -302,6 +323,8 @@ const Asset = (props: Props) => {
             right: 0,
             padding: 20,
             backgroundColor: 'white',
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
           }}
         >
           <>
@@ -318,38 +341,50 @@ const Asset = (props: Props) => {
               }}
             >
               <View style={{ position: 'absolute', left: 0, top: 6 }}>
-                <Icon name="close" />
+                <Icon name="close" style={{ color: '#000', fontSize: 14 }} />
               </View>
-              <Text>选择钱包</Text>
+              <Text style={{ color: '#000', fontSize: 14 }}>选择钱包</Text>
             </View>
             <View style={{ height: 300 }}>
               <ScrollView>
-                {aa.map((item, index) => (
-                  <View
-                    key={item}
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      borderBottomWidth: 1,
-                      borderColor: '#F9F9F9',
-                      paddingVertical: 10,
+                {(walletInfo?.token_list || []).map((item, index) => (
+                  <TouchableOpacity
+                    key={item.wallet_uuid}
+                    onPress={() => {
+                      props?.navigation.replace('home', {
+                        tab: 'asset',
+                        wallet_uuid: item.wallet_uuid,
+                      });
                     }}
                   >
-                    <Avatar rounded source={{ uri: 'https://randomuser.me/api/portraits/men/36.jpg' }} />
-                    <View style={{ flex: 1, marginRight: 14, marginLeft: 10 }}>
-                      <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
-                        <Text>我的钱包{item}</Text>
-                      </View>
-                      <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
-                        <View style={{ flexDirection: 'row' }}>
-                          <Text style={styles.listPrice}>¥ 195，457</Text>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        borderBottomWidth: 1,
+                        borderColor: '#F9F9F9',
+                        paddingVertical: 10,
+                        backgroundColor:
+                          item.wallet_uuid === currentWallet?.wallet_uuid ? 'rgba(249, 249, 249, 1)' : '#fff',
+                        paddingHorizontal: 19,
+                        borderRadius: 6,
+                      }}
+                    >
+                      <Avatar rounded source={{ uri: 'https://randomuser.me/api/portraits/men/36.jpg' }} />
+                      <View style={{ flex: 1, marginRight: 14, marginLeft: 10 }}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
+                          <Text>{item.wallet_name}</Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
+                          <View style={{ flexDirection: 'row' }}>
+                            <Text style={styles.listPrice}>¥ {item.wallet_asset_cny}</Text>
+                          </View>
                         </View>
                       </View>
-                    </View>
-                    {item !== 1 && (
                       <View style={{ flexDirection: 'row' }}>
                         <TouchableOpacity
-                          onPress={() => {
+                          onPress={(e) => {
+                            e.stopPropagation();
                             props?.navigation.navigate('startBackup');
                           }}
                           style={{ marginRight: 6 }}
@@ -359,10 +394,10 @@ const Asset = (props: Props) => {
                             <Text style={{ lineHeight: 18, color: '#3B2ACE' }}>未备份</Text>
                           </View>
                         </TouchableOpacity>
-                        <Icon name="edit" size={16} />
+                        <Icon name="edit" size={16} style={{ color: '#000', fontSize: 18 }} />
                       </View>
-                    )}
-                  </View>
+                    </View>
+                  </TouchableOpacity>
                 ))}
               </ScrollView>
             </View>
@@ -379,20 +414,27 @@ const useStyles = makeStyles((theme, props: Props) => {
       height: '100%',
     },
     price: { display: 'flex', flexDirection: 'row' },
+    topBar: {
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      alignItems: 'center',
+      marginHorizontal: 22,
+      paddingVertical: 12,
+    },
     card: {
       // marginBottom: 26,
       height: 156,
       backgroundColor: '#3B28CC',
       borderRadius: 14,
       elevation: 8, // 阴影的浮动高度
-      shadowColor: '#E7E7FF', // 阴影颜色
+      shadowColor: theme.colors.grey3, // 阴影颜色
       shadowOffset: { width: 4, height: 8 }, // 阴影偏移量
       shadowOpacity: 0.5, // 阴影的透明度
       shadowRadius: 18, // 阴影的模糊半径
       marginHorizontal: 22,
       marginVertical: 18,
       marginTop: 18,
-      color: '#fff',
+      color: theme.colors.white,
       overflow: 'hidden',
       paddingVertical: 15,
     },
@@ -455,6 +497,30 @@ const useStyles = makeStyles((theme, props: Props) => {
       height: 102,
       aspectRatio: 1,
       marginTop: 50,
+    },
+    assetList: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      borderBottomWidth: 1,
+      borderColor: '#F9F9F9',
+      paddingVertical: 10,
+    },
+    add: {
+      width: 24,
+      height: 24,
+      backgroundColor: '#F3F3F3',
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: 6,
+    },
+    search: {
+      width: 24,
+      height: 24,
+      backgroundColor: '#F3F3F3',
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: 6,
+      marginRight: 6,
     },
   };
 });

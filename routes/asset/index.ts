@@ -8,6 +8,8 @@ import Asset from '@screen/Asset';
 import AddToken from '@screen/Asset/AddToken';
 import Swap from '@screen/Asset/Swap';
 import TokenDetail from '@screen/Asset/TokenDetail';
+import Collection from '@screen/Asset/Collection';
+import SettingScreen from '@screen/Asset/SettingScreen';
 const menus = [
   {
     name: 'tokenDetail',
@@ -99,6 +101,30 @@ const menus = [
       headerShadowVisible: false,
     },
     component: CoinDetail,
+  },
+  {
+    name: 'settingScreen',
+    options: {
+      title: '钱包设置',
+      headerShadowVisible: false,
+    },
+    component: SettingScreen,
+  },
+  {
+    name: 'collection',
+    options: {
+      title: '',
+      headerShadowVisible: false,
+      // headerShown: false,
+      headerStyle: {
+        backgroundColor: '#3B28CC',
+      },
+      headerTintColor: 'white',
+      headerTitleStyle: {
+        color: 'white',
+      },
+    },
+    component: Collection, //（完成）
   },
 ];
 

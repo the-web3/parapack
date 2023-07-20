@@ -33,7 +33,7 @@ const Activity = ({ navigation }) => {
             </View>
             <View style={styles.titleContainer}>
               <Text style={styles.title} numberOfLines={1}>
-                {index}传“XXX”完成3.5亿美元e轮...融资，估值超过10亿美元，ceo已发内部邮件确认。
+                传“XXX”完成3.5亿美元e轮...融资，估值超过10亿美元，ceo已发内部邮件确认。
               </Text>
               <Text style={styles.time}>2020.10.01-2020.12.01</Text>
             </View>
@@ -116,7 +116,7 @@ const useStyles = makeStyles((theme) => {
       justifyContent: 'space-between',
     },
     title: {
-      color: 'rgba(51, 51, 51, 1)',
+      color: theme.colors.black,
       flex: 1,
       marginRight: 16,
     },
