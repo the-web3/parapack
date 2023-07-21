@@ -53,13 +53,20 @@ const Asset = (props: Props) => {
   };
   //
   const styles = useStyles(props);
+
   const getWalletInfo = async () => {
     const currentWalletInfo = await getData('currentWallet');
     const { wallet_uuid } = JSON.parse(currentWalletInfo);
+    if (!wallet_uuid) {
+      props?.navigation?.navigate('createWallet');
+      return;
+    }
     const device_id = await getUniqueId();
     const res = await getDeviceBalance({
       device_id,
+      wallet_uuid,
     });
+    console.log(JSON.stringify(res));
     if (res.code === SUCCESS_CODE && res?.data) {
       setWalletInfo(res?.data);
       if (!(res?.data?.token_list || [])?.find((item) => item.wallet_uuid === wallet_uuid)) {

@@ -125,9 +125,9 @@ export interface DeviceBalanceTokenList {
   /**
    * 是否备份过
    */
-  backup: string;
+  backup: boolean;
   wallet_asset_cny: string;
-  wallet_asset_usdt: string;
+  wallet_asset_usd: string;
   wallet_balance?: WalletBalance[];
   wallet_name?: string;
   wallet_uuid: string;
