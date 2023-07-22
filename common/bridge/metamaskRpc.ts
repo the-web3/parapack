@@ -1,191 +1,75 @@
 import assert from "assert";
-import keccak256 from "../common/utils/keccak256";
-import {recoverPersonalSignature} from 'eth-sig-util';
+import {keccak256} from "@ethersproject/keccak256";
+import {
+  recoverPersonalSignature,
+  personalSign as perSign,
+  signTypedDataLegacy,
+  signTypedData,
+  signTypedData_v4,
+  signTypedMessage
+} from 'eth-sig-util';
+import Web3 from 'web3';
 
-export default class MetamaskBridge {
-  constructor() {
-    this.web3 = null;
-  }
-  addHexPrefix = (data: any) => {
-    return data.indexOf('0x') === 0 ? data : '0x' + data
-  }
-  manageBridgeMessage = async params => {
-    const {type, payload, activeWallet, chain} = params || {};
+interface MetamaskBridgeProps {
+  web3: any;
+  chainId: number
+}
 
+export const useMetamaskBridge = (props: MetamaskBridgeProps) => {
+
+  const web3 = props.web3;
+  const chainId = props.chainId;
+
+  const manageBridgeMessage = async (params: any) => {
+    const {type, payload, activeWallet,privateKey} = params || {};
     const {method} = payload || {};
-    let resultPayload = {};
+    let r: any;
     if (type === 'eth_rpc_request') {
       switch (method) {
-        case 'wallet_addEthereumChain': {
-          resultPayload = this.wallet_addEthereumChain();
-        }
-          break;
-        case 'metamask_getProviderState': {
-          resultPayload =  this.getProviderState(payload);
-        }
-          break;
+        case 'wallet_addEthereumChain':   { r = addEthereumChain();}             break;
+        case 'metamask_getProviderState': { r =  getProviderState(activeWallet);}break;
         case 'eth_requestAccounts':
-        case 'eth_accounts': {
-          resultPayload = this.getAccounts({activeWallet, chain})
-        }
-          break;
-        case 'net_version': {
-          resultPayload = this.getNetVersion();
-        }
-          break;
-        case 'eth_chainId': {
-          resultPayload = this.ethChainId();
-        }
-          break;
-        case 'web3_clientVersion': {
-          resultPayload = this.web3ClientVersion();
-        }
-          break;
-        case 'eth_blockNumber': {
-          resultPayload = await this.getBlockNumber();
-        }
-          break;
-        case 'eth_estimateGas': {
-          resultPayload = await this.getEstimateGas(payload);
-        }
-          break;
-        case 'eth_gasPrice': {
-          resultPayload = await this.getGasPrice();
-        }
-          break;
-        case 'eth_getCode': {
-          resultPayload = await this.getCode(payload);
-        }
-          break;
-        case 'eth_coinbase': {
-          resultPayload = await this.getCoinbase(payload, activeWallet);
-        }
-          break;
-        case 'net_listening': {
-          resultPayload = await this.getNetListening(payload);
-        }
-          break;
-        case 'net_peerCount': {
-          resultPayload = await this.getNetPeerCount(payload);
-        }
-          break;
-        case 'eth_protocolVersion': {
-          resultPayload = await this.getEthProtocolVersion(payload);
-        }
-          break;
-        case 'eth_getBalance': {
-          resultPayload = await this.getEthBalance(payload);
-        }
-          break;
-        case 'eth_getBlockByNumber': {
-          resultPayload = await this.getBlockByNumber(payload);
-        }
-          break;
-        case 'eth_getBlockByHash': {
-          resultPayload = await this.getBlockByHash(payload);
-        }
-          break;
-        case 'eth_getStorageAt': {
-          resultPayload = await this.getStorageAt(payload);
-        }
-          break;
-        case 'eth_getTransactionByBlockHashAndIndex': {
-          resultPayload = await this.getTransactionByBlockHashAndIndex(payload);
-        }
-          break;
-        case 'eth_getTransactionByBlockNumberAndIndex': {
-          resultPayload = await this.getTransactionByBlockNumberAndIndex(payload);
-        }
-          break;
-        case 'eth_getTransactionByHash': {
-          resultPayload = await this.getTransactionByHash(payload);
-        }
-          break;
-        case 'eth_getTransactionCount': {
-          resultPayload = await this.getTransactionCount(payload);
-        }
-          break;
-        case 'eth_getTransactionReceipt': {
-          resultPayload = await this.getTransactionReceipt(payload);
-        }
-          break;
-        case 'eth_getUncleByBlockHashAndIndex': {
-          resultPayload = await this.getUncleByBlockHashAndIndex(payload);
-        }
-          break;
-        case 'eth_getUncleByBlockNumberAndIndex': {
-          resultPayload = await this.getUncleByBlockNumberAndIndex(payload);
-        }
-          break;
-        case 'eth_getBlockTransactionCountByHash': {
-          resultPayload = await this.getBlockTransactionCountByHash(payload);
-        }
-          break;
-        case 'eth_getBlockTransactionCountByNumber': {
-          resultPayload = await this.getBlockTransactionCountByNumber(payload);
-        }
-          break;
-        case 'eth_getWork': {
-          resultPayload = await this.getWork(payload);
-        }
-          break;
-        case 'eth_hashrate': {
-          resultPayload = await this.ethHashrate(payload);
-        }
-          break;
-        case 'eth_mining': {
-          resultPayload = await this.ethMining(payload);
-        }
-          break;
-        case 'eth_syncing': {
-          resultPayload = await this.ethSyncing(payload);
-        }
-          break;
-        case 'eth_submitWork': {
-          resultPayload = await this.ethSubmitWork(payload);
-        }
-          break;
-        case 'web3_sha3': {
-          resultPayload = await this.web3Sha3(payload);
-        }
-          break;
-        case 'eth_call': {
-          resultPayload = await this.ethCall(payload);
-        }
-          break;
-        case 'personal_sign': {
-          resultPayload = await this.personalSign(payload);
-        }
-          break;
-        case 'personal_ecRecover': {
-          resultPayload = await this.personalEcRecover(payload);
-        }
-          break;
+        case 'eth_accounts':              { r = accounts(activeWallet)}          break;
+        case 'net_version':               { r = getNetVersion(); }               break;
+        case 'eth_chainId':               { r = ethChainId(); }                  break;
+        case 'web3_clientVersion':        { r = web3ClientVersion(); }           break;
+        case 'eth_blockNumber':           { r = await getBlockNumber(); }        break;
+        case 'eth_estimateGas':           { r = await getEstimateGas(payload); } break;
+        case 'eth_gasPrice':              { r = await getGasPrice(); }           break;
+        case 'eth_getCode':               { r = await getCode(payload); }        break;
+        case 'eth_coinbase':              { r = await getCoinbase(activeWallet);}break;
+        case 'net_listening':             { r = await getNetListening();}        break;
+        case 'net_peerCount':             { r = await getNetPeerCount();}        break;
+        case 'eth_protocolVersion':       { r = await getEthProtocolVersion();}  break;
+        case 'eth_getBalance':            { r = await getEthBalance(payload);}   break;
+        case 'eth_getBlockByNumber':      { r = await getBlockByNumber(payload);}break;
+        case 'eth_getBlockByHash':        { r = await getBlockByHash(payload);}  break;
+        case 'eth_getStorageAt':          { r = await getStorageAt(payload);}    break;
+        case 'eth_getTransactionByBlockHashAndIndex': {r = await getTransactionByBlockHashAndIndex(payload);}     break;
+        case 'eth_getTransactionByBlockNumberAndIndex': {r = await getTransactionByBlockNumberAndIndex(payload);} break;
+        case 'eth_getTransactionByHash':  { r = await getTransactionByHash(payload);}                break;
+        case 'eth_getTransactionCount':   { r = await getTransactionCount(payload);}                 break;
+        case 'eth_getTransactionReceipt': { r = await getTransactionReceipt(payload);}               break;
+        case 'eth_getUncleByBlockHashAndIndex': {r = await getUncleByBlockHashAndIndex(payload);}           break;
+        case 'eth_getUncleByBlockNumberAndIndex': {r = await getUncleByBlockNumberAndIndex(payload);}       break;
+        case 'eth_getBlockTransactionCountByHash': {r = await getBlockTransactionCountByHash(payload);}     break;
+        case 'eth_getBlockTransactionCountByNumber': {r = await getBlockTransactionCountByNumber(payload);} break;
+        case 'eth_getWork':               { r = await getWork();}           break;
+        case 'eth_hashrate':              { r = await ethHashrate();}       break;
+        case 'eth_mining':                { r = await ethMining();}         break;
+        case 'eth_syncing':               { r = await ethSyncing();}        break;
+        case 'eth_submitWork':            { r = await ethSubmitWork(payload);}     break;
+        case 'web3_sha3':                 { r = await web3Sha3(payload);}   break;
+        case 'eth_call':                  { r = await ethCall(payload);}    break;
+        case 'personal_sign':             { r = await personalSign(payload, privateKey);}      break;
+        case 'personal_ecRecover':        { r = await personalEcRecover(payload);} break;
         case 'eth_signTransaction':
-        case 'eth_sendTransaction': {
-          resultPayload = await this.ethTransaction(payload);
-        }
-          break;
-        case 'eth_sendRawTransaction': {
-          resultPayload = await this.ethRawTransaction(payload);
-        }
-          break;
-        case 'eth_signTypedData': {
-          resultPayload = await this.ethSignTypedData(payload);
-        }
-          break;
-        case 'eth_signTypedData_v3': {
-          resultPayload = await this.ethSignTypedDataV3(payload);
-        }
-          break;
-        case 'eth_signTypedData_v4': {
-          resultPayload = await this.ethSignTypedDataV4(payload);
-        }
-          break;
-        case 'eth_sign': {
-          resultPayload = await this.ethSign(payload);
-        }
-          break;
+        case 'eth_sendTransaction':       { r = await ethTransaction(payload, privateKey);}    break;
+        case 'eth_sendRawTransaction':    { r = await ethRawTransaction(payload);} break;
+        case 'eth_signTypedData':         { r = await ethSignTypedData(payload, privateKey);}  break;
+        case 'eth_signTypedData_v3':      { r = await ethSignTypedDataV3(payload, privateKey);}break;
+        case 'eth_signTypedData_v4':      { r = await ethSignTypedDataV4(payload, privateKey);}break;
+        case 'eth_sign':                  { r = await ethSign(payload, privateKey);}           break;
         case 'eth_submitHashrate':
         case 'eth_uninstallFilter':
         case 'eth_getUncleCountByBlockHash':
@@ -197,204 +81,269 @@ export default class MetamaskBridge {
         case 'eth_getFilterLogs':
         case 'eth_getLogs':
         default:
-          resultPayload = this.default(method);
+          r = otherMethod(method);
       }
     }
-    return resultPayload;
+    console.warn('bridge method:',method);
+    console.warn('bridge result:',r);
+    return r;
   }
 
-  wallet_addEthereumChain = () => {
-
+  const addEthereumChain = () => {
+    return handleData(chainId);
   }
 
-  getProviderState = (payload) => {
-
+  const getProviderState = (activeWallet: string) => {
+    console.warn('getProviderState:', activeWallet);
+    return handleData({
+      accounts: accounts(activeWallet).data,
+      networkVersion: getNetVersion().data,
+      chainId,
+      isUnlocked: false
+    })
   }
-  getAccounts = () => {
+  const accounts = (activeWallet: string) => {
+    return handleData([activeWallet])
   }
-  getNetVersion = () => {
+  const getNetVersion = () => {
+    return addEthereumChain();
   };
-  web3ClientVersion = () => ({data: 'MetaMask/v6.4.1'});
-  ethChainId = () => {
+  const web3ClientVersion = () => handleData('MetaMask/v6.4.1');
+  const ethChainId = () => {
+    return addEthereumChain();
   };
-  getBlockNumber = async () => {
-    const result = await this.web3.eth.getBlockNumber()
-    return handleData('0x' + (+result).toString('16'));
+  const getBlockNumber = async () => {
+    const result = await web3.eth.getBlockNumber()
+    return handleData(Web3.utils.toHex(result));
   }
-  getEstimateGas = async payload => {
+  const getEstimateGas = async (payload: any) => {
     const {params = []} = payload || {};
     assert(params[0], 'Invalid params!')
-    const result = await this.web3.eth.estimateGas(params[0])
-    return handleData('0x' + (+result).toString('16'));
+    const result = await web3.eth.estimateGas(params[0])
+    return handleData(Web3.utils.toHex(result));
   }
-  getGasPrice = async () => {
-    const networkGasPrice = await this.web3.eth.getGasPrice()
-    return handleData(this.web3.utils.toHex(networkGasPrice));
+  const getGasPrice = async () => {
+    const networkGasPrice = await web3.eth.getGasPrice();
+    return handleData(Web3.utils.toHex(networkGasPrice));
   }
-  getCode = async payload => {
+  const getCode = async (payload: any) => {
     const {params = []} = payload || {};
     assert(params[0], 'Invalid params!')
     const address = payload.params[0];
-    const code = await this.web3.eth.getCode(address)
+    const code = await web3.eth.getCode(address)
     return handleData(code);
   }
-  getCoinbase = (payload, activeWallet) => {
-    assert(activeWallet.address, 'No Wallet');
-    return handleData(activeWallet.address);
+  const getCoinbase = (activeWallet: string) => {
+    assert(activeWallet, 'No Wallet');
+    return handleData(activeWallet);
   }
-  getNetListening = async () => {
-    const result = await this.web3.eth.net.isListening()
+  const getNetListening = async () => {
+    const result = await web3.eth.net.isListening();
     return handleData(result);
   }
-  getNetPeerCount = async () => {
-    const result = await this.web3.eth.net.getPeerCount()
+  const getNetPeerCount = async () => {
+    const result = await web3.eth.net.getPeerCount();
     return handleData(result);
   }
-  getEthProtocolVersion = async () => {
-    const result = await this.web3.eth.getProtocolVersion()
+  const getEthProtocolVersion = async () => {
+    const result = await web3.eth.getProtocolVersion();
     return handleData(result);
   }
-  getEthBalance = async payload => {
+  const getEthBalance = async (payload: any) => {
     const {params = []} = payload || {};
     assert(params[0], 'Invalid params!')
     const address = payload.params[0];
-    const balance = await this.web3.eth.getBalance(address)
-    return handleData('0x' + (+balance).toString('16'));
+    const balance = await web3.eth.getBalance(address)
+    return handleData(Web3.utils.toHex(balance));
   }
-  getBlockByNumber = async payload => {
+  const getBlockByNumber = async (payload: any) => {
     const {params = []} = payload || {};
     assert(params[0], 'Invalid params!')
     const blockHashOrBlockNumber = !isNaN(params[0]) ? +params[0] : params[0]
     const returnTransactionObjects = Boolean(params[1]);
-    const block = await this.web3.eth.getBlock(blockHashOrBlockNumber, returnTransactionObjects);
+    const block = await web3.eth.getBlock(blockHashOrBlockNumber, returnTransactionObjects);
     return handleData(block);
   }
-  getBlockByHash = async payload => {
+  const getBlockByHash = async (payload: any) => {
     const {params = []} = payload || {};
     assert(params[0], 'Invalid params!')
-    const block = await this.web3.eth.getBlock(params[0], Boolean(params[1]));
+    const block = await web3.eth.getBlock(params[0], Boolean(params[1]));
     return handleData(block);
   }
-  getStorageAt = async payload => {
+  const getStorageAt = async (payload: any) => {
     const {params = []} = payload || {};
     assert(params[0], 'Invalid params!')
-    const storage = await this.web3.eth.getStorageAt(params[0], +params[1])
-    return handleData('0x' + (+storage).toString('16'));
+    const storage = await web3.eth.getStorageAt(params[0], +params[1])
+    return handleData(Web3.utils.toHex(storage));
   }
-  getTransactionByBlockHashAndIndex = async payload => {
+  const getTransactionByBlockHashAndIndex = async (payload: any) => {
     const {params = []} = payload || {};
     assert(params[0], 'Invalid params!')
-    const transaction = await this.web3.eth.getTransactionFromBlock(params[0], +params[1])
+    const transaction = await web3.eth.getTransactionFromBlock(params[0], +params[1])
     return handleData(transaction);
   }
-  getTransactionByBlockNumberAndIndex = async payload => {
+  const getTransactionByBlockNumberAndIndex = async (payload: any) => {
     const {params = []} = payload || {};
     assert(params[0], 'Invalid params!')
     const blockHashOrBlockNumber = !isNaN(params[0]) ? +params[0] : params[0]
     const returnTransactionObjects = Boolean(params[1]);
-    const transaction = await this.web3.eth.getTransactionFromBlock(blockHashOrBlockNumber, +returnTransactionObjects)
+    const transaction = await web3.eth.getTransactionFromBlock(blockHashOrBlockNumber, +returnTransactionObjects)
     return handleData(transaction);
   }
-  getTransactionByHash = async payload => {
+  const getTransactionByHash = async (payload: any) => {
     const {params = []} = payload || {};
     assert(params[0], 'Invalid params!')
-    const result = await this.web3.eth.getTransaction(params[0])
+    const result = await web3.eth.getTransaction(params[0])
     return handleData(result);
   }
-  getTransactionCount = async payload => {
+  const getTransactionCount = async (payload: any) => {
     const {params = []} = payload || {};
     assert(params[0], 'Invalid params!')
-    const result = await this.web3.eth.getTransactionCount(params[0], params[1]);
-    return handleData('0x' + (+result).toString('16'));
+    const result = await web3.eth.getTransactionCount(params[0], params[1]);
+    return handleData(Web3.utils.toHex(result));
   }
-  getTransactionReceipt = async payload => {
+  const getTransactionReceipt = async (payload: any) => {
     const {params = []} = payload || {};
     assert(params[0], 'Invalid params!');
-    const result = await this.web3.eth.getTransactionReceipt(params[0]) || {};
+    const result = await web3.eth.getTransactionReceipt(params[0]) || {};
     result.status = result.status === true ? '0x01': '0x00';
     return handleData(result);
   }
-  getUncleByBlockHashAndIndex = async payload => {
+  const getUncleByBlockHashAndIndex = async (payload: any) => {
     assert(payload.params && payload.params[0] && payload.params[1], 'Invalid params!');
-    const transaction = await this.web3.eth.getUncle(payload.params[0], +payload.params[1], !!+payload.params[2]);
-    return transaction
+    const transaction = await web3.eth.getUncle(payload.params[0], +payload.params[1], !!+payload.params[2]);
+    return handleData(transaction);
   }
-  getUncleByBlockNumberAndIndex = async payload => {
+  const getUncleByBlockNumberAndIndex = async (payload: any) => {
     assert(payload.params && payload.params[0] && payload.params[1], 'Invalid params!')
     const hashStringOrNumber = !isNaN(payload.params[0]) ? +payload.params[0] : payload.params[0];
-    const transaction = await this.web3.eth.getUncle(hashStringOrNumber, +payload.params[1], !!+payload.params[2]);
-    return transaction
+    const transaction = await web3.eth.getUncle(hashStringOrNumber, +payload.params[1], !!+payload.params[2]);
+    return handleData(transaction);
   }
-  getBlockTransactionCountByHash = async payload => {
+  const getBlockTransactionCountByHash = async (payload: any) => {
     assert(payload.params && payload.params[0], 'Invalid params!');
-    const result = await this.web3.eth.getBlockTransactionCount(payload.params[0])
-    return '0x' + (+result).toString('16')
+    const result = await web3.eth.getBlockTransactionCount(payload.params[0])
+    return handleData(Web3.utils.toHex(result));
   }
-  getBlockTransactionCountByNumber = async payload => {
+  const getBlockTransactionCountByNumber = async (payload: any) => {
     assert(payload.params && payload.params[0], 'Invalid params!');
     const blockHashOrBlockNumber = !isNaN(payload.params[0]) ? +payload.params[0] : payload.params[0];
     const result = await web3.eth.getBlockTransactionCount(blockHashOrBlockNumber)
-    return '0x' + (+result).toString('16')
+    return handleData(Web3.utils.toHex(result));
 
   }
-  getWork = async () => {
-    const result = await this.web3.eth.getWork()
+  const getWork = async () => {
+    const result = await web3.eth.getWork()
     return handleData(result);
   }
-  ethHashrate = async () => {
-    const result = await this.web3.eth.getHashrate()
-    return handleData('0x' + (+result).toString('16'));
+  const ethHashrate = async () => {
+    const result = await web3.eth.getHashRate()
+    return handleData(Web3.utils.toHex(result));
   }
-  ethMining = async () => {
-    const result = await this.web3.eth.isMining()
+  const ethMining = async () => {
+    const result = await web3.eth.isMining()
     return handleData(result);
   }
-  ethSyncing = async () => {
-    const result = await this.web3.eth.isSyncing()
+  const ethSyncing = async () => {
+    const result = await web3.eth.isSyncing()
     return handleData(result);
   }
-  ethSubmitWork = async payload => {
+  const ethSubmitWork = async (payload: any) => {
     assert(payload.params && payload.params[0] && payload.params[1] && payload.params[2], 'Invalid params!')
     const {params = []} = payload || {};
-    const result = await this.web3.eth.submitWork(params[0], params[1], params[2])
+    const result = await web3.eth.submitWork(params[0], params[1], params[2])
     return handleData(result);
   }
-  web3Sha3 = async payload => {
+  const web3Sha3 = async (payload: any) => {
     const message = payload.indexOf('0x') === 0 ? payload.slice(2) : payload
     const result = keccak256(message);
-    return handleData('0x' + result.toString('hex'));
+    return handleData(Web3.utils.toHex(result));
   }
-  ethCall = async payload => {
+  const ethCall = async (payload: any) => {
     assert(payload.params && payload.params[0] && typeof payload.params[0] === 'object', 'Invalid params!')
     const {params = []} = payload || {};
-    const result = await this.web3.eth.call(params[0], params[1])
+    const result = await web3.eth.call(params[0], params[1])
     return handleData(result);
   }
-  personalEcRecover = payload => {
+  const personalEcRecover = (payload: any) => {
     const {params} = payload || {};
     const data = params[0];
     const sig = params[1];
     return recoverPersonalSignature({ data, sig });
   }
 
-  ethRawTransaction = async payload => {
+  const ethRawTransaction = async (payload: any) => {
     assert(payload.params && payload.params[0], 'Invalid params!')
     return new Promise((resolve, reject) => {
-      web3.eth.sendSignedTransaction(payload.params[0]).on('transactionHash', (hash) => {
-        resolve(hash)
-      }).on('error', (error) => {
-        reject(error)
+      web3.eth.sendSignedTransaction(payload.params[0]).on('transactionHash', (hash: string) => {
+        resolve({data:hash})
+      }).on('error', (error: any) => {
+        reject({error})
       })
     })
   }
-  personalSign = () => {}
-  ethTransaction = () => {}
-  ethSignTypedData = () => {}
-  ethSignTypedDataV3 = () => {}
-  ethSignTypedDataV4 = () => {}
-  ethSign = () => {}
+  const personalSign = (payload: any, privateKey: string) => {
+    const {params} = payload;
+    const paramsData = params[0];
+    const signature = perSign(Buffer.from(privateKey, 'hex'),{data: paramsData});
+    return handleData(signature);
+  }
 
-  default = method => {
+  const ethSignTypedData = (payload: any, privateKey: string) => {
+    const {params} = payload;
+    const paramsData = params[0];
+    const signature = signTypedDataLegacy(Buffer.from(privateKey, 'hex'), { data: paramsData })
+    return handleData(signature);
+  }
+  const ethSignTypedDataV3 = (payload: any, privateKey: string) => {
+    const {params} = payload;
+    const paramsData = params[0];
+    const signature = signTypedData(Buffer.from(privateKey, 'hex'), { data: paramsData })
+    return handleData(signature);
+  }
+  const ethSignTypedDataV4 = (payload: any, privateKey: string) => {
+    const {params} = payload;
+    const paramsData = params[0];
+    const signature = signTypedData_v4(Buffer.from(privateKey, 'hex'), { data: paramsData })
+    return handleData(signature);
+  }
+  const ethSign = (payload: any, privateKey: string) => {
+    const {params} = payload;
+    const paramsData = params[0];
+    const signature = signTypedMessage(Buffer.from(privateKey, 'hex'), { data: paramsData })
+    return handleData(signature);
+  }
+
+  const ethTransaction = (payload: any, privateKey: string) => new Promise(async (resolve, reject) => {
+    const {params = []} = payload || {};
+    assert(params[0] && typeof params[0] === 'object' && params[0].from && params[0].to, 'Invalid params!')
+    let { gasPrice,gas,value,from,to,data } = params[0];
+    if (!gasPrice) {
+      let networkGasPrice = await web3.eth.getGasPrice();
+      gasPrice = web3.utils.toHex(networkGasPrice);
+    }
+    if (!gas) {
+      gas = await web3.eth.estimateGas(params[0]);
+    }
+    gas = web3.utils.toHex(gas);
+    let nonce = await web3.eth.getTransactionCount(from);
+    nonce = web3.utils.toHex(nonce);
+
+    const signPrams = {
+      from, to, value, data, gas, gasPrice, nonce, chainId,
+    };
+    const signature = await web3.eth.accounts.signTransaction(signPrams, privateKey);
+    console.warn('signature:',signature);
+    web3.eth.sendSignedTransaction(
+      signature?.rawTransaction?? {}
+    ).on('transactionHash', (tx: string) => {
+      resolve({data: tx});
+    }).on("error", (error: any) => {
+      reject({error})
+    })
+  })
+
+  const otherMethod = (method: string) => {
     return {
       error: {
         message: `Unsupported rpc api: ${method}`
@@ -402,12 +351,10 @@ export default class MetamaskBridge {
     }
   }
 
-  removeHexPrefix = (data) => {
-    return data.indexOf('0x') === 0 ? data.slice(2): data
+  return {
+    manageBridgeMessage
   }
-
 }
 
-
-const handleData = data => ({data});
+const handleData = (data: any) => ({data});
 

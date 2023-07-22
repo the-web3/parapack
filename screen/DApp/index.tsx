@@ -46,9 +46,10 @@ export const DAppScreen = (props: DAppProps) => {
                     showsHorizontalScrollIndicator={false}
                     bounces={false}>
           {
-            MockData.tokenButtons.map(v => (
+            MockData.tokenButtons.map((v,index) => (
               <Button icon={<Icon name={v.icon} size={15} color={'#3B28CC'}/>}
                       title={v.name}
+                      key={index}
                       titleStyle={style.scrBtnTitle}
                       buttonStyle={style.scrBtnContainer}/>
             ))
@@ -64,9 +65,10 @@ export const DAppScreen = (props: DAppProps) => {
                     showsHorizontalScrollIndicator={false}
                     bounces={false}>
           {
-            MockData.recommendList.map(v => (
+            MockData.recommendList.map((v,index) => (
               <Button buttonStyle={style.recommendItem}
-                      onPress={onRecommendPress}>
+                      onPress={onRecommendPress}
+                      key={index}>
                 <Image source={{ uri: v.img }} style={{ height: 100, width: 100, borderRadius: 5 }}/>
                 <Text children={v.title} style={style.scrBtnTitle}/>
               </Button>

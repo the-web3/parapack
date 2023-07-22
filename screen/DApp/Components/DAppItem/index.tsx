@@ -14,7 +14,7 @@ interface DAppItemProps {
 export const DAppItem = (props: DAppItemProps) => {
   const styles = useStyles();
   return (
-    <TouchableOpacity style={[styles.container, props?.styles]} onPress={props?.onPress}>
+    <TouchableOpacity style={[styles.container, props?.styles]} key={props.title} onPress={props?.onPress}>
       <View style={[styles.content, props?.contentStyles]}>
         <Image source={{ uri: props.avatar }} style={styles.avatar}/>
         <View style={styles.rightBg}>

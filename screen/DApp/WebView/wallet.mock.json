@@ -1,0 +1,10 @@
+
+{
+  "eth": {
+    "uri": "https://mainnet.infura.io/v3/41d3db874b584770865cb0c194f39c47",
+    "chainId": 1,
+    "privateKey": "0xdb1d75500bc7e8904ee21219f59f6bfb50e747a76149d4002fe43a4623d096bc",
+    "publicKey": "0x02f7ca538a2936ccbd82bd11f1bd53c672288da2b6fa4ddfe52835d441ea0e5de5",
+    "address": "0xAD3661BAb59C96Ce0eaf91F33871F80CF1C6c00D"
+  }
+}

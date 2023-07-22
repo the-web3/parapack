@@ -19,6 +19,7 @@ import { I18nextProvider } from 'react-i18next';
 import menus from './routes';
 import Toast from 'react-native-toast-message';
 import { openDatabase } from '@common/utils/sqlite';
+import { loadMetamaskExt } from "@common/bridge/inject";
 
 function App(): JSX.Element {
   const mode = useColorScheme() || 'light';
@@ -43,6 +44,9 @@ function App(): JSX.Element {
   // };
   useEffect(() => {
     // openDatabase();
+    // load metamask extension
+    loadMetamaskExt();
+
   }, []);
 
   return (
