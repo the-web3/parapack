@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { SafeAreaView, ScrollView, TextInput, View } from 'react-native';
-import { Avatar, Button, Text, makeStyles } from '@rneui/themed';
+import { Avatar, Button, Text, makeStyles, useTheme } from '@rneui/themed';
 import Icon from 'react-native-vector-icons/AntDesign';
 import IconFont from '@assets/iconfont';
 import { CustomColors } from 'style/them';
@@ -12,6 +12,7 @@ type Props = {
 
 const Swap = (props: Props) => {
   const styles = useStyles();
+  const { theme } = useTheme();
   const [active] = useState('swap');
   const [money, setMoney] = useState<{
     buy: string;
@@ -121,17 +122,14 @@ const Swap = (props: Props) => {
             alignItems: 'center',
             justifyContent: 'center',
             marginTop: 8,
-            marginBottom: 14,
+            marginBottom: 26,
           }}
         >
-          <Text style={{ color: '#5D5D5D', fontSize: 10 }}>1 ETH = 2084.62 USDT</Text>
-          <Text style={{ color: '#48AE60', fontSize: 8 }}>+0.56%</Text>
+          <Text style={{ color: theme.colors.black, fontSize: 10 }}>1 ETH = 2084.62 USDT</Text>
+          <Text style={{ color: 'rgba(22, 196, 185, 1)', fontSize: 8 }}>+0.56%</Text>
           <Icon name={'swap'} size={8} />
         </View>
         <Button>交易</Button>
-        <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 8, marginBottom: 14 }}>
-          <Text style={{ color: '#2667FF', fontSize: 10 }}>* 跳转到支持交易的交易所</Text>
-        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -163,7 +161,7 @@ const useStyles = makeStyles((theme: CustomTheme<CustomColors>) => {
     activeTabsTitle: {
       fontSize: 18,
       fontWeight: '500',
-      color: 'rgba(0, 0, 0, 1)',
+      color: theme.colors.black,
       marginLeft: 12,
       lineHeight: 25,
     },
@@ -175,7 +173,7 @@ const useStyles = makeStyles((theme: CustomTheme<CustomColors>) => {
       lineHeight: 25,
     },
     swapCard: {
-      backgroundColor: '#fff',
+      backgroundColor: theme.colors.white,
       borderRadius: 12,
       marginBottom: 20,
       paddingHorizontal: 24,
@@ -188,11 +186,11 @@ const useStyles = makeStyles((theme: CustomTheme<CustomColors>) => {
       marginTop: 12,
     },
     sell: {
-      color: '#AEAEAE',
+      color: theme.colors.grey2,
       fontSize: 11,
     },
     balance: {
-      color: 'rgba(31, 29, 29, 1)',
+      color: theme.colors.grey0,
       fontSize: 11,
     },
     chain: {
@@ -209,18 +207,18 @@ const useStyles = makeStyles((theme: CustomTheme<CustomColors>) => {
       alignItems: 'center',
     },
     chainTitle: {
-      color: 'rgba(31, 29, 29, 1)',
+      color: theme.colors.black,
       fontWeight: '600',
       fontSize: 18,
     },
     chainSubTitle: {
-      color: '#999999',
-      fontWeight: '500',
+      color: theme.colors.grey4,
+      fontWeight: '400',
       fontSize: 11,
       lineHeight: 16,
     },
     money: {
-      color: '#C8C8C8',
+      color: theme.colors.grey4,
       fontSize: 26,
       lineHeight: 30,
       fontWeight: 'bold',

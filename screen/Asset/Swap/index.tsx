@@ -1,10 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import {
-  TextInput,
-  // StyleSheet,
-  View,
-} from 'react-native';
+import { TextInput, View } from 'react-native';
 import { Avatar, Button, Text, makeStyles } from '@rneui/themed';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Layout from '@components/Layout';
@@ -24,8 +20,8 @@ const Swap = (props: Props) => {
     buy: string;
     sell: string;
   }>({
-    buy: '0.00',
-    sell: '0.00',
+    buy: '',
+    sell: '',
   });
   const handleSwap = () => {
     props?.navigation.navigate('startBackup');
@@ -49,7 +45,7 @@ const Swap = (props: Props) => {
             }}
           >
             <Avatar rounded source={{ uri: 'https://randomuser.me/api/portraits/men/36.jpg' }} />
-            <View style={{ flex: 1, marginRight: 14, marginLeft: 10 }}>
+            <View style={{ flex: 1, marginRight: 10, marginLeft: 10 }}>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1, alignItems: 'center' }}>
                 <View>
                   <Text>BTC</Text>
@@ -64,16 +60,28 @@ const Swap = (props: Props) => {
                     Bitcoin
                   </Text>
                 </View>
-                <Text
+                <TextInput
+                  keyboardType="numeric"
                   style={{
-                    color: '#C8C8C8',
+                    // color: '#C8C8C8',
                     fontSize: 26,
                     lineHeight: 30,
                     fontWeight: 'bold',
+                    minWidth: 100,
+                    textAlign: 'right',
                   }}
-                >
-                  0.00
-                </Text>
+                  // placeholderTextColor={'gray'}
+                  onChangeText={(sell) => {
+                    setMoney((prev) => {
+                      return {
+                        ...prev,
+                        sell,
+                      };
+                    });
+                  }}
+                  placeholder="0.00"
+                  value={money.sell}
+                />
               </View>
             </View>
           </View>
@@ -112,7 +120,7 @@ const Swap = (props: Props) => {
             }}
           >
             <Avatar rounded source={{ uri: 'https://randomuser.me/api/portraits/men/36.jpg' }} />
-            <View style={{ flex: 1, marginRight: 14, marginLeft: 10 }}>
+            <View style={{ flex: 1, marginRight: 10, marginLeft: 10 }}>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1, alignItems: 'center' }}>
                 <View>
                   <Text>BTC</Text>
@@ -127,34 +135,27 @@ const Swap = (props: Props) => {
                     Bitcoin
                   </Text>
                 </View>
-                {/* <Input
-                  value={text}
-                  // style={styles.input}
-                  onChangeText={(text) => {
-                    const time = Date.now();
-                    // 复杂逻辑，输入文字不卡
-                    while (Date.now() - time <= 1000) {}
-                    setText(text);
-                  }}
-                /> */}
                 <TextInput
                   keyboardType="numeric"
                   style={{
-                    color: '#C8C8C8',
+                    // color: '#C8C8C8',
                     fontSize: 26,
                     lineHeight: 30,
                     fontWeight: 'bold',
+                    minWidth: 100,
+                    textAlign: 'right',
                   }}
-                  onChangeText={(sell) => {
+                  // placeholderTextColor={'gray'}
+                  onChangeText={(buy) => {
                     setMoney((prev) => {
                       return {
                         ...prev,
-                        sell,
+                        buy,
                       };
                     });
                   }}
-                  placeholder="Enter text"
-                  value={money.sell}
+                  placeholder="0.00"
+                  value={money.buy}
                 />
                 {/* <Text
                   style={{

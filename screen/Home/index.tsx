@@ -1,7 +1,7 @@
 import IconFont from '@assets/iconfont';
 import LayoutNormal from '@components/LayoutNormal';
 import { DarkTheme, DefaultTheme } from '@react-navigation/native';
-import { makeStyles } from '@rneui/themed';
+import { makeStyles, useTheme } from '@rneui/themed';
 import Activity from '@screen/Activity';
 import Asset from '@screen/Asset';
 import { DAppScreen } from '@screen/DApp';
@@ -36,6 +36,7 @@ const BAR = [
 ];
 const App = (props: any) => {
   const mode = useColorScheme() || 'light';
+  const { theme }: { theme: CustomTheme<CustomColors> } = useTheme();
   const { t } = useTranslation();
   // 获取传递的参数
   const tab = props.route.params?.tab || 'ecology';
@@ -61,7 +62,7 @@ const App = (props: any) => {
   return (
     <>
       <StatusBar
-        backgroundColor={mode === 'light' ? DefaultTheme.colors.background : DarkTheme.colors.background} // 替换为你想要的背景颜色
+        backgroundColor={theme.colors.background} // 替换为你想要的背景颜色
         barStyle={`${mode === 'light' ? 'dark' : 'light'}-content`} // 替换为你想要的图标和文字颜色
       />
       <LayoutNormal
@@ -105,12 +106,12 @@ const useStyles = makeStyles((theme) => {
       paddingVertical: 0,
     },
     bottom: {
-      height: 70,
+      height: 40,
       position: 'relative',
       top: -30,
     },
     bar: {
-      height: 100,
+      height: 70,
       flexDirection: 'row',
       paddingHorizontal: 0,
       paddingVertical: 11,
@@ -120,10 +121,12 @@ const useStyles = makeStyles((theme) => {
       borderTopRightRadius: 24, // 右上角边框半径
       borderBottomRightRadius: 0, // 右下角边框半径
       borderBottomLeftRadius: 0, // 左下角边框半径
-      shadowColor: theme.colors.black,
+      // shadowColor: theme.colors.black,
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.6,
       shadowRadius: 4,
+      shadowColor: '#000', // 阴影颜色
+      elevation: 5, // 添加阴影效果，可以根据需要调整阴影深度
     },
     barItem: { flex: 1, alignItems: 'center' },
     title: {

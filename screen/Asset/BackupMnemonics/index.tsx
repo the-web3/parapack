@@ -6,24 +6,29 @@ import Layout from '../../../components/Layout';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
-import { CreateMnemonic } from '@common/wallet';
-const BackupMnemonics = (props) => {
-  const { navigation } = props;
+import { CreateMnemonic } from 'savourlabs-wallet-sdk/wallet';
+const BackupMnemonics = (props: any) => {
+  const { navigation, route } = props;
   const theme = useTheme();
   const styles = useStyles(props);
   const { t } = useTranslation();
-  const [mnemonics, setMnemonics] = useState<string[]>([]);
+  const [mnemonic, setMnemonic] = useState<string[]>([]);
   const handleBackupMnemonics = () => {
-    navigation.navigate('verifyMnemonics', { mnemonics });
+    navigation.navigate('verifyMnemonics', {
+      params: {
+        ...route?.params?.params,
+        mnemonic,
+      },
+    });
   };
+  console.log(8888, route?.params?.params);
   const getMnemonic = async () => {
     try {
       const wordsInfo = await CreateMnemonic({
         number: 12,
         language: 'english',
       });
-      console.log(1111111, wordsInfo);
-      setMnemonics(wordsInfo.split(' '));
+      setMnemonic(wordsInfo.split(' '));
       // TODO: 在这里可以将助记词保存到状态或进行其他操作
     } catch (error) {
       console.error('生成助记词时出错:', error);
@@ -49,7 +54,7 @@ const BackupMnemonics = (props) => {
           并保存在安全的地方
         </Text>
         <View style={styles.card}>
-          {mnemonics.map((item, index) => (
+          {mnemonic.map((item, index) => (
             <View key={item} style={styles.cardItem}>
               <Text style={styles.cardIndex}>{index + 1}</Text>
               <Text>{item}</Text>
