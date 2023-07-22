@@ -82,7 +82,7 @@ const VerifyMnemonics = (props: Record<string, any>) => {
       mnemonic: walletInfo.mnemonic.join(' '),
     })
       .catch((e) => {
-        console.log(111111, e);
+        console.log('createImportWallet', e);
       })
       .finally(() => {
         setLoading(false);

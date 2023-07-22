@@ -53,27 +53,38 @@ const Asset = (props: Props) => {
   };
   //
   const styles = useStyles(props);
+
   const getWalletInfo = async () => {
     const currentWalletInfo = await getData('currentWallet');
-    const { wallet_uuid } = JSON.parse(currentWalletInfo);
+    const { wallet_uuid } = JSON.parse(currentWalletInfo || '{}');
+    if (!wallet_uuid) {
+      props?.navigation?.navigate('createWallet');
+      return;
+    }
     const device_id = await getUniqueId();
     const res = await getDeviceBalance({
       device_id,
     });
     if (res.code === SUCCESS_CODE && res?.data) {
       setWalletInfo(res?.data);
-      if (!(res?.data?.token_list || [])?.find((item) => item.wallet_uuid === wallet_uuid)) {
-        storeData('currentWallet', JSON.stringify(res?.data?.token_list[0]));
-        setCurrentWallet(res?.data?.token_list[0] || {});
-      } else {
-        setCurrentWallet(JSON.parse(currentWalletInfo));
-      }
+      setNewWallet(res?.data, wallet_uuid);
+    }
+  };
+  const setNewWallet = async (walletInfo, wallet_uuid) => {
+    const currentWalletInfo = (walletInfo?.token_list || [])?.find((item) => item.wallet_uuid === wallet_uuid);
+    if (!currentWalletInfo) {
+      console.log('meiyou', walletInfo);
+      storeData('currentWallet', JSON.stringify(walletInfo?.token_list[0]));
+      setCurrentWallet(walletInfo?.token_list[0] || {});
+    } else {
+      setCurrentWallet(currentWalletInfo);
     }
   };
 
   useEffect(() => {
     getWalletInfo();
   }, []);
+
   return (
     <SafeAreaView>
       <LinearGradient
@@ -347,14 +358,16 @@ const Asset = (props: Props) => {
             </View>
             <View style={{ height: 300 }}>
               <ScrollView>
-                {(walletInfo?.token_list || []).map((item, index) => (
+                {(walletInfo?.token_list || []).map((item) => (
                   <TouchableOpacity
                     key={item.wallet_uuid}
                     onPress={() => {
-                      props?.navigation.replace('home', {
-                        tab: 'asset',
-                        wallet_uuid: item.wallet_uuid,
-                      });
+                      setNewWallet(walletInfo, item.wallet_uuid);
+                      toggleOverlay();
+                      // props?.navigation.replace('home', {
+                      //   tab: 'asset',
+                      //   wallet_uuid: item.wallet_uuid,
+                      // });
                     }}
                   >
                     <View

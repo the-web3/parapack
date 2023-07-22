@@ -1,11 +1,14 @@
 import http from '@common/utils/http';
 import { IResponse } from 'typings/global';
 export interface SymbolSupportDatum {
-  map(arg0: (item: any) => Promise<any>): any;
   /**
    * 链名称
    */
   chainName: string;
+  /**
+   * 币价折合cny
+   */
+  cnyRate: string;
   /**
    * 默认初始化状态
    */
@@ -19,6 +22,10 @@ export interface SymbolSupportDatum {
    */
   logo: string;
   /**
+   * 24h涨跌幅
+   */
+  rose: string;
+  /**
    * 主币名称
    */
   symbol: string;
@@ -26,6 +33,10 @@ export interface SymbolSupportDatum {
    * 代币信息
    */
   token: Token[];
+  /**
+   * 币价（usdt）
+   */
+  usdtRate: string;
 }
 
 export interface Token {
@@ -34,7 +45,7 @@ export interface Token {
    */
   amountUnit: number;
   /**
-   * 折合cny
+   * 币价折合cny
    */
   cnyRate: string;
   /**
@@ -70,7 +81,7 @@ export interface Token {
    */
   type: number;
   /**
-   * 折合usdt
+   * 币价（usdt）
    */
   usdtRate: string;
 }
