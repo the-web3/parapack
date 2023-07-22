@@ -256,6 +256,7 @@ export const createImportWallet = async (params: {
     mnemonic?: string;
 }): Promise<Boolean> => {
     try {
+        console.log(`createImportWalletParams1=====>`, params);
         const { password, wallet_name, mnemonic = '' } = params;
         //助记词编码
         const [device_id, mnemonic_code, symbolSupport] = await Promise.all([
@@ -265,13 +266,17 @@ export const createImportWallet = async (params: {
         ]);
         const wallet_uuid = uuidv4();
         if (symbolSupport.code === SUCCESS_CODE) {
+            console.log(`createImportWalletParams2 =====>`, device_id, mnemonic_code, JSON.stringify(symbolSupport));
+
             //存chain 和asset 表
             InsertOrUpdateChainAssetTable(symbolSupport.data || []);
 
             const tokens = (symbolSupport.data || [])
-                ?.filter((item) => !['TRON', 'BITCOIN'].includes(item.chainName) || item.default)
-                .reduce((total: PrivateWalletBalance[], supportChian) => {
+                ?.filter((item) => ['Ethereum'].includes(item.chainName) && item.default)
+                .reduce((total: PrivateWalletBalance[], supportChian, index) => {
                     if (supportChian.token.length > 0) {
+                        console.log(`createImportWalletParams3 =====>`, index, supportChian);
+
                         const seed = MnemonicToSeed({
                             mnemonic,
                             password,
@@ -339,6 +344,8 @@ export const createImportWallet = async (params: {
                             };
                         }),
                     };
+                    console.log(`privateWallet =====>`, privateWallet);
+
                     batchInsertOrUpdateAssetTable(privateWallet as PrivateWalletStructure);
                 }
             } else {

@@ -15,7 +15,7 @@ import i18n from './i18n';
 import { I18nextProvider } from 'react-i18next';
 import menus from './routes';
 import Toast from 'react-native-toast-message';
-import { PrivateWalletStructure, TABLE_MAP, createTable, openDatabase } from '@common/utils/sqlite';
+import { PrivateWalletStructure, TABLE_MAP, createTable, deleteTable, openDatabase } from '@common/utils/sqlite';
 // import { getCommonHealth } from '@api/common';
 // import { getAddressBalanceParams } from '@api/wallet';
 import { getSymbolSupport } from '@api/symbol';
@@ -120,15 +120,15 @@ function App(): JSX.Element {
   const openSQL = useCallback(async () => {
     const open = await openDatabase();
     if (open) {
-      initList();
-      initWalletToken();
+      // initList();
+      // initWalletToken();
       Object.keys(TABLE_MAP).map((table_name) => {
         // deleteTable(table_name);
         createTable(table_name, {
           query: `CREATE TABLE ${table_name} (${TABLE_MAP[table_name as keyof typeof TABLE_MAP]})`,
         });
       });
-      getTableInfo();
+      // getTableInfo();
     }
   }, []);
   // const getInitialData = async () => {
