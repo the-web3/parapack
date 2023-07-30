@@ -4,7 +4,7 @@ import {
   View,
 } from 'react-native';
 import { Button, Text, makeStyles } from '@rneui/themed';
-import Toast from 'react-native-toast-message';
+import { showToast } from '@common/utils/platform';
 // import {StackNavigationProp} from '@react-navigation/stack';
 // import {RootStackParamList} from './types';
 // type ScreenNavigationProp = StackNavigationProp<
@@ -22,13 +22,7 @@ const Guide = (props: Props) => {
   };
   const handleFristCreateWallet = () => {
     // props?.navigation.navigate('startBackup');
-    Toast.show({
-      type: 'error', // 类型：success、error、info
-      text1: '暂不支持', // 标题
-      position: 'top', // 位置：top、bottom
-      visibilityTime: 2000, // 可见时间（毫秒）
-      autoHide: true, // 自动隐藏
-    });
+    showToast('暂不支持');
   };
   const styles = useStyles(props);
   return (

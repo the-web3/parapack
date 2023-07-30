@@ -1,19 +1,21 @@
 import { Button, Text, useTheme } from '@rneui/themed';
 import { makeStyles } from '@rneui/base';
 import * as React from 'react';
-import { View } from 'react-native';
+import { SafeAreaView, View } from 'react-native';
 import Layout from '../../../components/Layout';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
-import { CreateMnemonic } from 'savourlabs-wallet-sdk/wallet';
+import { CreateMnemonic, DecodeMnemonic } from 'savourlabs-wallet-sdk/wallet';
+import { executeQuery } from '@common/utils/sqlite';
+import { showToast } from '@common/utils/platform';
 const BackupMnemonics = (props: any) => {
   const { navigation, route } = props;
   const theme = useTheme();
   const styles = useStyles(props);
   const { t } = useTranslation();
   const [mnemonic, setMnemonic] = useState<string[]>([]);
-  const handleBackupMnemonics = () => {
+  const handleBackupMnemonics = async () => {
     navigation.navigate('verifyMnemonics', {
       params: {
         ...route?.params?.params,
@@ -24,20 +26,38 @@ const BackupMnemonics = (props: any) => {
   console.log(8888, route?.params?.params);
   const getMnemonic = async () => {
     try {
-      const wordsInfo = await CreateMnemonic({
-        number: 12,
-        language: 'english',
+      const sqliteData = await executeQuery({
+        customExec: (tx, resolve, reject) => {
+          return tx.executeSql(
+            `SELECT * FROM wallet WHERE wallet_uuid = ? `,
+            [route?.params?.params?.wallet_uuid],
+            (txObj, resultSet) => {
+              if (resultSet.rowsAffected > 0) {
+                const walletData = resultSet.rows.item(0);
+                resolve(walletData);
+              } else {
+                reject('Wallet not found.');
+              }
+            },
+            (txObj, error) => {
+              reject('Wallet Found Error.');
+            }
+          );
+        },
       });
-      setMnemonic(wordsInfo.split(' '));
-      // TODO: 在这里可以将助记词保存到状态或进行其他操作
+      if (sqliteData) {
+        const mnemonic = await DecodeMnemonic({ encrytMnemonic: sqliteData?.mnemonic_code, language: 'english' });
+        setMnemonic(mnemonic.split(' '));
+      }
     } catch (error) {
-      console.error('生成助记词时出错:', error);
+      showToast('解析助记词时出错');
+      console.error('解析助记词时出错:', error);
     }
   };
 
   useEffect(() => {
     getMnemonic();
-  }, []);
+  }, [props.navigation]);
 
   return (
     <Layout
@@ -47,7 +67,7 @@ const BackupMnemonics = (props: any) => {
         </View>
       }
     >
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <Text style={styles.text}>
           请按顺序写下
           <Text style={styles.green}>12个单词</Text>
@@ -79,7 +99,7 @@ const BackupMnemonics = (props: any) => {
           <Text style={{ color: theme.theme.colors.error }}>*</Text>
           {t('asset.backup_tips')}
         </Text>
-      </View>
+      </SafeAreaView>
     </Layout>
   );
 };

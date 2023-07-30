@@ -5,12 +5,13 @@ import { Avatar, Overlay, Tab, TabView, Text, makeStyles, useTheme } from '@rneu
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { useTranslation } from 'react-i18next';
-import Toast from 'react-native-toast-message';
 import IconFont from '@assets/iconfont';
 import { DeviceBalanceData, DeviceBalanceTokenList, getDeviceBalance } from '@api/wallet';
 import { getUniqueId } from 'react-native-device-info';
 import { SUCCESS_CODE } from '@common/constants';
 import { getData, storeData } from '@common/utils/storage';
+import { showToast } from '@common/utils/platform';
+import { useFocusEffect } from '@react-navigation/native';
 type Props = {
   fullWidth?: boolean;
   navigation: any;
@@ -26,7 +27,7 @@ const CARD_LIST = [
   {
     icon: 'erweima',
     title: 'receipt',
-    go: null,
+    go: 'collection',
   },
   {
     icon: 'zhuanzhang',
@@ -55,8 +56,7 @@ const Asset = (props: Props) => {
   const styles = useStyles(props);
 
   const getWalletInfo = async () => {
-    const currentWalletInfo = await getData('currentWallet');
-    const { wallet_uuid } = JSON.parse(currentWalletInfo || '{}');
+    const wallet_uuid = await getData('wallet_uuid');
     if (!wallet_uuid) {
       props?.navigation?.navigate('createWallet');
       return;
@@ -65,6 +65,10 @@ const Asset = (props: Props) => {
     const res = await getDeviceBalance({
       device_id,
     });
+    if (res?.data?.token_list?.length <= 0) {
+      props?.navigation?.navigate('createWallet');
+      return;
+    }
     if (res.code === SUCCESS_CODE && res?.data) {
       setWalletInfo(res?.data);
       setNewWallet(res?.data, wallet_uuid);
@@ -72,18 +76,20 @@ const Asset = (props: Props) => {
   };
   const setNewWallet = async (walletInfo, wallet_uuid) => {
     const currentWalletInfo = (walletInfo?.token_list || [])?.find((item) => item.wallet_uuid === wallet_uuid);
-    if (!currentWalletInfo) {
-      console.log('meiyou', walletInfo);
-      storeData('currentWallet', JSON.stringify(walletInfo?.token_list[0]));
-      setCurrentWallet(walletInfo?.token_list[0] || {});
-    } else {
+    if (currentWalletInfo) {
       setCurrentWallet(currentWalletInfo);
+      storeData('wallet_uuid', wallet_uuid);
+    } else {
+      storeData('wallet_uuid', walletInfo?.token_list[0]?.wallet_uuid);
+      setCurrentWallet(walletInfo?.token_list[0] || {});
     }
   };
 
-  useEffect(() => {
-    getWalletInfo();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      getWalletInfo();
+    }, [])
+  );
 
   return (
     <SafeAreaView>
@@ -159,34 +165,30 @@ const Asset = (props: Props) => {
                 }}
               />
             </View>
-            <TouchableOpacity
-              onPress={() => {
-                props?.navigation.navigate('startBackup');
-              }}
-            >
-              <View style={styles.button}>
-                <Icon name="pluscircleo" size={12} style={{ marginRight: 3, color: '#000' }} />
-                <Text style={{ lineHeight: 18, color: '#000' }}>去备份</Text>
-              </View>
-            </TouchableOpacity>
+            {!currentWallet?.backup && (
+              <TouchableOpacity
+                onPress={() => {
+                  props?.navigation.navigate('startBackup');
+                }}
+              >
+                <View style={styles.button}>
+                  <Icon name="pluscircleo" size={12} style={{ marginRight: 3, color: '#000' }} />
+                  <Text style={{ lineHeight: 18, color: '#000' }}>去备份</Text>
+                </View>
+              </TouchableOpacity>
+            )}
           </View>
           <View style={styles.cardBottom}>
             {CARD_LIST.map((item) => (
               <TouchableOpacity
                 key={item.title}
                 onPress={() => {
-                  // props?.navigation.navigate('tokenDetail');
                   if (item.go) {
-                    props?.navigation.navigate(item.go);
-                  } else {
-                    Toast.show({
-                      type: 'error', // 类型：success、error、info
-                      text1: '暂不支持此功能', // 标题
-                      // text2: '提示内容', // 内容
-                      position: 'top', // 位置：top、bottom
-                      visibilityTime: 2000, // 可见时间（毫秒）
-                      autoHide: true, // 自动隐藏
+                    props?.navigation.navigate('searchToken', {
+                      go: item.go,
                     });
+                  } else {
+                    showToast('暂不支持此功能');
                   }
                 }}
               >
@@ -227,7 +229,7 @@ const Asset = (props: Props) => {
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
               <TouchableOpacity
                 onPress={() => {
-                  props?.navigation.navigate('addToken');
+                  props?.navigation.navigate('searchToken');
                 }}
               >
                 <View style={styles.search}>
@@ -249,20 +251,12 @@ const Asset = (props: Props) => {
             <TabView value={index} onChange={setIndex} animationType="spring">
               <TabView.Item style={{ width: '100%' }}>
                 <ScrollView style={{ paddingHorizontal: 25 }} contentContainerStyle={{ paddingBottom: 300 }}>
-                  {(currentWallet?.wallet_balance || []).map((item: any) => (
+                  {(currentWallet?.wallet_balance || []).map((item: any, index) => (
                     <TouchableOpacity
-                      key={`${item.symbol}${item.contract_addr}`}
+                      key={`${item.symbol}${item.contract_addr}${item.address}${index}`}
                       onPress={() => {
-                        props?.navigation.navigate('tokenDetail', {
-                          address: item.address,
-                          contract_addr: item.contract_addr,
-                          chain: item.chain, //TODO
-                          index: item.index,
-                          network: 'mainnet',
-                          symbol: item.symbol,
-                          wallet_uuid: currentWallet?.wallet_uuid,
-                        });
-                        // props?.navigation.navigate('coinDetail');
+                        storeData('current_token_detail', JSON.stringify(item));
+                        props?.navigation.navigate('tokenDetail');
                       }}
                     >
                       <View style={styles.assetList}>
@@ -277,7 +271,7 @@ const Asset = (props: Props) => {
                           </View>
                           <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
                             <View style={{ flexDirection: 'row' }}>
-                              <Text style={styles.listPrice}>{item.contract_addr}</Text>
+                              <Text style={styles.listPrice}>{item.chain}</Text>
                             </View>
                             <View>
                               <Text style={{ color: '#999999' }}>¥{item.asset_cny}</Text>
@@ -364,10 +358,6 @@ const Asset = (props: Props) => {
                     onPress={() => {
                       setNewWallet(walletInfo, item.wallet_uuid);
                       toggleOverlay();
-                      // props?.navigation.replace('home', {
-                      //   tab: 'asset',
-                      //   wallet_uuid: item.wallet_uuid,
-                      // });
                     }}
                   >
                     <View
@@ -395,18 +385,20 @@ const Asset = (props: Props) => {
                         </View>
                       </View>
                       <View style={{ flexDirection: 'row' }}>
-                        <TouchableOpacity
-                          onPress={(e) => {
-                            e.stopPropagation();
-                            props?.navigation.navigate('startBackup');
-                          }}
-                          style={{ marginRight: 6 }}
-                        >
-                          <View style={styles.button}>
-                            <Icon name="exclamationcircleo" size={12} style={{ marginRight: 3 }} color={'#3B2ACE'} />
-                            <Text style={{ lineHeight: 18, color: '#3B2ACE' }}>未备份</Text>
-                          </View>
-                        </TouchableOpacity>
+                        {!item.backup && (
+                          <TouchableOpacity
+                            onPress={(e) => {
+                              e.stopPropagation();
+                              props?.navigation.navigate('startBackup');
+                            }}
+                            style={{ marginRight: 6 }}
+                          >
+                            <View style={styles.button}>
+                              <Icon name="exclamationcircleo" size={12} style={{ marginRight: 3 }} color={'#3B2ACE'} />
+                              <Text style={{ lineHeight: 18, color: '#3B2ACE' }}>未备份</Text>
+                            </View>
+                          </TouchableOpacity>
+                        )}
                         <Icon name="edit" size={16} style={{ color: '#000', fontSize: 18 }} />
                       </View>
                     </View>

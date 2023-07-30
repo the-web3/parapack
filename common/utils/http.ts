@@ -1,6 +1,6 @@
 import { SUCCESS_CODE } from '@common/constants';
 import axios from 'axios';
-import Toast from 'react-native-toast-message';
+import { showToast } from './platform';
 const instance = axios.create({
   baseURL: 'http://walletapi.parapack.net/wallet-app-api',
   timeout: 5000,
@@ -19,10 +19,7 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   (response) => {
     if (response.data.code !== SUCCESS_CODE) {
-      Toast.show({
-        type: 'error',
-        text1: response.data.msg,
-      });
+      showToast(response.data.msg);
     }
     return response.data;
   },

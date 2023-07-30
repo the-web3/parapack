@@ -1,79 +1,44 @@
 import * as React from 'react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { SafeAreaView, ScrollView, StatusBar, TouchableOpacity, View } from 'react-native';
 import { Avatar, SearchBar, Text, makeStyles, useTheme } from '@rneui/themed';
 import Icon from 'react-native-vector-icons/AntDesign';
-import { SymbolSupportDatum, Token, getSymbolSupport } from '@api/symbol';
-import { DeviceBalanceTokenList, addSymbolToken, walletSymbols } from '@api/wallet';
-import { getData } from '@common/utils/storage';
-import { getUniqueId } from 'react-native-device-info';
-import { addToken } from '@common/wallet';
 import Spinner from 'react-native-loading-spinner-overlay';
 import _ from 'lodash';
-// import {StackNavigationProp} from '@react-navigation/stack';
-// import {RootStackParamList} from './types';
-// type ScreenNavigationProp = StackNavigationProp<
-//   RootStackParamList,
-//   'ScreenName'
-// >;
+import { DeviceBalanceTokenList, getDeviceBalance } from '@api/wallet';
+import { getUniqueId } from 'react-native-device-info';
+import { getData, storeData } from '@common/utils/storage';
 type Props = {
   fullWidth?: boolean;
   navigation: any;
 };
-type ListItem = Token & { chainName: string; symbol: string };
-const AddToken = (props: Props) => {
+const SearchToken = (props: Props) => {
   const styles = useStyles(props);
   const { theme }: { theme: CustomTheme<CustomColors> } = useTheme();
   const [search, setSearch] = useState('');
-  const [list, setList] = useState<SymbolSupportDatum[]>([]);
-  const [supportList, setSupportList] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
-
-  // const handleAddToken = () => {
-  //   props?.navigation.navigate('startBackup');
-  // };
+  const [tokenList, setTokenList] = useState<DeviceBalanceTokenList>({});
 
   const initList = async (params = {}) => {
     const [device_id, wallet_uuid] = await Promise.all([getUniqueId(), getData('wallet_uuid')]);
-    const [res, supportRes] = await Promise.all([getSymbolSupport(params), walletSymbols({ device_id, wallet_uuid })]);
-    console.log(11111, JSON.stringify(res), params);
+    const res = await getDeviceBalance({
+      device_id,
+      wallet_uuid,
+    });
     if (res.data) {
-      setList(res.data);
-      setSupportList(supportRes.data);
+      setTokenList(res.data?.token_list[0] || {});
     }
   };
 
-  const filterList = React.useMemo(() => {
-    return (list || [])
-      ?.filter((item) => item.hot && ['Ethereum'].includes(item.chainName))
-      .reduce((total: Token[], supportChian) => {
-        if (supportChian.token.length > 0) {
-          const { chainName, symbol } = supportChian;
-          const curTokens = supportChian.token
-            .filter((currentToken) => currentToken.tokenHot)
-            .map((item) => {
-              const added =
-                supportList.findIndex(
-                  (addedChian: any) => addedChian.chain === chainName && addedChian.contractAddr === item.contractAddr
-                ) !== -1;
-              return { ...item, chainName, symbol, added };
-            });
-          return [...total, ...curTokens];
-        }
-        return [...total];
-      }, []) as ListItem[];
-  }, [list, supportList]);
-
-  // console.log(1111, supportList, filterList);
+  const filterList = useMemo(() => {
+    return tokenList?.wallet_balance;
+  }, [tokenList]);
 
   useEffect(() => {
     initList();
   }, [props.navigation]);
-
   const goToAsset = () => {
     props.navigation.navigate('home', {
       tab: 'asset',
-      forceUpdate: true,
     });
   };
 
@@ -86,7 +51,6 @@ const AddToken = (props: Props) => {
   return (
     <SafeAreaView style={{ backgroundColor: '#F6F7FC' }}>
       <StatusBar backgroundColor={'#F6F7FC'} barStyle={`dark-content`} />
-      <Spinner visible={loading} />
       <View style={styles.top}>
         <View style={{ flexDirection: 'row-reverse', alignItems: 'center' }}>
           <SearchBar
@@ -110,12 +74,8 @@ const AddToken = (props: Props) => {
               setSearch(newVal);
               handleSearchDebounced(newVal);
             }}
-            // onClearText={() => console.log(onClearText())}
             placeholder="Type query here..."
             placeholderTextColor="#888"
-            // cancelButtonTitle="取消"
-            // cancelButtonProps={{}}
-            // onCancel={() => console.log(onCancel())}
             value={search}
           />
           <TouchableOpacity onPress={goToAsset}>
@@ -130,57 +90,35 @@ const AddToken = (props: Props) => {
         </TouchableOpacity>
       </View>
       <View style={styles.body}>
-        <Text style={styles.title}>热门币种</Text>
         <ScrollView style={{ minHeight: '100%' }}>
-          {(filterList || []).map((item) => (
+          {(filterList || []).map((item: any, index) => (
             <TouchableOpacity
-              key={`${item?.symbol}_${item.contractAddr}`}
-              disabled={item?.added}
-              onPress={async () => {
-                setLoading(true);
-                const res = await addToken({
-                  contract_addr: item.contractAddr || '',
-                  symbol: item.symbol,
-                  chain: item.chainName,
-                  tokenName: item.tokenName,
-                }).finally(() => {
-                  setLoading(false);
-                });
-                if (res) {
-                  goToAsset();
+              key={`${item.symbol}${item.contract_addr}${item.address}${index}`}
+              onPress={() => {
+                storeData('current_token_detail', JSON.stringify(item));
+                if (props?.route?.params.go) {
+                  props?.navigation.navigate(props?.route?.params.go);
+                } else {
+                  props?.navigation.navigate('tokenDetail');
                 }
               }}
             >
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  borderBottomWidth: 1,
-                  borderColor: '#F9F9F9',
-                  paddingVertical: 10,
-                }}
-              >
-                <Avatar rounded source={{ uri: item.tokenLogo || 'https://randomuser.me/api/portraits/men/36.jpg' }} />
+              <View style={styles.assetList}>
+                <Avatar rounded source={{ uri: item.logo || 'https://randomuser.me/api/portraits/men/36.jpg' }} />
                 <View style={{ flex: 1, marginRight: 14, marginLeft: 10 }}>
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
-                    <Text>{item.tokenName}</Text>
-                    <Text>{item.amountUnit}</Text>
+                    <Text>{item.symbol}</Text>
+                    <Text>{item.asset_usd}</Text>
                   </View>
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
                     <View style={{ flexDirection: 'row' }}>
-                      <Text style={styles.listPrice}>$ {item.usdtRate}</Text>
-                      {item.rose.indexOf('-') !== -1 ? (
-                        <Text style={styles.red}> {item.rose}</Text>
-                      ) : (
-                        <Text style={styles.green}> +{item.rose}</Text>
-                      )}
+                      <Text style={styles.listPrice}>{item.chain}</Text>
                     </View>
                     <View>
-                      <Text style={{ color: '#999999' }}>¥{item.cnyRate}</Text>
+                      <Text style={{ color: '#999999' }}>¥{item.asset_cny}</Text>
                     </View>
                   </View>
                 </View>
-                <Icon name="checkcircle" color={item?.added ? '#3B28CC' : '#C8C8C8'} size={16} />
               </View>
             </TouchableOpacity>
           ))}
@@ -224,6 +162,13 @@ const useStyles = makeStyles((theme, props: Props) => {
       color: 'rgba(208, 31, 31, 1)',
       fontSize: 12,
     },
+    assetList: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      borderBottomWidth: 1,
+      borderColor: '#F9F9F9',
+      paddingVertical: 10,
+    },
   };
 });
-export default AddToken;
+export default SearchToken;

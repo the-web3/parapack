@@ -105,3 +105,8 @@ export const INIT_TOKEN = {
 };
 
 export const SUCCESS_CODE = 200;
+
+export const CHAIN_MAP = {
+  Ethereum: 'eth',
+  BITCOIN: 'btc',
+};

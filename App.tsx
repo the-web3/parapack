@@ -14,14 +14,19 @@ import { defineTheme } from './style/them';
 import i18n from './i18n';
 import { I18nextProvider } from 'react-i18next';
 import menus from './routes';
-import Toast from 'react-native-toast-message';
 import { PrivateWalletStructure, TABLE_MAP, createTable, deleteTable, openDatabase } from '@common/utils/sqlite';
 // import { getCommonHealth } from '@api/common';
-// import { getAddressBalanceParams } from '@api/wallet';
 import { getSymbolSupport } from '@api/symbol';
-import { batchInsertOrUpdateAssetTable, getTableInfo, InsertOrUpdateChainAssetTable } from '@common/wallet';
-import { getDeviceBalance } from '@api/wallet';
+import {
+  batchInsertOrUpdateAssetTable,
+  getTableInfo,
+  insertOrUpdateChainAssetTable,
+  insertWalletAsset,
+} from '@common/wallet';
+import { getAddressBalance, getDeviceBalance } from '@api/wallet';
 import { SUCCESS_CODE } from '@common/constants';
+import { RootSiblingParent } from 'react-native-root-siblings';
+import Toast from 'react-native-root-toast';
 // eslint-disable-next-line no-undef
 function App(): JSX.Element {
   const mode = useColorScheme() || 'light';
@@ -32,10 +37,18 @@ function App(): JSX.Element {
   const initList = async () => {
     try {
       const res = await getSymbolSupport({});
+      // const res = await getAddressBalance({
+      //   address: '0xA3AFA38476cF8b967e712dD878376030f52a841A',
+      //   chain: 'Ethereum',
+      //   contract_address: '0x95ad61b0a150d79219dcf64e1e6cc01f0b64c4ce',
+      //   device_id: '912d3e55e6d76283',
+      //   symbol: 'SHIB',
+      //   wallet_uuid: '00f8f218-6256-43eb-a1cd-324623e1e0f8',
+      // });
       console.log(99999, JSON.stringify(res));
       if (res.data) {
         const chainList = res.data || [];
-        InsertOrUpdateChainAssetTable(chainList);
+        insertOrUpdateChainAssetTable(chainList);
       }
     } catch (e) {}
   };
@@ -122,64 +135,48 @@ function App(): JSX.Element {
     if (open) {
       // initList();
       // initWalletToken();
+      // deleteTable('asset');
       Object.keys(TABLE_MAP).map((table_name) => {
         // deleteTable(table_name);
         createTable(table_name, {
           query: `CREATE TABLE ${table_name} (${TABLE_MAP[table_name as keyof typeof TABLE_MAP]})`,
         });
       });
-      // getTableInfo();
+      getTableInfo();
     }
   }, []);
-  // const getInitialData = async () => {
-  //   try {
-  //     // const res = await getCommonHealth();
-  //     // const res = await getAddressBalanceParams({
-  //     //   device_id: 'string',
-  //     //   wallet_uuid: 'string',
-  //     //   index: 0,
-  //     //   chain: 'string',
-  //     //   symbol: 'string',
-  //     //   network: 'string',
-  //     //   address: 'string',
-  //     //   contract_address: 'string',
-  //     // });
-  //     const res = await getUniqueId();
-  //     console.log(9999, res);
-  //   } catch (e) {
-  //     console.log(66666, e);
-  //   }
-  // };
 
   useEffect(() => {
     openSQL();
   }, [openSQL]);
 
   return (
-    <I18nextProvider i18n={i18n}>
-      <ThemeProvider theme={theme}>
-        <NavigationContainer
-          theme={
-            mode === 'dark'
-              ? {
-                  dark: true,
-                  colors: DarkTheme.colors,
-                }
-              : {
-                  dark: false,
-                  colors: DefaultTheme.colors,
-                }
-          }
-        >
-          <Stack.Navigator>
-            {menus.map((menu) => (
-              <Stack.Screen key={menu.name} {...menu} />
-            ))}
-          </Stack.Navigator>
-          <Toast />
-        </NavigationContainer>
-      </ThemeProvider>
-    </I18nextProvider>
+    <RootSiblingParent>
+      <I18nextProvider i18n={i18n}>
+        <ThemeProvider theme={theme}>
+          <NavigationContainer
+            theme={
+              mode === 'dark'
+                ? {
+                    dark: true,
+                    colors: DarkTheme.colors,
+                  }
+                : {
+                    dark: false,
+                    colors: DefaultTheme.colors,
+                  }
+            }
+          >
+            <Stack.Navigator>
+              {menus.map((menu) => (
+                <Stack.Screen key={menu.name} {...menu} />
+              ))}
+            </Stack.Navigator>
+            <Toast />
+          </NavigationContainer>
+        </ThemeProvider>
+      </I18nextProvider>
+    </RootSiblingParent>
   );
 }
 // const styles = StyleSheet.create({

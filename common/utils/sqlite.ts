@@ -49,6 +49,7 @@ export const TABLE_MAP = {
   asset: `
   "id" INTEGER PRIMARY KEY AUTOINCREMENT,
   "chain_id" BIGINT,
+  "chainListId" BIGINT,
   "tokenName" VARCHAR,
   "tokenHot" INTEGER,
   "tokenDefault" INTEGER,
@@ -219,7 +220,7 @@ export const executeQuery = ({
 }: {
   query?: string;
   params?: string[];
-  customExec?: (tx: SQLite.Transaction) => void;
+  customExec?: (tx: SQLite.Transaction, resolve: (value: unknown) => void, reject: (value: unknown) => void) => void;
 }) => {
   return new Promise((resolve, reject) => {
     if (!db) {
@@ -228,7 +229,7 @@ export const executeQuery = ({
     }
     db.transaction((tx) => {
       if (customExec) {
-        customExec(tx);
+        customExec(tx, resolve, reject);
       } else if (query) {
         tx.executeSql(
           query,

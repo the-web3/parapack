@@ -1,16 +1,15 @@
 import IconFont from '@assets/iconfont';
 import LayoutNormal from '@components/LayoutNormal';
-import { DarkTheme, DefaultTheme } from '@react-navigation/native';
 import { makeStyles, useTheme } from '@rneui/themed';
 import Activity from '@screen/Activity';
 import Asset from '@screen/Asset';
 import { DAppScreen } from '@screen/DApp';
 import Swap from '@screen/Swap';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StatusBar, Text, TouchableOpacity, View, useColorScheme } from 'react-native';
 const Screen2 = () => {
-  return <Text>22222</Text>;
+  return <Text />;
 };
 const BAR = [
   {
@@ -45,20 +44,23 @@ const App = (props: any) => {
   const renderScreen = (prop: any) => {
     switch (tab) {
       case 'ecology':
-        return <DAppScreen {...props} />;
+        return <DAppScreen {...prop} />;
       case 'activity':
-        return <Activity {...props} />;
+        return <Activity {...prop} />;
       case 'swap':
-        return <Swap {...props} />;
+        return <Swap {...prop} />;
       case 'chat':
-        return <Screen2 {...props} />;
+        return <Screen2 {...prop} />;
       case 'asset':
-        return <Asset {...props} />;
+        return <Asset {...prop} />;
       default:
         return null;
     }
   };
-
+  useEffect(() => {
+    // 在这里执行你想要的操作
+    console.log('Home 页面重新渲染了');
+  }, [props.navigation]);
   return (
     <>
       <StatusBar

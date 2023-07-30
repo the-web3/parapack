@@ -1,17 +1,17 @@
 import { SymbolSupportDatum, getSymbolSupport } from '@api/symbol';
-import { addSymbolToken, createWallet, getDeviceBalance } from '@api/wallet';
+import { addSymbolToken, createWallet, getAddressBalance, getDeviceBalance } from '@api/wallet';
 import { SUCCESS_CODE } from '@common/constants';
 import { PrivateWalletBalance, PrivateWalletStructure, TABLE_MAP, executeQuery } from '@common/utils/sqlite';
 import { getData } from '@common/utils/storage';
 import { getUniqueId } from 'react-native-device-info';
-import { CreateAddress, EncodeMnemonic, MnemonicToSeed } from 'savourlabs-wallet-sdk/wallet';
+import { CreateAddress, DecodeMnemonic, EncodeMnemonic, MnemonicToSeed } from 'savourlabs-wallet-sdk/wallet';
 import { v4 as uuidv4 } from 'uuid';
 
 /**
  *
  * @param chainList
  */
-export const InsertOrUpdateChainAssetTable = async (chainList: SymbolSupportDatum[] = []) => {
+export const insertOrUpdateChainAssetTable = async (chainList: SymbolSupportDatum[] = []) => {
     await executeQuery({
         customExec: (tx) => {
             tx.executeSql('BEGIN TRANSACTION');
@@ -32,7 +32,7 @@ export const InsertOrUpdateChainAssetTable = async (chainList: SymbolSupportDatu
                   `,
                         [chain.chainName, chain.symbol, chain.hot ? 1 : 0, chain.default ? 1 : 0, chain.logo, '', 0],
                         (txObj, resultSet) => {
-                            if (resultSet.insertId) {
+                            if (resultSet.rowsAffected > 0) {
                                 console.log('chain inserted successfully', JSON.stringify(resultSet));
                             } else {
                                 console.log('Failed to insert chain data');
@@ -55,9 +55,10 @@ export const InsertOrUpdateChainAssetTable = async (chainList: SymbolSupportDatu
                     for (let a = 0; a < chain.token.length; a++) {
                         const asset = chainList[i].token[a];
                         tx.executeSql(
-                            `INSERT INTO asset (chain_id, tokenName, tokenHot, tokenDefault, tokenLogo, activeTokenLogo, contract_addr, contractUnit, is_del)
-                    VALUES ((SELECT id FROM chain WHERE chainName = ?), ?, ?, ?, ?, ?, ?, ?, ?)
+                            `INSERT INTO asset (chain_id, chainListId, tokenName, tokenHot, tokenDefault, tokenLogo, activeTokenLogo, contract_addr, contractUnit, is_del)
+                    VALUES ((SELECT id FROM chain WHERE chainName = ?), ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     ON CONFLICT(chain_id, tokenName, contract_addr) DO UPDATE SET
+                    chainListId = excluded.chainListId,
                     tokenHot = excluded.tokenHot,
                     tokenDefault = excluded.tokenDefault,
                     tokenLogo = excluded.tokenLogo,
@@ -67,6 +68,7 @@ export const InsertOrUpdateChainAssetTable = async (chainList: SymbolSupportDatu
                   `,
                             [
                                 chain.chainName,
+                                asset.chainListId,
                                 asset.tokenName,
                                 asset.tokenHot ? 1 : 0,
                                 asset.tokenDefault ? 1 : 0,
@@ -77,7 +79,7 @@ export const InsertOrUpdateChainAssetTable = async (chainList: SymbolSupportDatu
                                 0,
                             ],
                             (txObj, resultSet) => {
-                                if (resultSet.insertId) {
+                                if (resultSet.rowsAffected > 0) {
                                     console.log('asset Data inserted successfully', resultSet);
                                 } else {
                                     console.log('Failed to insert asset data');
@@ -96,6 +98,100 @@ export const InsertOrUpdateChainAssetTable = async (chainList: SymbolSupportDatu
                 tx.executeSql('ROLLBACK');
                 console.error('Error inserting data:', error);
             }
+        },
+    });
+};
+/**
+ * walletAsset 表
+ * account表
+ * accountAsset表
+ */
+export const insertWalletAsset = ({
+    wallet_uuid,
+    chain,
+    contract_addr,
+    balance,
+    asset_usd,
+    asset_cny,
+    address,
+    publicKey,
+    privateKey,
+}: {
+    wallet_uuid: string;
+    chain: string;
+    contract_addr: string;
+    balance: string;
+    asset_usd: string;
+    asset_cny: string;
+    address: string;
+    publicKey: string;
+    privateKey: string;
+}) => {
+    executeQuery({
+        customExec: (tx) => {
+            //walletAsset 表: wallet_id, asset_id 联合唯一键（不同钱包都有ETH） , asset表的三个联合唯一键去查 (SELECT id FROM asset WHERE chain_id = (SELECT id FROM chain WHERE chain = ?) AND contract_addr = ?)
+            tx.executeSql(
+                `INSERT INTO walletAsset (wallet_id, asset_id, balance, asset_usd, asset_cny, is_del)
+  VALUES ((SELECT id FROM wallet WHERE wallet_uuid = ?), (SELECT id FROM asset WHERE chain_id = (SELECT id FROM chain WHERE chainName = ?) AND contract_addr = ?), ?, ?, ?, ?)
+  ON CONFLICT(wallet_id, asset_id) DO UPDATE SET
+  balance = excluded.balance,
+  asset_usd = excluded.asset_usd,
+  asset_cny = excluded.asset_cny,
+  is_del = excluded.is_del`,
+                [wallet_uuid, chain, contract_addr, balance, asset_usd, asset_cny, 0],
+                (txObj, resultSet) => {
+                    if (resultSet.rowsAffected > 0) {
+                        console.log('walletAsset inserted successfully', JSON.stringify(resultSet));
+                    } else {
+                        console.log('walletAsset Failed to insert data');
+                    }
+                },
+                (txObj, error) => {
+                    console.log('walletAsset Error inserting data:', txObj);
+                }
+            );
+            //account表 wallet_id, address 作为联合唯一键
+            tx.executeSql(
+                `INSERT INTO account (wallet_id, address_index, address, pub_key, priv_key, is_del)
+                      VALUES ((SELECT id FROM wallet WHERE wallet_uuid = ?), ?, ?, ?, ?, ?)
+                      ON CONFLICT(wallet_id, address) DO UPDATE SET
+                      address_index = excluded.address_index,
+                      pub_key = excluded.pub_key,
+                      priv_key = excluded.priv_key,
+                      is_del = excluded.is_del`,
+                [wallet_uuid, 0, address, publicKey, privateKey, 0],
+                (txObj, resultSet) => {
+                    if (resultSet.rowsAffected > 0) {
+                        console.log('account inserted successfully', JSON.stringify(resultSet));
+                    } else {
+                        console.log('account Failed to insert data');
+                    }
+                },
+                (txObj, error) => {
+                    console.log('account Error inserting data:', txObj);
+                }
+            );
+            //accountAsset表 address_id, asset_id 联合唯一, address_id 需要 wallet_id, address 作为联合唯一键
+            tx.executeSql(
+                `INSERT INTO accountAsset (address_id, asset_id, balance, asset_usd, asset_cny, is_del)
+        VALUES ((SELECT id FROM account WHERE address = ?), (SELECT id FROM asset WHERE chain_id = (SELECT id FROM chain WHERE chainName = ?) AND contract_addr = ?), ?, ?, ?, ?)
+        ON CONFLICT(address_id, asset_id) DO UPDATE SET
+        balance = excluded.balance,
+        asset_usd = excluded.asset_usd,
+        asset_cny = excluded.asset_cny,
+        is_del = excluded.is_del`,
+                [address, chain, contract_addr, balance, asset_usd, asset_cny, 0],
+                (txObj, resultSet) => {
+                    if (resultSet.rowsAffected > 0) {
+                        console.log('accountAsset inserted successfully', JSON.stringify(resultSet));
+                    } else {
+                        console.log('accountAsset Failed to insert data');
+                    }
+                },
+                (txObj, error) => {
+                    console.log('accountAsset Error inserting data:', txObj);
+                }
+            );
         },
     });
 };
@@ -142,7 +238,7 @@ export const batchInsertOrUpdateAssetTable = async (
                         0,
                     ],
                     (txObj, resultSet) => {
-                        if (resultSet.insertId) {
+                        if (resultSet.rowsAffected > 0) {
                             console.log('wallet inserted successfully', JSON.stringify(resultSet));
                         } else {
                             console.log('wallet Failed to insert data');
@@ -174,7 +270,7 @@ export const batchInsertOrUpdateAssetTable = async (
                             0,
                         ],
                         (txObj, resultSet) => {
-                            if (resultSet.insertId) {
+                            if (resultSet.rowsAffected > 0) {
                                 console.log('walletAsset inserted successfully', JSON.stringify(resultSet));
                             } else {
                                 console.log('walletAsset Failed to insert data');
@@ -195,7 +291,7 @@ export const batchInsertOrUpdateAssetTable = async (
                               is_del = excluded.is_del`,
                         [privateWalletInfo.wallet_uuid, 0, walletAsset.address, walletAsset.publicKey, walletAsset.privateKey, 0],
                         (txObj, resultSet) => {
-                            if (resultSet.insertId) {
+                            if (resultSet.rowsAffected > 0) {
                                 console.log('account inserted successfully', JSON.stringify(resultSet));
                             } else {
                                 console.log('account Failed to insert data');
@@ -224,7 +320,7 @@ export const batchInsertOrUpdateAssetTable = async (
                             0,
                         ],
                         (txObj, resultSet) => {
-                            if (resultSet.insertId) {
+                            if (resultSet.rowsAffected > 0) {
                                 console.log('accountAsset inserted successfully', JSON.stringify(resultSet));
                             } else {
                                 console.log('accountAsset Failed to insert data');
@@ -254,7 +350,10 @@ export const createImportWallet = async (params: {
     password: any;
     wallet_name: any;
     mnemonic?: string;
-}): Promise<Boolean> => {
+}): Promise<{
+    success: boolean;
+    wallet_uuid: string;
+}> => {
     try {
         console.log(`createImportWalletParams1=====>`, params);
         const { password, wallet_name, mnemonic = '' } = params;
@@ -269,10 +368,16 @@ export const createImportWallet = async (params: {
             console.log(`createImportWalletParams2 =====>`, device_id, mnemonic_code, JSON.stringify(symbolSupport));
 
             //存chain 和asset 表
-            InsertOrUpdateChainAssetTable(symbolSupport.data || []);
+            insertOrUpdateChainAssetTable(symbolSupport.data || []);
 
             const tokens = (symbolSupport.data || [])
-                ?.filter((item) => ['Ethereum'].includes(item.chainName) && item.default)
+                ?.filter(
+                    (item) =>
+                        [
+                            'Ethereum',
+                            // 'BITCOIN'
+                        ].includes(item.chainName) && item.default
+                )
                 .reduce((total: PrivateWalletBalance[], supportChian, index) => {
                     if (supportChian.token.length > 0) {
                         console.log(`createImportWalletParams3 =====>`, index, supportChian);
@@ -334,13 +439,13 @@ export const createImportWallet = async (params: {
                         mnemonic_code,
                         device_id,
                         password,
-                        wallet_balance: tokens.map((item) => {
-                            const matchToken = wallet_balance.find(
+                        wallet_balance: wallet_balance.map((item) => {
+                            const matchToken = tokens.find(
                                 (info) => info.contract_addr === item.contract_addr && info.address === item.address
                             );
                             return {
-                                ...item,
                                 ...matchToken,
+                                ...item,
                             };
                         }),
                     };
@@ -371,81 +476,145 @@ export const createImportWallet = async (params: {
                 };
                 batchInsertOrUpdateAssetTable(unSubmitPrivateWallet as PrivateWalletStructure, 0);
             }
-            return res.code === SUCCESS_CODE;
+            return {
+                success: res.code === SUCCESS_CODE,
+                wallet_uuid,
+            };
         }
     } catch (error) {
         console.log('error', error);
-        return false;
+        return {
+            success: false,
+            wallet_uuid: '',
+        };
     }
-    return false;
+    return {
+        success: false,
+        wallet_uuid: '',
+    };
 };
 
-export const addToken = async (params: { chain: string; contract_addr: string; symbol: string }): Promise<Boolean> => {
-    const currentWalletInfo = await getData('currentWallet');
-    const { wallet_uuid } = JSON.parse(currentWalletInfo);
-    const device_id = await getUniqueId();
-    const seed = MnemonicToSeed({
-        mnemonic: [
-            'sea',
-            'wrestle',
-            'know',
-            'wedding',
-            'trigger',
-            'chunk',
-            'autumn',
-            'museum',
-            'destroy',
-            'seven',
-            'anger',
-            'jazz',
-        ].join(' '),
-        password: '1234567a',
+/**
+ *
+ * @param params
+ * @returns
+ */
+export const addToken = async (params: {
+    chain: string;
+    contract_addr: string;
+    symbol: string;
+    tokenName: string;
+}): Promise<Boolean> => {
+    const [device_id, wallet_uuid] = await Promise.all([getUniqueId(), getData('wallet_uuid')]);
+    const sqliteData = await executeQuery({
+        customExec: (tx, resolve, reject) => {
+            return tx.executeSql(
+                `SELECT * FROM wallet WHERE wallet_uuid = ? `,
+                [wallet_uuid],
+                (txObj, resultSet) => {
+                    if (resultSet.rows.length > 0) {
+                        const walletData = resultSet.rows.item(0);
+                        resolve(walletData);
+                    } else {
+                        reject('Wallet not found.');
+                    }
+                },
+                (txObj, error) => {
+                    reject('Wallet Found Error.');
+                }
+            );
+        },
     });
-    const account = CreateAddress({
-        chain: params.symbol.toLowerCase(),
-        seedHex: seed.toString('hex'),
-        index: 0,
-        receiveOrChange: 0,
-        network: 'mainnet',
-    });
-    console.log('addToken', account);
-    try {
-        const { address, publicKey, privateKey } = JSON.parse(account);
-        const res = await addSymbolToken({
-            device_id,
-            wallet_uuid,
-            chain: params.chain,
-            symbol: params.symbol,
-            contract_addr: params.contract_addr,
-            address,
-            index: 0,
+    if (sqliteData) {
+        const mnemonic = await DecodeMnemonic({ encrytMnemonic: sqliteData?.mnemonic_code, language: 'english' });
+        const seed = MnemonicToSeed({
+            mnemonic,
+            password: sqliteData?.password,
         });
-        if (res.code === SUCCESS_CODE) {
-            executeQuery({
-                query: `INSERT INTO account (wallet_id, address_index, address, pub_key, priv_key, is_del)
-                VALUES ((SELECT id FROM wallet WHERE wallet_uuid = ?), ?, ?, ?, ?, ?)
-                ON CONFLICT(wallet_id, address) DO UPDATE SET
-                address_index = excluded.address_index,
-                pub_key = excluded.pub_key,
-                priv_key = excluded.priv_key,
-                is_del = excluded.is_del`,
-                params: [wallet_uuid, 0, address, publicKey, privateKey, 0],
-            });
+        const account = CreateAddress({
+            chain: params.symbol.toLowerCase(),
+            seedHex: seed.toString('hex'),
+            index: 0,
+            receiveOrChange: 0,
+            network: 'mainnet',
+        });
+        if (account) {
+            try {
+                const { address, publicKey, privateKey } = JSON.parse(account);
+                const submitObj = {
+                    device_id,
+                    wallet_uuid,
+                    chain: params.chain,
+                    symbol: params.tokenName,
+                    contract_addr: params.contract_addr,
+                    address,
+                    index: 0,
+                };
+                const res = await addSymbolToken(submitObj);
+                if (res.code === SUCCESS_CODE) {
+                    const balanceRes = await getAddressBalance({
+                        device_id,
+                        wallet_uuid,
+                        chain: params.chain,
+                        symbol: params.tokenName,
+                        contract_address: params.contract_addr,
+                        address,
+                    });
+                    console.log(
+                        'getAddressBalance',
+                        balanceRes,
+                        {
+                            device_id,
+                            wallet_uuid,
+                            chain: params.chain,
+                            symbol: params.tokenName,
+                            contract_address: params.contract_addr,
+                            address,
+                        },
+                        {
+                            wallet_uuid,
+                            address,
+                            publicKey,
+                            privateKey,
+                            chain: params.chain,
+                            contract_addr: params.contract_addr,
+                            balance: balanceRes?.data?.balance || 0,
+                            asset_usd: balanceRes?.data?.asset_usd || 0,
+                            asset_cny: balanceRes?.data?.asset_cny || 0,
+                        }
+                    );
+                    if (balanceRes.data) {
+                        insertWalletAsset({
+                            wallet_uuid,
+                            address,
+                            publicKey,
+                            privateKey,
+                            chain: params.chain,
+                            contract_addr: params.contract_addr,
+                            balance: balanceRes.data.balance || 0,
+                            asset_usd: balanceRes.data.asset_usd || 0,
+                            asset_cny: balanceRes.data.asset_cny || 0,
+                        });
+                    }
+                }
+                return res.code === SUCCESS_CODE;
+            } catch (e) {
+                console.log(8888, e);
+                return false;
+            }
         }
-        return res.code === SUCCESS_CODE;
-    } catch (e) {
-        return false;
     }
+    // return false;
 };
 
 /**
  * getTableInfo
- * @param hideTable
+ * @param showTable
  */
 
-export const getTableInfo = (hideTable?: string[]) => {
+export const getTableInfo = (showTable?: string[]) => {
     Object.keys(TABLE_MAP)
-        .filter((item) => !(hideTable || []).includes(item))
+        .filter((item) => (showTable || Object.keys(TABLE_MAP)).includes(item))
         .map((table_name) => {
             executeQuery({
                 customExec: (tx) => {

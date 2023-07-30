@@ -12,11 +12,21 @@ const SplashScreen = ({ navigation }) => {
       // navigation.navigate('asset', {
       //   wallet_uuid: 'c11b420e-50e3-4723-8d0f-0cb3dca8849f',
       // });
+      // navigation.navigate('addToken');
       navigation.navigate('home', {
-        // tab: 'asset',
-        tab: 'ecology',
+        tab: 'asset',
+        // tab: 'ecology',
         // wallet_uuid: 'c11b420e-50e3-4723-8d0f-0cb3dca8849f',
       });
+      // navigation.navigate('transferPayment', {
+      //   // address: '0x41Ff20F867e14BDe24c971407a3A773cF661C834',
+      //   // contract_addr: '',
+      //   // chain: 'Ethereum',
+      //   // index: 0,
+      //   // network: 'mainnet',
+      //   // symbol: 'ETH',
+      //   // wallet_uuid: '350c287c-ed96-4c3e-933a-3bddf597815f',
+      // });
       // navigation.navigate('collection', {
       //   toAddr: '0xbF31a6ec96851d90772529015ABb4E98eABD7fa2',
       // });
@@ -28,14 +38,15 @@ const SplashScreen = ({ navigation }) => {
       //   },
       // });
       // navigation.navigate('tokenDetail', {
-      //   address: '0xbF31a6ec96851d90772529015ABb4E98eABD7fa2',
-      //   chain: 'Ethereum',
-      //   contract_addr: '',
-      //   index: 0,
-      //   network: 'mainnet',
-      //   symbol: 'ETH',
-      //   wallet_uuid: 'c11b420e-50e3-4723-8d0f-0cb3dca8849f',
+      //   // address: '0xbF31a6ec96851d90772529015ABb4E98eABD7fa2',
+      //   // chain: 'Ethereum',
+      //   // contract_addr: '',
+      //   // index: 0,
+      //   // network: 'mainnet',
+      //   // symbol: 'ETH',
+      //   // wallet_uuid: 'c11b420e-50e3-4723-8d0f-0cb3dca8849f',
       // });
+      // navigation.navigate('searchHistory');
     }, 2000); // 2秒延迟
   }, [navigation]);
 

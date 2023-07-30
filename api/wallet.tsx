@@ -169,13 +169,18 @@ export function deleteWallet(data: DeleteWalletParams): Promise<IResponse<string
   return http.post(`/wallet/delete`, data);
 }
 export interface TransferParams {
-  amount: string;
+  /**
+   * 链名称
+   */
   chain: string;
-  contractAddr?: string;
-  fromAddr: string;
-  sign: string;
+  /**
+   * 转账内容
+   */
+  raw_tx: string;
+  /**
+   * 币种名称
+   */
   symbol: string;
-  toAddr: string;
 }
 
 export function transfer(data: TransferParams): Promise<IResponse<string>> {
@@ -256,9 +261,46 @@ export interface AddSymbolTokenParams {
   contract_addr?: string;
   device_id: string;
   index: number;
-  symbol: string;
+  symbol?: string;
   wallet_uuid: string;
 }
 export function addSymbolToken(data: AddSymbolTokenParams): Promise<IResponse<string>> {
   return http.post(`/wallet/symbol/token`, data);
+}
+
+export function walletBackUp(data: { device_id: string; wallet_uuid?: string }): Promise<IResponse<string>> {
+  return http.post(`/wallet/backup`, data);
+}
+
+/**
+ * 获取钱包中已经添加的币种
+ * @param data
+ * @returns
+ */
+export interface AddedWalletSymbols {
+  chain: string;
+  contractAddr?: string;
+  /**
+   * 链上的主币名称
+   */
+  mainChainSymbol: string;
+  /**
+   * 代币
+   */
+  tokenName: string;
+}
+
+export function walletSymbols(data: {
+  device_id: string;
+  wallet_uuid?: string;
+}): Promise<IResponse<AddedWalletSymbols[]>> {
+  return http.post(`/wallet/walletSymbols`, data);
+}
+
+export function walletNonce(data: { address: string; chain: string; symbol: string }): Promise<
+  IResponse<{
+    nonce: string;
+  }>
+> {
+  return http.post(`/wallet/nonce`, data);
 }
