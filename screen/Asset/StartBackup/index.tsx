@@ -4,11 +4,8 @@ import { Button, Image, Text } from '@rneui/themed';
 import { ActivityIndicator, SafeAreaView, StyleSheet, View } from 'react-native';
 const StartBackup = ({ navigation, route }: any) => {
   const handleStartBackup = () => {
-    navigation.navigate('backupMnemonics', {
-      ...route?.params,
-    });
+    navigation.navigate('backupMnemonics');
   };
-  console.log(7777, route?.params?.params);
   return (
     <Layout
       fixedChildren={

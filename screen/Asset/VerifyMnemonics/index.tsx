@@ -16,7 +16,7 @@ const VerifyMnemonics = (props: Record<string, any>) => {
   const styles = useStyles(theme.theme);
   const { navigation, route } = props;
   const { t } = useTranslation();
-  const [walletInfo] = useState(route?.params?.params);
+  const [walletInfo] = useState(route?.params);
   const [loading, setLoading] = useState(false);
 
   const shuffle = useCallback((arr: string[]) => {
@@ -93,9 +93,9 @@ const VerifyMnemonics = (props: Record<string, any>) => {
     }).finally(() => {
       setLoading(false);
     });
-    // if (res.code === SUCCESS_CODE) {
-    //   navigation?.navigate?.('home', { tab: 'asset' });
-    // }
+    if (res.code === SUCCESS_CODE) {
+      navigation?.navigate?.('home', { tab: 'asset' });
+    }
     console.log(2222, res);
   };
   useEffect(() => {

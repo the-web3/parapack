@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import { CreateMnemonic, DecodeMnemonic } from 'savourlabs-wallet-sdk/wallet';
 import { executeQuery } from '@common/utils/sqlite';
 import { showToast } from '@common/utils/platform';
+import { getData } from '@common/utils/storage';
 const BackupMnemonics = (props: any) => {
   const { navigation, route } = props;
   const theme = useTheme();
@@ -17,22 +18,20 @@ const BackupMnemonics = (props: any) => {
   const [mnemonic, setMnemonic] = useState<string[]>([]);
   const handleBackupMnemonics = async () => {
     navigation.navigate('verifyMnemonics', {
-      params: {
-        ...route?.params?.params,
-        mnemonic,
-      },
+      mnemonic,
     });
   };
-  console.log(8888, route?.params?.params);
   const getMnemonic = async () => {
     try {
+      const [wallet_uuid] = await Promise.all([getData('wallet_uuid')]);
       const sqliteData = await executeQuery({
         customExec: (tx, resolve, reject) => {
           return tx.executeSql(
             `SELECT * FROM wallet WHERE wallet_uuid = ? `,
-            [route?.params?.params?.wallet_uuid],
+            [wallet_uuid],
             (txObj, resultSet) => {
-              if (resultSet.rowsAffected > 0) {
+              console.log(99999, resultSet);
+              if (resultSet.rows.length > 0) {
                 const walletData = resultSet.rows.item(0);
                 resolve(walletData);
               } else {
