@@ -14,15 +14,21 @@ import { defineTheme } from './style/them';
 import i18n from './i18n';
 import { I18nextProvider } from 'react-i18next';
 import menus from './routes';
-import Toast from 'react-native-toast-message';
-import { loadMetamaskExt } from "@common/bridge/inject";
+import { loadMetamaskExt } from '@common/bridge/inject';
 import { PrivateWalletStructure, TABLE_MAP, createTable, deleteTable, openDatabase } from '@common/utils/sqlite';
 // import { getCommonHealth } from '@api/common';
-// import { getAddressBalanceParams } from '@api/wallet';
 import { getSymbolSupport } from '@api/symbol';
-import { batchInsertOrUpdateAssetTable, getTableInfo, InsertOrUpdateChainAssetTable } from '@common/wallet';
-import { getDeviceBalance } from '@api/wallet';
+import {
+  batchInsertOrUpdateAssetTable,
+  getTableInfo,
+  insertOrUpdateChainAssetTable,
+  insertWalletAsset,
+} from '@common/wallet';
+import { getAddressBalance, getDeviceBalance } from '@api/wallet';
 import { SUCCESS_CODE } from '@common/constants';
+import { RootSiblingParent } from 'react-native-root-siblings';
+import Toast from 'react-native-root-toast';
+import { getData, storeData } from '@common/utils/storage';
 // eslint-disable-next-line no-undef
 function App(): JSX.Element {
   const mode = useColorScheme() || 'light';
@@ -32,11 +38,56 @@ function App(): JSX.Element {
   });
   const initList = async () => {
     try {
+      // insertWalletAsset({
+      //   address: '0xEf8DfDFa8E48d57296dEf455eDe4aD1e60409d2d',
+      //   asset_cny: 0,
+      //   asset_usd: 0,
+      //   balance: 0,
+      //   chain: 'Ethereum',
+      //   contract_addr: '0xdac17f958d2ee523a2206206994597c13d831ec7',
+      //   privateKey: '0xd1ece1ac2c43fa9492ebcb88c15e6d885eac70d89f0de7d8f64b8f1b9520253f',
+      //   publicKey: '0x03fdd50354d0221e3ff9f583c757fa99052872d2f856b6e744e43e59d8f10e73f8',
+      //   wallet_uuid: '32db0356-54c8-4e5f-927d-1979edc93132',
+      //   symbol: 'USDT',
+      // });
       const res = await getSymbolSupport({});
-      console.log(99999, JSON.stringify(res));
+      // const res = await getAddressBalance({
+      //   address: '0xA3AFA38476cF8b967e712dD878376030f52a841A',
+      //   chain: 'Ethereum',
+      //   contract_address: '0x95ad61b0a150d79219dcf64e1e6cc01f0b64c4ce',
+      //   device_id: '912d3e55e6d76283',
+      //   symbol: 'SHIB',
+      //   wallet_uuid: '00f8f218-6256-43eb-a1cd-324623e1e0f8',
+      // });
+      // console.log(99999, JSON.stringify(res));
       if (res.data) {
         const chainList = res.data || [];
-        InsertOrUpdateChainAssetTable(chainList);
+        insertOrUpdateChainAssetTable(chainList);
+        batchInsertOrUpdateAssetTable({
+          backup: false,
+          device_id: 'ff8df3b99925d50',
+          mnemonic_code: 'a7933bb47d755c8c2c5db3b4659fd7b6',
+          password: '1234567a',
+          wallet_asset_cny: '0',
+          wallet_asset_usd: '0',
+          wallet_balance: [
+            {
+              address: '0xE3e9c23a05Eff79d3582Af11586878F41358775d',
+              asset_cny: '0',
+              asset_usd: '0',
+              balance: '0',
+              chain: 'Ethereum',
+              contract_addr: '',
+              index: 0,
+              logo: '',
+              privateKey: '0xb2b742411841203f8b3d847d65d14bac3ddde7b404fd503b3bffa65511ddc4df',
+              publicKey: '0x023aa83f73b2f573a2cc8f667cac865645a3ddeb5116eff9d97aa742b509fb66a3',
+              symbol: 'ETH',
+            },
+          ],
+          wallet_name: 'M_2',
+          wallet_uuid: 'ff8d1f36-7d11-429c-a1ce-dbb008f46911',
+        });
       }
     } catch (e) {}
   };
@@ -123,6 +174,14 @@ function App(): JSX.Element {
     if (open) {
       // initList();
       // initWalletToken();
+      // deleteTable('asset');
+      const reset_table = await getData('reset_table');
+      if (reset_table !== '1') {
+        Object.keys(TABLE_MAP).map((table_name) => {
+          deleteTable(table_name);
+        });
+        storeData('reset_table', '1');
+      }
       Object.keys(TABLE_MAP).map((table_name) => {
         // deleteTable(table_name);
         createTable(table_name, {
@@ -132,58 +191,40 @@ function App(): JSX.Element {
       // getTableInfo();
     }
   }, []);
-  // const getInitialData = async () => {
-  //   try {
-  //     // const res = await getCommonHealth();
-  //     // const res = await getAddressBalanceParams({
-  //     //   device_id: 'string',
-  //     //   wallet_uuid: 'string',
-  //     //   index: 0,
-  //     //   chain: 'string',
-  //     //   symbol: 'string',
-  //     //   network: 'string',
-  //     //   address: 'string',
-  //     //   contract_address: 'string',
-  //     // });
-  //     const res = await getUniqueId();
-  //     console.log(9999, res);
-  //   } catch (e) {
-  //     console.log(66666, e);
-  //   }
-  // };
 
   useEffect(() => {
     openSQL();
     // load metamask extension
     loadMetamaskExt();
-
   }, [openSQL]);
 
   return (
-    <I18nextProvider i18n={i18n}>
-      <ThemeProvider theme={theme}>
-        <NavigationContainer
-          theme={
-            mode === 'dark'
-              ? {
-                  dark: true,
-                  colors: DarkTheme.colors,
-                }
-              : {
-                  dark: false,
-                  colors: DefaultTheme.colors,
-                }
-          }
-        >
-          <Stack.Navigator>
-            {menus.map((menu) => (
-              <Stack.Screen key={menu.name} {...menu} />
-            ))}
-          </Stack.Navigator>
-          <Toast />
-        </NavigationContainer>
-      </ThemeProvider>
-    </I18nextProvider>
+    <RootSiblingParent>
+      <I18nextProvider i18n={i18n}>
+        <ThemeProvider theme={theme}>
+          <NavigationContainer
+            theme={
+              mode === 'dark'
+                ? {
+                    dark: true,
+                    colors: DarkTheme.colors,
+                  }
+                : {
+                    dark: false,
+                    colors: DefaultTheme.colors,
+                  }
+            }
+          >
+            <Stack.Navigator>
+              {menus.map((menu) => (
+                <Stack.Screen key={menu.name} {...menu} />
+              ))}
+            </Stack.Navigator>
+            <Toast />
+          </NavigationContainer>
+        </ThemeProvider>
+      </I18nextProvider>
+    </RootSiblingParent>
   );
 }
 // const styles = StyleSheet.create({

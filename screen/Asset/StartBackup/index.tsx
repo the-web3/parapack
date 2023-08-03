@@ -1,14 +1,11 @@
 import * as React from 'react';
 import Layout from '@components/Layout';
 import { Button, Image, Text } from '@rneui/themed';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, SafeAreaView, StyleSheet, View } from 'react-native';
 const StartBackup = ({ navigation, route }: any) => {
   const handleStartBackup = () => {
-    navigation.navigate('backupMnemonics', {
-      ...route?.params,
-    });
+    navigation.navigate('backupMnemonics');
   };
-  console.log(7777, route?.params?.params);
   return (
     <Layout
       fixedChildren={
@@ -17,18 +14,22 @@ const StartBackup = ({ navigation, route }: any) => {
         </View>
       }
     >
-      <View style={styles.item}>
-        <Image
-          // source={BASE_URI}
-          source={require('../../../assets/images/empty.png')}
-          style={styles.img}
-          // containerStyle={styles.item}
-          PlaceholderContent={<ActivityIndicator />}
-        />
-      </View>
-      <Text style={styles.text}>如果您的手机丢失或损坏</Text>
-      <Text style={styles.text}>纸密码是你找回钱包的唯一途径</Text>
-      <Text style={styles.text2}>（安全起见，请不要截图形式）</Text>
+      <SafeAreaView>
+        <View style={styles.item}>
+          <View>
+            <Image
+              // source={BASE_URI}
+              source={require('../../../assets/images/empty.png')}
+              style={styles.img}
+              // containerStyle={styles.item}
+              PlaceholderContent={<ActivityIndicator />}
+            />
+            <Text style={styles.text}>如果您的手机丢失或损坏</Text>
+            <Text style={styles.text}>纸密码是你找回钱包的唯一途径</Text>
+            <Text style={styles.text2}>（安全起见，请不要截图形式）</Text>
+          </View>
+        </View>
+      </SafeAreaView>
     </Layout>
   );
 };
@@ -41,7 +42,6 @@ const styles = StyleSheet.create({
     width: 138,
     height: 180,
     aspectRatio: 1,
-    marginTop: 106,
     marginBottom: 112,
   },
   text: {

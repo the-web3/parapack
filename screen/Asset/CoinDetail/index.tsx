@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Image,
+  StatusBar,
   // StyleSheet,
   View,
 } from 'react-native';
@@ -36,6 +37,10 @@ const CoinDetail = (props: Props) => {
   }, [navigation]);
   return (
     <View style={{ backgroundColor: '#fff', height: '100%' }}>
+      <StatusBar
+        backgroundColor="#fff" // 替换为你想要的背景颜色
+        barStyle="dark-content" // 替换为你想要的图标和文字颜色
+      />
       <View style={{ marginHorizontal: 52, position: 'relative' }}>
         <View
           style={{

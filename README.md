@@ -50,3 +50,20 @@ change iconfont.json's symbol_url, exec shell
 ```
 npx iconfont-rn
 ```
+
+## savourlabs-wallet-sdk/wallet
+
+when use `savourlabs-wallet-sdk/wallet` need chain is our symbol.toLowerCase()
+demo
+
+```
+import { CreateAddress, DecodeMnemonic, EncodeMnemonic, MnemonicToSeed } from 'savourlabs-wallet-sdk/wallet';
+const account = CreateAddress({
+    chain: supportChian.symbol.toLowerCase(),
+    seedHex: seed.toString('hex'),
+    index: 0,
+    receiveOrChange: 0,
+    network: 'mainnet',
+});
+
+```

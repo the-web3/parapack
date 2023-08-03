@@ -1,17 +1,22 @@
-import { Button, Overlay, Text, useTheme } from '@rneui/themed';
+import { Button, Text, useTheme } from '@rneui/themed';
 import * as React from 'react';
-import { ActivityIndicator, ToastAndroid, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView, TouchableOpacity, View } from 'react-native';
 import { makeStyles } from '@rneui/base';
 import Layout from '../../../components/Layout';
 import { useTranslation } from 'react-i18next';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { createImportWallet } from '@common/wallet';
+import Spinner from 'react-native-loading-spinner-overlay';
+import { showToast } from '@common/utils/platform';
+import { walletBackUp } from '@api/wallet';
+import { getUniqueId } from 'react-native-device-info';
+import { getData } from '@common/utils/storage';
+import { SUCCESS_CODE } from '@common/constants';
 const VerifyMnemonics = (props: Record<string, any>) => {
   const theme = useTheme();
   const styles = useStyles(theme.theme);
   const { navigation, route } = props;
   const { t } = useTranslation();
-  const [walletInfo] = useState(route?.params?.params);
+  const [walletInfo] = useState(route?.params);
   const [loading, setLoading] = useState(false);
 
   const shuffle = useCallback((arr: string[]) => {
@@ -72,28 +77,30 @@ const VerifyMnemonics = (props: Record<string, any>) => {
     for (let i = 0; i < selectMnemonics.length; i++) {
       const { key, value } = selectMnemonics[i];
       if (!value || originMnemonics[key] !== value) {
-        return ToastAndroid.show('助记词顺序有误', ToastAndroid.SHORT);
+        showToast('助记词顺序有误');
       }
     }
     // TODO: 助记词存sqlite
     setLoading(true);
-    const createSuccess = await createImportWallet({
-      ...walletInfo,
-      mnemonic: walletInfo.mnemonic.join(' '),
-    })
-      .catch((e) => {
-        console.log('createImportWallet', e);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-    if (createSuccess) {
+    const [device_id, wallet_uuid] = await Promise.all([getUniqueId(), getData('wallet_uuid')]);
+    console.log(11111, {
+      device_id,
+      wallet_uuid,
+    });
+    const res = await walletBackUp({
+      device_id,
+      wallet_uuid,
+    }).finally(() => {
+      setLoading(false);
+    });
+    if (res.code === SUCCESS_CODE) {
       navigation?.navigate?.('home', { tab: 'asset' });
     }
+    console.log(2222, res);
   };
   useEffect(() => {
     setSelectMnemonics(generateRandomNumbers());
-  }, []);
+  }, [props.navigation]);
 
   const handleSelect = (selectValue: string, checked: boolean) => {
     setSelectMnemonics((prev) => {
@@ -132,7 +139,8 @@ const VerifyMnemonics = (props: Record<string, any>) => {
         </View>
       }
     >
-      <View style={styles.container}>
+      <Spinner visible={loading} />
+      <SafeAreaView style={styles.container}>
         <Text>{t('asset.backup_verify_tips')}</Text>
         <View style={styles.fillCard}>
           {selectMnemonics.map((item) => (
@@ -158,10 +166,7 @@ const VerifyMnemonics = (props: Record<string, any>) => {
             </TouchableOpacity>
           ))}
         </View>
-      </View>
-      <Overlay isVisible={loading} overlayStyle={{ justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" color="blue" />
-      </Overlay>
+      </SafeAreaView>
     </Layout>
   );
 };

@@ -84,6 +84,10 @@ export interface Token {
    * 币价（usdt）
    */
   usdtRate: string;
+  /**
+   * chainId https://chainlist.org/
+   */
+  chainListId: string;
 }
 export interface SymbolSupportParams {
   chain?: string;

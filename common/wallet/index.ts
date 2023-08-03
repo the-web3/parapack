@@ -1,17 +1,17 @@
 import { SymbolSupportDatum, getSymbolSupport } from '@api/symbol';
-import { addSymbolToken, createWallet, getDeviceBalance } from '@api/wallet';
+import { addSymbolToken, createWallet, getAddressBalance, getDeviceBalance } from '@api/wallet';
 import { SUCCESS_CODE } from '@common/constants';
 import { PrivateWalletBalance, PrivateWalletStructure, TABLE_MAP, executeQuery } from '@common/utils/sqlite';
 import { getData } from '@common/utils/storage';
 import { getUniqueId } from 'react-native-device-info';
-import { CreateAddress, EncodeMnemonic, MnemonicToSeed } from 'savourlabs-wallet-sdk/wallet';
+import { CreateAddress, DecodeMnemonic, EncodeMnemonic, MnemonicToSeed } from 'savourlabs-wallet-sdk/wallet';
 import { v4 as uuidv4 } from 'uuid';
 
 /**
  *
  * @param chainList
  */
-export const InsertOrUpdateChainAssetTable = async (chainList: SymbolSupportDatum[] = []) => {
+export const insertOrUpdateChainAssetTable = async (chainList: SymbolSupportDatum[] = []) => {
     await executeQuery({
         customExec: (tx) => {
             tx.executeSql('BEGIN TRANSACTION');
@@ -19,34 +19,38 @@ export const InsertOrUpdateChainAssetTable = async (chainList: SymbolSupportDatu
                 // 循环插入chain表数据
                 for (let i = 0; i < chainList.length; i++) {
                     const chain = chainList[i];
-                    tx.executeSql(
-                        `INSERT INTO chain (chainName, symbol, hot, chainDefault, logo, active_logo, is_del)
-                        VALUES (?, ?, ?, ?, ?, ?, ?)
-                        ON CONFLICT(chainName) DO UPDATE SET
-                        symbol = excluded.symbol,
-                        hot = excluded.hot,
-                        chainDefault = excluded.chainDefault,
-                        logo = excluded.logo,
-                        active_logo = excluded.active_logo,
-                        is_del = excluded.is_del
-                  `,
-                        [chain.chainName, chain.symbol, chain.hot ? 1 : 0, chain.default ? 1 : 0, chain.logo, '', 0],
-                        (txObj, resultSet) => {
-                            if (resultSet.insertId) {
-                                console.log('chain inserted successfully', JSON.stringify(resultSet));
-                            } else {
-                                console.log('Failed to insert chain data');
-                            }
-                        },
-                        (txObj, error) => {
-                            console.log(
-                                'Error inserting chain data:',
-                                txObj,
-                                [chain.chainName, chain.symbol, chain.hot ? 1 : 0, chain.default ? 1 : 0, chain.logo, chain.logo, 0, 1],
-                                error
+                    tx.executeSql(`SELECT id FROM chain WHERE chainName = ?`, [chain.chainName], (txObj, resultSet) => {
+                        if (resultSet.rows.length === 0) {
+                            tx.executeSql(
+                                `
+            INSERT INTO chain (chainName, symbol, hot, chainDefault, logo, active_logo, is_del)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+          `,
+                                [chain.chainName, chain.symbol, chain.hot ? 1 : 0, chain.default ? 1 : 0, chain.logo, '', 0],
+                                (txObj, resultSet) => {
+                                    if (resultSet.rowsAffected > 0) {
+                                        console.log('Data inserted successfully');
+                                    } else {
+                                        console.log('Failed to insert data');
+                                    }
+                                }
+                            );
+                        } else {
+                            // 如果插入操作失败（唯一约束冲突），则执行更新操作
+                            const chainId = resultSet.rows.item(0).id;
+                            tx.executeSql(
+                                `UPDATE chain SET symbol = ?, hot = ?, chainDefault = ?, logo = ?, active_logo = ?, is_del = ? WHERE id = ?`,
+                                [chain.symbol, chain.hot ? 1 : 0, chain.default ? 1 : 0, chain.logo, '', 0, chainId],
+                                (txObj, resultSet) => {
+                                    if (resultSet.rowsAffected > 0) {
+                                        console.log('Data updated successfully');
+                                    } else {
+                                        console.log('Failed to update data');
+                                    }
+                                }
                             );
                         }
-                    );
+                    });
                 }
 
                 // 循环插入asset表数据 chainName tokenName  contract_addr 联合唯一键
@@ -55,36 +59,67 @@ export const InsertOrUpdateChainAssetTable = async (chainList: SymbolSupportDatu
                     for (let a = 0; a < chain.token.length; a++) {
                         const asset = chainList[i].token[a];
                         tx.executeSql(
-                            `INSERT INTO asset (chain_id, tokenName, tokenHot, tokenDefault, tokenLogo, activeTokenLogo, contract_addr, contractUnit, is_del)
-                    VALUES ((SELECT id FROM chain WHERE chainName = ?), ?, ?, ?, ?, ?, ?, ?, ?)
-                    ON CONFLICT(chain_id, tokenName, contract_addr) DO UPDATE SET
-                    tokenHot = excluded.tokenHot,
-                    tokenDefault = excluded.tokenDefault,
-                    tokenLogo = excluded.tokenLogo,
-                    activeTokenLogo = excluded.activeTokenLogo,
-                    contractUnit = excluded.contractUnit,
-                    is_del = excluded.is_del
-                  `,
-                            [
-                                chain.chainName,
-                                asset.tokenName,
-                                asset.tokenHot ? 1 : 0,
-                                asset.tokenDefault ? 1 : 0,
-                                asset.tokenLogo,
-                                asset.tokenLogo,
-                                asset.contractAddr,
-                                asset.contractUnit,
-                                0,
-                            ],
+                            `SELECT id FROM asset WHERE chain_id = (SELECT id FROM chain WHERE chainName = ?) AND tokenName = ? AND contract_addr = ?`,
+                            [chain.chainName, asset.tokenName, asset.contractAddr],
                             (txObj, resultSet) => {
-                                if (resultSet.insertId) {
-                                    console.log('asset Data inserted successfully', resultSet);
+                                // 如果查询结果为空，表示表中不存在相同的记录，执行插入操作
+                                if (resultSet.rows.length === 0) {
+                                    tx.executeSql(
+                                        `INSERT INTO asset (chain_id, chainListId, tokenName, tokenHot, tokenDefault, tokenLogo, activeTokenLogo, contract_addr, contractUnit, is_del)
+                                  VALUES ((SELECT id FROM chain WHERE chainName = ?), ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                                        [
+                                            chain.chainName,
+                                            asset.chainListId,
+                                            asset.tokenName,
+                                            asset.tokenHot ? 1 : 0,
+                                            asset.tokenDefault ? 1 : 0,
+                                            asset.tokenLogo,
+                                            asset.tokenLogo,
+                                            asset.contractAddr,
+                                            asset.contractUnit,
+                                            0,
+                                        ],
+                                        (txObj, resultSet) => {
+                                            if (resultSet.insertId) {
+                                                console.log('Asset Data inserted successfully');
+                                            } else {
+                                                console.log('Failed to insert asset data');
+                                            }
+                                        },
+                                        (txObj, error) => {
+                                            console.log('Error inserting asset data:', error);
+                                        }
+                                    );
                                 } else {
-                                    console.log('Failed to insert asset data');
+                                    // 如果查询结果不为空，表示表中已经存在相同的记录，执行更新操作
+                                    const assetId = resultSet.rows.item(0).id;
+                                    tx.executeSql(
+                                        `UPDATE asset SET chainListId = ?, tokenHot = ?, tokenDefault = ?, tokenLogo = ?, activeTokenLogo = ?, contractUnit = ?, is_del = ? WHERE id = ?`,
+                                        [
+                                            asset.chainListId,
+                                            asset.tokenHot ? 1 : 0,
+                                            asset.tokenDefault ? 1 : 0,
+                                            asset.tokenLogo,
+                                            asset.tokenLogo,
+                                            asset.contractUnit,
+                                            0,
+                                            assetId,
+                                        ],
+                                        (txObj, resultSet) => {
+                                            if (resultSet.rowsAffected > 0) {
+                                                console.log('Asset Data updated successfully');
+                                            } else {
+                                                console.log('Failed to update asset data');
+                                            }
+                                        },
+                                        (txObj, error) => {
+                                            console.log('Error updating asset data:', error);
+                                        }
+                                    );
                                 }
                             },
                             (txObj, error) => {
-                                console.log('Error inserting asset data:', txObj, error);
+                                console.log('Error querying asset data:', error);
                             }
                         );
                     }
@@ -99,6 +134,215 @@ export const InsertOrUpdateChainAssetTable = async (chainList: SymbolSupportDatu
         },
     });
 };
+
+/**
+ * walletAsset 表
+ * account表
+ * accountAsset表
+ */
+export const insertWalletAsset = ({
+    wallet_uuid,
+    chain,
+    contract_addr,
+    balance,
+    asset_usd,
+    asset_cny,
+    address,
+    publicKey,
+    privateKey,
+    symbol,
+}: {
+    wallet_uuid: string;
+    chain: string;
+    contract_addr: string;
+    balance: string;
+    asset_usd: string;
+    asset_cny: string;
+    address: string;
+    publicKey: string;
+    privateKey: string;
+    symbol: string;
+}) => {
+    executeQuery({
+        customExec: async (tx) => {
+            tx.executeSql(
+                `SELECT id AS wallet_id FROM wallet WHERE wallet_uuid = ?`,
+                [wallet_uuid],
+                (txObj, resultSet) => {
+                    if (resultSet.rows.length === 0) {
+                        // 如果查询结果为空，表示表中不存在对应的 wallet 记录，不执行任何操作
+                        console.log('Wallet data not found');
+                    } else {
+                        // 如果查询结果不为空，获取 wallet_id 的值
+                        const wallet_id = resultSet.rows.item(0).wallet_id;
+                        //1、account表 wallet_id, address 作为联合唯一键
+                        tx.executeSql(
+                            `SELECT * FROM account WHERE wallet_id = ? AND address = ?`,
+                            [wallet_id, address],
+                            (txObj, resultSet) => {
+                                if (resultSet.rows.length > 0) {
+                                    //account表 wallet_id, address 作为联合唯一键
+                                    const address_id = resultSet.rows.item(0).id;
+                                    tx.executeSql(
+                                        `UPDATE account SET address_index = ?, address = ?, pub_key = ?, priv_key = ?, is_del = ? WHERE id = ? AND wallet_id = ?`,
+                                        [0, address, publicKey, privateKey, 0, address_id, wallet_id],
+                                        (txObj, resultSet) => {
+                                            if (resultSet.rowsAffected > 0) {
+                                                console.log('account Data updated successfully');
+                                            } else {
+                                                console.log('Failed to update account data');
+                                            }
+                                        },
+                                        (txObj, error) => {
+                                            console.log('Error updating account data:', JSON.stringify(txObj));
+                                        }
+                                    );
+                                } else {
+                                    //account表 wallet_id, address 作为联合唯一键
+                                    tx.executeSql(
+                                        `INSERT INTO account (wallet_id, address_index, address, pub_key, priv_key, is_del)
+                                VALUES (?, ?, ?, ?, ?, ?)`,
+                                        [wallet_id, 0, address, publicKey, privateKey, 0],
+                                        (txObj, resultSet) => {
+                                            if (resultSet.rowsAffected > 0) {
+                                                console.log('Account Data inserted  successfully', JSON.stringify(resultSet));
+                                            } else {
+                                                console.log('Failed to insert Account data');
+                                            }
+                                        },
+                                        (txObj, error) => {
+                                            console.log('Error inserting Account data:', JSON.stringify(txObj));
+                                        }
+                                    );
+                                }
+                                tx.executeSql(
+                                    `SELECT id AS asset_id FROM asset
+                        WHERE chain_id = (SELECT id FROM chain WHERE chainName = ?) AND contract_addr = ?AND tokenName = ?`,
+                                    [chain, contract_addr, symbol],
+                                    (txObj, resultSet) => {
+                                        if (resultSet.rows.length === 0) {
+                                            // 如果查询结果为空，表示表中不存在对应的 asset 记录，不执行任何操作
+                                            console.log('Asset data not found');
+                                        } else {
+                                            // 如果查询结果不为空，获取 asset_id 的值
+                                            const asset_id = resultSet.rows.item(0).asset_id;
+                                            //2、walletAsset 表: wallet_id, asset_id 联合唯一键（不同钱包都有ETH） , asset表的三个联合唯一键去查 (SELECT id FROM asset WHERE chain_id = (SELECT id FROM chain WHERE chain = ?) AND contract_addr = ?)
+                                            tx.executeSql(
+                                                `SELECT * FROM walletAsset WHERE wallet_id = ? AND asset_id = ?`,
+                                                [wallet_id, asset_id],
+                                                (txObj, resultSet) => {
+                                                    if (resultSet.rows.length > 0) {
+                                                        // 存在对应数据，执行更新操作
+                                                        tx.executeSql(
+                                                            `UPDATE walletAsset SET balance = ?, asset_usd = ?, asset_cny = ?, is_del = ? WHERE wallet_id = ? AND asset_id = ?`,
+                                                            [balance, asset_usd, asset_cny, 0, wallet_id, asset_id],
+                                                            (txObj, resultSet) => {
+                                                                if (resultSet.rowsAffected > 0) {
+                                                                    console.log('WalletAsset Data updated successfully');
+                                                                } else {
+                                                                    console.log('Failed to update WalletAsset data');
+                                                                }
+                                                            },
+                                                            (txObj, error) => {
+                                                                console.log('Error updating WalletAsset data:', error);
+                                                            }
+                                                        );
+                                                    } else {
+                                                        // 不存在对应数据，执行插入操作
+                                                        tx.executeSql(
+                                                            `INSERT INTO walletAsset (wallet_id, asset_id, balance, asset_usd, asset_cny, is_del) VALUES (?, ?, ?, ?, ?, ?)`,
+                                                            [wallet_id, asset_id, balance, asset_usd, asset_cny, 0],
+                                                            (txObj, resultSet) => {
+                                                                if (resultSet.rowsAffected > 0) {
+                                                                    console.log('WalletAsset Data inserted successfully');
+                                                                } else {
+                                                                    console.log('Failed to insert WalletAsset data');
+                                                                }
+                                                            },
+                                                            (txObj, error) => {
+                                                                console.log('Error inserting WalletAsset data:', error);
+                                                            }
+                                                        );
+                                                    }
+                                                },
+                                                (txObj, error) => {
+                                                    console.log('Error querying WalletAsset data:', error);
+                                                }
+                                            );
+                                            //3、accountAsset表 address_id, asset_id 联合唯一, address_id 需要 wallet_id, address 作为联合唯一键
+                                            tx.executeSql(
+                                                `SELECT * FROM account WHERE wallet_id = ? AND address = ?`,
+                                                [wallet_id, address],
+                                                (txObj, resultSet) => {
+                                                    if (resultSet.rows.length > 0) {
+                                                        const address_id = resultSet.rows.item(0).id;
+                                                        tx.executeSql(
+                                                            `SELECT * FROM accountAsset WHERE address_id = ? AND asset_id = ?`,
+                                                            [address_id, asset_id],
+                                                            (txObj, resultSet) => {
+                                                                if (resultSet.rows.length > 0) {
+                                                                    // 如果已存在记录，则执行更新操作
+                                                                    tx.executeSql(
+                                                                        `UPDATE accountAsset SET balance = ?, asset_usd = ?, asset_cny = ?, is_del = ? WHERE address_id = ? AND asset_id = ?`,
+                                                                        [balance, asset_usd, asset_cny, 0, address_id, asset_id],
+                                                                        (txObj, resultSet) => {
+                                                                            if (resultSet.rowsAffected > 0) {
+                                                                                console.log('accountAsset update success');
+                                                                            } else {
+                                                                                console.log('accountAsset update fail');
+                                                                            }
+                                                                        },
+                                                                        (txObj, error) => {
+                                                                            console.log('accountAsset update fail:', JSON.stringify(txObj));
+                                                                        }
+                                                                    );
+                                                                } else {
+                                                                    // 如果不存在记录，则执行插入操作
+                                                                    tx.executeSql(
+                                                                        `INSERT INTO accountAsset (address_id, asset_id, balance, asset_usd, asset_cny, is_del)
+                                                                   VALUES (?, (SELECT id FROM asset WHERE chain_id = (SELECT id FROM chain WHERE chainName = ?) AND contract_addr = ?), ?, ?, ?, ?)`,
+                                                                        [address_id, chain, contract_addr, balance, asset_usd, asset_cny, 0],
+                                                                        (txObj, resultSet) => {
+                                                                            if (resultSet.rowsAffected > 0) {
+                                                                                console.log('accountAsset insert success');
+                                                                            } else {
+                                                                                console.log('accountAsset insert fail');
+                                                                            }
+                                                                        },
+                                                                        (txObj, error) => {
+                                                                            console.log('accountAsset insert fail:', JSON.stringify(txObj));
+                                                                        }
+                                                                    );
+                                                                }
+                                                            },
+                                                            (txObj, error) => {
+                                                                console.log('accountAsset search:', JSON.stringify(txObj));
+                                                            }
+                                                        );
+                                                    }
+                                                }
+                                            );
+                                        }
+                                    },
+                                    (txObj, error) => {
+                                        console.log('Error querying asset data:', JSON.stringify(txObj));
+                                    }
+                                );
+                            },
+                            (txObj, error) => {
+                                console.log('Error inserting or updating Account data:', JSON.stringify(txObj));
+                            }
+                        );
+                    }
+                },
+                (txObj, error) => {
+                    console.log('Error querying wallet data:', error);
+                }
+            );
+        },
+    });
+};
+
 /**
  *
  * @param privateWalletInfo
@@ -114,126 +358,99 @@ export const batchInsertOrUpdateAssetTable = async (
             try {
                 //wallet表 增加 backup
                 tx.executeSql(
-                    `INSERT INTO wallet (chain_id, wallet_name, device_id, wallet_uuid, mnemonic_code, password, wallet_asset_usd, wallet_asset_cny, backup, has_submit, is_del)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            ON CONFLICT(wallet_uuid) DO UPDATE SET
-            chain_id = excluded.chain_id,
-            wallet_name = excluded.wallet_name,
-            device_id = excluded.device_id,
-            mnemonic_code = excluded.mnemonic_code,
-            password = excluded.password,
-            wallet_asset_usd = excluded.wallet_asset_usd,
-            wallet_asset_cny = excluded.wallet_asset_cny,
-            backup = excluded.backup,
-            has_submit = excluded.has_submit,
-            is_del = excluded.is_del;
-          `,
-                    [
-                        0,
-                        privateWalletInfo.wallet_name,
-                        privateWalletInfo.device_id,
-                        privateWalletInfo.wallet_uuid,
-                        privateWalletInfo.mnemonic_code,
-                        privateWalletInfo.password,
-                        privateWalletInfo.wallet_asset_usd,
-                        privateWalletInfo.wallet_asset_cny,
-                        privateWalletInfo.backup ? 1 : 0,
-                        submitted,
-                        0,
-                    ],
+                    `SELECT * FROM wallet WHERE wallet_uuid = ?`,
+                    [privateWalletInfo.wallet_uuid],
                     (txObj, resultSet) => {
-                        if (resultSet.insertId) {
-                            console.log('wallet inserted successfully', JSON.stringify(resultSet));
+                        if (resultSet.rows.length === 0) {
+                            // 如果查询结果为空，表示表中不存在对应的钱包信息，执行插入操作
+                            tx.executeSql(
+                                `INSERT INTO wallet (chain_id, wallet_name, device_id, wallet_uuid, mnemonic_code, password, wallet_asset_usd, wallet_asset_cny, backup, has_submit, is_del)
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                                [
+                                    0,
+                                    privateWalletInfo.wallet_name,
+                                    privateWalletInfo.device_id,
+                                    privateWalletInfo.wallet_uuid,
+                                    privateWalletInfo.mnemonic_code,
+                                    privateWalletInfo.password,
+                                    privateWalletInfo.wallet_asset_usd,
+                                    privateWalletInfo.wallet_asset_cny,
+                                    privateWalletInfo.backup ? 1 : 0,
+                                    submitted,
+                                    0,
+                                ],
+                                (txObj, resultSet) => {
+                                    if (resultSet.rowsAffected > 0) {
+                                        console.log('Wallet inserted successfully', JSON.stringify(resultSet));
+                                    } else {
+                                        console.log('Failed to insert Wallet data');
+                                    }
+                                },
+                                (txObj, error) => {
+                                    console.log('Error inserting Wallet data:', error);
+                                }
+                            );
                         } else {
-                            console.log('wallet Failed to insert data');
+                            // 如果查询结果不为空，表示表中存在对应的钱包信息，执行更新操作
+                            const chain_id = resultSet.rows.item(0).chain_id;
+                            tx.executeSql(
+                                `UPDATE wallet SET
+                     chain_id = ?,
+                     wallet_name = ?,
+                     device_id = ?,
+                     mnemonic_code = ?,
+                     password = ?,
+                     wallet_asset_usd = ?,
+                     wallet_asset_cny = ?,
+                     backup = ?,
+                     has_submit = ?,
+                     is_del = ?
+                     WHERE wallet_uuid = ?`,
+                                [
+                                    chain_id,
+                                    privateWalletInfo.wallet_name,
+                                    privateWalletInfo.device_id,
+                                    privateWalletInfo.mnemonic_code,
+                                    privateWalletInfo.password,
+                                    privateWalletInfo.wallet_asset_usd,
+                                    privateWalletInfo.wallet_asset_cny,
+                                    privateWalletInfo.backup ? 1 : 0,
+                                    submitted,
+                                    0,
+                                    privateWalletInfo.wallet_uuid,
+                                ],
+                                (txObj, resultSet) => {
+                                    if (resultSet.rowsAffected > 0) {
+                                        console.log('Wallet updated successfully', JSON.stringify(resultSet));
+                                    } else {
+                                        console.log('Failed to update Wallet data');
+                                    }
+                                },
+                                (txObj, error) => {
+                                    console.log('Error updating Wallet data:', error);
+                                }
+                            );
                         }
                     },
                     (txObj, error) => {
-                        console.log('wallet Error inserting data:', txObj);
+                        console.log('Error querying Wallet data:', error);
                     }
                 );
                 if (!privateWalletInfo.wallet_balance) return;
                 for (let i = 0; i < privateWalletInfo.wallet_balance.length; i++) {
                     const walletAsset = privateWalletInfo.wallet_balance[i];
-                    //walletAsset 表: wallet_id, asset_id 联合唯一键（不同钱包都有ETH） , asset表的三个联合唯一键去查 (SELECT id FROM asset WHERE chain_id = (SELECT id FROM chain WHERE chain = ?) AND contract_addr = ?)
-                    tx.executeSql(
-                        `INSERT INTO walletAsset (wallet_id, asset_id, balance, asset_usd, asset_cny, is_del)
-          VALUES ((SELECT id FROM wallet WHERE wallet_uuid = ?), (SELECT id FROM asset WHERE chain_id = (SELECT id FROM chain WHERE chainName = ?) AND contract_addr = ?), ?, ?, ?, ?)
-          ON CONFLICT(wallet_id, asset_id) DO UPDATE SET
-          balance = excluded.balance,
-          asset_usd = excluded.asset_usd,
-          asset_cny = excluded.asset_cny,
-          is_del = excluded.is_del`,
-                        [
-                            privateWalletInfo.wallet_uuid,
-                            walletAsset.chain,
-                            walletAsset.contract_addr,
-                            walletAsset.balance,
-                            walletAsset.asset_usd,
-                            walletAsset.asset_cny,
-                            0,
-                        ],
-                        (txObj, resultSet) => {
-                            if (resultSet.insertId) {
-                                console.log('walletAsset inserted successfully', JSON.stringify(resultSet));
-                            } else {
-                                console.log('walletAsset Failed to insert data');
-                            }
-                        },
-                        (txObj, error) => {
-                            console.log('walletAsset Error inserting data:', txObj);
-                        }
-                    );
-                    //account表 wallet_id, address 作为联合唯一键
-                    tx.executeSql(
-                        `INSERT INTO account (wallet_id, address_index, address, pub_key, priv_key, is_del)
-                              VALUES ((SELECT id FROM wallet WHERE wallet_uuid = ?), ?, ?, ?, ?, ?)
-                              ON CONFLICT(wallet_id, address) DO UPDATE SET
-                              address_index = excluded.address_index,
-                              pub_key = excluded.pub_key,
-                              priv_key = excluded.priv_key,
-                              is_del = excluded.is_del`,
-                        [privateWalletInfo.wallet_uuid, 0, walletAsset.address, walletAsset.publicKey, walletAsset.privateKey, 0],
-                        (txObj, resultSet) => {
-                            if (resultSet.insertId) {
-                                console.log('account inserted successfully', JSON.stringify(resultSet));
-                            } else {
-                                console.log('account Failed to insert data');
-                            }
-                        },
-                        (txObj, error) => {
-                            console.log('account Error inserting data:', txObj);
-                        }
-                    );
-                    //accountAsset表 address_id, asset_id 联合唯一, address_id 需要 wallet_id, address 作为联合唯一键
-                    tx.executeSql(
-                        `INSERT INTO accountAsset (address_id, asset_id, balance, asset_usd, asset_cny, is_del)
-                VALUES ((SELECT id FROM account WHERE address = ?), (SELECT id FROM asset WHERE chain_id = (SELECT id FROM chain WHERE chainName = ?) AND contract_addr = ?), ?, ?, ?, ?)
-                ON CONFLICT(address_id, asset_id) DO UPDATE SET
-                balance = excluded.balance,
-                asset_usd = excluded.asset_usd,
-                asset_cny = excluded.asset_cny,
-                is_del = excluded.is_del`,
-                        [
-                            walletAsset.address,
-                            walletAsset.chain,
-                            walletAsset.contract_addr,
-                            walletAsset.balance,
-                            walletAsset.asset_usd,
-                            walletAsset.asset_cny,
-                            0,
-                        ],
-                        (txObj, resultSet) => {
-                            if (resultSet.insertId) {
-                                console.log('accountAsset inserted successfully', JSON.stringify(resultSet));
-                            } else {
-                                console.log('accountAsset Failed to insert data');
-                            }
-                        },
-                        (txObj, error) => {
-                            console.log('accountAsset Error inserting data:', txObj);
-                        }
-                    );
+                    insertWalletAsset({
+                        wallet_uuid: privateWalletInfo.wallet_uuid,
+                        address: walletAsset.address,
+                        publicKey: walletAsset.publicKey,
+                        privateKey: walletAsset.privateKey,
+                        chain: walletAsset.chain,
+                        contract_addr: walletAsset.contract_addr,
+                        balance: walletAsset.balance || '0',
+                        asset_usd: walletAsset.asset_usd || '0',
+                        asset_cny: walletAsset.asset_cny || '0',
+                        symbol: walletAsset.symbol,
+                    });
                 }
                 // 提交事务
                 tx.executeSql('COMMIT');
@@ -254,7 +471,10 @@ export const createImportWallet = async (params: {
     password: any;
     wallet_name: any;
     mnemonic?: string;
-}): Promise<Boolean> => {
+}): Promise<{
+    success: boolean;
+    wallet_uuid: string;
+}> => {
     try {
         console.log(`createImportWalletParams1=====>`, params);
         const { password, wallet_name, mnemonic = '' } = params;
@@ -269,10 +489,16 @@ export const createImportWallet = async (params: {
             console.log(`createImportWalletParams2 =====>`, device_id, mnemonic_code, JSON.stringify(symbolSupport));
 
             //存chain 和asset 表
-            InsertOrUpdateChainAssetTable(symbolSupport.data || []);
+            insertOrUpdateChainAssetTable(symbolSupport.data || []);
 
             const tokens = (symbolSupport.data || [])
-                ?.filter((item) => ['Ethereum'].includes(item.chainName) && item.default)
+                ?.filter(
+                    (item) =>
+                        [
+                            'Ethereum',
+                            //  'BITCOIN'
+                        ].includes(item.chainName) && item.default
+                )
                 .reduce((total: PrivateWalletBalance[], supportChian, index) => {
                     if (supportChian.token.length > 0) {
                         console.log(`createImportWalletParams3 =====>`, index, supportChian);
@@ -334,13 +560,13 @@ export const createImportWallet = async (params: {
                         mnemonic_code,
                         device_id,
                         password,
-                        wallet_balance: tokens.map((item) => {
-                            const matchToken = wallet_balance.find(
+                        wallet_balance: wallet_balance.map((item) => {
+                            const matchToken = tokens.find(
                                 (info) => info.contract_addr === item.contract_addr && info.address === item.address
                             );
                             return {
-                                ...item,
                                 ...matchToken,
+                                ...item,
                             };
                         }),
                     };
@@ -371,81 +597,147 @@ export const createImportWallet = async (params: {
                 };
                 batchInsertOrUpdateAssetTable(unSubmitPrivateWallet as PrivateWalletStructure, 0);
             }
-            return res.code === SUCCESS_CODE;
+            return {
+                success: res.code === SUCCESS_CODE,
+                wallet_uuid,
+            };
         }
     } catch (error) {
         console.log('error', error);
-        return false;
+        return {
+            success: false,
+            wallet_uuid: '',
+        };
     }
-    return false;
+    return {
+        success: false,
+        wallet_uuid: '',
+    };
 };
 
-export const addToken = async (params: { chain: string; contract_addr: string; symbol: string }): Promise<Boolean> => {
-    const currentWalletInfo = await getData('currentWallet');
-    const { wallet_uuid } = JSON.parse(currentWalletInfo);
-    const device_id = await getUniqueId();
-    const seed = MnemonicToSeed({
-        mnemonic: [
-            'sea',
-            'wrestle',
-            'know',
-            'wedding',
-            'trigger',
-            'chunk',
-            'autumn',
-            'museum',
-            'destroy',
-            'seven',
-            'anger',
-            'jazz',
-        ].join(' '),
-        password: '1234567a',
+/**
+ *
+ * @param params
+ * @returns
+ */
+export const addToken = async (params: {
+    chain: string;
+    contract_addr: string;
+    symbol: string;
+    tokenName: string;
+}): Promise<Boolean> => {
+    const [device_id, wallet_uuid] = await Promise.all([getUniqueId(), getData('wallet_uuid')]);
+    const sqliteData = await executeQuery({
+        customExec: (tx, resolve, reject) => {
+            return tx.executeSql(
+                `SELECT * FROM wallet WHERE wallet_uuid = ? `,
+                [wallet_uuid],
+                (txObj, resultSet) => {
+                    if (resultSet.rows.length > 0) {
+                        const walletData = resultSet.rows.item(0);
+                        resolve(walletData);
+                    } else {
+                        reject('Wallet not found.');
+                    }
+                },
+                (txObj, error) => {
+                    reject('Wallet Found Error.');
+                }
+            );
+        },
     });
-    const account = CreateAddress({
-        chain: params.symbol.toLowerCase(),
-        seedHex: seed.toString('hex'),
-        index: 0,
-        receiveOrChange: 0,
-        network: 'mainnet',
-    });
-    console.log('addToken', account);
-    try {
-        const { address, publicKey, privateKey } = JSON.parse(account);
-        const res = await addSymbolToken({
-            device_id,
-            wallet_uuid,
-            chain: params.chain,
-            symbol: params.symbol,
-            contract_addr: params.contract_addr,
-            address,
-            index: 0,
+    if (sqliteData) {
+        const mnemonic = await DecodeMnemonic({ encrytMnemonic: sqliteData?.mnemonic_code, language: 'english' });
+        const seed = MnemonicToSeed({
+            mnemonic,
+            password: sqliteData?.password,
         });
-        if (res.code === SUCCESS_CODE) {
-            executeQuery({
-                query: `INSERT INTO account (wallet_id, address_index, address, pub_key, priv_key, is_del)
-                VALUES ((SELECT id FROM wallet WHERE wallet_uuid = ?), ?, ?, ?, ?, ?)
-                ON CONFLICT(wallet_id, address) DO UPDATE SET
-                address_index = excluded.address_index,
-                pub_key = excluded.pub_key,
-                priv_key = excluded.priv_key,
-                is_del = excluded.is_del`,
-                params: [wallet_uuid, 0, address, publicKey, privateKey, 0],
-            });
+        const account = CreateAddress({
+            chain: params.symbol.toLowerCase(),
+            seedHex: seed.toString('hex'),
+            index: 0,
+            receiveOrChange: 0,
+            network: 'mainnet',
+        });
+        if (account) {
+            try {
+                const { address, publicKey, privateKey } = JSON.parse(account);
+                const submitObj = {
+                    device_id,
+                    wallet_uuid,
+                    chain: params.chain,
+                    symbol: params.tokenName,
+                    contract_addr: params.contract_addr,
+                    address,
+                    index: 0,
+                };
+                const res = await addSymbolToken(submitObj);
+                if (res.code === SUCCESS_CODE) {
+                    const balanceRes = await getAddressBalance({
+                        device_id,
+                        wallet_uuid,
+                        chain: params.chain,
+                        symbol: params.tokenName,
+                        contract_address: params.contract_addr,
+                        address,
+                    });
+                    console.log(
+                        'getAddressBalance',
+                        balanceRes,
+                        {
+                            device_id,
+                            wallet_uuid,
+                            chain: params.chain,
+                            symbol: params.tokenName,
+                            contract_address: params.contract_addr,
+                            address,
+                        },
+                        {
+                            wallet_uuid,
+                            address,
+                            publicKey,
+                            privateKey,
+                            chain: params.chain,
+                            contract_addr: params.contract_addr,
+                            balance: balanceRes?.data?.balance || 0,
+                            asset_usd: balanceRes?.data?.asset_usd || 0,
+                            asset_cny: balanceRes?.data?.asset_cny || 0,
+                            symbol: params.tokenName,
+                        }
+                    );
+                    if (balanceRes.data) {
+                        insertWalletAsset({
+                            wallet_uuid,
+                            address,
+                            publicKey,
+                            privateKey,
+                            chain: params.chain,
+                            contract_addr: params.contract_addr,
+                            balance: balanceRes.data.balance || 0,
+                            asset_usd: balanceRes.data.asset_usd || 0,
+                            asset_cny: balanceRes.data.asset_cny || 0,
+                            symbol: params.tokenName,
+                        });
+                    }
+                }
+                return res.code === SUCCESS_CODE;
+            } catch (e) {
+                console.log(8888, e);
+                return false;
+            }
         }
-        return res.code === SUCCESS_CODE;
-    } catch (e) {
-        return false;
     }
+    // return false;
 };
 
 /**
  * getTableInfo
- * @param hideTable
+ * @param showTable
  */
 
-export const getTableInfo = (hideTable?: string[]) => {
+export const getTableInfo = (showTable?: string[]) => {
     Object.keys(TABLE_MAP)
-        .filter((item) => !(hideTable || []).includes(item))
+        .filter((item) => (showTable || Object.keys(TABLE_MAP)).includes(item))
         .map((table_name) => {
             executeQuery({
                 customExec: (tx) => {

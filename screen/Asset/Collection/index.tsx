@@ -1,7 +1,8 @@
 import IconFont from '@assets/iconfont';
+import { getData } from '@common/utils/storage';
 import ImageScreen from '@components/ImageScreen';
-import { Overlay, makeStyles } from '@rneui/themed';
-import React, { useRef, useState } from 'react';
+import { makeStyles } from '@rneui/themed';
+import React, { useEffect, useRef, useState } from 'react';
 import { Alert, CameraRoll } from 'react-native';
 import { Clipboard, Image, Modal, StatusBar, Text, TouchableOpacity, View } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
@@ -14,6 +15,7 @@ const Collection = (props) => {
     loading: false,
     url: '',
   });
+  const [tokenDetail, setTokenDetail] = useState({});
   const styles = useStyles(props);
   const { navigation, route } = props;
   const captureImage = async () => {
@@ -25,7 +27,6 @@ const Collection = (props) => {
     console.log('Image URI:', url);
     // 可以将 URI 用于显示、保存或分享等操作
   };
-  console.log(1111, capture.url);
   const handleCloseModal = async () => {
     setCapture({
       ...capture,
@@ -33,6 +34,14 @@ const Collection = (props) => {
       url: '',
     });
   };
+  const init = async () => {
+    const res = await getData('current_token_detail');
+    setTokenDetail(JSON.parse(res));
+  };
+  useEffect(() => {
+    init();
+  }, [props.navigation]);
+  console.log(11111, tokenDetail);
   return (
     <>
       <StatusBar
@@ -61,7 +70,7 @@ const Collection = (props) => {
                   <Text style={styles.font}>扫描二维码，向我支付</Text>
                 </View>
                 <View style={{ justifyContent: 'center', alignItems: 'center', marginVertical: 20 }}>
-                  <QRCode value={props?.route?.params?.toAddr || ''} size={200} />
+                  {tokenDetail?.address && <QRCode value={tokenDetail?.address || ''} size={200} />}
                 </View>
                 <View
                   style={{
@@ -73,7 +82,7 @@ const Collection = (props) => {
                     paddingVertical: 7,
                   }}
                 >
-                  <Text style={styles.font}>{route?.params?.toAddr || ''}</Text>
+                  <Text style={styles.font}>{tokenDetail?.address || ''}</Text>
                 </View>
               </View>
 
@@ -81,7 +90,7 @@ const Collection = (props) => {
                 <TouchableOpacity
                   style={styles.item}
                   onPress={() => {
-                    Clipboard.setString(route?.params?.toAddr || '');
+                    Clipboard.setString(tokenDetail?.address || '');
                   }}
                 >
                   <Text style={styles.font}>复制地址</Text>
@@ -107,7 +116,7 @@ const Collection = (props) => {
           <ImageScreen url={capture.url} styles={{ width: 300, height: 600 }} />
           <View>
             <TouchableOpacity onPress={handleCloseModal}>
-              <Icon name={'close'} size={16} />
+              <Icon name={'closecircleo'} size={16} style={{ color: '#fff', fontSize: 18 }} />
             </TouchableOpacity>
           </View>
         </View>

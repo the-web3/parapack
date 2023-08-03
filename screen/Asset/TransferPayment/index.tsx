@@ -1,14 +1,26 @@
 import { Button, Input, Text } from '@rneui/themed';
 import * as React from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import Layout from '../../../components/Layout';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { useTranslation } from 'react-i18next';
-import { useState } from 'react';
-import { getAddressBalance, symbolGas, transfer } from '@api/wallet';
+import { useCallback, useEffect, useState } from 'react';
+import {
+  DeviceBalanceTokenList,
+  SymbolGasData,
+  WalletBalance,
+  getAddressBalance,
+  getDeviceBalance,
+  symbolGas,
+  transfer,
+  walletNonce,
+} from '@api/wallet';
 import { getUniqueId } from 'react-native-device-info';
 import { getData } from '@common/utils/storage';
 import Picker from 'react-native-picker-select';
+import { executeQuery } from '@common/utils/sqlite';
+import { SignTransaction } from 'savourlabs-wallet-sdk/wallet';
+import { CHAIN_MAP } from '@common/constants';
 const FEE_TYPE = [
   {
     type: 'low',
@@ -38,9 +50,8 @@ const FEE_TYPE = [
 ];
 const TransferPayment = ({ navigation, route }) => {
   const { t } = useTranslation();
-  const [list, setList] = useState<any[]>([]);
-  const [wallet, setWallet] = useState<any[]>([]);
-  const [token, seToken] = useState<any[]>([]);
+  const [token, seToken] = useState<WalletBalance>();
+
   const [form, setForm] = useState({
     fromAddr: route?.params?.address || '',
     toAddr: route?.params?.toAddr || '',
@@ -50,74 +61,178 @@ const TransferPayment = ({ navigation, route }) => {
     sign: route?.params?.sign || '',
     chain: route?.params?.chain || '',
   });
+
+  const [list, setList] = useState<any[]>([]);
   const [byte, setByte] = useState<string>('');
   const [size, setSize] = useState<string>('');
-  const [activeType, setActiveType] = useState<string>('recommend');
-  const handleComfirm = async () => {
-    const res = await transfer(form);
+  const [activeType, setActiveType] = useState<'recommend' | 'low' | 'fast' | 'custom'>('recommend');
+  const [gas, setGas] = useState<SymbolGasData>();
+
+  const handleConfirmed = async () => {
+    const [wallet_uuid, nonceRes] = await Promise.all([
+      getData('wallet_uuid'),
+      walletNonce({
+        chain: token?.chain as string,
+        symbol: token?.symbol as string,
+        address: token?.address as string,
+      }),
+    ]);
+    const sqliteData = await executeQuery({
+      customExec: (tx, resolve, reject) => {
+        tx.executeSql(
+          `
+          SELECT * 
+          FROM asset 
+          WHERE chain_id = (
+            SELECT id
+            FROM chain
+            WHERE chainName = ?
+          )
+          AND tokenName = ?
+          AND contract_addr = ?
+      `,
+          [token?.chain, token?.symbol, token?.contract_addr],
+          (txObj, resultSet) => {
+            console.log(1111111, CHAIN_MAP[token?.chain], JSON.stringify(resultSet), {
+              chain: token?.chain as string,
+              symbol: token?.symbol as string,
+              address: token?.address as string,
+            });
+            if (resultSet.rows.length > 0) {
+              const { contractUnit, chainListId } = resultSet.rows.item(0);
+              console.log(888888, resultSet.rows.item(0));
+              tx.executeSql(
+                `
+              SELECT * 
+              FROM account 
+              WHERE wallet_id = (
+                SELECT id
+                FROM wallet
+                WHERE wallet_uuid = ?
+              )
+              AND address = ?
+          `,
+                [wallet_uuid, token?.address],
+                async (txObj2, resultSet2) => {
+                  if (resultSet2.rows.length > 0) {
+                    // 获取第一条数据
+                    const accountData = resultSet2.rows.item(0);
+                    const params = {
+                      privateKey: accountData.priv_key.replace('0x', ''),
+                      nonce: Number(nonceRes.data?.nonce || 0),
+                      from: token?.address,
+                      to: form.toAddr || '',
+                      amount: form.amount || '0.1',
+                      gasPrice: gas?.[`${activeType}`] as unknown as number,
+                      gasLimit: gas?.[`${activeType}`] as unknown as number,
+                      decimal: contractUnit, //contractUnit
+                      chainId: chainListId,
+                      tokenAddress: '0x00',
+                      // gasLimit: 21000,
+                      // gasPrice: 750000000000,
+                      // privateKey: '0cc9a688f5608f4b5ae64444d936282ca5ff1fcf9cdd09fe34d4475a5b1a8d65',
+                      // nonce: 0,
+                      // from: '0x1c176b36166F74BB5DBC19a340a896A68DeA1385',
+                      // to: '0x36FCde42B307915a94542132AbE5b273bFfF4376',
+                      // gasLimit: 21000,
+                      // amount: '0.1',
+                      // gasPrice: 750000000000,
+                      // decimal: 18,
+                      // chainId: 1,
+                      // tokenAddress: '0x00',
+                    };
+                    console.log(111111, token?.symbol.toLowerCase(), params);
+                    try {
+                      const raw_tx = await SignTransaction(CHAIN_MAP[token?.chain] || token?.chain, params);
+                      const res = await transfer({
+                        raw_tx: raw_tx as string,
+                        chain: token?.chain as string,
+                        symbol: token?.symbol as string,
+                      });
+                      console.log(
+                        2222,
+                        {
+                          raw_tx: raw_tx as string,
+                          chain: token?.chain as string,
+                          symbol: token?.symbol as string,
+                        },
+                        res
+                      );
+                    } catch (e) {
+                      console.log(e);
+                    }
+                  } else {
+                    console.log('Account not found.');
+                  }
+                },
+                (txObj) => {
+                  console.log('Error executing SQL query:', txObj);
+                }
+              );
+            }
+          },
+          (txObj) => {
+            console.log('Error executing SQL query:', txObj);
+          }
+        );
+      },
+    });
+
+    // const res = await transfer(form);
     // if (res.data) {
     // navigation.navigate('verifyMnemonics');
     // }
   };
+
   const handleSelect = (type) => {
     setActiveType(type);
   };
-  const initData = async () => {
-    const currentWalletInfo = await getData('currentWallet');
-    setWallet(JSON.parse(currentWalletInfo));
-    const { wallet_uuid, wallet_balance } = JSON.parse(currentWalletInfo);
-    const { address, contract_addr } = route?.params || {};
-    let token = wallet_balance.find((item) => item.address === address && item.contract_addr === contract_addr);
-    if (!token) {
-      token = wallet_balance[0];
+
+  const initData = useCallback(async () => {
+    const [device_id, wallet_uuid, current_token_detail] = await Promise.all([
+      getUniqueId(),
+      getData('wallet_uuid'),
+      getData('current_token_detail'),
+    ]);
+    const currentTokenDetail = JSON.parse(current_token_detail || '{}');
+    const [addressBalanceRes, gasRes] = await Promise.all([
+      getAddressBalance({
+        device_id,
+        wallet_uuid,
+        chain: currentTokenDetail?.chain,
+        symbol: currentTokenDetail?.symbol,
+        address: currentTokenDetail?.address,
+        contract_address: currentTokenDetail?.contract_addr,
+      }),
+      symbolGas({
+        chain: currentTokenDetail?.chain as string,
+      }),
+    ]);
+    if (addressBalanceRes.data) {
+      seToken({
+        ...addressBalanceRes.data,
+        ...currentTokenDetail,
+      });
     }
+    if (gasRes?.data) {
+      setList(
+        FEE_TYPE.map((item) => {
+          return {
+            ...item,
+            time: `约${gasRes.data[`${item?.type}Time`]}分钟`,
+            price: `$ ${gasRes.data[`${item?.type}Usdt`]}`,
+            subTitle: `${gasRes.data[`${item?.type}`]}${gasRes.data.gasFeeSymbol}`,
+          };
+        })
+      );
+      setGas(gasRes.data);
+    }
+  }, [route?.params]);
 
-    seToken(token);
-    const { data } = await symbolGas({
-      chain: token.chain,
-    });
-    setList(
-      FEE_TYPE.map((item) => {
-        return {
-          ...item,
-          time: `约${data[`${item.type}Time`]}分钟`,
-          price: `$ ${data[`${item.type}Usdt`]}`,
-          subTitle: `${data[`${item.type}`]}${data.gasFeeSymbol}`,
-        };
-      })
-    );
-
-    // const device_id = await getUniqueId();
-    // const res = await getAddressBalance({
-    //   device_id,
-    //   wallet_uuid,
-    //   chain: token.chain,
-    //   symbol: token.symbol,
-    //   address: token.address,
-    //   contract_address: contract_addr,
-    // });
-    // console.log(11111, res);
-  };
-  const initGas = async () => {
-    // const { data } = await symbolGas({
-    //   chain: token.chain,
-    // });
-    // setList(
-    //   FEE_TYPE.map((item) => {
-    //     return {
-    //       ...item,
-    //       time: `约${data[`${item.type}Time`]}分钟`,
-    //       price: `$ ${data[`${item.type}Usdt`]}`,
-    //       subTitle: `${data[`${item.type}`]}${data.gasFeeSymbol}`,
-    //     };
-    //   })
-    // );
-  };
-
-  React.useEffect(() => {
+  useEffect(() => {
     initData();
-    initGas();
-  }, []);
+  }, [initData, navigation]);
+
   const handleChange = (value) => {
     console.log(11111, value);
     // seToken()
@@ -126,18 +241,18 @@ const TransferPayment = ({ navigation, route }) => {
     <Layout
       fixedChildren={
         <View style={styles.button}>
-          <Button onPress={handleComfirm}>确定</Button>
+          <Button onPress={handleConfirmed}>确定</Button>
         </View>
       }
     >
-      <View style={styles.layout}>
+      <SafeAreaView style={styles.layout}>
         <View style={styles.overview}>
           <Text style={styles.overviewTitle}>{token?.symbol} 余额</Text>
           <Text style={styles.money}>
             <Text style={styles.moneyStrong}>
               {token?.balance} {token?.symbol}
             </Text>
-            ≈ $ {token.asset_usd}
+            ≈ $ {token?.asset_usd}
           </Text>
         </View>
         <View>
@@ -165,7 +280,20 @@ const TransferPayment = ({ navigation, route }) => {
             <View>
               <Text style={styles.title}>转账金额</Text>
             </View>
-            <View>
+            <TouchableOpacity
+              onPress={() => {
+                navigation?.navigate('searchToken', {
+                  go: 'transferPayment',
+                });
+              }}
+            >
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text>{token?.symbol}</Text>
+                <Icon name="caretdown" style={{ marginLeft: 8 }} />
+              </View>
+            </TouchableOpacity>
+
+            {/* <View>
               <Picker
                 value={token?.contract_addr || ''}
                 style={pickerStyles}
@@ -177,11 +305,11 @@ const TransferPayment = ({ navigation, route }) => {
                 }))}
               >
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Text>{token.symbol}</Text>
+                  <Text>{token?.symbol}</Text>
                   <Icon name="caretdown" style={{ marginLeft: 8 }} />
                 </View>
               </Picker>
-            </View>
+            </View> */}
           </View>
 
           <Input
@@ -266,11 +394,7 @@ const TransferPayment = ({ navigation, route }) => {
                 <Text style={styles.customTitle}>Fee per byte（sat/b）</Text>
                 <Input
                   value={byte}
-                  // style={styles.input}
                   onChangeText={(byte) => {
-                    // const time = Date.now();
-                    // 复杂逻辑，输入文字不卡
-                    // while (Date.now() - time <= 1000) {}
                     setByte(byte);
                   }}
                 />
@@ -279,11 +403,7 @@ const TransferPayment = ({ navigation, route }) => {
                 <Text style={styles.customTitle}>Size（sat/b）</Text>
                 <Input
                   value={size}
-                  // style={styles.input}
                   onChangeText={(size) => {
-                    // const time = Date.now();
-                    // 复杂逻辑，输入文字不卡
-                    // while (Date.now() - time <= 1000) {}
                     setSize(size);
                   }}
                 />
@@ -291,7 +411,7 @@ const TransferPayment = ({ navigation, route }) => {
             </View>
           )}
         </View>
-      </View>
+      </SafeAreaView>
     </Layout>
   );
 };

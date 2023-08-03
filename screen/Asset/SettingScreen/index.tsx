@@ -1,51 +1,66 @@
 import { DeviceBalanceData, deleteWallet, getDeviceBalance } from '@api/wallet';
 import { SUCCESS_CODE } from '@common/constants';
+import { showToast } from '@common/utils/platform';
 import { executeQuery } from '@common/utils/sqlite';
 import { getData } from '@common/utils/storage';
 import Layout from '@components/Layout';
-import { Avatar, Button, Icon, ListItem, Switch } from '@rneui/themed';
+import { Avatar, Button, Dialog, ListItem, Switch } from '@rneui/themed';
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, Clipboard, ToastAndroid } from 'react-native';
+import { View, Text, TouchableOpacity, Clipboard } from 'react-native';
 import { getUniqueId } from 'react-native-device-info';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Icon from 'react-native-vector-icons/AntDesign';
 const SettingScreen = (props) => {
   const [walletInfo, setWalletInfo] = useState<DeviceBalanceData>();
   const [device_id, setDeviceId] = useState('');
+  const [privateDialog, setPrivate] = useState({
+    visible: false,
+    text: '',
+  });
+  const [wallet_uuid, setWalletUuid] = useState('');
   const getWalletInfo = async () => {
-    const device_id = await getUniqueId();
+    const [device_id, wallet_uuid] = await Promise.all([getUniqueId(), getData('wallet_uuid')]);
     setDeviceId(device_id);
-    let currentWallet = await getData('currentWallet');
-    const currentWalletObj = JSON.parse(currentWallet);
+    setWalletUuid(wallet_uuid);
     const res = await getDeviceBalance({
       device_id,
-      wallet_uuid: currentWalletObj?.wallet_uuid,
+      wallet_uuid,
     });
+    console.log(111111, JSON.stringify(res));
     if (res.code === SUCCESS_CODE && res?.data) {
       setWalletInfo(res?.data);
     }
   };
-  console.log(111111, JSON.stringify(walletInfo));
 
   useEffect(() => {
     getWalletInfo();
-  }, []);
+  }, [props.navigation]);
 
   const handleDelete = async () => {
-    // const { wallet_uuid = '' } = walletInfo?.token_list[0] || {};
-    // const res = await deleteWallet({
-    //   device_id,
-    //   wallet_uuid,
-    // });
-    // if (res.code === SUCCESS_CODE) {
-    //   ToastAndroid.show('删除成功', ToastAndroid.SHORT);
-    //   props?.navigation.replace('home', {
-    //     tab: 'asset',
-    //   });
-    // }
-    ToastAndroid.show('删除成功', ToastAndroid.SHORT);
-    props?.navigation.goBack();
+    try {
+      const res = await deleteWallet({
+        device_id,
+        wallet_uuid,
+      });
+      if (res.code === SUCCESS_CODE) {
+        showToast('删除成功', {
+          onHide: () => {
+            props?.navigation?.navigate('home', {
+              tab: 'asset',
+            });
+          },
+        });
+      }
+    } catch (e) {
+      console.log(111111, e);
+    }
   };
-
+  const toggleDialog = () => {
+    setPrivate({
+      visible: !privateDialog.visible,
+      text: '',
+    });
+  };
   return (
     <Layout
       fixedChildren={
@@ -73,7 +88,7 @@ const SettingScreen = (props) => {
                 <View>
                   <Text>{walletInfo?.token_list[0]?.wallet_name}</Text>
                 </View>
-                <View style={{ flexDirection: 'row', width: 150 }}>
+                <View style={{ flexDirection: 'row', width: 150, alignItems: 'center' }}>
                   <Text numberOfLines={1} ellipsizeMode="tail">
                     Id: {walletInfo?.token_list[0]?.wallet_uuid}
                   </Text>
@@ -82,7 +97,7 @@ const SettingScreen = (props) => {
                       Clipboard.setString(walletInfo?.token_list[0]?.wallet_uuid || '');
                     }}
                   >
-                    <Icon name="inbox" />
+                    <Icon name="copy1" />
                   </TouchableOpacity>
                 </View>
               </View>
@@ -110,28 +125,44 @@ const SettingScreen = (props) => {
         </ListItem>
         <ListItem
           onPress={() => {
-            // executeQuery({
-            //   customExec: (tx) => {
-            //     tx.executeSql(
-            //       `SELECT privateKey
-            //       FROM account
-            //       WHERE address = ?`,
-            //       [],
-            //       (txObj, resultSet) => {
-            //         if (resultSet.rows.length > 0) {
-            //           // 获取私钥
-            //           const privateKey = resultSet.rows.item(0).privateKey;
-            //           console.log('Private key:', privateKey);
-            //         } else {
-            //           console.log('No matching record found');
-            //         }
-            //       },
-            //       (txObj, error) => {
-            //         console.log('Error executing SQL query:', error);
-            //       }
-            //     );
-            //   },
-            // });
+            executeQuery({
+              customExec: (tx) => {
+                tx.executeSql(
+                  `
+                SELECT * 
+                FROM account 
+                WHERE wallet_id = (
+                  SELECT id
+                  FROM wallet
+                  WHERE wallet_uuid = ?
+                )
+                AND address = ?
+            `,
+                  [wallet_uuid, walletInfo?.token_list[0]?.wallet_balance[0]?.address],
+                  (txObj, resultSet) => {
+                    if (resultSet.rows.length > 0) {
+                      // 获取私钥
+                      const privateKey = resultSet.rows.item(0).priv_key;
+                      setPrivate({
+                        visible: true,
+                        text: privateKey,
+                      });
+                      console.log('Private key:', privateKey);
+                    } else {
+                      console.log(
+                        'No matching record found',
+                        wallet_uuid,
+                        walletInfo?.token_list[0]?.wallet_balance[0]?.address,
+                        JSON.stringify(resultSet)
+                      );
+                    }
+                  },
+                  (txObj, error) => {
+                    console.log('Error executing SQL query:', error);
+                  }
+                );
+              },
+            });
           }}
         >
           <ListItem.Content>
@@ -139,12 +170,18 @@ const SettingScreen = (props) => {
           </ListItem.Content>
           <ListItem.Chevron />
         </ListItem>
-        <ListItem>
-          <ListItem.Content>
-            <ListItem.Title>备份钱包</ListItem.Title>
-          </ListItem.Content>
-          <ListItem.Chevron />
-        </ListItem>
+        {!walletInfo?.token_list?.[0].backup && (
+          <ListItem
+            onPress={() => {
+              props?.navigation.navigate('startBackup');
+            }}
+          >
+            <ListItem.Content>
+              <ListItem.Title>备份钱包</ListItem.Title>
+            </ListItem.Content>
+            <ListItem.Chevron />
+          </ListItem>
+        )}
         <ListItem>
           <ListItem.Content>
             <ListItem.Title>面容/指纹支付</ListItem.Title>
@@ -170,6 +207,17 @@ const SettingScreen = (props) => {
           <ListItem.Chevron />
         </ListItem>
       </SafeAreaView>
+      <Dialog isVisible={privateDialog.visible} onBackdropPress={toggleDialog}>
+        <Dialog.Title title="私钥" />
+        <Text>{privateDialog.text}</Text>
+        <Button
+          onPress={() => {
+            Clipboard.setString(privateDialog?.text || '');
+          }}
+        >
+          复制
+        </Button>
+      </Dialog>
     </Layout>
   );
 };

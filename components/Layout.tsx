@@ -1,7 +1,7 @@
 import * as React from 'react';
 import type { FC } from 'react';
 import { makeStyles } from '@rneui/base';
-import { ScrollView, View } from 'react-native';
+import { ScrollView, StatusBar, View, useColorScheme } from 'react-native';
 import { useTheme } from '@rneui/themed';
 type Props = {
   children: React.ReactNode;
@@ -10,10 +10,15 @@ type Props = {
   containerStyle?: any;
 };
 const Layout: FC<Props> = ({ children, fixedChildren, fixedStyle = {}, containerStyle = {} }) => {
-  const theme = useTheme();
-  const styles = useStyles(theme.theme);
+  const mode = useColorScheme() || 'light';
+  const { theme }: { theme: CustomTheme<CustomColors> } = useTheme();
+  const styles = useStyles(theme);
   return (
     <View style={styles.container}>
+      <StatusBar
+        backgroundColor={theme.colors.background} // 替换为你想要的背景颜色
+        barStyle={`${mode === 'light' ? 'dark' : 'light'}-content`} // 替换为你想要的图标和文字颜色
+      />
       <ScrollView
         style={{
           ...styles.containerContent,

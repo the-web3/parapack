@@ -10,6 +10,9 @@ import Swap from '@screen/Asset/Swap';
 import TokenDetail from '@screen/Asset/TokenDetail';
 import Collection from '@screen/Asset/Collection';
 import SettingScreen from '@screen/Asset/SettingScreen';
+import SearchToken from '@screen/Asset/SearchToken';
+import SearchHistory from '@screen/Asset/SearchHistory';
+
 const menus = [
   {
     name: 'tokenDetail',
@@ -73,10 +76,28 @@ const menus = [
     name: 'addToken',
     options: {
       title: '添加币种',
-      // headerShown: false,
+      headerShown: false,
       headerShadowVisible: false,
     },
     component: AddToken, //（完成）
+  },
+  {
+    name: 'searchToken',
+    options: {
+      title: '',
+      headerShown: false,
+      headerShadowVisible: false,
+    },
+    component: SearchToken, //（完成）
+  },
+  {
+    name: 'searchHistory',
+    options: {
+      title: '',
+      headerShown: false,
+      headerShadowVisible: false,
+    },
+    component: SearchHistory, //（完成）
   },
   {
     name: 'swap',
