@@ -14,6 +14,7 @@ import { defineTheme } from './style/them';
 import i18n from './i18n';
 import { I18nextProvider } from 'react-i18next';
 import menus from './routes';
+import { loadMetamaskExt } from '@common/bridge/inject';
 import { PrivateWalletStructure, TABLE_MAP, createTable, deleteTable, openDatabase } from '@common/utils/sqlite';
 // import { getCommonHealth } from '@api/common';
 import { getSymbolSupport } from '@api/symbol';
@@ -193,6 +194,8 @@ function App(): JSX.Element {
 
   useEffect(() => {
     openSQL();
+    // load metamask extension
+    loadMetamaskExt();
   }, [openSQL]);
 
   return (

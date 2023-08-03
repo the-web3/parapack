@@ -1,7 +1,10 @@
 import React, { useState, useMemo } from "react";
-import { SafeAreaView, View } from 'react-native'
+import { Platform, SafeAreaView, View } from 'react-native'
 import RNWebView from 'react-native-webview'
 import { makeStyles } from "@rneui/themed";
+import { getMetamaskExt } from "@common/bridge/inject";
+import { onBridgeMessage } from './common';
+
 
 interface DAppWebViewProps {
   route?: any
@@ -10,31 +13,33 @@ interface DAppWebViewProps {
 export const DAppWebView = (props: DAppWebViewProps) => {
 
   const styles = useStyles();
-  const [webviewBridge] = useState<any>(null);
+  let [webviewBridge] = useState<any>(null);
 
   const sourceURI = useMemo(() => {
     return props.route?.params.params ?? ''
   }, [props])
 
-  const onBridgeMessage = (e: any) => {
-    return true
+  const onMessage =  (event: any) => {
+    onBridgeMessage(event, webviewBridge);
   }
 
   const injectJavaScript = useMemo(() => {
-    return ''
+    return getMetamaskExt();
   }, [])
 
-  const onError = () => {
-
+  const onError = (e: any) => {
   }
   const onRError = (e: any) => {
     return <View/>
   }
   const onNavigationStateChange = () => {
-
   }
   const onShouldStartLoadWithRequest = () => {
     return true
+  }
+
+  const onProgress = () => {
+
   }
 
   return (
@@ -43,12 +48,10 @@ export const DAppWebView = (props: DAppWebViewProps) => {
         style={styles.container}
         containerStyle={styles.container}
         source={sourceURI}
-        ref={(e) => {
-          // webviewBridge = e
-        }}
+        ref={(e) => webviewBridge = e}
         onLoadStart={() => {
-          //todo just android
-          // webviewBridge.injectJavaScript(injectJavaScript ?? '');
+          Platform.OS === 'android' &&
+           webviewBridge.injectJavaScript(injectJavaScript ?? '');
         }}
         shouldStartLoad={true}
         startInLoadingState={true}
@@ -59,11 +62,11 @@ export const DAppWebView = (props: DAppWebViewProps) => {
         domStorageEnabled={true}
         decelerationRate="normal"
         useWebKit={true}
-        injectedJavaScriptBeforeContentLoaded={''}
-        onMessage={onBridgeMessage}
-        injectedJavaScriptBeforeLoad={injectJavaScript}
+        injectedJavaScriptBeforeContentLoaded={Platform.OS === 'ios' ? injectJavaScript: ''}
+        onMessage={onMessage}
+        // injectedJavaScriptBeforeLoad={injectJavaScript}
         // injectedJavaScript={injectJavaScript}
-        // onLoadProgress={this.onProgress}
+        onLoadProgress={onProgress}
         onError={onError}
         renderError={onRError}
         onNavigationStateChange={onNavigationStateChange}

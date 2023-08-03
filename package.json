@@ -10,7 +10,9 @@
     "test": "jest"
   },
   "dependencies": {
+      "@ethersproject/keccak256": "^5.7.0",
     "@metamask/inpage-provider": "^8.1.0",
+      "@polkadot/x-textencoder": "^12.3.2",
     "@react-native-async-storage/async-storage": "^1.19.1",
     "@react-native-picker/picker": "^2.4.10",
     "@react-navigation/native": "^6.1.6",
@@ -38,6 +40,7 @@
     "react": "18.2.0",
     "react-i18next": "^12.3.1",
     "react-native": "0.71.8",
+      "react-native-fs": "^2.20.0",
     "react-native-camera": "^4.2.1",
     "react-native-chart-kit": "^6.12.0",
     "react-native-crypto": "^2.2.0",
@@ -63,7 +66,8 @@
     "savourlabs-wallet-sdk": "^1.1.2",
     "stream": "^0.0.2",
     "stream-browserify": "^3.0.0",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+      "web3": "^4.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
