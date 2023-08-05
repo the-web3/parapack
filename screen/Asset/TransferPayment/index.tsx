@@ -5,19 +5,9 @@ import Layout from '../../../components/Layout';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { useTranslation } from 'react-i18next';
 import { useCallback, useEffect, useState } from 'react';
-import {
-  DeviceBalanceTokenList,
-  SymbolGasData,
-  WalletBalance,
-  getAddressBalance,
-  getDeviceBalance,
-  symbolGas,
-  transfer,
-  walletNonce,
-} from '@api/wallet';
+import { SymbolGasData, WalletBalance, getAddressBalance, symbolGas, transfer, walletNonce } from '@api/wallet';
 import { getUniqueId } from 'react-native-device-info';
 import { getData } from '@common/utils/storage';
-import Picker from 'react-native-picker-select';
 import { executeQuery } from '@common/utils/sqlite';
 import { SignTransaction } from 'savourlabs-wallet-sdk/wallet';
 import { CHAIN_MAP } from '@common/constants';
@@ -177,11 +167,6 @@ const TransferPayment = ({ navigation, route }) => {
         );
       },
     });
-
-    // const res = await transfer(form);
-    // if (res.data) {
-    // navigation.navigate('verifyMnemonics');
-    // }
   };
 
   const handleSelect = (type) => {

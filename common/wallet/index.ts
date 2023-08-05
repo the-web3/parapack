@@ -496,7 +496,7 @@ export const createImportWallet = async (params: {
                     (item) =>
                         [
                             'Ethereum',
-                            //  'BITCOIN'
+                            'BITCOIN'
                         ].includes(item.chainName) && item.default
                 )
                 .reduce((total: PrivateWalletBalance[], supportChian, index) => {
