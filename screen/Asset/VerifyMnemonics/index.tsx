@@ -83,10 +83,6 @@ const VerifyMnemonics = (props: Record<string, any>) => {
     // TODO: 助记词存sqlite
     setLoading(true);
     const [device_id, wallet_uuid] = await Promise.all([getUniqueId(), getData('wallet_uuid')]);
-    console.log(11111, {
-      device_id,
-      wallet_uuid,
-    });
     const res = await walletBackUp({
       device_id,
       wallet_uuid,

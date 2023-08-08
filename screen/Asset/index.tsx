@@ -12,6 +12,7 @@ import { SUCCESS_CODE } from '@common/constants';
 import { getData, storeData } from '@common/utils/storage';
 import { showToast } from '@common/utils/platform';
 import { useFocusEffect } from '@react-navigation/native';
+import { CreateAddress } from 'savourlabs-wallet-sdk/wallet';
 type Props = {
   fullWidth?: boolean;
   navigation: any;
@@ -116,6 +117,16 @@ const Asset = (props: Props) => {
                 props?.navigation.navigate('settingScreen', {
                   wallet_uuid: currentWallet?.wallet_uuid,
                 });
+                //TODO: test
+                const account = CreateAddress({
+                  chain: 'btc',
+                  index: 0,
+                  network: 'mainnet',
+                  receiveOrChange: 0,
+                  seedHex:
+                    'd59419ac39d3b2baed209a61dc9de0bf85c5106cdda28513cf479deb1ce7de2fdeaeeb8943be173c0f539f6f5382a29cda69057db56c202aad94d6fa101c9633',
+                });
+                console.log(66666, account);
               }}
             >
               <Icon name="creditcard" size={24} color={theme.colors.black} />

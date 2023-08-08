@@ -492,13 +492,7 @@ export const createImportWallet = async (params: {
             insertOrUpdateChainAssetTable(symbolSupport.data || []);
 
             const tokens = (symbolSupport.data || [])
-                ?.filter(
-                    (item) =>
-                        [
-                            'Ethereum',
-                            //  'BITCOIN'
-                        ].includes(item.chainName) && item.default
-                )
+                ?.filter((item) => ['Ethereum', 'BITCOIN'].includes(item.chainName) && item.default)
                 .reduce((total: PrivateWalletBalance[], supportChian, index) => {
                     if (supportChian.token.length > 0) {
                         console.log(`createImportWalletParams3 =====>`, index, supportChian);
@@ -507,13 +501,17 @@ export const createImportWallet = async (params: {
                             mnemonic,
                             password,
                         });
-                        const account = CreateAddress({
+                        let account = CreateAddress({
                             chain: supportChian.symbol.toLowerCase(),
                             seedHex: seed.toString('hex'),
                             index: 0,
                             receiveOrChange: 0,
                             network: 'mainnet',
                         });
+                        if (typeof account === 'string') {
+                            account = JSON.parse(account);
+                        }
+                        console.log('account====>', account, typeof account);
                         const curTokens = supportChian.token
                             .filter((currentToken) => currentToken.tokenDefault)
                             .map((currentToken) => {
@@ -522,7 +520,7 @@ export const createImportWallet = async (params: {
                                     symbol: supportChian.symbol,
                                     contract_addr: currentToken.contractAddr,
                                     index: 0,
-                                    ...JSON.parse(account),
+                                    ...account,
                                 };
                             });
 
@@ -530,6 +528,7 @@ export const createImportWallet = async (params: {
                     }
                     return [...total];
                 }, []);
+            console.log('tokens====>', tokens);
             const res = await createWallet({
                 password,
                 tokens: tokens.map(({ chain, symbol, contract_addr, index, address }: any) => {

@@ -188,7 +188,7 @@ function App(): JSX.Element {
           query: `CREATE TABLE ${table_name} (${TABLE_MAP[table_name as keyof typeof TABLE_MAP]})`,
         });
       });
-      // getTableInfo();
+      getTableInfo();
     }
   }, []);
 
