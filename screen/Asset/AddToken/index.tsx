@@ -45,7 +45,7 @@ const AddToken = (props: Props) => {
 
   const filterList = React.useMemo(() => {
     return (list || [])
-      ?.filter((item) => item.hot && ['Ethereum'].includes(item.chainName))
+      ?.filter((item) => item.hot && ['Ethereum', 'BITCOIN'].includes(item.chainName))
       .reduce((total: Token[], supportChian) => {
         if (supportChian.token.length > 0) {
           const { chainName, symbol } = supportChian;

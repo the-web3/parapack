@@ -371,13 +371,7 @@ export const createImportWallet = async (params: {
             insertOrUpdateChainAssetTable(symbolSupport.data || []);
 
             const tokens = (symbolSupport.data || [])
-                ?.filter(
-                    (item) =>
-                        [
-                            'Ethereum',
-                            // 'BITCOIN'
-                        ].includes(item.chainName) && item.default
-                )
+                ?.filter((item) => ['Ethereum', 'BITCOIN'].includes(item.chainName) && item.default)
                 .reduce((total: PrivateWalletBalance[], supportChian, index) => {
                     if (supportChian.token.length > 0) {
                         console.log(`createImportWalletParams3 =====>`, index, supportChian);
