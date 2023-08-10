@@ -16,10 +16,11 @@ import { I18nextProvider } from 'react-i18next';
 import menus from './routes';
 import { loadMetamaskExt } from '@common/bridge/inject';
 import { PrivateWalletStructure, TABLE_MAP, createTable, deleteTable, openDatabase } from '@common/utils/sqlite';
-// import { getCommonHealth } from '@api/common';
 import { getSymbolSupport } from '@api/symbol';
 import {
   batchInsertOrUpdateAssetTable,
+  fixAccountTable,
+  fixChainTable,
   getTableInfo,
   insertOrUpdateChainAssetTable,
   insertWalletAsset,
@@ -29,8 +30,9 @@ import { SUCCESS_CODE } from '@common/constants';
 import { RootSiblingParent } from 'react-native-root-siblings';
 import Toast from 'react-native-root-toast';
 import { getData, storeData } from '@common/utils/storage';
-// eslint-disable-next-line no-undef
-function App(): JSX.Element {
+const RESET_SQLITE_TAG = '2';
+
+const App = () => {
   const mode = useColorScheme() || 'light';
   const theme = createTheme({
     ...defineTheme,
@@ -62,32 +64,7 @@ function App(): JSX.Element {
       // console.log(99999, JSON.stringify(res));
       if (res.data) {
         const chainList = res.data || [];
-        insertOrUpdateChainAssetTable(chainList);
-        batchInsertOrUpdateAssetTable({
-          backup: false,
-          device_id: 'ff8df3b99925d50',
-          mnemonic_code: 'a7933bb47d755c8c2c5db3b4659fd7b6',
-          password: '1234567a',
-          wallet_asset_cny: '0',
-          wallet_asset_usd: '0',
-          wallet_balance: [
-            {
-              address: '0xE3e9c23a05Eff79d3582Af11586878F41358775d',
-              asset_cny: '0',
-              asset_usd: '0',
-              balance: '0',
-              chain: 'Ethereum',
-              contract_addr: '',
-              index: 0,
-              logo: '',
-              privateKey: '0xb2b742411841203f8b3d847d65d14bac3ddde7b404fd503b3bffa65511ddc4df',
-              publicKey: '0x023aa83f73b2f573a2cc8f667cac865645a3ddeb5116eff9d97aa742b509fb66a3',
-              symbol: 'ETH',
-            },
-          ],
-          wallet_name: 'M_2',
-          wallet_uuid: 'ff8d1f36-7d11-429c-a1ce-dbb008f46911',
-        });
+        // insertOrUpdateChainAssetTable(chainList);
       }
     } catch (e) {}
   };
@@ -172,15 +149,16 @@ function App(): JSX.Element {
   const openSQL = useCallback(async () => {
     const open = await openDatabase();
     if (open) {
-      // initList();
       // initWalletToken();
+      // deleteTable('chain');
       // deleteTable('asset');
+      // initList();
       const reset_table = await getData('reset_table');
-      if (reset_table !== '1') {
+      if (reset_table !== RESET_SQLITE_TAG) {
         Object.keys(TABLE_MAP).map((table_name) => {
           deleteTable(table_name);
         });
-        storeData('reset_table', '1');
+        storeData('reset_table', RESET_SQLITE_TAG);
       }
       Object.keys(TABLE_MAP).map((table_name) => {
         // deleteTable(table_name);
@@ -189,6 +167,8 @@ function App(): JSX.Element {
         });
       });
       // getTableInfo();
+      // fixChainTable();
+      // fixAccountTable();
     }
   }, []);
 
@@ -226,11 +206,6 @@ function App(): JSX.Element {
       </I18nextProvider>
     </RootSiblingParent>
   );
-}
-// const styles = StyleSheet.create({
-//   header: {
-//     borderBottomWidth: 0,
-//     // 添加其他标题栏样式
-//   },
-// });
+};
+
 export default App;

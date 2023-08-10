@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { ActivityIndicator, Image, SafeAreaView, ScrollView, TouchableOpacity, View } from 'react-native';
 import { Avatar, Overlay, Tab, TabView, Text, makeStyles, useTheme } from '@rneui/themed';
 import LinearGradient from 'react-native-linear-gradient';
@@ -13,6 +13,7 @@ import { getData, storeData } from '@common/utils/storage';
 import { showToast } from '@common/utils/platform';
 import { useFocusEffect } from '@react-navigation/native';
 import { CreateAddress } from 'savourlabs-wallet-sdk/wallet';
+import { batchInsertOrUpdateAssetTable, updateWalletTable } from '@common/wallet';
 type Props = {
   fullWidth?: boolean;
   navigation: any;
@@ -117,16 +118,59 @@ const Asset = (props: Props) => {
                 props?.navigation.navigate('settingScreen', {
                   wallet_uuid: currentWallet?.wallet_uuid,
                 });
-                //TODO: test
-                const account = CreateAddress({
-                  chain: 'btc',
-                  index: 0,
-                  network: 'mainnet',
-                  receiveOrChange: 0,
-                  seedHex:
-                    'd59419ac39d3b2baed209a61dc9de0bf85c5106cdda28513cf479deb1ce7de2fdeaeeb8943be173c0f539f6f5382a29cda69057db56c202aad94d6fa101c9633',
-                });
-                console.log(66666, account);
+                // //TODO: test
+                // const account = CreateAddress({
+                //   chain: 'btc',
+                //   index: 0,
+                //   network: 'mainnet',
+                //   receiveOrChange: 0,
+                //   seedHex:
+                //     'd59419ac39d3b2baed209a61dc9de0bf85c5106cdda28513cf479deb1ce7de2fdeaeeb8943be173c0f539f6f5382a29cda69057db56c202aad94d6fa101c9633',
+                // });
+                // console.log(66666, account);
+                // // TODO: test
+                // batchInsertOrUpdateAssetTable({
+                //   backup: false,
+                //   device_id: 'a9caa5c8abac3bf2',
+                //   mnemonic_code: '44db894501449e33910e3a1a2266e580',
+                //   password: '1234567a',
+                //   wallet_asset_cny: '0',
+                //   wallet_asset_usd: '0',
+                //   wallet_balance: [
+                //     {
+                //       address: '0x88fcbbc7E4e5F109cb835B70444DC7d8267bc30F',
+                //       asset_cny: '0',
+                //       asset_usd: '0',
+                //       balance: '0',
+                //       chain: 'Ethereum',
+                //       contract_addr: '',
+                //       index: 0,
+                //       logo: '',
+                //       privateKey: '0xbf979d60804aa3127c609ed8ac61706e9eba8ee5b05ef30df6b9ab7a513ed5e4',
+                //       publicKey: '0x0321ff4d0210cd051f1b99cf20a581ea543716b266dcb8b447f2ed639eda313dc0',
+                //       symbol: 'ETH',
+                //     },
+                //     {
+                //       address: '14CfCpyRuDjhPKwCmDbsian9aTtiPvowE7',
+                //       asset_cny: '0',
+                //       asset_usd: '0',
+                //       balance: '0',
+                //       chain: 'BITCOIN',
+                //       contract_addr: '',
+                //       index: 0,
+                //       logo: '',
+                //       privateKey: 'c4deccc9e22a8a093fd8f7fa7f012d3ebbef7202819badc412765a28e821aa07',
+                //       publicKey: '035e7fa26107794074fa082204f65be717ef4cd2085bdf971dbb8202597a67caa7',
+                //       symbol: 'BTC',
+                //     },
+                //   ],
+                //   wallet_name: 'S_6',
+                //   wallet_uuid: '1ea80516-7134-400b-893e-9a545d25bfbc',
+                // });
+                // updateWalletTable('b692f18b-1b5a-4a61-ada7-a51017867d78', {
+                //   key: 'is_del = ?',
+                //   value: [1],
+                // });
               }}
             >
               <Icon name="creditcard" size={24} color={theme.colors.black} />

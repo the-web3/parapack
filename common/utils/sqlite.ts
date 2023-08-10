@@ -31,6 +31,21 @@ export interface PrivateWalletBalance {
   symbol: string;
 }
 
+export const BLOCK_CHAIN_ID_MAP = {
+  Ethereum: 1,
+  BITCOIN: 0,
+  Arbitrum: 42161, //Arbitrum One
+  Op: 10, //OP Mainnet
+  Polygon: 137,
+  HECO: 128, //Huobi ECO Chain Mainnet
+  MetaDot: 16000, //MetaDot Mainnet
+  BSC: 56, //BNB Smart Chain Mainnet
+  ETC: 61, //Ethereum Classic Mainnet
+  Avalanche: 43114, //Avalanche C-Chain
+  zkSync: 324, //zkSync Era Mainnet
+  TRON: 1231, //Ultron Mainnet
+};
+
 export const TABLE_MAP = {
   //is_del (0:not deleted 1:delete)
   //chain table - support(0:nonsupport 1:support)
@@ -43,27 +58,27 @@ export const TABLE_MAP = {
     "logo" VARCHAR,
     "active_logo" VARCHAR,
     "is_del" INTEGER,
+    block_chain_id BIGINT,
     UNIQUE (chainName) ON CONFLICT REPLACE
     `,
   //asset table :chain_id TokenName  contract_addr 联合唯一键
   asset: `
-  "id" INTEGER PRIMARY KEY AUTOINCREMENT,
-  "chain_id" BIGINT,
-  "chainListId" BIGINT,
-  "tokenName" VARCHAR,
-  "tokenHot" INTEGER,
-  "tokenDefault" INTEGER,
-  "tokenLogo" VARCHAR,
-  "activeTokenLogo" VARCHAR,
-  "contract_addr" VARCHAR,
-  "contractUnit" INTEGER,
-  "is_del" INTEGER,
-  UNIQUE (chain_id, tokenName, contract_addr) ON CONFLICT REPLACE
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "chain_id" BIGINT,
+    "chainListId" BIGINT, 
+    "tokenName" VARCHAR,
+    "tokenHot" INTEGER,
+    "tokenDefault" INTEGER,
+    "tokenLogo" VARCHAR,
+    "activeTokenLogo" VARCHAR,
+    "contract_addr" VARCHAR,
+    "contractUnit" INTEGER,
+    "is_del" INTEGER,
+    UNIQUE (chain_id, tokenName, contract_addr) ON CONFLICT REPLACE
   `,
   //wallet table mnemonic_code is encode
   wallet: `
     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
-    "chain_id" BIGINT,
     "wallet_name" VARCHAR,
     "device_id" VARCHAR,
     "wallet_uuid" VARCHAR UNIQUE,
@@ -98,21 +113,22 @@ export const TABLE_MAP = {
     "pub_key" VARCHAR,
     "priv_key" VARCHAR,
     "is_del" INTEGER,
+    block_chain_id BIGINT,
     UNIQUE (wallet_id, address) ON CONFLICT REPLACE,
     FOREIGN KEY (wallet_id) REFERENCES wallet (id)
     `,
   //account asset table (account is equivalent to address)  //address_id, asset_id 联合唯一, address_id 需要 wallet_id, address_index 作为联合唯一键
   accountAsset: `
-  "id" INTEGER PRIMARY KEY AUTOINCREMENT,
-  "address_id" BIGINT,
-  "asset_id" BIGINT,
-  "balance" VARCHAR,
-  "asset_usd" VARCHAR,
-  "asset_cny" VARCHAR,
-  "is_del" INTEGER,
-  UNIQUE (address_id, asset_id) ON CONFLICT REPLACE,
-  FOREIGN KEY (address_id) REFERENCES account (id),
-  FOREIGN KEY (asset_id) REFERENCES asset (id)
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "address_id" BIGINT,
+    "asset_id" BIGINT,
+    "balance" VARCHAR,
+    "asset_usd" VARCHAR,
+    "asset_cny" VARCHAR,
+    "is_del" INTEGER,
+    UNIQUE (address_id, asset_id) ON CONFLICT REPLACE,
+    FOREIGN KEY (address_id) REFERENCES account (id),
+    FOREIGN KEY (asset_id) REFERENCES asset (id)
   `,
 };
 
@@ -190,6 +206,7 @@ export const createTable = (
     });
   });
 };
+
 export const deleteTable = (table_name: string) => {
   return new Promise((resolve, reject) => {
     if (!db) {

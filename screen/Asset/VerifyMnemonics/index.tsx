@@ -11,6 +11,7 @@ import { walletBackUp } from '@api/wallet';
 import { getUniqueId } from 'react-native-device-info';
 import { getData } from '@common/utils/storage';
 import { SUCCESS_CODE } from '@common/constants';
+import { updateWalletTable } from '@common/wallet';
 const VerifyMnemonics = (props: Record<string, any>) => {
   const theme = useTheme();
   const styles = useStyles(theme.theme);
@@ -90,6 +91,10 @@ const VerifyMnemonics = (props: Record<string, any>) => {
       setLoading(false);
     });
     if (res.code === SUCCESS_CODE) {
+      updateWalletTable(wallet_uuid, {
+        key: 'backup = ?',
+        value: [1],
+      });
       navigation?.navigate?.('home', { tab: 'asset' });
     }
     console.log(2222, res);

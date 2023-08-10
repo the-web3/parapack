@@ -3,6 +3,7 @@ import { SUCCESS_CODE } from '@common/constants';
 import { showToast } from '@common/utils/platform';
 import { executeQuery } from '@common/utils/sqlite';
 import { getData } from '@common/utils/storage';
+import { updateWalletTable } from '@common/wallet';
 import Layout from '@components/Layout';
 import { Avatar, Button, Dialog, ListItem, Switch } from '@rneui/themed';
 import React, { useEffect, useState } from 'react';
@@ -43,6 +44,10 @@ const SettingScreen = (props) => {
         wallet_uuid,
       });
       if (res.code === SUCCESS_CODE) {
+        updateWalletTable(wallet_uuid, {
+          key: 'is_del = ?',
+          value: [1],
+        });
         showToast('删除成功', {
           onHide: () => {
             props?.navigation?.navigate('home', {
