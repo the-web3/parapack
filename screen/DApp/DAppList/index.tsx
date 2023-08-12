@@ -5,13 +5,13 @@ import React from "react";
 import { DAppItem } from "@screen/DApp/Components/DAppItem";
 
 interface DAppListProps {
-
+  navigation?: any
 }
 
 export const DAppList = (props: DAppListProps) => {
 
   const onPress = () => {
-
+    props?.navigation.navigate('DAppDetail');
   }
 
   const styles = useStyles(props);

@@ -1,5 +1,6 @@
 import { DAppList } from "@screen/DApp/DAppList"
 import { DAppWebView } from "@screen/DApp/WebView"
+import { DAppDetail } from "@screen/DApp/DAppDetail"
 
 // Just a simple option please optimize
 const _getOptions = (title: string) => {
@@ -20,6 +21,11 @@ const menus = [
   // TODO temp title is uniswap
   options: _getOptions('UniSwap'),
   component:  DAppWebView
+  },
+  {
+    name: "DAppDetail",
+    options: _getOptions(''),
+    component:  DAppDetail
   }
 ];
 

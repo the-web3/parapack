@@ -149,10 +149,10 @@ const App = () => {
   const openSQL = useCallback(async () => {
     const open = await openDatabase();
     if (open) {
-      // initWalletToken();
-      // deleteTable('chain');
-      // deleteTable('asset');
-      // initList();
+      initWalletToken();
+      deleteTable('chain');
+      deleteTable('asset');
+      initList();
       const reset_table = await getData('reset_table');
       if (reset_table !== RESET_SQLITE_TAG) {
         Object.keys(TABLE_MAP).map((table_name) => {
