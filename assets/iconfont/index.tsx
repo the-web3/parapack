@@ -55,6 +55,7 @@ import IconYishouquan from './IconYishouquan';
 import IconZhuanchu from './IconZhuanchu';
 import IconWujilu from './IconWujilu';
 import IconALogopeise from './IconALogopeise';
+import IconTg from './IconTg';
 export { default as IconAGroup217 } from './IconAGroup217';
 export { default as IconVector } from './IconVector';
 export { default as IconALujing1 } from './IconALujing1';
@@ -106,8 +107,9 @@ export { default as IconYishouquan } from './IconYishouquan';
 export { default as IconZhuanchu } from './IconZhuanchu';
 export { default as IconWujilu } from './IconWujilu';
 export { default as IconALogopeise } from './IconALogopeise';
+export { default as IconTg } from './IconTg';
 
-export type IconNames = 'a-Group217' | 'Vector' | 'a-lujing1' | 'a-huaban1' | 'vuesax_outline_arrow-3' | 'ziliaoshenhezhong' | 'tijiaochenggong' | 'fanhuidingbu' | 'liaotiandianjiqian' | 'zichandianjiqian' | 'duihuandianjiqian' | 'huodongdianjiqian' | 'zichandianjihou' | 'shengtaidianjihou' | 'duihuandianjihou' | 'shengtaidianjiqian' | 'huodongdianjihou' | 'liaotiandianjihou' | 'daishoukuan' | 'duihuanmaduihuan' | 'a-31-saoma' | 'bukejian' | 'charulianjie' | 'a-paixubeifen6' | 'shoukuanzhanghao' | 'erweima' | 'gengduoshezhi' | 'liulanqi' | 'zhuanzhang' | 'fuzhi' | 'genghuan' | 'icon' | 'xiangqing' | 'xuanxiangbeifen' | 'daikuanshuliang' | 'xiaoxi' | 'qianbao' | 'daikuanbao' | 'a-xiala' | 'kuanggong2' | 'lujing' | 'xiangshang' | 'shengtai' | 'tuite1' | 'lishishuju' | 'zhongmingming' | 'wujilu2' | 'yishouquan' | 'zhuanchu' | 'wujilu' | 'a-logopeise';
+export type IconNames = 'a-Group217' | 'Vector' | 'a-lujing1' | 'a-huaban1' | 'vuesax_outline_arrow-3' | 'ziliaoshenhezhong' | 'tijiaochenggong' | 'fanhuidingbu' | 'liaotiandianjiqian' | 'zichandianjiqian' | 'duihuandianjiqian' | 'huodongdianjiqian' | 'zichandianjihou' | 'shengtaidianjihou' | 'duihuandianjihou' | 'shengtaidianjiqian' | 'huodongdianjihou' | 'liaotiandianjihou' | 'daishoukuan' | 'duihuanmaduihuan' | 'a-31-saoma' | 'bukejian' | 'charulianjie' | 'a-paixubeifen6' | 'shoukuanzhanghao' | 'erweima' | 'gengduoshezhi' | 'liulanqi' | 'zhuanzhang' | 'fuzhi' | 'genghuan' | 'icon' | 'xiangqing' | 'xuanxiangbeifen' | 'daikuanshuliang' | 'xiaoxi' | 'qianbao' | 'daikuanbao' | 'a-xiala' | 'kuanggong2' | 'lujing' | 'xiangshang' | 'shengtai' | 'tuite1' | 'lishishuju' | 'zhongmingming' | 'wujilu2' | 'yishouquan' | 'zhuanchu' | 'wujilu' | 'a-logopeise' | 'tg';
 
 interface Props extends GProps, ViewProps {
   name: IconNames;
@@ -219,6 +221,8 @@ let IconFont: FunctionComponent<Props> = ({ name, ...rest }) => {
       return <IconWujilu key="50" {...rest} />;
     case 'a-logopeise':
       return <IconALogopeise key="51" {...rest} />;
+    case 'tg':
+      return <IconTg key="52" {...rest} />;
   }
 
   return null;

@@ -1,11 +1,13 @@
-import React from 'react';
-import { View, ScrollView, Text, Image, TouchableOpacity, Dimensions, SafeAreaView } from "react-native";
+import React, { useEffect, useState } from 'react';
+import { View, ScrollView, Dimensions,Image, SafeAreaView, useWindowDimensions } from "react-native";
 import { makeStyles, useTheme } from "@rneui/themed";
 import Icon from "react-native-vector-icons/AntDesign";
-import { Button } from "@rneui/base";
 import MockData from './index.mock.json'
 import { useTranslation } from "react-i18next";
 import { DAppItem } from "@screen/DApp/Components/DAppItem";
+import { getBanners } from '@api/dApp';
+import { Button, Input, Text } from '@rneui/themed';
+import IconFont from '@assets/iconfont';
 
 interface DAppProps {
   navigation?: any
@@ -13,78 +15,110 @@ interface DAppProps {
 
 export const DAppScreen = (props: DAppProps) => {
 
+  const { width } = useWindowDimensions();
   const style = useStyles(props);
   const { theme } = useTheme();
   const { t } = useTranslation();
+  const [banners,setBanners] = useState<Array<any>>([])
+
+  useEffect(() => {
+    // rqBanners();
+  }, []);
+
+  const rqBanners = async () => {
+    try {
+      const banners = await getBanners('zh_CN');
+    } catch (e) {
+    }
+  }
 
   const onShowAll = () => {
     props?.navigation.navigate('DAppList');
   }
 
   const onHotPress = () => {
-    props?.navigation.navigate('DAppWebView', {params: {uri: 'https://app.uniswap.org/#/swap'}});
+    props?.navigation.navigate('DAppDetail');
   }
   const onRecommendPress = () => {
-    props?.navigation.navigate('DAppWebView', {params: {uri: 'https://app.uniswap.org/#/swap'}});
+    props?.navigation.navigate('DAppDetail');
   }
 
   return (
     <SafeAreaView style={[style.container, { height: Dimensions.get('window').height - 100 }]}>
-      <View style={style.banner}/>
+        <View style={style.searchBar}>
+        <Input
+        containerStyle={{marginLeft:-25}}
+          inputContainerStyle={style.inputContainer}
+          errorProps={{ display: 'none' }}
+          inputStyle={{
+            minHeight: 17,
+            fontSize: 12,
+          }}
+          leftIcon={<IconFont name="a-huaban1" />}
+          placeholder="输入Dapp名称或者网站"
+        />
+        <Icon name="scan1" style={{marginLeft:5}} size={24} color={theme.colors.black} />
+      </View>
+      <View style={style.banner}>
+        <Image source={require('@assets/images/banner.jpg')} style={{
+          height: 150,
+          width: width - 40,
+        }} />
+      </View>
       <View style={style.notice}>
         <Button icon={
-          <Icon name={'appstore1'} size={15} color={theme.colors.grey4}/>
-        } size={'sm'} color={'transparent'}/>
+          <Icon name={'appstore1'} size={15} color={theme.colors.grey4} />
+        } size={'sm'} color={'transparent'} />
         <Text style={style.noticeText} numberOfLines={1}>据CoinDesk 4月 17日报道, 美国纽约吧啦吧吧吧吧吧</Text>
         <Button icon={
-          <Icon name={'appstore1'} size={15} color={theme.colors.grey4}/>
-        } size={'sm'} color={'transparent'}/>
+          <Icon name={'appstore1'} size={15} color={theme.colors.grey4} />
+        } size={'sm'} color={'transparent'} />
       </View>
       <View>
         <ScrollView style={style.scrollView}
-                    contentContainerStyle={style.scrollViewContentView}
-                    showsHorizontalScrollIndicator={false}
-                    bounces={false}>
+          contentContainerStyle={style.scrollViewContentView}
+          showsHorizontalScrollIndicator={false}
+          bounces={false}>
           {
-            MockData.tokenButtons.map((v,index) => (
-              <Button icon={<Icon name={v.icon} size={15} color={'#3B28CC'}/>}
-                      title={v.name}
-                      key={index}
-                      titleStyle={style.scrBtnTitle}
-                      buttonStyle={style.scrBtnContainer}/>
+            MockData.tokenButtons.map((v, index) => (
+              <Button icon={<Icon name={v.icon} size={15} color={'#3B28CC'} />}
+                title={v.name}
+                key={index}
+                titleStyle={style.scrBtnTitle}
+                buttonStyle={style.scrBtnContainer} />
             ))
           }
         </ScrollView>
       </View>
-      <View style={{ marginTop: 25 }}>
+      <View style={{ marginTop: 20 }}>
         <ContentHeader leftTitle={t('dApp.recommendList')}
-                       rightTitle={t('dApp.seeAll')}
-                       onRightClick={onShowAll}/>
+          rightTitle={t('dApp.seeAll')}
+          onRightClick={onShowAll} />
         <ScrollView style={style.scrollView}
-                    contentContainerStyle={[style.scrollViewContentView]}
-                    showsHorizontalScrollIndicator={false}
-                    bounces={false}>
+          contentContainerStyle={[style.scrollViewContentView]}
+          showsHorizontalScrollIndicator={false}
+          bounces={false}>
           {
-            MockData.recommendList.map((v,index) => (
+            MockData.recommendList.map((v, index) => (
               <Button buttonStyle={style.recommendItem}
-                      onPress={onRecommendPress}
-                      key={index}>
-                <Image source={{ uri: v.img }} style={{ height: 100, width: 100, borderRadius: 5 }}/>
-                <Text children={v.title} style={style.scrBtnTitle}/>
+                onPress={onRecommendPress}
+                key={index}>
+                <Image source={{ uri: v.img }} style={{ height: 90, width: 90, borderRadius: 5 }} />
+                <Text children={v.title} style={style.scrBtnTitle} />
               </Button>
             ))
           }
         </ScrollView>
-        <View style={{ marginVertical: 25, marginHorizontal: 20, backgroundColor: theme.colors.grey5, height: 1 }}/>
+        <View style={{ marginVertical: 20, marginHorizontal: 20, backgroundColor: theme.colors.grey5, height: 1 }} />
       </View>
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1}}>
         <ContentHeader leftTitle={t('dApp.activityHotList')}
-                       rightTitle={t('dApp.seeAll')}
-                       onRightClick={onShowAll}/>
-        <ScrollView contentContainerStyle={{ paddingBottom: 46 }}>
+          rightTitle={t('dApp.seeAll')}
+          onRightClick={onShowAll} />
+        <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
           {
             MockData.hotList.map((v, i) => (
-              <DAppItem {...v} key={v.title + String(i)} onPress={onHotPress}/>
+              <DAppItem {...v} key={v.title + String(i)} onPress={onHotPress} />
             ))
           }
         </ScrollView>
@@ -105,17 +139,17 @@ const ContentHeader = (props: ContentHeaderProps) => {
     <View style={{
       flexDirection: 'row',
       marginHorizontal: 20,
-      marginBottom: 20,
+      marginBottom: 15,
       justifyContent: 'space-between'
     }}>
       {props.leftTitle && <Text children={props.leftTitle} style={{
         fontSize: 16,
         fontWeight: 'bold'
-      }}/>}
+      }} />}
       {props.rightTitle && <Text children={props.rightTitle} style={{
         fontSize: 15,
         color: '#3B28CC'
-      }} onPress={props?.onRightClick}/>}
+      }} onPress={props?.onRightClick} />}
     </View>
   )
 }
@@ -125,14 +159,32 @@ const useStyles = makeStyles((theme, props: DAppProps) => {
   return {
     container: {
       backgroundColor: theme.colors.white,
+      flex:1,
+    },
+    searchBar: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingTop: 4,
+      paddingHorizontal: 25,
+      paddingBottom: 15,
+      backgroundColor: theme.colors.white,
+    },
+    inputContainer: {
+      marginLeft:20,
+      paddingHorizontal: 11,
+      borderRadius: 16,
+      height: 36,
+      width:Dimensions.get('window').width - 75,
+      borderColor: theme.colors.grey5,
+
+
     },
     banner: {
       backgroundColor: theme.colors.grey5,
       height: 150,
-      margin: 20,
-      marginTop: 5,
-      marginBottom: 0,
+      marginHorizontal: 20,
       borderRadius: 10,
+      overflow: 'hidden'
     },
     notice: {
       marginVertical: 10,
@@ -144,6 +196,8 @@ const useStyles = makeStyles((theme, props: DAppProps) => {
     },
     noticeText: {
       flex: 1,
+      color:'#8c8c8c',
+      fontSize: 12,
     },
     noticeIcon: {
       backgroundColor: theme.colors.grey1,
@@ -153,25 +207,28 @@ const useStyles = makeStyles((theme, props: DAppProps) => {
       flexDirection: "row",
     },
     scrollViewContentView: {
-      gap: 10,
+      gap: 5,
       paddingHorizontal: 20,
       flexDirection: "row",
     },
     scrBtnContainer: {
       gap: 5,
-      paddingHorizontal: 15,
+      paddingHorizontal: 12,
       borderRadius: 25,
       justifyContent: 'flex-start',
-      backgroundColor: theme.colors.grey5
+      backgroundColor: '#F2F3F6'
     },
     scrBtnTitle: {
-      fontSize: 15,
+      fontSize: 12,
       color: theme.colors.black
     },
     recommendItem: {
-      gap: 5,
+      gap: 2,
+      paddingTop:7,
+      paddingBottom:5,
+      paddingHorizontal:7,
       flexDirection: "column",
-      backgroundColor: theme.colors.grey5,
+      backgroundColor: '#F2F3F6',
       borderRadius: 10,
     }
   };

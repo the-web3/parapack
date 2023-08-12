@@ -15,5 +15,4 @@ global.TextEncoder = TextEncoder;
 // set node crypto - getRandomValues function
 import 'react-native-get-random-values';
 
-
 AppRegistry.registerComponent(appName, () => App);
