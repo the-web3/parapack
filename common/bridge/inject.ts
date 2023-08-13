@@ -10,7 +10,8 @@ console.log(rootPath);
 let metamaskExt = '';
 const loadMetamaskExt = () => {
   if (metamaskExt.length) return metamaskExt;
-  loadExtFile(`${rootPath}/inject_metamask_ext.js`)
+  const fileName = Platform.OS === 'ios' ? `injectMetamaskExt.js` : `inject_metamask_ext.js`
+  loadExtFile(`${rootPath}/${fileName}`)
     .then((content) => {
       metamaskExt = content;
     })
