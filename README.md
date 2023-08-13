@@ -39,6 +39,9 @@ go to android folder,exec
 - android
 
 ```
+cd android
+./gradlew clean
+cd ../
 npx react-native build-android --mode=release  
 
 ```

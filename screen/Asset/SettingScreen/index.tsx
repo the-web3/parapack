@@ -78,6 +78,14 @@ const SettingScreen = (props) => {
       return !visible;
     });
   };
+  const toggleWalletName = () => {
+    setWalletNameDialog((prev) => {
+      return {
+        ...prev,
+        visible: !prev.visible,
+      };
+    });
+  };
 
   const handleDelete = async () => {
     try {
@@ -103,6 +111,7 @@ const SettingScreen = (props) => {
       console.log(111111, e);
     }
   };
+
   return (
     <Layout
       fixedChildren={
@@ -159,16 +168,7 @@ const SettingScreen = (props) => {
             </View>
           </ListItem>
         </View>
-        <ListItem
-          onPress={() => {
-            setWalletNameDialog((prev) => {
-              return {
-                ...prev,
-                visible: true,
-              };
-            });
-          }}
-        >
+        <ListItem onPress={toggleWalletName}>
           <ListItem.Content>
             <ListItem.Title>修改钱包名</ListItem.Title>
           </ListItem.Content>
@@ -268,7 +268,7 @@ const SettingScreen = (props) => {
         </View>
         <Button title="取消" onPress={toggleDialogDelete} type="outline" />
       </BottomOverlay>
-      <BottomOverlay visible={walletNameDialog.visible} title={'修改钱包名称'}>
+      <BottomOverlay visible={walletNameDialog.visible} title={'修改钱包名称'} onBackdropPress={toggleWalletName}>
         <View style={{ marginTop: 16 }}>
           <Input
             placeholder="请输入钱包名称"
