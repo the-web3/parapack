@@ -6,6 +6,7 @@ import { getData } from '@common/utils/storage';
 import { updateWalletTable } from '@common/wallet';
 import BottomOverlay from '@components/BottomOverlay';
 import Layout from '@components/Layout';
+import ValidatePassword from '@components/ValidatePassword';
 import { Avatar, Button, Dialog, Input, ListItem, Switch } from '@rneui/themed';
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Clipboard } from 'react-native';
@@ -24,6 +25,10 @@ const SettingScreen = (props) => {
     wallet_name: '',
     device_id: '',
     wallet_uuid: '',
+  });
+  const [validate, setValidate] = useState({
+    visible: false,
+    type: 'private',
   });
   const [deleteVisible, setDeleteVisible] = useState(false);
   const [wallet_uuid, setWalletUuid] = useState('');
@@ -110,6 +115,15 @@ const SettingScreen = (props) => {
     } catch (e) {
       console.log(111111, e);
     }
+  };
+
+  const toggleValidate = async () => {
+    setValidate((prev) => {
+      return {
+        ...prev,
+        visible: !prev.visible,
+      };
+    });
   };
 
   return (
@@ -268,6 +282,13 @@ const SettingScreen = (props) => {
         </View>
         <Button title="取消" onPress={toggleDialogDelete} type="outline" />
       </BottomOverlay>
+      <ValidatePassword
+        visible={validate.visible}
+        onBackdropPress={toggleValidate}
+        validateCorrect={() => {
+          toggleValidate();
+        }}
+      />
       <BottomOverlay visible={walletNameDialog.visible} title={'修改钱包名称'} onBackdropPress={toggleWalletName}>
         <View style={{ marginTop: 16 }}>
           <Input
