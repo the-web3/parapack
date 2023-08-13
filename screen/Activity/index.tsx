@@ -50,7 +50,7 @@ const Activity = ({ navigation }) => {
                 titleStyle={{ fontWeight: 'bold', fontSize: 11, lineHeight: 16 }}
                 size="sm"
                 onPress={() => {
-                  navigation?.navigate('createWallet');
+                  navigation?.navigate('guide');
                 }}
               >
                 进入活动

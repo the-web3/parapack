@@ -13,7 +13,9 @@ import { getData, storeData } from '@common/utils/storage';
 import { showToast } from '@common/utils/platform';
 import { useFocusEffect } from '@react-navigation/native';
 import { CreateAddress } from 'savourlabs-wallet-sdk/wallet';
-import { batchInsertOrUpdateAssetTable, updateWalletTable } from '@common/wallet';
+import { batchInsertOrUpdateAssetTable, updateWalletTable, addToken } from '@common/wallet';
+import BottomOverlay from '@components/BottomOverlay';
+
 type Props = {
   fullWidth?: boolean;
   navigation: any;
@@ -60,7 +62,7 @@ const Asset = (props: Props) => {
   const getWalletInfo = async () => {
     const wallet_uuid = await getData('wallet_uuid');
     if (!wallet_uuid) {
-      props?.navigation?.navigate('createWallet');
+      props?.navigation?.navigate('guide');
       return;
     }
     const device_id = await getUniqueId();
@@ -68,7 +70,7 @@ const Asset = (props: Props) => {
       device_id,
     });
     if (res?.data?.token_list?.length <= 0) {
-      props?.navigation?.navigate('createWallet');
+      props?.navigation?.navigate('guide');
       return;
     }
     if (res.code === SUCCESS_CODE && res?.data) {
@@ -118,6 +120,9 @@ const Asset = (props: Props) => {
                 props?.navigation.navigate('settingScreen', {
                   wallet_uuid: currentWallet?.wallet_uuid,
                 });
+                // TODO: test
+                // addToken({ chain: 'Ploygon', contract_addr: '', symbol: 'Ploygon', tokenName: 'Ploygon' });
+                // addToken({ chain: 'Arbitrum', contract_addr: '', symbol: 'Arbi', tokenName: 'Arbi' });
                 // //TODO: test
                 // const account = CreateAddress({
                 //   chain: 'btc',
@@ -373,7 +378,60 @@ const Asset = (props: Props) => {
             </TabView>
           </View>
         </View>
-        <Overlay
+        <BottomOverlay visible={visible} title="选择钱包" onBackdropPress={toggleOverlay}>
+          {(walletInfo?.token_list || []).map((item) => (
+            <TouchableOpacity
+              key={item.wallet_uuid}
+              onPress={() => {
+                setNewWallet(walletInfo, item.wallet_uuid);
+                toggleOverlay();
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  borderBottomWidth: 1,
+                  borderColor: '#F9F9F9',
+                  paddingVertical: 10,
+                  backgroundColor: item.wallet_uuid === currentWallet?.wallet_uuid ? 'rgba(249, 249, 249, 1)' : '#fff',
+                  paddingHorizontal: 19,
+                  borderRadius: 6,
+                }}
+              >
+                <Avatar rounded source={{ uri: 'https://randomuser.me/api/portraits/men/36.jpg' }} />
+                <View style={{ flex: 1, marginRight: 14, marginLeft: 10 }}>
+                  <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
+                    <Text>{item.wallet_name}</Text>
+                  </View>
+                  <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
+                    <View style={{ flexDirection: 'row' }}>
+                      <Text style={styles.listPrice}>¥ {item.wallet_asset_cny}</Text>
+                    </View>
+                  </View>
+                </View>
+                <View style={{ flexDirection: 'row' }}>
+                  {!item.backup && (
+                    <TouchableOpacity
+                      onPress={(e) => {
+                        e.stopPropagation();
+                        props?.navigation.navigate('startBackup');
+                      }}
+                      style={{ marginRight: 6 }}
+                    >
+                      <View style={styles.button}>
+                        <Icon name="exclamationcircleo" size={12} style={{ marginRight: 3 }} color={'#3B2ACE'} />
+                        <Text style={{ lineHeight: 18, color: '#3B2ACE' }}>未备份</Text>
+                      </View>
+                    </TouchableOpacity>
+                  )}
+                  <Icon name="edit" size={16} style={{ color: '#000', fontSize: 18 }} />
+                </View>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </BottomOverlay>
+        {/* <Overlay
           isVisible={visible}
           onBackdropPress={toggleOverlay}
           overlayStyle={{
@@ -462,7 +520,7 @@ const Asset = (props: Props) => {
               </ScrollView>
             </View>
           </>
-        </Overlay>
+        </Overlay> */}
       </LinearGradient>
     </SafeAreaView>
   );

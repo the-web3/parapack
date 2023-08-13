@@ -1,11 +1,12 @@
-import { DeviceBalanceData, deleteWallet, getDeviceBalance } from '@api/wallet';
+import { DeviceBalanceData, deleteWallet, getDeviceBalance, updateWallet } from '@api/wallet';
 import { SUCCESS_CODE } from '@common/constants';
 import { showToast } from '@common/utils/platform';
 import { executeQuery } from '@common/utils/sqlite';
 import { getData } from '@common/utils/storage';
 import { updateWalletTable } from '@common/wallet';
+import BottomOverlay from '@components/BottomOverlay';
 import Layout from '@components/Layout';
-import { Avatar, Button, Dialog, ListItem, Switch } from '@rneui/themed';
+import { Avatar, Button, Dialog, Input, ListItem, Switch } from '@rneui/themed';
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Clipboard } from 'react-native';
 import { getUniqueId } from 'react-native-device-info';
@@ -18,6 +19,13 @@ const SettingScreen = (props) => {
     visible: false,
     text: '',
   });
+  const [walletNameDialog, setWalletNameDialog] = useState({
+    visible: false,
+    wallet_name: '',
+    device_id: '',
+    wallet_uuid: '',
+  });
+  const [deleteVisible, setDeleteVisible] = useState(false);
   const [wallet_uuid, setWalletUuid] = useState('');
   const getWalletInfo = async () => {
     const [device_id, wallet_uuid] = await Promise.all([getUniqueId(), getData('wallet_uuid')]);
@@ -27,15 +35,49 @@ const SettingScreen = (props) => {
       device_id,
       wallet_uuid,
     });
-    console.log(111111, JSON.stringify(res));
     if (res.code === SUCCESS_CODE && res?.data) {
       setWalletInfo(res?.data);
+      setWalletNameDialog((prev) => {
+        return {
+          ...prev,
+          wallet_name: res?.data?.token_list?.[0]?.wallet_name || '',
+          device_id,
+          wallet_uuid,
+        };
+      });
     }
   };
 
   useEffect(() => {
     getWalletInfo();
   }, [props.navigation]);
+
+  const toggleDialog = () => {
+    setPrivate({
+      visible: !privateDialog.visible,
+      text: '',
+    });
+  };
+
+  const handleEditor = async () => {
+    const { visible, ...rest } = walletNameDialog;
+    const res = await updateWallet(rest);
+    if (res.code === SUCCESS_CODE) {
+      getWalletInfo();
+      setWalletNameDialog((prev) => {
+        return {
+          ...prev,
+          visible: false,
+        };
+      });
+      showToast('修改成功');
+    }
+  };
+  const toggleDialogDelete = () => {
+    setDeleteVisible((visible) => {
+      return !visible;
+    });
+  };
 
   const handleDelete = async () => {
     try {
@@ -44,6 +86,7 @@ const SettingScreen = (props) => {
         wallet_uuid,
       });
       if (res.code === SUCCESS_CODE) {
+        toggleDialogDelete();
         updateWalletTable(wallet_uuid, {
           key: 'is_del = ?',
           value: [1],
@@ -60,18 +103,12 @@ const SettingScreen = (props) => {
       console.log(111111, e);
     }
   };
-  const toggleDialog = () => {
-    setPrivate({
-      visible: !privateDialog.visible,
-      text: '',
-    });
-  };
   return (
     <Layout
       fixedChildren={
         <View>
           <Button
-            onPress={handleDelete}
+            onPress={toggleDialogDelete}
             buttonStyle={{
               backgroundColor: 'rgba(244, 244, 244, 1)',
               borderRadius: 3,
@@ -122,7 +159,16 @@ const SettingScreen = (props) => {
             </View>
           </ListItem>
         </View>
-        <ListItem>
+        <ListItem
+          onPress={() => {
+            setWalletNameDialog((prev) => {
+              return {
+                ...prev,
+                visible: true,
+              };
+            });
+          }}
+        >
           <ListItem.Content>
             <ListItem.Title>修改钱包名</ListItem.Title>
           </ListItem.Content>
@@ -212,16 +258,45 @@ const SettingScreen = (props) => {
           <ListItem.Chevron />
         </ListItem>
       </SafeAreaView>
+
+      <BottomOverlay visible={deleteVisible} title={'确定要删除钱包吗？'} onBackdropPress={toggleDialogDelete}>
+        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', marginBottom: 16 }}>
+          <Text>删除后，您可通过已备份的助记词重新导入钱包</Text>
+        </View>
+        <View style={{ marginBottom: 16 }}>
+          <Button title="确定" onPress={handleDelete} />
+        </View>
+        <Button title="取消" onPress={toggleDialogDelete} type="outline" />
+      </BottomOverlay>
+      <BottomOverlay visible={walletNameDialog.visible} title={'修改钱包名称'}>
+        <View style={{ marginTop: 16 }}>
+          <Input
+            placeholder="请输入钱包名称"
+            value={walletNameDialog.wallet_name}
+            onChangeText={(wallet_name) => {
+              setWalletNameDialog((prev) => {
+                return {
+                  ...prev,
+                  wallet_name,
+                };
+              });
+            }}
+          />
+        </View>
+        <Button onPress={handleEditor}>确定</Button>
+      </BottomOverlay>
       <Dialog isVisible={privateDialog.visible} onBackdropPress={toggleDialog}>
         <Dialog.Title title="私钥" />
         <Text>{privateDialog.text}</Text>
-        <Button
-          onPress={() => {
-            Clipboard.setString(privateDialog?.text || '');
-          }}
-        >
-          复制
-        </Button>
+        <Dialog.Actions>
+          <Dialog.Button
+            title="复制"
+            onPress={() => {
+              Clipboard.setString(privateDialog?.text || '');
+            }}
+          />
+          <Dialog.Button title="取消" onPress={toggleDialog} />
+        </Dialog.Actions>
       </Dialog>
     </Layout>
   );
