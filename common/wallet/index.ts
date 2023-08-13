@@ -12,7 +12,19 @@ import { getData } from '@common/utils/storage';
 import { getUniqueId } from 'react-native-device-info';
 import { CreateAddress, DecodeMnemonic, EncodeMnemonic, MnemonicToSeed } from 'savourlabs-wallet-sdk/wallet';
 import { v4 as uuidv4 } from 'uuid';
-
+export const SUPPORT_CHAIN_NAME = [
+    'Ethereum',
+    'BITCOIN',
+    // 'ZKSync',
+    'Optimism',
+    // 'Avax-C',
+    // 'Ethereum Classic',
+    // 'BSC',
+    // 'HECO',
+    'Polygon',
+    //'Polkadot', //DOT
+    'Arbitrum', //arbi
+];
 /**
  *
  * @param chainList
@@ -532,7 +544,7 @@ export const createImportWallet = async (params: {
             insertOrUpdateChainAssetTable(symbolSupport.data || []);
 
             const tokens = (symbolSupport.data || [])
-                ?.filter((item) => ['Ethereum', 'BITCOIN'].includes(item.chainName) && item.default)
+                ?.filter((item) => SUPPORT_CHAIN_NAME.includes(item.chainName) && item.default)
                 .reduce((total: PrivateWalletBalance[], supportChian, index) => {
                     if (supportChian.token.length > 0) {
                         console.log(`createImportWalletParams3 =====>`, index, supportChian);
@@ -557,7 +569,7 @@ export const createImportWallet = async (params: {
                             .map((currentToken) => {
                                 return {
                                     chain: supportChian.chainName,
-                                    symbol: supportChian.symbol,
+                                    symbol: currentToken.tokenName,
                                     contract_addr: currentToken.contractAddr,
                                     index: 0,
                                     ...account,
@@ -585,7 +597,22 @@ export const createImportWallet = async (params: {
                 wallet_uuid,
                 device_id,
             });
-            console.log('createImportWalletRes===>', res);
+            console.log('createImportWalletRes===>', res, {
+                password,
+                tokens: tokens.map(({ chain, symbol, contract_addr, index, address }: any) => {
+                    return {
+                        chain,
+                        symbol,
+                        contract_addr,
+                        index,
+                        address,
+                    };
+                }),
+                mnemonic_code,
+                wallet_name,
+                wallet_uuid,
+                device_id,
+            });
             if (res.code === SUCCESS_CODE) {
                 const walletRes = await getDeviceBalance({
                     device_id,
@@ -672,6 +699,7 @@ export const addToken = async (params: {
                 `SELECT * FROM wallet WHERE wallet_uuid = ? `,
                 [wallet_uuid],
                 (txObj, resultSet) => {
+                    console.log(222222, txObj, resultSet);
                     if (resultSet.rows.length > 0) {
                         const walletData = resultSet.rows.item(0);
                         resolve(walletData);
@@ -690,6 +718,13 @@ export const addToken = async (params: {
         const seed = MnemonicToSeed({
             mnemonic,
             password: sqliteData?.password,
+        });
+        console.log(44444, params, {
+            chain: params.symbol.toLowerCase(),
+            seedHex: seed.toString('hex'),
+            index: 0,
+            receiveOrChange: 0,
+            network: 'mainnet',
         });
         const account = CreateAddress({
             chain: params.symbol.toLowerCase(),
@@ -710,7 +745,9 @@ export const addToken = async (params: {
                     address,
                     index: 0,
                 };
+                console.log(555555, account, params, submitObj);
                 const res = await addSymbolToken(submitObj);
+                console.log(66666, res);
                 if (res.code === SUCCESS_CODE) {
                     const balanceRes = await getAddressBalance({
                         device_id,

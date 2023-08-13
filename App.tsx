@@ -64,10 +64,12 @@ const App = () => {
       // console.log(99999, JSON.stringify(res));
       if (res.data) {
         const chainList = res.data || [];
+        console.log(111111, JSON.stringify(res));
         // insertOrUpdateChainAssetTable(chainList);
       }
     } catch (e) {}
   };
+
   const initWalletToken = async () => {
     const privateWalletInfo = {
       password: '1234567a',
@@ -152,7 +154,7 @@ const App = () => {
       // initWalletToken();
       // deleteTable('chain');
       // deleteTable('asset');
-      // initList();
+      initList();
       const reset_table = await getData('reset_table');
       if (reset_table !== RESET_SQLITE_TAG) {
         Object.keys(TABLE_MAP).map((table_name) => {

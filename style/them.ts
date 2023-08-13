@@ -63,7 +63,7 @@ export const defineTheme = {
         // color: 'greyTitle',
       },
       inputContainerStyle: {
-        height: 58,
+        minHeight: 58,
         paddingHorizontal: 12,
         borderRadius: 9,
         borderWidth: 1,
