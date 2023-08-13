@@ -199,6 +199,7 @@ const TransferPayment = ({ navigation, route }) => {
         ...currentTokenDetail,
       });
     }
+    console.log(111111, gasRes);
     if (gasRes?.data) {
       setList(
         FEE_TYPE.map((item) => {

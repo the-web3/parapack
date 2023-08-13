@@ -88,8 +88,7 @@ export const TABLE_MAP = {
     "wallet_asset_cny" VARCHAR,
     "backup" INTEGER,
     "has_submit" INTEGER,
-    "is_del" INTEGER,
-    FOREIGN KEY (chain_id) REFERENCES chain (id)
+    "is_del" INTEGER
   `,
   //wallet asset table  wallet_id, asset_id 联合唯一键（不同钱包都有ETH） , asset表的三个联合唯一键去查 (SELECT id FROM asset WHERE chain_id = (SELECT id FROM chain WHERE chain = ?) AND contract_addr = ?)
   walletAsset: `
@@ -189,7 +188,7 @@ export const createTable = (
                 resolve(result);
               },
               (tx, error) => {
-                console.error(`Failed to create table: ${table_name}`, error);
+                console.error(`Failed to create table: ${table_name}`, JSON.stringify(tx));
                 reject(error);
               }
             );

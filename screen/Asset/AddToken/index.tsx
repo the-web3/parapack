@@ -4,18 +4,12 @@ import { SafeAreaView, ScrollView, StatusBar, TouchableOpacity, View } from 'rea
 import { Avatar, SearchBar, Text, makeStyles, useTheme } from '@rneui/themed';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { SymbolSupportDatum, Token, getSymbolSupport } from '@api/symbol';
-import { DeviceBalanceTokenList, addSymbolToken, walletSymbols } from '@api/wallet';
+import { walletSymbols } from '@api/wallet';
 import { getData } from '@common/utils/storage';
 import { getUniqueId } from 'react-native-device-info';
-import { addToken } from '@common/wallet';
+import { SUPPORT_CHAIN_NAME, addToken } from '@common/wallet';
 import Spinner from 'react-native-loading-spinner-overlay';
 import _ from 'lodash';
-// import {StackNavigationProp} from '@react-navigation/stack';
-// import {RootStackParamList} from './types';
-// type ScreenNavigationProp = StackNavigationProp<
-//   RootStackParamList,
-//   'ScreenName'
-// >;
 type Props = {
   fullWidth?: boolean;
   navigation: any;
@@ -29,14 +23,10 @@ const AddToken = (props: Props) => {
   const [supportList, setSupportList] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // const handleAddToken = () => {
-  //   props?.navigation.navigate('startBackup');
-  // };
-
   const initList = async (params = {}) => {
     const [device_id, wallet_uuid] = await Promise.all([getUniqueId(), getData('wallet_uuid')]);
     const [res, supportRes] = await Promise.all([getSymbolSupport(params), walletSymbols({ device_id, wallet_uuid })]);
-    console.log(11111, JSON.stringify(res), params);
+    // console.log(11111, JSON.stringify(res), params);
     if (res.data) {
       setList(res.data);
       setSupportList(supportRes.data);
@@ -45,12 +35,15 @@ const AddToken = (props: Props) => {
 
   const filterList = React.useMemo(() => {
     return (list || [])
-      ?.filter((item) => item.hot && ['Ethereum', 'BITCOIN'].includes(item.chainName))
+      ?.filter((item) =>
+        // item.hot &&
+        SUPPORT_CHAIN_NAME.includes(item.chainName)
+      )
       .reduce((total: Token[], supportChian) => {
         if (supportChian.token.length > 0) {
           const { chainName, symbol } = supportChian;
           const curTokens = supportChian.token
-            .filter((currentToken) => currentToken.tokenHot)
+            // .filter((currentToken) => currentToken.tokenHot)
             .map((item) => {
               const added =
                 supportList.findIndex(
@@ -63,8 +56,6 @@ const AddToken = (props: Props) => {
         return [...total];
       }, []) as ListItem[];
   }, [list, supportList]);
-
-  // console.log(1111, supportList, filterList);
 
   useEffect(() => {
     initList();

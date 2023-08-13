@@ -348,7 +348,7 @@ const TokenDetail = (props: Props) => {
             style={styles.bannerContainer}
           >
             <Image
-              source={require('@assets/images/banner.png')}
+              source={require('@assets/images/banner1.png')}
               style={styles.banner}
               // PlaceholderContent={<ActivityIndicator />}
             />

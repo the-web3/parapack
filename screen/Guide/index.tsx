@@ -1,8 +1,5 @@
 import * as React from 'react';
-import {
-  // StyleSheet,
-  View,
-} from 'react-native';
+import { View } from 'react-native';
 import { Button, Text, makeStyles } from '@rneui/themed';
 import { showToast } from '@common/utils/platform';
 // import {StackNavigationProp} from '@react-navigation/stack';
@@ -20,24 +17,14 @@ const Guide = (props: Props) => {
   const createNewWallet = () => {
     props?.navigation.navigate('createWallet');
   };
-  const handleFristCreateWallet = () => {
-    // props?.navigation.navigate('startBackup');
-    showToast('暂不支持');
+  const handleImportWallet = () => {
+    props?.navigation.navigate('importWallet');
   };
   const styles = useStyles(props);
   return (
     <View style={styles.container}>
       <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-        <View
-          style={{
-            backgroundColor: '#AEAEAE',
-            height: 180,
-            width: 180,
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginTop: 100,
-          }}
-        >
+        <View style={styles.logo}>
           <Text>LOGO</Text>
         </View>
       </View>
@@ -53,7 +40,7 @@ const Guide = (props: Props) => {
           titleStyle={{ color: 'white', flexDirection: 'column' }}
         />
         <Button
-          onPress={handleFristCreateWallet}
+          onPress={handleImportWallet}
           buttonStyle={{
             backgroundColor: '#F1F1FF',
             marginTop: 12,
@@ -72,7 +59,6 @@ const Guide = (props: Props) => {
 };
 
 const useStyles = makeStyles((theme, props: Props) => {
-  // console.log(11111, theme.colors, props);
   return {
     container: {
       position: 'relative',
@@ -91,6 +77,14 @@ const useStyles = makeStyles((theme, props: Props) => {
     },
     protocol: {
       color: '#4D6EF5',
+    },
+    logo: {
+      backgroundColor: '#AEAEAE',
+      height: 180,
+      width: 180,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: 100,
     },
   };
 });

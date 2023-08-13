@@ -46,6 +46,7 @@ const BackupMnemonics = (props: any) => {
       });
       if (sqliteData) {
         const mnemonic = await DecodeMnemonic({ encrytMnemonic: sqliteData?.mnemonic_code, language: 'english' });
+        console.log(1111111, mnemonic.split(' ').join(','));
         setMnemonic(mnemonic.split(' '));
       }
     } catch (error) {

@@ -12,6 +12,7 @@ import Collection from '@screen/Asset/Collection';
 import SettingScreen from '@screen/Asset/SettingScreen';
 import SearchToken from '@screen/Asset/SearchToken';
 import SearchHistory from '@screen/Asset/SearchHistory';
+import ImportWallet from '@screen/Asset/ImportWallet';
 
 const menus = [
   {
@@ -37,6 +38,14 @@ const menus = [
       headerShadowVisible: false,
     },
     component: CreateWallet, //（完成）
+  },
+  {
+    name: 'importWallet',
+    options: {
+      title: '导入钱包',
+      headerShadowVisible: false,
+    },
+    component: ImportWallet, //（完成）
   },
   {
     name: 'asset',

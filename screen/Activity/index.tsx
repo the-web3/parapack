@@ -26,7 +26,7 @@ const Activity = ({ navigation }) => {
           <View style={styles.card} key={index}>
             <View style={styles.bannerContainer}>
               <Image
-                source={require('@assets/images/banner.png')}
+                source={require('@assets/images/banner1.png')}
                 style={styles.banner}
                 // PlaceholderContent={<ActivityIndicator />}
               />
@@ -50,7 +50,7 @@ const Activity = ({ navigation }) => {
                 titleStyle={{ fontWeight: 'bold', fontSize: 11, lineHeight: 16 }}
                 size="sm"
                 onPress={() => {
-                  navigation?.navigate('createWallet');
+                  navigation?.navigate('guide');
                 }}
               >
                 进入活动
