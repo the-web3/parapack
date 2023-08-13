@@ -107,14 +107,6 @@ const Asset = (props: Props) => {
           <View style={{ flexDirection: 'row' }}>
             <TouchableOpacity
               onPress={() => {
-                props?.navigation.navigate('scannerScreen');
-                // props?.navigation.navigate('coinDetail');
-              }}
-            >
-              <Icon name="scan1" style={{ marginRight: 21 }} size={24} color={theme.colors.black} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
                 // props?.navigation.navigate('tokenDetail');
                 // props?.navigation.navigate('coinDetail');
                 props?.navigation.navigate('settingScreen', {
@@ -178,7 +170,14 @@ const Asset = (props: Props) => {
                 // });
               }}
             >
-              <Icon name="creditcard" size={24} color={theme.colors.black} />
+              <Icon style={{ marginRight: 16 }} name="setting" size={24} color={theme.colors.black} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                props?.navigation.navigate('scannerScreen');
+              }}
+            >
+              <Icon name="scan1" size={24} color={theme.colors.black} />
             </TouchableOpacity>
           </View>
         </View>
