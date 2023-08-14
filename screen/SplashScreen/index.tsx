@@ -15,8 +15,8 @@ const SplashScreen = ({ navigation }) => {
       // navigation.navigate('addToken');
       // navigation.navigate('importWallet');
       navigation.navigate('home', {
-        tab: 'asset',
-        // tab: 'ecology',
+        // tab: 'asset',
+        tab: 'ecology',
         // wallet_uuid: 'c11b420e-50e3-4723-8d0f-0cb3dca8849f',
       });
       // navigation.navigate('transferPayment', {
