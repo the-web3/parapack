@@ -122,7 +122,7 @@ const AddToken = (props: Props) => {
       </View>
       <View style={styles.body}>
         <Text style={styles.title}>热门币种</Text>
-        <ScrollView style={{ minHeight: '100%' }}>
+        <ScrollView style={{ minHeight: '100%' }} contentContainerStyle={{ paddingBottom: 300 }}>
           {(filterList || []).map((item) => (
             <TouchableOpacity
               key={`${item?.symbol}_${item.contractAddr}`}

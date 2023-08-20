@@ -83,25 +83,20 @@ const TransferPayment = ({ navigation, route }) => {
       `,
           [token?.chain, token?.symbol, token?.contract_addr],
           (txObj, resultSet) => {
-            console.log(1111111, CHAIN_MAP[token?.chain], JSON.stringify(resultSet), {
-              chain: token?.chain as string,
-              symbol: token?.symbol as string,
-              address: token?.address as string,
-            });
             if (resultSet.rows.length > 0) {
               const { contractUnit, chainListId } = resultSet.rows.item(0);
-              console.log(888888, resultSet.rows.item(0));
+              console.log(888888, resultSet.rows.item(0), nonceRes);
               tx.executeSql(
                 `
-              SELECT * 
-              FROM account 
-              WHERE wallet_id = (
-                SELECT id
-                FROM wallet
-                WHERE wallet_uuid = ?
-              )
-              AND address = ?
-          `,
+                    SELECT * 
+                    FROM account 
+                    WHERE wallet_id = (
+                      SELECT id
+                      FROM wallet
+                      WHERE wallet_uuid = ?
+                    )
+                    AND address = ?
+                `,
                 [wallet_uuid, token?.address],
                 async (txObj2, resultSet2) => {
                   if (resultSet2.rows.length > 0) {
@@ -125,22 +120,28 @@ const TransferPayment = ({ navigation, route }) => {
                       // from: '0x1c176b36166F74BB5DBC19a340a896A68DeA1385',
                       // to: '0x36FCde42B307915a94542132AbE5b273bFfF4376',
                       // gasLimit: 21000,
-                      // amount: '0.1',
-                      // gasPrice: 750000000000,
                       // decimal: 18,
                       // chainId: 1,
                       // tokenAddress: '0x00',
                     };
-                    console.log(111111, token?.symbol.toLowerCase(), params);
+                    console.log(
+                      111111,
+                      token?.symbol.toLowerCase(),
+                      CHAIN_MAP[token?.chain] || token?.chain?.toLocaleLowerCase(),
+                      params
+                    );
                     try {
-                      const raw_tx = await SignTransaction(CHAIN_MAP[token?.chain] || token?.chain, params);
+                      const raw_tx = await SignTransaction(
+                        CHAIN_MAP[token?.chain] || token?.chain?.toLocaleLowerCase(),
+                        params
+                      );
                       const res = await transfer({
                         raw_tx: raw_tx as string,
                         chain: token?.chain as string,
                         symbol: token?.symbol as string,
                       });
                       console.log(
-                        2222,
+                        'transfer =====>',
                         {
                           raw_tx: raw_tx as string,
                           chain: token?.chain as string,
@@ -149,7 +150,7 @@ const TransferPayment = ({ navigation, route }) => {
                         res
                       );
                     } catch (e) {
-                      console.log(e);
+                      console.log('raw_tx', e);
                     }
                   } else {
                     console.log('Account not found.');
@@ -199,7 +200,7 @@ const TransferPayment = ({ navigation, route }) => {
         ...currentTokenDetail,
       });
     }
-    console.log(111111, gasRes);
+
     if (gasRes?.data) {
       setList(
         FEE_TYPE.map((item) => {
@@ -278,24 +279,6 @@ const TransferPayment = ({ navigation, route }) => {
                 <Icon name="caretdown" style={{ marginLeft: 8 }} />
               </View>
             </TouchableOpacity>
-
-            {/* <View>
-              <Picker
-                value={token?.contract_addr || ''}
-                style={pickerStyles}
-                placeholder={{}}
-                onValueChange={handleChange}
-                items={(wallet?.wallet_balance || []).map((item: any) => ({
-                  label: item.symbol,
-                  value: item.contract_addr,
-                }))}
-              >
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Text>{token?.symbol}</Text>
-                  <Icon name="caretdown" style={{ marginLeft: 8 }} />
-                </View>
-              </Picker>
-            </View> */}
           </View>
 
           <Input

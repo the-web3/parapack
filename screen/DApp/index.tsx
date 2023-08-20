@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { DAppItem } from '@screen/DApp/Components/DAppItem';
 import { getBanners, getDAppGroup, getNotices } from '@api/dApp';
 import { Button, Input, Text } from '@rneui/themed';
+import { getActivity } from '@api/home';
 
 interface DAppProps {
   navigation?: any;
@@ -28,6 +29,15 @@ export const DAppScreen = (props: DAppProps) => {
   const rqBanners = async () => {
     try {
       const banners = await getBanners('zh_CN');
+      // console.log('banners', JSON.stringify(banners));
+      // const activity = await getActivity({
+      //   pageNum: '1',
+      //   pageSize: '1',
+      //   status: 1,
+      //   // symbol,
+      // });
+      // console.log('activity', JSON.stringify(activity));
+
       const dAppGroupRes = await getDAppGroup({
         pageNum: 1,
         pageSize: 10,
@@ -35,7 +45,7 @@ export const DAppScreen = (props: DAppProps) => {
         walletLanguage: 'zh_CN',
       });
       setDAppGroup(dAppGroupRes.data);
-      console.log(222222, JSON.stringify(dAppGroupRes));
+      console.log('group', JSON.stringify(dAppGroupRes));
       const noticesRes = await getNotices({
         pageNum: 1,
         pageSize: 10,
@@ -43,7 +53,7 @@ export const DAppScreen = (props: DAppProps) => {
         walletLanguage: 'zh_CN',
       });
       setNotices(noticesRes.data);
-      console.log(33333, JSON.stringify(noticesRes));
+      console.log('news', JSON.stringify(noticesRes));
     } catch (e) {}
   };
 

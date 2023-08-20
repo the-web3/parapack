@@ -24,6 +24,8 @@ export const SUPPORT_CHAIN_NAME = [
     'Polygon',
     //'Polkadot', //DOT
     'Arbitrum', //arbi
+    'SOL',
+    'TRON',
 ];
 /**
  *
