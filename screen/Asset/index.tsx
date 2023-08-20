@@ -73,6 +73,7 @@ const Asset = (props: Props) => {
       props?.navigation?.navigate('guide');
       return;
     }
+
     if (res.code === SUCCESS_CODE && res?.data) {
       setWalletInfo(res?.data);
       setNewWallet(res?.data, wallet_uuid);
@@ -94,7 +95,7 @@ const Asset = (props: Props) => {
       getWalletInfo();
     }, [])
   );
-
+  // console.log(88888, JSON.stringify(currentWallet));
   return (
     <SafeAreaView>
       <LinearGradient
@@ -288,7 +289,9 @@ const Asset = (props: Props) => {
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
               <TouchableOpacity
                 onPress={() => {
-                  props?.navigation.navigate('searchToken');
+                  props?.navigation.navigate('searchToken', {
+                    go: 'tokenDetail',
+                  });
                 }}
               >
                 <View style={styles.search}>

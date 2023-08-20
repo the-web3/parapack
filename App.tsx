@@ -65,7 +65,7 @@ const App = () => {
       if (res.data) {
         const chainList = res.data || [];
         console.log(111111, JSON.stringify(res));
-        // insertOrUpdateChainAssetTable(chainList);
+        insertOrUpdateChainAssetTable(chainList);
       }
     } catch (e) {}
   };
@@ -168,7 +168,7 @@ const App = () => {
           query: `CREATE TABLE ${table_name} (${TABLE_MAP[table_name as keyof typeof TABLE_MAP]})`,
         });
       });
-      // getTableInfo();
+      getTableInfo();
       // fixChainTable();
       // fixAccountTable();
     }
