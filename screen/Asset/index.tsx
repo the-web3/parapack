@@ -61,7 +61,7 @@ const Asset = (props: Props) => {
 
   const getWalletInfo = async () => {
     const wallet_uuid = await getData('wallet_uuid');
-    if (!wallet_uuid) {
+    if (!wallet_uuid || wallet_uuid === '{}') {
       props?.navigation?.navigate('guide');
       return;
     }
