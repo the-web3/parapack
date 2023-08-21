@@ -106,9 +106,9 @@ const TransferPayment = ({ navigation, route }) => {
                       privateKey: accountData.priv_key.replace('0x', ''),
                       nonce: Number(nonceRes.data?.nonce || 0),
                       from: token?.address,
-                      to: form.toAddr || '',
+                      // to: form.toAddr || '',
                       amount: form.amount || '0.1',
-                      gasPrice: gas?.[`${activeType}`] as unknown as number,
+                      gasPrice: gas?.[`${activeType}`] as unknown as number, //((gas?.[`${activeType}`] as unknown as number) * 10) ** contractUnitbig number time(10)
                       gasLimit: gas?.[`${activeType}`] as unknown as number,
                       decimal: contractUnit, //contractUnit
                       chainId: chainListId,
@@ -118,7 +118,7 @@ const TransferPayment = ({ navigation, route }) => {
                       // privateKey: '0cc9a688f5608f4b5ae64444d936282ca5ff1fcf9cdd09fe34d4475a5b1a8d65',
                       // nonce: 0,
                       // from: '0x1c176b36166F74BB5DBC19a340a896A68DeA1385',
-                      // to: '0x36FCde42B307915a94542132AbE5b273bFfF4376',
+                      to: '0x36FCde42B307915a94542132AbE5b273bFfF4376',
                       // gasLimit: 21000,
                       // decimal: 18,
                       // chainId: 1,

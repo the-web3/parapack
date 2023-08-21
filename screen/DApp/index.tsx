@@ -29,14 +29,14 @@ export const DAppScreen = (props: DAppProps) => {
   const rqBanners = async () => {
     try {
       const banners = await getBanners('zh_CN');
-      // console.log('banners', JSON.stringify(banners));
-      // const activity = await getActivity({
-      //   pageNum: '1',
-      //   pageSize: '1',
-      //   status: 1,
-      //   // symbol,
-      // });
-      // console.log('activity', JSON.stringify(activity));
+      console.log('banners', JSON.stringify(banners));
+      const activity = await getActivity({
+        pageNum: '1',
+        pageSize: '1',
+        status: 1,
+        // symbol,
+      });
+      console.log('activity', JSON.stringify(activity));
 
       const dAppGroupRes = await getDAppGroup({
         pageNum: 1,
