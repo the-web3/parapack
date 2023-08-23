@@ -13,6 +13,7 @@ import SettingScreen from '@screen/Asset/SettingScreen';
 import SearchToken from '@screen/Asset/SearchToken';
 import SearchHistory from '@screen/Asset/SearchHistory';
 import ImportWallet from '@screen/Asset/ImportWallet';
+import Test from '@screen/Asset/Test';
 
 const menus = [
   {
@@ -155,6 +156,10 @@ const menus = [
       },
     },
     component: Collection, //（完成）
+  },
+  {
+    name: 'test',
+    component: Test, //（完成）
   },
 ];
 

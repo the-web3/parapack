@@ -11,6 +11,10 @@ import { getData } from '@common/utils/storage';
 import { executeQuery } from '@common/utils/sqlite';
 import { SignTransaction } from 'savourlabs-wallet-sdk/wallet';
 import { CHAIN_MAP } from '@common/constants';
+import Big from 'big.js';
+import BottomOverlay from '@components/BottomOverlay';
+import { showToast } from '@common/utils/platform';
+
 const FEE_TYPE = [
   {
     type: 'low',
@@ -53,10 +57,15 @@ const TransferPayment = ({ navigation, route }) => {
   });
 
   const [list, setList] = useState<any[]>([]);
-  const [byte, setByte] = useState<string>('');
-  const [size, setSize] = useState<string>('');
+  const [gasPrice, setGasPrice] = useState<string>('');
+  const [gasLimit, setGasLimit] = useState<string>('');
   const [activeType, setActiveType] = useState<'recommend' | 'low' | 'fast' | 'custom'>('recommend');
   const [gas, setGas] = useState<SymbolGasData>();
+  const [visible, setVisible] = useState(false);
+
+  const toggleOverlay = () => {
+    setVisible(!visible);
+  };
 
   const handleConfirmed = async () => {
     const [wallet_uuid, nonceRes] = await Promise.all([
@@ -101,6 +110,11 @@ const TransferPayment = ({ navigation, route }) => {
                 async (txObj2, resultSet2) => {
                   if (resultSet2.rows.length > 0) {
                     // 获取第一条数据
+                    const gasPriceInGwei = new Big(10)
+                      .pow(contractUnit)
+                      .times(gas?.[`${activeType as keyof typeof SymbolGasData}`]); // Example gas price in Gwei
+                    const gasLimit = new Big(`${gas?.limitPrice}`);
+                    // const totalTransactionCostInWei = gasPriceInWei.times(gasLimit);
                     const accountData = resultSet2.rows.item(0);
                     const params = {
                       privateKey: accountData.priv_key.replace('0x', ''),
@@ -108,8 +122,8 @@ const TransferPayment = ({ navigation, route }) => {
                       from: token?.address,
                       // to: form.toAddr || '',
                       amount: form.amount || '0.1',
-                      gasPrice: gas?.[`${activeType}`] as unknown as number, //((gas?.[`${activeType}`] as unknown as number) * 10) ** contractUnitbig number time(10)
-                      gasLimit: gas?.[`${activeType}`] as unknown as number,
+                      gasPrice: gasPriceInGwei,
+                      gasLimit,
                       decimal: contractUnit, //contractUnit
                       chainId: chainListId,
                       tokenAddress: '0x00',
@@ -215,20 +229,44 @@ const TransferPayment = ({ navigation, route }) => {
       setGas(gasRes.data);
     }
   }, [route?.params]);
+  console.log(999999, gas, form, token);
 
   useEffect(() => {
     initData();
   }, [initData, navigation]);
 
-  const handleChange = (value) => {
-    console.log(11111, value);
-    // seToken()
+  const handleOpen = () => {
+    if (!form?.toAddr) {
+      return showToast(`输入或者黏贴钱包地址`);
+    } else if (!form?.amount) {
+      return showToast(`输入正确的转出数量`);
+    } else {
+      if (activeType === 'custom') {
+        if (Number(gasPrice) < (gas?.low || 0)) {
+          return showToast(`Gas Price至少为${gas?.low}`);
+        }
+        if (Number(gasLimit) < 21000) {
+          return showToast(`Gas Limit至少为21000`);
+        }
+      }
+      toggleOverlay();
+    }
   };
+  const customPrice = React.useMemo(() => {
+    if (!gasLimit) return 0;
+    if (!gasPrice) return 0;
+    return ((Number(gasLimit) * Number(gasPrice)) / 10e18).toFixed(4);
+  }, [gasLimit, gasPrice]);
+  const customUsdtPrice = React.useMemo(() => {
+    if (!gasLimit) return 0;
+    if (!gasPrice) return 0;
+    return (((Number(gasLimit) * Number(gasPrice)) / 10e18) * 100).toFixed(2);
+  }, [gasLimit, gasPrice]);
   return (
     <Layout
       fixedChildren={
         <View style={styles.button}>
-          <Button onPress={handleConfirmed}>确定</Button>
+          <Button onPress={handleOpen}>确定</Button>
         </View>
       }
     >
@@ -362,24 +400,51 @@ const TransferPayment = ({ navigation, route }) => {
               <View style={{ flex: 1 }}>
                 <Text style={styles.customTitle}>Fee per byte（sat/b）</Text>
                 <Input
-                  value={byte}
-                  onChangeText={(byte) => {
-                    setByte(byte);
+                  value={gasPrice}
+                  onChangeText={(price) => {
+                    setGasPrice(price);
                   }}
                 />
               </View>
               <View style={{ flex: 1, marginLeft: 13 }}>
                 <Text style={styles.customTitle}>Size（sat/b）</Text>
                 <Input
-                  value={size}
-                  onChangeText={(size) => {
-                    setSize(size);
+                  value={gasLimit}
+                  onChangeText={(limit) => {
+                    setGasLimit(limit);
                   }}
                 />
               </View>
             </View>
           )}
         </View>
+        <BottomOverlay visible={visible} title={'交易详情'} onBackdropPress={toggleOverlay}>
+          <View style={{ marginTop: 16 }}>
+            <View style={{ marginBottom: 16 }}>
+              <Text style={{ fontSize: 16 }}>{token?.chain}</Text>
+            </View>
+            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
+              <Text style={{ color: '#9397AF', fontSize: 14, marginRight: 2 }}>付款地址</Text>
+              <Text>{token?.address || ''}</Text>
+            </View>
+            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
+              <Text style={{ color: '#9397AF', fontSize: 14, marginRight: 2 }}>收款地址</Text>
+              <Text>{form.toAddr || ''}</Text>
+            </View>
+            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
+              <Text style={{ color: '#9397AF', fontSize: 14, marginRight: 2 }}>矿工费</Text>
+              <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                <Text style={{ fontSize: 20 }}>
+                  {activeType === 'custom' ? customPrice : gas?.[activeType]} {token?.symbol}
+                </Text>
+                <Text style={{ fontSize: 14 }}>
+                  ≈$ {activeType === 'custom' ? customUsdtPrice : gas?.[activeType] && gas[`${activeType}Usdt`]}
+                </Text>
+              </View>
+            </View>
+          </View>
+          <Button onPress={handleConfirmed}>确定</Button>
+        </BottomOverlay>
       </SafeAreaView>
     </Layout>
   );

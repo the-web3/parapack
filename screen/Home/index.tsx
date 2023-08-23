@@ -3,6 +3,7 @@ import LayoutNormal from '@components/LayoutNormal';
 import { makeStyles, useTheme } from '@rneui/themed';
 import Activity from '@screen/Activity';
 import Asset from '@screen/Asset';
+import Test from '@screen/Asset/Test';
 import { DAppScreen } from '@screen/DApp';
 import Swap from '@screen/Swap';
 import React, { useEffect, useState } from 'react';
@@ -50,7 +51,7 @@ const App = (props: any) => {
       case 'swap':
         return <Swap {...prop} />;
       case 'chat':
-        return <Screen2 {...prop} />;
+        return <Test {...prop} />;
       case 'asset':
         return <Asset {...prop} />;
       default:

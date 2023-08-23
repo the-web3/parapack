@@ -226,6 +226,8 @@ export interface SymbolGasData {
    * gas费币种
    */
   gasFeeSymbol: string;
+
+  limitPrice: number;
   /**
    * 慢到账需要gas
    */
