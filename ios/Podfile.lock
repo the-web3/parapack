@@ -704,7 +704,7 @@ SPEC CHECKSUMS:
   FlipperKit: cbdee19bdd4e7f05472a66ce290f1b729ba3cb86
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
-  hermes-engine: 47986d26692ae75ee7a17ab049caee8864f855de
+  hermes-engine: 53601682292b99a774c41bcb7d6e2dfd56fe73ea
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
   RCT-Folly: 424b8c9a7a0b9ab2886ffe9c3b041ef628fd4fb1
@@ -756,4 +756,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: a77b23006efc4795c81d1b8481accb29746e7dcf
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.11.3

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, ScrollView, Dimensions, Image, SafeAreaView, useWindowDimensions } from 'react-native';
 import { makeStyles, useTheme } from '@rneui/themed';
 import Icon from 'react-native-vector-icons/AntDesign';
-import MockData from './index.mock.json';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { useTranslation } from 'react-i18next';
 import { DAppItem } from '@screen/DApp/Components/DAppItem';
 import { getBanners, getDAppGroup, getNotices } from '@api/dApp';
@@ -12,6 +12,13 @@ import { getActivity } from '@api/home';
 interface DAppProps {
   navigation?: any;
 }
+
+const classifyButtons = [
+  { id: 0, icon: "barchart", name: "排行榜" },
+  { id: 1, icon: "clockcircleo", name: "最新上线" },
+  { id: 2, icon: "pay-circle-o1", name: "理财" },
+  { id: 3, icon: "bulb1", name: "Defi" }
+];
 
 export const DAppScreen = (props: DAppProps) => {
   const { width } = useWindowDimensions();
@@ -54,7 +61,7 @@ export const DAppScreen = (props: DAppProps) => {
       });
       setNotices(noticesRes.data);
       console.log('news', JSON.stringify(noticesRes));
-    } catch (e) {}
+    } catch (e) { }
   };
 
   const onShowAll = () => {
@@ -94,7 +101,7 @@ export const DAppScreen = (props: DAppProps) => {
       </View>
       <View style={style.notice}>
         <Button
-          icon={<Icon name={'appstore1'} size={15} color={theme.colors.grey4} />}
+          icon={<Icon name={'sound'} size={17} color={theme.colors.grey4} />}
           size={'sm'}
           color={'transparent'}
         />
@@ -102,7 +109,7 @@ export const DAppScreen = (props: DAppProps) => {
           据CoinDesk 4月 17日报道, 美国纽约吧啦吧吧吧吧吧
         </Text>
         <Button
-          icon={<Icon name={'appstore1'} size={15} color={theme.colors.grey4} />}
+          icon={<FontAwesomeIcon name={'navicon'} size={18} color={theme.colors.grey4} />}
           size={'sm'}
           color={'transparent'}
         />
@@ -114,9 +121,9 @@ export const DAppScreen = (props: DAppProps) => {
           showsHorizontalScrollIndicator={false}
           bounces={false}
         >
-          {MockData.tokenButtons.map((v, index) => (
+          {classifyButtons.map((v, index) => (
             <Button
-              icon={<Icon name={v.icon} size={15} color={'#3B28CC'} />}
+              icon={<Icon name={v.icon} size={18} color={'#3B28CC'} />}
               title={v.name}
               key={index}
               titleStyle={style.scrBtnTitle}
@@ -250,14 +257,15 @@ const useStyles = makeStyles((theme, props: DAppProps) => {
       flexDirection: 'row',
     },
     scrBtnContainer: {
-      gap: 5,
+      gap: 6,
       paddingHorizontal: 12,
       borderRadius: 25,
       justifyContent: 'flex-start',
       backgroundColor: '#F2F3F6',
     },
     scrBtnTitle: {
-      fontSize: 12,
+      fontSize: 13,
+      fontWeight:'500',
       color: theme.colors.black,
     },
     recommendItem: {
