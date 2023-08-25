@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Platform, SafeAreaView, View } from 'react-native'
 import RNWebView from 'react-native-webview'
 import { makeStyles } from "@rneui/themed";
@@ -15,13 +15,19 @@ export const DAppWebView = (props: DAppWebViewProps) => {
   const styles = useStyles();
   let [webviewBridge] = useState<any>(null);
 
-  const sourceURI = useMemo(() => {
+  const propsData = useMemo(() => {
     return props.route?.params.params ?? ''
   }, [props])
 
   const onMessage =  (event: any) => {
     onBridgeMessage(event, webviewBridge);
   }
+
+  useEffect(() => {
+    //props.route?.params.params.title
+    console.log('props.route?.params.params.title:',props.route?.params.params.title);
+    (props as any)?.navigation.setOptions({title: props.route?.params.params.title ?? 'DApp' })
+  },[]);
 
   const injectJavaScript = useMemo(() => {
     return getMetamaskExt();
@@ -47,7 +53,7 @@ export const DAppWebView = (props: DAppWebViewProps) => {
       <RNWebView
         style={styles.container}
         containerStyle={styles.container}
-        source={sourceURI}
+        source={{uri: propsData.uri}}
         ref={(e) => webviewBridge = e}
         onLoadStart={() => {
           Platform.OS === 'android' &&

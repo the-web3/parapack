@@ -10,48 +10,57 @@ const web3 = new Web3(
   new Web3.providers.HttpProvider(Wallet.eth.uri)
 )
 
+const getWallet = async (chainId: any) => {
+  try{Í
+    const wallet_uuid = await getData('wallet_uuid');
+    console.warn('wallet_uuid:',wallet_uuid);
+    //blockchain ID
+    // TODO please ext it when need suport other EVM chains 
+    // const chainId = BLOCK_CHAIN_ID_MAP.Ethereum;
+    const sqliteData = await executeQuery({
+      customExec: (tx, resolve, reject) => {
+        tx.executeSql(
+          `
+        SELECT * 
+        FROM account 
+        WHERE wallet_id = (
+          SELECT id
+          FROM wallet
+          WHERE wallet_uuid = ?
+        ) AND block_chain_id = ?
+      `,
+          [wallet_uuid, chainId],
+          async (txObj2, resultSet2) => {
+            if (resultSet2.rows.length > 0) {
+              const accountData = resultSet2.rows.item(0);
+              resolve({account: accountData})
+            } else {
+              // reject('Account not found.');
+              resolve({account: {}});
+            }
+          },
+          (txObj) => {
+            // reject(`Error executing SQL query:${txObj}`);
+            resolve({account: {}});
+          }
+        );
+      },
+    }) as any;
+  } catch(e) {
+    return Promise.resolve({account: {}})
+  }
+}
+
 export const onBridgeMessage = async (event: any, webviewBridge: any) => {
   _webviewBridge = webviewBridge;
   let bridgeParamsJson = event.nativeEvent.data || '';
   const bridgeParams = JSON.parse(bridgeParamsJson);
   const { messageId } = bridgeParams || {}
   console.warn('onBridgeMessage');
-
-  const wallet_uuid = await getData('wallet_uuid');
-  console.warn('wallet_uuid:',wallet_uuid);
-  //blockchain ID
-  // TODO please ext it when need suport other EVM chains 
   const chainId = BLOCK_CHAIN_ID_MAP.Ethereum;
-
+  const sqliteData = await getWallet(chainId) ?? {};
   try {
-  const sqliteData = {}
-  //  await executeQuery({
-  //   customExec: (tx, resolve, reject) => {
-  //     tx.executeSql(
-  //       `
-  //     SELECT * 
-  //     FROM account 
-  //     WHERE wallet_id = (
-  //       SELECT id
-  //       FROM wallet
-  //       WHERE wallet_uuid = ?
-  //     ) AND block_chain_id = ?
-  //   `,
-  //       [wallet_uuid, chainId],
-  //       async (txObj2, resultSet2) => {
-  //         if (resultSet2.rows.length > 0) {
-  //           const accountData = resultSet2.rows.item(0);
-  //           resolve({account: accountData})
-  //         } else {
-  //           // reject('Account not found.');
-  //         }
-  //       },
-  //       (txObj) => {
-  //         // reject(`Error executing SQL query:${txObj}`);
-  //       }
-  //     );
-  //   },
-  // }) as any;
+
   console.warn('sqliteData:',sqliteData);
   // TODO temp Wallet.eth.x
   const privateKey = sqliteData?.account?.priv_key.replace('0x', '') ?? Wallet.eth.privateKey;
@@ -67,6 +76,7 @@ export const onBridgeMessage = async (event: any, webviewBridge: any) => {
       privateKey: privateKey
     });
   } catch (e) {
+    console.log('123123132111');
     injectJavaScript(errorParams(messageId, {
         code: -32603,
         message: 'User rejected provider access'

@@ -18,8 +18,7 @@ const menus = [
   },
   {
   name: "DAppWebView",
-  // TODO temp title is uniswap
-  options: _getOptions('UniSwap'),
+  options: _getOptions(''),
   component:  DAppWebView
   },
   {

@@ -40,3 +40,12 @@ export const getDAppGroup = (params: NoticeProps) => {
     })
 }
 
+export const getDAppDetail = (params: any) => {
+    return http.post('/contentPage', {
+        id: params.id 
+    }, {
+        headers: {
+            "wallet-language": params.walletLanguage
+        }
+    });
+}

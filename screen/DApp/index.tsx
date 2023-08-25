@@ -25,25 +25,27 @@ export const DAppScreen = (props: DAppProps) => {
   const style = useStyles(props);
   const { theme } = useTheme();
   const { t } = useTranslation();
-  const [banners, setBanners] = useState<Array<any>>([]);
-  const [notices, setNotices] = useState<Array<any>>([]);
-  const [dAppGroup, setDAppGroup] = useState<Array<any>>([]);
+  const [banners, setBanners] = useState<Record<string, any>>({});
+  const [notices, setNotices] = useState<Record<string, any>>({});
+  const [dAppGroup, setDAppGroup] = useState<Record<string, any>>({});
+  const [activity, setActivity] = useState<Record<string, any>>({});
 
   useEffect(() => {
-    rqBanners();
+    rqDatas();
   }, []);
 
-  const rqBanners = async () => {
+  const rqDatas = async () => {
     try {
       const banners = await getBanners('zh_CN');
       console.log('banners', JSON.stringify(banners));
-      const activity = await getActivity({
-        pageNum: '1',
-        pageSize: '1',
+      setBanners(banners);
+      const activityRes = await getActivity({
+        pageNum: "1",
+        pageSize: "10",
         status: 1,
         // symbol,
       });
-      console.log('activity', JSON.stringify(activity));
+      setActivity(activityRes.data);
 
       const dAppGroupRes = await getDAppGroup({
         pageNum: 1,
@@ -52,7 +54,7 @@ export const DAppScreen = (props: DAppProps) => {
         walletLanguage: 'zh_CN',
       });
       setDAppGroup(dAppGroupRes.data);
-      console.log('group', JSON.stringify(dAppGroupRes));
+
       const noticesRes = await getNotices({
         pageNum: 1,
         pageSize: 10,
@@ -60,19 +62,23 @@ export const DAppScreen = (props: DAppProps) => {
         walletLanguage: 'zh_CN',
       });
       setNotices(noticesRes.data);
-      console.log('news', JSON.stringify(noticesRes));
+
     } catch (e) { }
   };
 
+  const onTagPress = () => {
+    props?.navigation.navigate('DAppList');
+  }
   const onShowAll = () => {
     props?.navigation.navigate('DAppList');
   };
 
-  const onHotPress = () => {
-    props?.navigation.navigate('DAppDetail');
+  const onHotPress = (params: any) => {
+    props?.navigation.navigate('DAppDetail', {params});
   };
-  const onRecommendPress = () => {
-    props?.navigation.navigate('DAppDetail');
+  const onRecommendPress = (params: any) => {
+    console.warn('params:',params);
+    props?.navigation.navigate('DAppDetail', {params});
   };
 
   return (
@@ -86,7 +92,7 @@ export const DAppScreen = (props: DAppProps) => {
             fontSize: 12,
           }}
           leftIcon={<Icon name="search1" />}
-          placeholder="输入Dapp名称或者网站"
+          placeholder="输入Dapp网站"
         />
         <Icon name="scan1" style={{ marginLeft: 5 }} size={24} color={theme.colors.black} />
       </View>
@@ -106,7 +112,7 @@ export const DAppScreen = (props: DAppProps) => {
           color={'transparent'}
         />
         <Text style={style.noticeText} numberOfLines={1}>
-          据CoinDesk 4月 17日报道, 美国纽约吧啦吧吧吧吧吧
+          {notices?.lists?.length ? notices.lists[0].content : ''}
         </Text>
         <Button
           icon={<FontAwesomeIcon name={'navicon'} size={18} color={theme.colors.grey4} />}
@@ -126,6 +132,7 @@ export const DAppScreen = (props: DAppProps) => {
               icon={<Icon name={v.icon} size={18} color={'#3B28CC'} />}
               title={v.name}
               key={index}
+              onPress={onTagPress}
               titleStyle={style.scrBtnTitle}
               buttonStyle={style.scrBtnContainer}
             />
@@ -142,9 +149,9 @@ export const DAppScreen = (props: DAppProps) => {
           horizontal={true}
         >
           {dAppGroup?.lists?.map((v, index) => (
-            <Button buttonStyle={style.recommendItem} onPress={onRecommendPress} key={index}>
+            <Button buttonStyle={style.recommendItem} onPress={() => onRecommendPress(v)} key={index}>
               <Image source={{ uri: v.coverPicture }} style={{ height: 90, width: 90, borderRadius: 5 }} />
-              <Text children={v.summary} style={style.scrBtnTitle} />
+              <Text children={v.title} style={style.scrBtnTitle} />
             </Button>
           ))}
         </ScrollView>
@@ -153,8 +160,8 @@ export const DAppScreen = (props: DAppProps) => {
       <View style={{ flex: 1 }}>
         <ContentHeader leftTitle={t('dApp.activityHotList')} rightTitle={t('dApp.seeAll')} onRightClick={onShowAll} />
         <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
-          {notices?.lists?.map((v, i) => (
-            <DAppItem {...v} key={v.title + String(i)} onPress={onHotPress} />
+          {activity?.lists?.map((v, i) => (
+            <DAppItem {...v} key={v.title + String(i)} onPress={() => onHotPress(v)} />
           ))}
         </ScrollView>
       </View>
