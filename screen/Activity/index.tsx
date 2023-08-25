@@ -10,16 +10,29 @@ const Activity = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.searchBar}>
-        <Input
-          inputContainerStyle={styles.inputContainer}
-          errorProps={{ display: 'none' }}
-          inputStyle={{
-            minHeight: 17,
-            fontSize: 12,
+        <View
+          style={{
+            width: '100%',
+            height: 36,
+            backgroundColor: theme.colors.white,
+            borderRadius: 9,
+            shadowColor: '#999999', // 阴影颜色
+            shadowOffset: { width: 0, height: 0 }, // 阴影偏移为 (0, 0)
+            shadowOpacity: 0.5, // 阴影透明度
+            shadowRadius: 10, // 模糊半径为 10
+            elevation: 2, // 仅在 Android 上需要，设置为 0 表示不要阴影
           }}
-          rightIcon={<IconFont name="a-huaban1" />}
-          placeholder="搜索你想要了解的活动..."
-        />
+        >
+          <Input
+            inputContainerStyle={styles.inputContainer}
+            errorProps={{ display: 'none' }}
+            inputStyle={{
+              fontSize: 12,
+            }}
+            rightIcon={<IconFont name="a-huaban1" />}
+            placeholder="搜索你想要了解的活动..."
+          />
+        </View>
       </View>
       <ScrollView style={styles.main}>
         {arr.map((item, index) => (
@@ -75,16 +88,11 @@ const useStyles = makeStyles((theme) => {
       backgroundColor: theme.colors.white,
     },
     inputContainer: {
-      paddingHorizontal: 11,
-      borderRadius: 8,
-      // borderWidth: 0,
-      // elevation: 5,
-      // shadowColor: theme.colors.grey5,
-      // shadowOffset: { width: 0, height: 0 },
-      // shadowOpacity: 1,
-      // shadowRadius: 10,
+      paddingHorizontal: 12,
+      borderWidth: 0,
       height: 36,
-      borderColor: theme.colors.grey5,
+      minHeight: 36,
+      borderColor: theme.colors.white,
     },
     main: {
       paddingHorizontal: 15,

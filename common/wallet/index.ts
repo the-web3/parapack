@@ -1,6 +1,7 @@
 import { SymbolSupportDatum, getSymbolSupport } from '@api/symbol';
 import { addSymbolToken, createWallet, getAddressBalance, getDeviceBalance } from '@api/wallet';
 import { SUCCESS_CODE } from '@common/constants';
+import { showToast } from '@common/utils/platform';
 import {
     BLOCK_CHAIN_ID_MAP,
     PrivateWalletBalance,
@@ -539,13 +540,13 @@ export const createImportWallet = async (params: {
             getSymbolSupport({}),
         ]);
         const wallet_uuid = uuidv4();
-        if (symbolSupport.code === SUCCESS_CODE) {
+        if (symbolSupport?.code === SUCCESS_CODE) {
             console.log(`createImportWalletParams2 =====>`, device_id, mnemonic_code, JSON.stringify(symbolSupport));
 
             //存chain 和asset 表
-            insertOrUpdateChainAssetTable(symbolSupport.data || []);
+            insertOrUpdateChainAssetTable(symbolSupport?.data || []);
 
-            const tokens = (symbolSupport.data || [])
+            const tokens = (symbolSupport?.data || [])
                 ?.filter((item) => SUPPORT_CHAIN_NAME.includes(item.chainName) && item.default)
                 .reduce((total: PrivateWalletBalance[], supportChian, index) => {
                     if (supportChian.token.length > 0) {
