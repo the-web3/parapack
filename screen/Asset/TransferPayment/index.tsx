@@ -346,6 +346,7 @@ const TransferPayment = ({ navigation, route }) => {
 
           <Input
             value={form.amount}
+            keyboardType="numeric"
             onChangeText={(amount) => {
               setForm((prev) => {
                 return {
