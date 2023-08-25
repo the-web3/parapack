@@ -129,7 +129,7 @@ const CreateWallet = (props: Props) => {
             // errorMessage="ENTER A VALID ERROR HERE"
           />
         </View>
-        <View style={{ flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'center' }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
           <TouchableOpacity
             onPress={() => {
               setWalletInfo((prev) => {
@@ -157,7 +157,7 @@ const CreateWallet = (props: Props) => {
             </View>
           </TouchableOpacity>
 
-          <Text>
+          <Text style={{ flexWrap: 'wrap', flex: 1 }}>
             我已阅读并同意 <Text style={styles.protocol}>《用户协议》</Text>
             以及
             <Text style={styles.protocol}>《隐私政策》</Text>

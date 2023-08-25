@@ -47,13 +47,13 @@ const TransferPayment = ({ navigation, route }) => {
   const [token, seToken] = useState<WalletBalance>();
 
   const [form, setForm] = useState({
-    fromAddr: route?.params?.address || '',
-    toAddr: route?.params?.toAddr || '',
+    fromAddr: '',
+    toAddr: route?.params?.address || '',
     amount: '',
-    symbol: route?.params?.symbol || '',
-    contractAddr: route?.params?.contractAddr || '',
-    sign: route?.params?.sign || '',
-    chain: route?.params?.chain || '',
+    symbol: '',
+    contractAddr: '',
+    sign: '',
+    chain: '',
   });
 
   const [list, setList] = useState<any[]>([]);
@@ -76,6 +76,7 @@ const TransferPayment = ({ navigation, route }) => {
         address: token?.address as string,
       }),
     ]);
+
     const sqliteData = await executeQuery({
       customExec: (tx, resolve, reject) => {
         tx.executeSql(
@@ -114,15 +115,12 @@ const TransferPayment = ({ navigation, route }) => {
                     // const gasPriceInGwei = new Big(gas?.[`${activeType}`]).toNumber(); // Example gas price in Gwei
                     // const gasLimit = new Big(`${gas?.gasLimit}`).toNumber();
                     const accountData = resultSet2.rows.item(0);
-                    if (activeType === 'custom') {
-                      gasLimit;
-                    }
                     const params = {
                       privateKey: accountData.priv_key.replace('0x', ''),
                       nonce: Number(nonceRes.data?.nonce || 0),
                       from: token?.address,
                       to: form.toAddr || '',
-                      amount: form.amount || '0.1',
+                      amount: form.amount,
                       gasPrice: new Big(activeType === 'custom' ? gasPrice : gas?.[`${activeType}`]).toNumber(),
                       gasLimit: new Big(`${activeType === 'custom' ? gasLimit : gas?.gasLimit}`).toNumber(),
                       decimal: contractUnit, //contractUnit
@@ -165,6 +163,7 @@ const TransferPayment = ({ navigation, route }) => {
                         res
                       );
                     } catch (e) {
+                      showToast(`${e}`);
                       console.log('raw_tx', e);
                     }
                   } else {
@@ -238,6 +237,7 @@ const TransferPayment = ({ navigation, route }) => {
         })
       );
       setGas(gasRes.data);
+      console.log(11111, gasRes.data);
     }
   }, [route?.params]);
 
@@ -252,7 +252,7 @@ const TransferPayment = ({ navigation, route }) => {
       return showToast(`输入正确的转出数量`);
     } else {
       if (activeType === 'custom') {
-        if (Number(gasPrice) < (gas?.low || 0)) {
+        if (new Big(gasPrice) < (new Big(gas?.low) || 0)) {
           return showToast(`Gas Price至少为${gas?.low}`);
         }
         if (Number(gasLimit) < 21000) {
