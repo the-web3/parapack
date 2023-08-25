@@ -19,22 +19,22 @@ const FEE_TYPE = [
   {
     type: 'low',
     title: '慢',
-    subTitle: '0.00073BTC',
-    price: '$ 3.27',
+    price: '0.00073',
+    usdtPrice: '3.27',
     time: '约60分钟',
   },
   {
     type: 'recommend',
     title: '推荐',
-    subTitle: '0.00073BTC',
-    price: '$ 3.27',
+    price: '0.00073',
+    usdtPrice: '$ 3.27',
     time: '约30分钟',
   },
   {
     type: 'fast',
     title: '快',
-    subTitle: '0.00073BTC',
-    price: '$ 3.27',
+    price: '0.00073',
+    usdtPrice: '3.27',
     time: '约10分钟',
   },
   {
@@ -110,20 +110,21 @@ const TransferPayment = ({ navigation, route }) => {
                 async (txObj2, resultSet2) => {
                   if (resultSet2.rows.length > 0) {
                     // 获取第一条数据
-                    const gasPriceInGwei = new Big(10)
-                      .pow(contractUnit)
-                      .times(gas?.[`${activeType as keyof typeof SymbolGasData}`]); // Example gas price in Gwei
-                    const gasLimit = new Big(`${gas?.limitPrice}`);
-                    // const totalTransactionCostInWei = gasPriceInWei.times(gasLimit);
+
+                    // const gasPriceInGwei = new Big(gas?.[`${activeType}`]).toNumber(); // Example gas price in Gwei
+                    // const gasLimit = new Big(`${gas?.gasLimit}`).toNumber();
                     const accountData = resultSet2.rows.item(0);
+                    if (activeType === 'custom') {
+                      gasLimit;
+                    }
                     const params = {
                       privateKey: accountData.priv_key.replace('0x', ''),
                       nonce: Number(nonceRes.data?.nonce || 0),
                       from: token?.address,
-                      // to: form.toAddr || '',
+                      to: form.toAddr || '',
                       amount: form.amount || '0.1',
-                      gasPrice: gasPriceInGwei,
-                      gasLimit,
+                      gasPrice: new Big(activeType === 'custom' ? gasPrice : gas?.[`${activeType}`]).toNumber(),
+                      gasLimit: new Big(`${activeType === 'custom' ? gasLimit : gas?.gasLimit}`).toNumber(),
                       decimal: contractUnit, //contractUnit
                       chainId: chainListId,
                       tokenAddress: '0x00',
@@ -132,14 +133,14 @@ const TransferPayment = ({ navigation, route }) => {
                       // privateKey: '0cc9a688f5608f4b5ae64444d936282ca5ff1fcf9cdd09fe34d4475a5b1a8d65',
                       // nonce: 0,
                       // from: '0x1c176b36166F74BB5DBC19a340a896A68DeA1385',
-                      to: '0x36FCde42B307915a94542132AbE5b273bFfF4376',
+                      // to: '0x36FCde42B307915a94542132AbE5b273bFfF4376',
                       // gasLimit: 21000,
                       // decimal: 18,
                       // chainId: 1,
                       // tokenAddress: '0x00',
                     };
                     console.log(
-                      111111,
+                      77777,
                       token?.symbol.toLowerCase(),
                       CHAIN_MAP[token?.chain] || token?.chain?.toLocaleLowerCase(),
                       params
@@ -214,22 +215,31 @@ const TransferPayment = ({ navigation, route }) => {
         ...currentTokenDetail,
       });
     }
-
     if (gasRes?.data) {
       setList(
         FEE_TYPE.map((item) => {
-          return {
-            ...item,
-            time: `约${gasRes.data[`${item?.type}Time`]}分钟`,
-            price: `$ ${gasRes.data[`${item?.type}Usdt`]}`,
-            subTitle: `${gasRes.data[`${item?.type}`]}${gasRes.data.gasFeeSymbol}`,
-          };
+          if (item.type === 'custom') {
+            return {
+              ...item,
+            };
+          } else {
+            // const estimatedCost = gasPrice * gasLimit
+            // const actualCostInEther = estimatedCost / 10^18
+            const pows = new Big(10).pow(gasRes.data.contractUnit);
+            const symbolPrice = new Big(gasRes.data[`${item?.type}`]).times(gasRes.data.gasLimit).div(pows);
+            const price = symbolPrice.times(gasRes.data.symbolRate);
+            return {
+              ...item,
+              time: `约${gasRes.data[`${item?.type}Time`]}分钟`,
+              usdtPrice: `${price.toFixed(gasRes.data.amountUnit).toString()}`,
+              price: `${symbolPrice.toFixed(gasRes.data.amountUnit).toString()}`,
+            };
+          }
         })
       );
       setGas(gasRes.data);
     }
   }, [route?.params]);
-  console.log(999999, gas, form, token);
 
   useEffect(() => {
     initData();
@@ -252,16 +262,31 @@ const TransferPayment = ({ navigation, route }) => {
       toggleOverlay();
     }
   };
-  const customPrice = React.useMemo(() => {
-    if (!gasLimit) return 0;
-    if (!gasPrice) return 0;
-    return ((Number(gasLimit) * Number(gasPrice)) / 10e18).toFixed(4);
-  }, [gasLimit, gasPrice]);
-  const customUsdtPrice = React.useMemo(() => {
-    if (!gasLimit) return 0;
-    if (!gasPrice) return 0;
-    return (((Number(gasLimit) * Number(gasPrice)) / 10e18) * 100).toFixed(2);
-  }, [gasLimit, gasPrice]);
+
+  const priceDetail = React.useMemo(() => {
+    if (activeType === 'custom') {
+      let price = 0;
+      let usdtPrice = 0;
+      if (gasLimit && gasPrice) {
+        const pows = new Big(10).pow(gas.contractUnit);
+        const symbolPrice = new Big(gasPrice).times(gasLimit).div(pows);
+        const symbolUsdtPrice = symbolPrice.times(gas.symbolRate);
+        price = symbolPrice.toFixed(gas.amountUnit);
+        usdtPrice = symbolUsdtPrice.toFixed(gas.amountUnit);
+      }
+      return {
+        price,
+        usdtPrice,
+      };
+    } else {
+      const current = list?.find((item) => item.type === activeType);
+      return {
+        price: current?.price || 0,
+        usdtPrice: current?.usdtPrice || 0,
+      };
+    }
+  }, [gasLimit, gasPrice, activeType, list]);
+
   return (
     <Layout
       fixedChildren={
@@ -379,8 +404,10 @@ const TransferPayment = ({ navigation, route }) => {
                 >
                   <View style={{ ...style }}>
                     <Text style={styles.groupTitle}>{item.title}</Text>
-                    <Text style={styles.groupSubTitle}>{item.subTitle}</Text>
-                    <Text style={styles.groupSubTitle}>{item.price}</Text>
+                    <Text style={styles.groupSubTitle}>
+                      {item.price} {token?.symbol}
+                    </Text>
+                    <Text style={styles.groupSubTitle}>$ {item.usdtPrice} Usdt</Text>
                     <Text style={styles.time}>{item.time}</Text>
                     <Icon
                       // eslint-disable-next-line react-native/no-inline-styles
@@ -401,6 +428,7 @@ const TransferPayment = ({ navigation, route }) => {
                 <Text style={styles.customTitle}>Fee per byte（sat/b）</Text>
                 <Input
                   value={gasPrice}
+                  keyboardType="numeric"
                   onChangeText={(price) => {
                     setGasPrice(price);
                   }}
@@ -410,6 +438,7 @@ const TransferPayment = ({ navigation, route }) => {
                 <Text style={styles.customTitle}>Size（sat/b）</Text>
                 <Input
                   value={gasLimit}
+                  keyboardType="numeric"
                   onChangeText={(limit) => {
                     setGasLimit(limit);
                   }}
@@ -423,23 +452,26 @@ const TransferPayment = ({ navigation, route }) => {
             <View style={{ marginBottom: 16 }}>
               <Text style={{ fontSize: 16 }}>{token?.chain}</Text>
             </View>
-            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
-              <Text style={{ color: '#9397AF', fontSize: 14, marginRight: 2 }}>付款地址</Text>
+            <View style={{ marginBottom: 16 }}>
+              <View>
+                <Text style={{ color: '#9397AF', fontSize: 14, marginRight: 2 }}>付款地址</Text>
+              </View>
+
               <Text>{token?.address || ''}</Text>
             </View>
-            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
-              <Text style={{ color: '#9397AF', fontSize: 14, marginRight: 2 }}>收款地址</Text>
+            <View style={{ marginBottom: 16 }}>
+              <View>
+                <Text style={{ color: '#9397AF', fontSize: 14, marginRight: 2 }}>收款地址</Text>
+              </View>
               <Text>{form.toAddr || ''}</Text>
             </View>
-            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
-              <Text style={{ color: '#9397AF', fontSize: 14, marginRight: 2 }}>矿工费</Text>
+            <View style={{ marginBottom: 16 }}>
+              <View>
+                <Text style={{ color: '#9397AF', fontSize: 14, marginRight: 2 }}>矿工费</Text>
+              </View>
               <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                <Text style={{ fontSize: 20 }}>
-                  {activeType === 'custom' ? customPrice : gas?.[activeType]} {token?.symbol}
-                </Text>
-                <Text style={{ fontSize: 14 }}>
-                  ≈$ {activeType === 'custom' ? customUsdtPrice : gas?.[activeType] && gas[`${activeType}Usdt`]}
-                </Text>
+                <Text style={{ fontSize: 20 }}>{priceDetail.price}</Text>
+                <Text style={{ fontSize: 14 }}>≈$ {priceDetail.usdtPrice}</Text>
               </View>
             </View>
           </View>
