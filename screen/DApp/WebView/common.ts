@@ -15,46 +15,49 @@ export const onBridgeMessage = async (event: any, webviewBridge: any) => {
   let bridgeParamsJson = event.nativeEvent.data || '';
   const bridgeParams = JSON.parse(bridgeParamsJson);
   const { messageId } = bridgeParams || {}
+  console.warn('onBridgeMessage');
 
-  const [ wallet_uuid ] = await Promise.all([
-    getData('wallet_uuid'),
-  ]);
+  const wallet_uuid = await getData('wallet_uuid');
+  console.warn('wallet_uuid:',wallet_uuid);
   //blockchain ID
   // TODO please ext it when need suport other EVM chains 
   const chainId = BLOCK_CHAIN_ID_MAP.Ethereum;
 
   try {
-  const sqliteData = await executeQuery({
-    customExec: (tx, resolve, reject) => {
-      tx.executeSql(
-        `
-      SELECT * 
-      FROM account 
-      WHERE wallet_id = (
-        SELECT id
-        FROM wallet
-        WHERE wallet_uuid = ?
-      ) AND block_chain_id = ?
-    `,
-        [wallet_uuid, chainId],
-        async (txObj2, resultSet2) => {
-          if (resultSet2.rows.length > 0) {
-            const accountData = resultSet2.rows.item(0);
-            resolve({account: accountData})
-          } else {
-            reject('Account not found.');
-          }
-        },
-        (txObj) => {
-          reject(`Error executing SQL query:${txObj}`);
-        }
-      );
-    },
-  }) as any;
-
+  const sqliteData = {}
+  //  await executeQuery({
+  //   customExec: (tx, resolve, reject) => {
+  //     tx.executeSql(
+  //       `
+  //     SELECT * 
+  //     FROM account 
+  //     WHERE wallet_id = (
+  //       SELECT id
+  //       FROM wallet
+  //       WHERE wallet_uuid = ?
+  //     ) AND block_chain_id = ?
+  //   `,
+  //       [wallet_uuid, chainId],
+  //       async (txObj2, resultSet2) => {
+  //         if (resultSet2.rows.length > 0) {
+  //           const accountData = resultSet2.rows.item(0);
+  //           resolve({account: accountData})
+  //         } else {
+  //           // reject('Account not found.');
+  //         }
+  //       },
+  //       (txObj) => {
+  //         // reject(`Error executing SQL query:${txObj}`);
+  //       }
+  //     );
+  //   },
+  // }) as any;
+  console.warn('sqliteData:',sqliteData);
   // TODO temp Wallet.eth.x
-  const privateKey = sqliteData?.priv_key.replace('0x', '') ?? Wallet.eth.privateKey;
-  const address = sqliteData?.address ?? Wallet.eth.address;
+  const privateKey = sqliteData?.account?.priv_key.replace('0x', '') ?? Wallet.eth.privateKey;
+  const address = sqliteData?.account?.address ?? Wallet.eth.address;
+  console.warn('privateKey:',privateKey);
+  console.warn('address:',address);
 
   const bridge = useMetamaskBridge({chainId, web3});
 

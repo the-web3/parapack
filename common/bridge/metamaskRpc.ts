@@ -337,6 +337,7 @@ export const useMetamaskBridge = (props: MetamaskBridgeProps) => {
     web3.eth.sendSignedTransaction(
       signature?.rawTransaction?? {}
     ).on('transactionHash', (tx: string) => {
+      console.warn('tx:',tx);
       resolve({data: tx});
     }).on("error", (error: any) => {
       reject({error})

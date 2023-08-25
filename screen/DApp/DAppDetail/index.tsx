@@ -119,7 +119,8 @@ export const DAppDetail = (props: DAppDetail) => {
     }, []);
 
     const onPress = () => {
-        props?.navigation.navigate('DAppWebView', { params: { uri: 'https://app.uniswap.org/#/swap' } });
+        props?.navigation.navigate('DAppWebView', { params: { uri: 'https://app.1inch.io/#/1/simple/swap/ETH' } });
+        // props?.navigation.navigate('DAppWebView', { params: { uri: 'https://app.uniswap.org/#/swap' } });
     }
 
     return (
