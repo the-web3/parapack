@@ -1,4 +1,5 @@
 import Toast from 'react-native-root-toast';
+import * as RNLocalize from 'react-native-localize';
 
 export const showToast = (
     msg: string,
@@ -17,4 +18,9 @@ export const showToast = (
             props?.onHide?.();
         },
     });
+};
+
+export const getLanguage = () => {
+    const systemLanguages = RNLocalize.getLocales()?.[0];
+    return `${systemLanguages.languageCode}_${systemLanguages.countryCode}`;
 };
