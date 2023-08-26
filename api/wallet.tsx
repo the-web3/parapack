@@ -191,6 +191,9 @@ export interface TransferRecordParams {
   contractAddr?: string;
   symbol: string;
   type?: number; //类型，1=转入，0=转出
+  ownerAddr: 'string';
+  pageNum: number;
+  pageSize: number;
 }
 export interface Datum {
   amount?: string;

@@ -130,17 +130,20 @@ const TokenDetail = (props: Props) => {
           },
         };
       });
-      const { chain, contract_addr: contractAddr, symbol } = tokenInfo?.tokenDetail || {};
+      const { chain, contract_addr: contractAddr, symbol, address } = tokenInfo?.tokenDetail || {};
       const params: TransferRecordParams = {
         chain,
         contractAddr,
         symbol,
+        ownerAddr: address,
+        pageNum: 1,
+        pageSize: 100,
       };
       if (type !== -1) {
         params.type = type;
       }
       const res = await transferRecord(params);
-      console.log(44444, JSON.stringify(res));
+      console.log(44444, params, JSON.stringify(res));
       if (res.data) {
         setRecord((prev: any) => {
           return {
@@ -148,7 +151,7 @@ const TokenDetail = (props: Props) => {
             [type]: {
               ...prev[type],
               loading: false,
-              list: res.data,
+              ...res.data,
             },
           };
         });
@@ -371,8 +374,8 @@ const TokenDetail = (props: Props) => {
                 }}
               >
                 <Tab.Item>全部</Tab.Item>
-                <Tab.Item>转入</Tab.Item>
                 <Tab.Item>转出</Tab.Item>
+                <Tab.Item>转入</Tab.Item>
               </Tab>
             </View>
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
@@ -403,8 +406,8 @@ const TokenDetail = (props: Props) => {
                 return (
                   <TabView.Item style={{ width: '100%' }} key={item}>
                     <ScrollView style={{ paddingHorizontal: 25 }}>
-                      {record[item].data?.lists?.length > 0 ? (
-                        record[item].data?.lists?.map((item) => (
+                      {record[item]?.lists?.length > 0 ? (
+                        record[item]?.lists?.map((item) => (
                           <TouchableOpacity
                             key={item}
                             onPress={() => {

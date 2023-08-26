@@ -63,7 +63,7 @@ const Collection = (props) => {
                       fontSize: 18,
                     }}
                   >
-                    LTC (Litecoin) 收款
+                    {tokenDetail?.symbol} ({tokenDetail?.chain}) 收款
                   </Text>
                 </View>
                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>

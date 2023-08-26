@@ -66,8 +66,7 @@ const ImportWallet = (props: Props) => {
       if (sqliteData) {
         for (let item of sqliteData as any[]) {
           const mnemonic = await DecodeMnemonic({ encrytMnemonic: item?.mnemonic_code, language: 'english' });
-          const currentWords = mnemonic.split(' ').join(',');
-          if (currentWords === walletInfo.mnemonic && item.is_del === 0) {
+          if (mnemonic === walletInfo.mnemonic && item.is_del === 0) {
             showToast('当前链已存在此助记词钱包');
             return false;
           }
@@ -113,10 +112,20 @@ const ImportWallet = (props: Props) => {
         });
       if (createSuccess && createSuccess.success) {
         storeData('wallet_uuid', createSuccess.wallet_uuid);
-        props?.navigation?.navigate?.('home', { tab: 'asset' });
+        // props?.navigation?.navigate?.('home', { tab: 'asset' });
       }
     }
   };
+  // const init = async () => {
+  //   const mnemonic = await DecodeMnemonic({
+  //     encrytMnemonic: '6abb1dbb18026cbfb007bc03ff4bd3c7',
+  //     language: 'english',
+  //   });
+  //   console.log(mnemonic, 'mnemonic');
+  // };
+  // React.useEffect(() => {
+  //   init();
+  // }, []);
   const styles = useStyles(props);
 
   return (
