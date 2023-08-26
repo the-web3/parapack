@@ -26,6 +26,9 @@ const SearchHistory = (props: Props) => {
       chain: tokenDetail.chain,
       contractAddr: tokenDetail.contract_addr,
       symbol: tokenDetail.symbol,
+      ownerAddr: tokenDetail.address,
+      pageNum: 1,
+      pageSize: 100,
     });
     if (res.data) {
       setRecord((prev: any) => {

@@ -30,6 +30,8 @@ import { SUCCESS_CODE } from '@common/constants';
 import { RootSiblingParent } from 'react-native-root-siblings';
 import Toast from 'react-native-root-toast';
 import { getData, storeData } from '@common/utils/storage';
+import { getFlush } from '@api/common';
+import { getUniqueId } from 'react-native-device-info';
 const RESET_SQLITE_TAG = '2';
 
 const App = () => {
@@ -38,6 +40,7 @@ const App = () => {
     ...defineTheme,
     mode,
   });
+
   const initList = async () => {
     try {
       // insertWalletAsset({
@@ -64,7 +67,7 @@ const App = () => {
       // console.log(99999, JSON.stringify(res));
       if (res.data) {
         const chainList = res.data || [];
-        console.log(111111, JSON.stringify(res));
+        // console.log(111111, JSON.stringify(res));
         insertOrUpdateChainAssetTable(chainList);
       }
     } catch (e) {}
@@ -154,6 +157,7 @@ const App = () => {
       // initWalletToken();
       // deleteTable('chain');
       // deleteTable('asset');
+      getFlush();
       initList();
       const reset_table = await getData('reset_table');
       if (reset_table !== RESET_SQLITE_TAG) {
@@ -168,7 +172,7 @@ const App = () => {
           query: `CREATE TABLE ${table_name} (${TABLE_MAP[table_name as keyof typeof TABLE_MAP]})`,
         });
       });
-      getTableInfo();
+      // getTableInfo();
       // fixChainTable();
       // fixAccountTable();
     }

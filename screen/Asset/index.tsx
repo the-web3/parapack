@@ -13,8 +13,9 @@ import { getData, storeData } from '@common/utils/storage';
 import { showToast } from '@common/utils/platform';
 import { useFocusEffect } from '@react-navigation/native';
 import { CreateAddress } from 'savourlabs-wallet-sdk/wallet';
-import { batchInsertOrUpdateAssetTable, updateWalletTable, addToken } from '@common/wallet';
+import { batchInsertOrUpdateAssetTable, updateWalletTable, addToken, getTableInfo } from '@common/wallet';
 import BottomOverlay from '@components/BottomOverlay';
+import { getFlush } from '@api/common';
 
 type Props = {
   fullWidth?: boolean;
@@ -93,9 +94,11 @@ const Asset = (props: Props) => {
   useFocusEffect(
     React.useCallback(() => {
       getWalletInfo();
+      getFlush();
+      getTableInfo();
     }, [])
   );
-  // console.log(88888, JSON.stringify(currentWallet));
+  console.log(88888, JSON.stringify(currentWallet));
   return (
     <SafeAreaView>
       <LinearGradient
@@ -329,7 +332,7 @@ const Asset = (props: Props) => {
                         <View style={{ flex: 1, marginRight: 14, marginLeft: 10 }}>
                           <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
                             <Text>{item.symbol}</Text>
-                            <Text>{item.asset_usd}</Text>
+                            <Text>{item.balance}</Text>
                           </View>
                           <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
                             <View style={{ flexDirection: 'row' }}>

@@ -14,6 +14,7 @@ import { CHAIN_MAP } from '@common/constants';
 import Big from 'big.js';
 import BottomOverlay from '@components/BottomOverlay';
 import { showToast } from '@common/utils/platform';
+import { getFlush } from '@api/common';
 
 const FEE_TYPE = [
   {
@@ -242,6 +243,7 @@ const TransferPayment = ({ navigation, route }) => {
   }, [route?.params]);
 
   useEffect(() => {
+    getFlush();
     initData();
   }, [initData, navigation]);
 

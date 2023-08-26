@@ -554,7 +554,7 @@ export const createImportWallet = async (params: {
 
                         const seed = MnemonicToSeed({
                             mnemonic,
-                            password,
+                            password: '',
                         });
                         let account = CreateAddress({
                             chain: supportChian.symbol.toLowerCase(),

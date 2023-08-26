@@ -8,7 +8,7 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import { showToast } from '@common/utils/platform';
 import { createTest, getTableInfo } from '@common/wallet';
 import { CreateMnemonic, DecodeMnemonic, EncodeMnemonic } from 'savourlabs-wallet-sdk/wallet';
-import { storeData } from '@common/utils/storage';
+import { getData, storeData } from '@common/utils/storage';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { executeQuery } from '@common/utils/sqlite';
 import { getUniqueId } from 'react-native-device-info';
@@ -19,6 +19,7 @@ type Props = {
 };
 
 const Test = (props: Props) => {
+  const [walletUuid, setWalletUuid] = useState('');
   const [uniqueId, setUniqueId] = useState('');
   const [encodeMnemonic, setEncodeMnemonic] = useState('');
   const [symbolSupport, setSymbolSupport] = useState('');
@@ -29,6 +30,19 @@ const Test = (props: Props) => {
           <Button
             onPress={async () => {
               try {
+                const aa = await getData('wallet_uuid');
+                setWalletUuid(JSON.stringify(aa));
+              } catch (error) {
+                setUniqueId(`error getUniqueId=====>${JSON.stringify(error)}`);
+              }
+            }}
+          >
+            wallet_uuid
+          </Button>
+          <Text>{walletUuid}</Text>
+          <Button
+            onPress={async () => {
+              try {
                 const aa = await getUniqueId();
                 setUniqueId(JSON.stringify(aa));
               } catch (error) {
@@ -36,7 +50,7 @@ const Test = (props: Props) => {
               }
             }}
           >
-            getUniqueId
+            device_id
           </Button>
           <Text>{uniqueId}</Text>
           <Button
