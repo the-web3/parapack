@@ -8,6 +8,7 @@ export const getCommonHealth = async (): Promise<IResponse<null>> => {
 
 export const getFlush = async (data?: { device_id?: string }): Promise<IResponse<any>> => {
   const device_id = await getUniqueId();
+  console.log(1111111, data);
   return http.post(`/flush`, {
     device_id: data?.device_id || device_id,
   });
