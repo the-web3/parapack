@@ -1,12 +1,28 @@
 import IconFont from '@assets/iconfont';
+import React, { useEffect, useState } from 'react';
 import { Button, Input, Image, Text } from '@rneui/themed';
-import * as React from 'react';
+import { getActivity } from '@api/home';
 import { View, ScrollView, SafeAreaView } from 'react-native';
 import { makeStyles, useTheme } from '@rneui/themed';
 const Activity = ({ navigation }) => {
   const styles = useStyles();
   const { theme } = useTheme();
-  const [arr] = React.useState(new Array(10).fill(1));
+  const [activity, setActivity] = useState<Record<string, any>>({});
+  const rqDatas = async () => {
+    try {
+      const activityRes = await getActivity({
+        pageNum: '1',
+        pageSize: '10',
+        status: 1,
+        // symbol,
+      });
+      console.log(1111111, JSON.stringify(activityRes));
+      setActivity(activityRes.data);
+    } catch (e) {}
+  };
+  useEffect(() => {
+    rqDatas();
+  }, []);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.searchBar}>
@@ -35,20 +51,20 @@ const Activity = ({ navigation }) => {
         </View>
       </View>
       <ScrollView style={styles.main}>
-        {arr.map((item, index) => (
+        {activity?.lists?.map((item, index) => (
           <View style={styles.card} key={index}>
             <View style={styles.bannerContainer}>
               <Image
-                source={require('@assets/images/banner1.png')}
+                source={{ uri: item.coverPicture }}
                 style={styles.banner}
                 // PlaceholderContent={<ActivityIndicator />}
               />
             </View>
             <View style={styles.titleContainer}>
               <Text style={styles.title} numberOfLines={1}>
-                传“XXX”完成3.5亿美元e轮...融资，估值超过10亿美元，ceo已发内部邮件确认。
+                {item.title}
               </Text>
-              <Text style={styles.time}>2020.10.01-2020.12.01</Text>
+              <Text style={styles.time}>{item.ctime}</Text>
             </View>
             <View style={styles.titleContainer}>
               <View style={{ flexDirection: 'row' }}>
@@ -63,7 +79,7 @@ const Activity = ({ navigation }) => {
                 titleStyle={{ fontWeight: 'bold', fontSize: 11, lineHeight: 16 }}
                 size="sm"
                 onPress={() => {
-                  navigation?.navigate('guide');
+                  navigation.navigate('DAppDetail', { params: item });
                 }}
               >
                 进入活动

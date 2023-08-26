@@ -7,7 +7,7 @@ import { rules } from '@common/utils/validation';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { showToast } from '@common/utils/platform';
 import { createImportWallet, getTableInfo } from '@common/wallet';
-import { CreateMnemonic, DecodeMnemonic } from 'savourlabs-wallet-sdk/wallet';
+import { CreateMnemonic, DecodeMnemonic, MnemonicToSeed, CreateAddress } from 'savourlabs-wallet-sdk/wallet';
 import { storeData } from '@common/utils/storage';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { executeQuery } from '@common/utils/sqlite';
@@ -116,16 +116,27 @@ const ImportWallet = (props: Props) => {
       }
     }
   };
-  // const init = async () => {
-  //   const mnemonic = await DecodeMnemonic({
-  //     encrytMnemonic: '6abb1dbb18026cbfb007bc03ff4bd3c7',
-  //     language: 'english',
-  //   });
-  //   console.log(mnemonic, 'mnemonic');
-  // };
-  // React.useEffect(() => {
-  //   init();
-  // }, []);
+  const init = async () => {
+    const mnemonic = await DecodeMnemonic({
+      encrytMnemonic: '6abb1dbb18026cbfb007bc03ff4bd3c7',
+      language: 'english',
+    });
+    const seed = MnemonicToSeed({
+      mnemonic: 'height suggest human copy chat garlic scale wasp advance where visual monkey',
+      password: '1234567a',
+    });
+    let account = CreateAddress({
+      chain: 'eth',
+      seedHex: seed.toString('hex'),
+      index: 0,
+      receiveOrChange: 0,
+      network: 'mainnet',
+    });
+    console.log(seed, account, 'mnemonic');
+  };
+  React.useEffect(() => {
+    init();
+  }, []);
   const styles = useStyles(props);
 
   return (

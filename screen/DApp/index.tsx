@@ -2,23 +2,28 @@ import React, { useEffect, useState } from 'react';
 import { View, ScrollView, Dimensions, Image, SafeAreaView, useWindowDimensions } from 'react-native';
 import { makeStyles, useTheme } from '@rneui/themed';
 import Icon from 'react-native-vector-icons/AntDesign';
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { useTranslation } from 'react-i18next';
 import { DAppItem } from '@screen/DApp/Components/DAppItem';
 import { getBanners, getDAppGroup, getNotices } from '@api/dApp';
 import { Button, Input, Text } from '@rneui/themed';
 import { getActivity } from '@api/home';
+<<<<<<< HEAD
 import { Carousel } from 'react-native-ui-lib'
 
+=======
+import HTML from 'react-native-render-html';
+import Swiper from 'react-native-swiper';
+>>>>>>> c391e6c201723132fc1f3f70c44e7dbb239b9eb5
 interface DAppProps {
   navigation?: any;
 }
 
 const classifyButtons = [
-  { id: 0, icon: "barchart", name: "排行榜" },
-  { id: 1, icon: "clockcircleo", name: "最新上线" },
-  { id: 2, icon: "pay-circle-o1", name: "理财" },
-  { id: 3, icon: "bulb1", name: "Defi" }
+  { id: 0, icon: 'barchart', name: '排行榜' },
+  { id: 1, icon: 'clockcircleo', name: '最新上线' },
+  { id: 2, icon: 'pay-circle-o1', name: '理财' },
+  { id: 3, icon: 'bulb1', name: 'Defi' },
 ];
 
 export const DAppScreen = (props: DAppProps) => {
@@ -37,11 +42,15 @@ export const DAppScreen = (props: DAppProps) => {
 
   const rqDatas = async () => {
     try {
+<<<<<<< HEAD
       const banners = await getBanners('zh_CN');
+=======
+      const banners = await getBanners();
+>>>>>>> c391e6c201723132fc1f3f70c44e7dbb239b9eb5
       setBanners(banners.data);
       const activityRes = await getActivity({
-        pageNum: "1",
-        pageSize: "10",
+        pageNum: '1',
+        pageSize: '10',
         status: 1,
         // symbol,
       });
@@ -51,8 +60,10 @@ export const DAppScreen = (props: DAppProps) => {
         pageNum: 1,
         pageSize: 10,
         symbol: 'eth',
-        walletLanguage: 'zh_CN',
       });
+      // console.log('dAppGroupRes', JSON.stringify(dAppGroupRes));
+      console.log('banners', JSON.stringify(banners));
+      console.log('activityRes', JSON.stringify(activityRes));
       setDAppGroup(dAppGroupRes.data);
       console.log('dAppGroupRes:',JSON.stringify(dAppGroupRes.data));
 
@@ -60,16 +71,15 @@ export const DAppScreen = (props: DAppProps) => {
         pageNum: 1,
         pageSize: 10,
         symbol: 'eth',
-        walletLanguage: 'zh_CN',
       });
+      // console.log('noticesRes', JSON.stringify(noticesRes));
       setNotices(noticesRes.data);
-
-    } catch (e) { }
+    } catch (e) {}
   };
 
   const onTagPress = () => {
     props?.navigation.navigate('DAppList');
-  }
+  };
   const onShowAll = () => {
     props?.navigation.navigate('DAppList');
   };
@@ -78,6 +88,10 @@ export const DAppScreen = (props: DAppProps) => {
     props?.navigation.navigate('DAppDetail', { params });
   };
   const onRecommendPress = (params: any) => {
+<<<<<<< HEAD
+=======
+    console.warn('params:', params);
+>>>>>>> c391e6c201723132fc1f3f70c44e7dbb239b9eb5
     props?.navigation.navigate('DAppDetail', { params });
   };
 
@@ -95,6 +109,7 @@ export const DAppScreen = (props: DAppProps) => {
           placeholder="输入Dapp网站"
         />
         <Icon name="scan1" style={{ marginLeft: 5 }} size={24} color={theme.colors.black} />
+<<<<<<< HEAD
       </View>    
         <Carousel
           key={0}
@@ -118,14 +133,27 @@ export const DAppScreen = (props: DAppProps) => {
             ))
           }
         </Carousel>
+=======
+      </View>
+      <View style={style.banner}>
+        <Swiper style={style.wrapper} autoplay={true}>
+          {(banners?.lists || [])?.map((item, index) => {
+            return (
+              <View style={style.slide} key={index}>
+                <View style={style.imageContainer}>
+                  <Image source={{ uri: item.img }} style={style.image} />
+                </View>
+              </View>
+            );
+          })}
+        </Swiper>
+      </View>
+>>>>>>> c391e6c201723132fc1f3f70c44e7dbb239b9eb5
       <View style={style.notice}>
-        <Button
-          icon={<Icon name={'sound'} size={17} color={theme.colors.grey4} />}
-          size={'sm'}
-          color={'transparent'}
-        />
+        <Button icon={<Icon name={'sound'} size={17} color={theme.colors.grey4} />} size={'sm'} color={'transparent'} />
         <Text style={style.noticeText} numberOfLines={1}>
           {notices?.lists?.length ? notices.lists[0].content : ''}
+          {/* <HTML source={{ html: notices?.lists?.length ? notices.lists[0].content : '' }} /> */}
         </Text>
         <Button
           icon={<FontAwesomeIcon name={'navicon'} size={18} color={theme.colors.grey4} />}
@@ -164,7 +192,7 @@ export const DAppScreen = (props: DAppProps) => {
           {dAppGroup?.lists?.map((v, index) => (
             <Button buttonStyle={style.recommendItem} onPress={() => onRecommendPress(v)} key={index}>
               <Image source={{ uri: v.coverPicture }} style={{ height: 90, width: 90, borderRadius: 5 }} />
-              <Text children={v.title} style={style.scrBtnTitle} />
+              <Text numberOfLines={1} ellipsizeMode="tail" children={v.title} style={style.scrBtnTitle} />
             </Button>
           ))}
         </ScrollView>
@@ -200,7 +228,7 @@ const ContentHeader = (props: ContentHeaderProps) => {
     >
       {props.leftTitle && (
         <Text
-          children={props.leftTitle}
+          children={props?.leftTitle}
           style={{
             fontSize: 16,
             fontWeight: 'bold',
@@ -209,7 +237,7 @@ const ContentHeader = (props: ContentHeaderProps) => {
       )}
       {props.rightTitle && (
         <Text
-          children={props.rightTitle}
+          children={props?.rightTitle}
           style={{
             fontSize: 15,
             color: '#3B28CC',
@@ -245,11 +273,31 @@ const useStyles = makeStyles((theme, props: DAppProps) => {
       borderColor: theme.colors.grey5,
     },
     banner: {
-      backgroundColor: theme.colors.grey5,
-      height: 150,
+      // backgroundColor: theme.colors.grey5,
+      // height: 150,
       marginHorizontal: 20,
-      borderRadius: 10,
-      overflow: 'hidden',
+      // borderRadius: 10,
+      // overflow: 'hidden',
+      flex: 1,
+    },
+    wrapper: {
+      height: 150,
+    },
+    slide: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    imageContainer: {
+      width: '100%',
+      height: '100%',
+      borderRadius: 10, // 添加圆角边框
+      overflow: 'hidden', // 剪切超出边界的内容
+    },
+    image: {
+      width: '100%',
+      height: '100%',
+      resizeMode: 'cover',
     },
     notice: {
       marginVertical: 10,
@@ -296,6 +344,7 @@ const useStyles = makeStyles((theme, props: DAppProps) => {
       flexDirection: 'column',
       backgroundColor: '#F2F3F6',
       borderRadius: 10,
+      width: 98,
     },
   };
 });
