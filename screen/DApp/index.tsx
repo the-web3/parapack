@@ -8,6 +8,7 @@ import { DAppItem } from '@screen/DApp/Components/DAppItem';
 import { getBanners, getDAppGroup, getNotices } from '@api/dApp';
 import { Button, Input, Text } from '@rneui/themed';
 import { getActivity } from '@api/home';
+import { Carousel } from 'react-native-ui-lib'
 
 interface DAppProps {
   navigation?: any;
@@ -37,8 +38,7 @@ export const DAppScreen = (props: DAppProps) => {
   const rqDatas = async () => {
     try {
       const banners = await getBanners('zh_CN');
-      console.log('banners', JSON.stringify(banners));
-      setBanners(banners);
+      setBanners(banners.data);
       const activityRes = await getActivity({
         pageNum: "1",
         pageSize: "10",
@@ -54,6 +54,7 @@ export const DAppScreen = (props: DAppProps) => {
         walletLanguage: 'zh_CN',
       });
       setDAppGroup(dAppGroupRes.data);
+      console.log('dAppGroupRes:',JSON.stringify(dAppGroupRes.data));
 
       const noticesRes = await getNotices({
         pageNum: 1,
@@ -74,11 +75,10 @@ export const DAppScreen = (props: DAppProps) => {
   };
 
   const onHotPress = (params: any) => {
-    props?.navigation.navigate('DAppDetail', {params});
+    props?.navigation.navigate('DAppDetail', { params });
   };
   const onRecommendPress = (params: any) => {
-    console.warn('params:',params);
-    props?.navigation.navigate('DAppDetail', {params});
+    props?.navigation.navigate('DAppDetail', { params });
   };
 
   return (
@@ -95,16 +95,29 @@ export const DAppScreen = (props: DAppProps) => {
           placeholder="输入Dapp网站"
         />
         <Icon name="scan1" style={{ marginLeft: 5 }} size={24} color={theme.colors.black} />
-      </View>
-      <View style={style.banner}>
-        <Image
-          source={require('@assets/images/banner.jpg')}
-          style={{
-            height: 150,
-            width: width - 40,
-          }}
-        />
-      </View>
+      </View>    
+        <Carousel
+          key={0}
+          style={style.banner}
+          autoplay={true}
+          pageWidth={width - 30}
+          itemSpacings={0}
+          containerMarginHorizontal={0}
+          initialPage={0}
+          allowAccessibleLayout
+        >
+          {
+            (banners.lists || []).map((v: any, i: number) => (
+              <Image
+              source={{uri: v.img}}
+              style={{
+                height: 150,
+                width: width - 30,
+              }}
+            />
+            ))
+          }
+        </Carousel>
       <View style={style.notice}>
         <Button
           icon={<Icon name={'sound'} size={17} color={theme.colors.grey4} />}
@@ -272,7 +285,7 @@ const useStyles = makeStyles((theme, props: DAppProps) => {
     },
     scrBtnTitle: {
       fontSize: 13,
-      fontWeight:'500',
+      fontWeight: '500',
       color: theme.colors.black,
     },
     recommendItem: {

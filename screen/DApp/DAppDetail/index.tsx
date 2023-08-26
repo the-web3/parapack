@@ -5,9 +5,10 @@ import IconFont from '@assets/iconfont';
 import { getSymbolKline } from '@api/symbol';
 import moment from 'moment';
 import { LineChart } from 'react-native-chart-kit';
-import { getDAppDetail } from '@api/dApp';
+import { getDAppDetail, getBanners } from '@api/dApp';
 import { getData } from '@common/utils/storage';
-import {showToast} from '@common/utils/platform'
+import { showToast } from '@common/utils/platform'
+import { Carousel } from 'react-native-ui-lib'
 
 const MockPrices = [
     [
@@ -89,6 +90,7 @@ const chartConfig = {
 export const DAppDetail = (props: DAppDetail) => {
 
     const { width } = Dimensions.get('window');
+    const [banners, setBanners] = useState<Record<string, any>>({});
     const styles = useStyles();
     const [kLine, setKLine] = useState<{ labels: string[]; datasets: any[] }>({
         labels: (MockPrices as Array<any>).map((v, index) => index % 2 != 0 ? moment(v[0] / 1000).format('hh-mm') : ''),
@@ -101,10 +103,13 @@ export const DAppDetail = (props: DAppDetail) => {
         ],
     });
     const [dAppProps] = useState(props?.route?.params?.params)
-    
+
     useEffect(() => {
         initKLine();
         rqDAppDetail();
+        getBanners('zh_CN').then(banners => {
+            setBanners(banners.data);
+        });
     }, []);
     const initKLine = useCallback(async () => {
         //TODO 接口不通
@@ -134,9 +139,9 @@ export const DAppDetail = (props: DAppDetail) => {
                 id: dAppProps.id ?? 0,
                 walletLanguage: 'zh_CN',
             });
-            console.log('dAppDetail trd:',dAppDetail);
-        }catch(e) {
-            console.log('dAppDetail e:',e);
+            console.log('dAppDetail trd:', dAppDetail);
+        } catch (e) {
+            console.log('dAppDetail e:', e);
         }
     }
 
@@ -146,14 +151,14 @@ export const DAppDetail = (props: DAppDetail) => {
             showToast('No Wallet');
             return;
         }
-        props?.navigation.navigate('DAppWebView', { params: { uri: dAppProps.url,title: dAppProps.title } });
+        props?.navigation.navigate('DAppWebView', { params: { uri: dAppProps.url, title: dAppProps.title } });
     }
 
     return (
         <View style={styles.container}>
             <ScrollView>
                 <View style={styles.headerBg}>
-                    <Image source={{uri:dAppProps.coverPicture ?? ''}} style={{ width: 85, height: 85,borderRadius:15, overflow:'hidden' }}></Image>
+                    <Image source={{ uri: dAppProps.coverPicture ?? '' }} style={{ width: 85, height: 85, borderRadius: 15, overflow: 'hidden' }}></Image>
                     <View style={{ flex: 1, flexDirection: 'column', gap: 3, marginLeft: 15 }}>
                         <Text style={{ color: '#252525', fontSize: 16, fontWeight: '500' }}>{dAppProps.title}</Text>
                         <Text style={{ color: '#AEAEAE', fontSize: 13 }} numberOfLines={1}>{dAppProps.summary}</Text>
@@ -210,12 +215,28 @@ export const DAppDetail = (props: DAppDetail) => {
                         paddingTop: 16,
                     }}
                 />
-                <View style={styles.banner}>
-                    <Image source={require('@assets/images/banner.jpg')} style={{
-                        height: 150,
-                        width: width - 40,
-                    }} />
-                </View>
+                <Carousel
+                    key={0}
+                    style={styles.banner}
+                    autoplay={true}
+                    pageWidth={width - 30}
+                    itemSpacings={0}
+                    containerMarginHorizontal={0}
+                    initialPage={0}
+                    allowAccessibleLayout
+                >
+                    {
+                        (banners.lists || []).map((v: any, i: number) => (
+                            <Image
+                                source={{ uri: v.img }}
+                                style={{
+                                    height: 150,
+                                    width: width - 30,
+                                }}
+                            />
+                        ))
+                    }
+                </Carousel>
                 <View style={{ flexDirection: 'column', backgroundColor: '#F2F3F6', borderRadius: 10, margin: 20 }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10, }}>
                         <Image source={{ uri: 'https://randomuser.me/api/portraits/men/36.jpg' }} style={{
