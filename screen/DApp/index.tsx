@@ -40,6 +40,7 @@ export const DAppScreen = (props: DAppProps) => {
     try {
       const banners = await getBanners();
       setBanners(banners.data);
+      console.log('banners:',banners);
       const activityRes = await getActivity({
         pageNum: '1',
         pageSize: '10',
@@ -82,6 +83,7 @@ export const DAppScreen = (props: DAppProps) => {
   const onRecommendPress = (params: any) => {
     props?.navigation.navigate('DAppDetail', { params });
   };
+  console.log('banners.lists:',banners.lists);
 
   return (
     <SafeAreaView style={[style.container, { height: Dimensions.get('window').height - 100 }]}>
@@ -106,15 +108,18 @@ export const DAppScreen = (props: DAppProps) => {
         itemSpacings={0}
         containerMarginHorizontal={0}
         initialPage={0}
+        containerStyle={{height: 180}}
         allowAccessibleLayout
       >
-        {(banners.lists || []).map((v: any, i: number) => (
+        {(banners.lists || []).map((v: any, i: number) => ( 
+            // <HTML source={{ html: v.content }} />
           <Image
             source={{ uri: v.img }}
             key={i}
             style={{
-              height: 150,
+              height: 180,
               width: width - 30,
+              backgroundColor:'red'
             }}
           />
         ))}
@@ -242,11 +247,11 @@ const useStyles = makeStyles((theme, props: DAppProps) => {
       borderColor: theme.colors.grey5,
     },
     banner: {
-      // backgroundColor: theme.colors.grey5,
-      // height: 150,
+      backgroundColor: theme.colors.grey5,
+      height: 180,
       marginHorizontal: 20,
-      // borderRadius: 10,
-      // overflow: 'hidden',
+      borderRadius: 10,
+      overflow: 'hidden',
       flex: 1,
     },
     wrapper: {

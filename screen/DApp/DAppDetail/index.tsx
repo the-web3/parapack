@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { makeStyles, useTheme } from '@rneui/themed';
-import { View, ScrollView, Image, Text, SafeAreaView, Dimensions, TouchableOpacity } from 'react-native';
+import { View, ScrollView, Image, Text, SafeAreaView, Dimensions, TouchableOpacity, Linking } from 'react-native';
 import IconFont from '@assets/iconfont';
 import { getSymbolKline } from '@api/symbol';
 import moment from 'moment';
 import { LineChart } from 'react-native-chart-kit';
-import { getDAppDetail, getBanners } from '@api/dApp';
+import { getDAppDetail, getBanners,getNotices } from '@api/dApp';
 import { getData } from '@common/utils/storage';
 import { showToast } from '@common/utils/platform';
 import { Carousel } from 'react-native-ui-lib';
@@ -61,6 +61,7 @@ export const DAppDetail = (props: DAppDetailParam) => {
     ],
   });
   const [appDetail, setAppDetail] = useState({});
+  const [notices, setNotices] = useState<Record<string, any>>({});
   const [dAppProps] = useState(props?.route?.params?.params);
 
   useEffect(() => {
@@ -69,6 +70,14 @@ export const DAppDetail = (props: DAppDetailParam) => {
     getBanners().then((banners) => {
       setBanners(banners.data);
     });
+    getNotices({
+      pageNum: 1,
+      pageSize: 10,
+      symbol: 'eth',
+    }).then((noticesRes: any) => {
+      setNotices(noticesRes.data)
+    });
+;
   }, []);
 
   const initKLine = useCallback(async () => {
@@ -113,8 +122,25 @@ export const DAppDetail = (props: DAppDetailParam) => {
       showToast('No Wallet');
       return;
     }
-    props?.navigation.navigate('DAppWebView', { params: { uri: appDetail.url, title: appDetail.title } });
+    props?.navigation.navigate('DAppWebView', { params: { uri: dAppProps.url, title: appDetail.title } });
   };
+  const onMedium = async (url: string) => {
+    try {
+      const canOpen = await Linking.canOpenURL(url);
+      if (canOpen) {
+        Linking.openURL(url);
+      }else {
+        showToast('can not open url:'+ url);
+      }
+    } catch (e: any) {
+      showToast(e.message ?? e);
+    }
+  }
+
+  const medium = useMemo(() => {
+    return JSON.parse(appDetail?.medium?? '[]') ?? []
+  },[appDetail]);
+  console.log('medium:',medium);
 
   return (
     <View style={styles.container}>
@@ -150,59 +176,31 @@ export const DAppDetail = (props: DAppDetailParam) => {
             </View>
           </View>
         </View>
-        <View style={{ color: '#5D5D5D', fontSize: 12, marginHorizontal: 20, marginTop: 30 }}>
+        <View style={{color: '#5D5D5D', fontSize: 10, marginHorizontal: 20, marginTop: 10 }}>
+          {/* <Text style={{color: '#5D5D5D', fontSize: 12}}>{dAppProps.content}</Text> */}
           <HTML source={{ html: appDetail.content }} />
         </View>
-
+              
         <View style={{ flexDirection: 'row', gap: 10, margin: 20 }}>
-          <TouchableOpacity
-            style={{
-              width: 70,
-              height: 26,
-              backgroundColor: '#F2F3F6',
-              borderRadius: 14,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <IconFont name="a-Group217" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              width: 70,
-              height: 26,
-              backgroundColor: '#F2F3F6',
-              borderRadius: 14,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <IconFont name="a-Group217" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              width: 70,
-              height: 26,
-              backgroundColor: '#F2F3F6',
-              borderRadius: 14,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <IconFont name="a-Group217" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              width: 70,
-              height: 26,
-              backgroundColor: '#F2F3F6',
-              borderRadius: 14,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <IconFont name="a-Group217" />
-          </TouchableOpacity>
+          {
+            (medium || []).map((value: any, i: number) => (
+              <TouchableOpacity
+              key={i}
+              style={{
+                width: 70,
+                height: 26,
+                backgroundColor: '#F2F3F6',
+                borderRadius: 14,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+              onPress={() => onMedium(value.url)}
+            >
+              {/* <IconFont name="a-Group217" /> */}
+              <Image source={{uri: value.logo ?? ''}}/>
+            </TouchableOpacity>
+            ))
+          }
         </View>
         <View
           style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20 }}
@@ -253,7 +251,18 @@ export const DAppDetail = (props: DAppDetailParam) => {
             />
           ))}
         </Carousel>
-        <View style={{ flexDirection: 'column', backgroundColor: '#F2F3F6', borderRadius: 10, margin: 20 }}>
+        <View style={{color: '#5D5D5D', fontSize: 10, marginHorizontal: 20, marginTop: 30 }}>
+          {/* <Text style={{color: '#5D5D5D', fontSize: 12}}>{dAppProps.content}</Text> */}
+          <HTML source={{ html: appDetail.content }} />
+        </View>
+        {/* <View style={{ color: '#5D5D5D', fontSize: 12, marginHorizontal: 20, marginTop: 30 }}>
+          {
+            (notices?.lists ?? []).map((v: any, i: number) => (
+              <HTML source={{ html: v.content }} key={i}/>
+            ))
+            }
+        </View> */}
+        {/* <View style={{ flexDirection: 'column', backgroundColor: '#F2F3F6', borderRadius: 10, margin: 20 }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}>
             <Image
               source={{ uri: 'https://randomuser.me/api/portraits/men/36.jpg' }}
@@ -286,7 +295,7 @@ export const DAppDetail = (props: DAppDetailParam) => {
               [29]
             </Text>
           </View>
-        </View>
+        </View> */}
       </ScrollView>
     </View>
   );
