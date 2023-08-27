@@ -9,7 +9,7 @@ export const showToast = (
 ) => {
     Toast.show(msg, {
         duration: Toast.durations.LONG,
-        position: Toast.positions.TOP,
+        position: Toast.positions.CENTER,
         shadow: true,
         animation: true,
         hideOnPress: true,
