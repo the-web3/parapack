@@ -58,6 +58,7 @@ export const DAppDetail = (props: DAppDetail) => {
       },
     ],
   });
+  const [appDetail, setAppDetail] = useState({});
   const [dAppProps] = useState(props?.route?.params?.params);
 
   useEffect(() => {
@@ -91,9 +92,10 @@ export const DAppDetail = (props: DAppDetail) => {
   const rqDAppDetail = async () => {
     try {
       const dAppDetail = await getDAppDetail({
-        id: dAppProps.id ?? 0,
+        id: dAppProps.contentPageId ?? 0,
       });
-      console.log('dAppDetail trd:', dAppDetail);
+      setAppDetail(dAppDetail.data);
+      console.log('dAppDetail trd:', JSON.stringify(dAppDetail), JSON.stringify(dAppProps));
     } catch (e) {
       console.log('dAppDetail e:', e);
     }
@@ -105,7 +107,7 @@ export const DAppDetail = (props: DAppDetail) => {
       showToast('No Wallet');
       return;
     }
-    props?.navigation.navigate('DAppWebView', { params: { uri: dAppProps.url, title: dAppProps.title } });
+    props?.navigation.navigate('DAppWebView', { params: { uri: appDetail.url, title: appDetail.title } });
   };
 
   return (
@@ -113,13 +115,13 @@ export const DAppDetail = (props: DAppDetail) => {
       <ScrollView>
         <View style={styles.headerBg}>
           <Image
-            source={{ uri: dAppProps.coverPicture ?? '' }}
+            source={{ uri: appDetail.coverPicture ?? '' }}
             style={{ width: 85, height: 85, borderRadius: 15, overflow: 'hidden' }}
           />
           <View style={{ flex: 1, flexDirection: 'column', gap: 3, marginLeft: 15 }}>
-            <Text style={{ color: '#252525', fontSize: 16, fontWeight: '500' }}>{dAppProps.title}</Text>
+            <Text style={{ color: '#252525', fontSize: 16, fontWeight: '500' }}>{appDetail.title}</Text>
             <Text style={{ color: '#AEAEAE', fontSize: 13 }} numberOfLines={1}>
-              {dAppProps.summary}
+              {appDetail.summary}
             </Text>
             <View
               style={{
@@ -143,7 +145,7 @@ export const DAppDetail = (props: DAppDetail) => {
           </View>
         </View>
         <View style={{ color: '#5D5D5D', fontSize: 12, marginHorizontal: 20, marginTop: 30 }}>
-          <HTML source={{ html: dAppProps.content }} />
+          <HTML source={{ html: appDetail?.content }} />
         </View>
         <View style={{ flexDirection: 'row', gap: 10, margin: 20 }}>
           <TouchableOpacity

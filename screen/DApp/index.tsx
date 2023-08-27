@@ -160,7 +160,7 @@ export const DAppScreen = (props: DAppProps) => {
       </View>
       <View style={{ flex: 1 }}>
         <ContentHeader leftTitle={t('dApp.activityHotList')} rightTitle={t('dApp.seeAll')} onRightClick={onShowAll} />
-        <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
+        <ScrollView contentContainerStyle={{ paddingBottom: 20, minHeight: 200 }}>
           {activity?.lists?.map((v, i) => (
             <DAppItem {...v} key={v.title + String(i)} onPress={() => onHotPress(v)} />
           ))}

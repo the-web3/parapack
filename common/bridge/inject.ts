@@ -2,7 +2,7 @@ import { Platform } from 'react-native';
 //
 import RNFS from 'react-native-fs';
 
-export const rootPath = Platform.OS === 'ios' ? RNFS.MainBundlePath : RNFS.MainBundlePath + '/res/raw';
+export const rootPath = Platform.OS === 'ios' ? RNFS.MainBundlePath : '/res/raw';
 const readFile = Platform.OS === 'ios' ? RNFS.readFile : RNFS.readFileAssets;
 //
 const loadExtFile = (path: string) => readFile(path, 'utf8');
