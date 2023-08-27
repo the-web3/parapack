@@ -101,7 +101,7 @@ const Asset = (props: Props) => {
       getTableInfo();
     }, [])
   );
-  console.log(88888, JSON.stringify(currentWallet));
+  // console.log(88888, JSON.stringify(currentWallet));
   return (
     <SafeAreaView>
       <LinearGradient

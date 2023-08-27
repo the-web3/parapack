@@ -66,7 +66,7 @@ const Activity = ({ navigation }) => {
               </Text>
               <Text style={styles.time}>{item.ctime}</Text>
             </View>
-            <View style={styles.titleContainer}>
+            <View style={styles.subTitleContainer}>
               <View style={{ flexDirection: 'row' }}>
                 <IconFont name="shoukuanzhanghao" />
                 <Text style={styles.people}>747</Text>
@@ -125,11 +125,14 @@ const useStyles = makeStyles((theme) => {
     },
     bannerContainer: {
       height: 94,
+      borderRadius: 8,
+      overflow: 'hidden',
     },
     banner: {
       width: '100%',
       height: '100%',
       aspectRatio: 1,
+      resizeMode: 'cover',
     },
     titleContainer: {
       display: 'flex',
@@ -137,6 +140,13 @@ const useStyles = makeStyles((theme) => {
       flexWrap: 'nowrap',
       alignItems: 'center',
       marginVertical: 6,
+      justifyContent: 'space-between',
+    },
+    subTitleContainer: {
+      display: 'flex',
+      flexDirection: 'row',
+      flexWrap: 'nowrap',
+      alignItems: 'center',
       justifyContent: 'space-between',
     },
     title: {

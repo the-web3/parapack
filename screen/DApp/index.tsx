@@ -242,7 +242,7 @@ const useStyles = makeStyles((theme, props: DAppProps) => {
       flex: 1,
     },
     wrapper: {
-      height: 150,
+      // height: 150,
     },
     slide: {
       flex: 1,
