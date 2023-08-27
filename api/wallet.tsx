@@ -1,5 +1,9 @@
 import http from '@common/utils/http';
 import { IResponse } from 'typings/global';
+const DEFAULT_DATA = {
+  // device_id: 'bd1aae254aa24f14',
+  // wallet_uuid: '43ef50c7-9a05-4d47-a7fb-6d68c22dcef3',
+};
 
 export interface AddressList {
   address: string;
@@ -51,7 +55,10 @@ export interface AddressBalanceParamsData {
 }
 
 export function getAddressBalance(data: AddressBalanceParams): Promise<IResponse<AddressBalanceParamsData | null>> {
-  return http.post(`/wallet/address/balance`, data);
+  return http.post(`/wallet/address/balance`, {
+    ...data,
+    ...DEFAULT_DATA,
+  });
 }
 export interface ChainBalanceParams {
   chain: string;
@@ -147,7 +154,10 @@ export interface WalletBalance {
 }
 
 export function getDeviceBalance(data: DeviceBalanceParams): Promise<IResponse<DeviceBalanceData | null>> {
-  return http.post(`/wallet/device/balance`, data);
+  return http.post(`/wallet/device/balance`, {
+    ...data,
+    // device_id: 'bd1aae254aa24f14',
+  });
 }
 export interface UpdateWalletParams {
   device_id: string;

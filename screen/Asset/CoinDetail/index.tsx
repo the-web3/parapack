@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Image,
+  ScrollView,
   StatusBar,
   // StyleSheet,
   View,
@@ -10,6 +11,9 @@ import {
 import { Button, Input, Tab, TabView, Text, makeStyles } from '@rneui/themed';
 import Layout from '@components/Layout';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { getActivity } from '@api/home';
+import { getData } from '@common/utils/storage';
+import { ActivityItems } from '@screen/Activity/Components/ActivityItems';
 // import {StackNavigationProp} from '@react-navigation/stack';
 // import {RootStackParamList} from './types';
 // type ScreenNavigationProp = StackNavigationProp<
@@ -25,16 +29,43 @@ const CoinDetail = (props: Props) => {
   const { navigation } = props;
   const styles = useStyles(props);
   const [index, setIndex] = React.useState(0);
+  const [activity, setActivity] = useState<Record<string, any>>({});
+  const [currentTokenDetail, setCurrentTokenDetail] = useState<Record<string, any>>({});
+
   const handleCoinDetail = () => {
     props?.navigation.navigate('startBackup');
   };
+  const initData = React.useCallback(async () => {
+    const [current_token_detail] = await Promise.all([getData('current_token_detail')]);
+    console.log('current_token_detail', current_token_detail, current_token_detail?.symbol);
+    try {
+      const current_token_detail_obj = JSON.parse(current_token_detail);
+      navigation.setOptions({
+        title: current_token_detail_obj?.symbol,
+        // subTitle: '99999',
+      });
+      setCurrentTokenDetail(current_token_detail_obj);
+    } catch (e) {}
+  }, [navigation]);
+
+  const rqDatas = React.useCallback(async () => {
+    try {
+      if (currentTokenDetail?.symbol) {
+        const activityRes = await getActivity({
+          pageNum: '1',
+          pageSize: '10',
+          status: 1,
+          symbol: currentTokenDetail?.symbol,
+        });
+        setActivity(activityRes.data);
+      }
+    } catch (e) {}
+  }, [currentTokenDetail?.symbol]);
   useEffect(() => {
     // 在组件挂载或标题更新时执行
-    navigation.setOptions({
-      title: 'BNB',
-      subTitle: '99999',
-    });
-  }, [navigation]);
+    initData();
+    rqDatas();
+  }, [rqDatas, initData]);
   return (
     <View style={{ backgroundColor: '#fff', height: '100%' }}>
       <StatusBar
@@ -59,7 +90,6 @@ const CoinDetail = (props: Props) => {
           onChange={setIndex}
           dense
           indicatorStyle={{
-            // backgroundColor: '#D8D8D8',
             backgroundColor: '#3B28CC',
             height: 4,
             borderRadius: 2,
@@ -76,25 +106,33 @@ const CoinDetail = (props: Props) => {
 
       <TabView value={index} onChange={setIndex} animationType="spring">
         <TabView.Item style={styles.viewItem}>
-          <View>
-            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-              <View style={styles.item}>
-                <Image
-                  // source={BASE_URI}
-                  source={require('@assets/images/emptyRecord.png')}
-                  style={styles.img}
-                  // containerStyle={styles.item}
-                  PlaceholderContent={<ActivityIndicator />}
-                />
+          <ScrollView>
+            {activity?.lists?.length > 0 ? (
+              activity?.lists?.map((item, index) => (
+                <ActivityItems item={item} key={index} navigation={props?.navigation} />
+              ))
+            ) : (
+              <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                <View style={styles.item}>
+                  <Image
+                    // source={BASE_URI}
+                    source={require('@assets/images/emptyRecord.png')}
+                    style={styles.img}
+                    // containerStyle={styles.item}
+                    PlaceholderContent={<ActivityIndicator />}
+                  />
+                </View>
+                <Text style={{ fontSize: 10, marginTop: 18, marginBottom: 28, color: '#AEAEAE' }}>暂无交易记录</Text>
+                <View
+                  style={{ backgroundColor: '#F1F1F1', paddingVertical: 4, paddingHorizontal: 12, borderRadius: 4 }}
+                >
+                  <Text style={{ fontSize: 10, color: '#5D5D5D' }}>
+                    在浏览器中查看 <Icon name="link" size={10} color={'#5D5D5D'} />
+                  </Text>
+                </View>
               </View>
-              <Text style={{ fontSize: 10, marginTop: 18, marginBottom: 28, color: '#AEAEAE' }}>暂无交易记录</Text>
-              <View style={{ backgroundColor: '#F1F1F1', paddingVertical: 4, paddingHorizontal: 12, borderRadius: 4 }}>
-                <Text style={{ fontSize: 10, color: '#5D5D5D' }}>
-                  在浏览器中查看 <Icon name="link" size={10} color={'#5D5D5D'} />
-                </Text>
-              </View>
-            </View>
-          </View>
+            )}
+          </ScrollView>
         </TabView.Item>
         <TabView.Item style={styles.viewItem}>
           <View style={{ marginTop: 20 }}>

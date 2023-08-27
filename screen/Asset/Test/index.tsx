@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { SafeAreaView, ScrollView, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView, ScrollView, TouchableOpacity, View, Clipboard } from 'react-native';
 import { Button, Input, Text, makeStyles } from '@rneui/themed';
 import Layout from '@components/Layout';
 import { rules } from '@common/utils/validation';
@@ -29,9 +29,24 @@ const Test = (props: Props) => {
         <ScrollView>
           <Button
             onPress={async () => {
+              props?.navigation?.navigate('guide');
+            }}
+          >
+            创建钱包
+          </Button>
+          <Input
+            label="wallet_uuid"
+            value={walletUuid}
+            onChangeText={(wallet_uuid) => {
+              setWalletUuid(wallet_uuid);
+            }}
+          />
+          <Button
+            onPress={async () => {
               try {
                 const aa = await getData('wallet_uuid');
                 setWalletUuid(JSON.stringify(aa));
+                Clipboard.setString(JSON.stringify(aa) || '');
               } catch (error) {
                 setUniqueId(`error getUniqueId=====>${JSON.stringify(error)}`);
               }
@@ -39,12 +54,19 @@ const Test = (props: Props) => {
           >
             wallet_uuid
           </Button>
-          <Text>{walletUuid}</Text>
+          <Input
+            label="uniqueId"
+            value={uniqueId}
+            onChangeText={(aa) => {
+              setUniqueId(aa);
+            }}
+          />
           <Button
             onPress={async () => {
               try {
                 const aa = await getUniqueId();
                 setUniqueId(JSON.stringify(aa));
+                Clipboard.setString(JSON.stringify(aa) || '');
               } catch (error) {
                 setUniqueId(`error getUniqueId=====>${JSON.stringify(error)}`);
               }
@@ -52,7 +74,13 @@ const Test = (props: Props) => {
           >
             device_id
           </Button>
-          <Text>{uniqueId}</Text>
+          <Input
+            label="encodeMnemonic"
+            value={encodeMnemonic}
+            onChangeText={(aa) => {
+              setEncodeMnemonic(aa);
+            }}
+          />
           <Button
             onPress={async () => {
               try {
@@ -60,6 +88,7 @@ const Test = (props: Props) => {
                   mnemonic: 'indoor industry avoid little sweet month elegant tackle autumn mass vault forum',
                   language: 'english',
                 });
+                Clipboard.setString(JSON.stringify(aa) || '');
                 setEncodeMnemonic(JSON.stringify(aa));
               } catch (error) {
                 setEncodeMnemonic(`error EncodeMnemonic=====>${JSON.stringify(error)}`);
@@ -68,7 +97,19 @@ const Test = (props: Props) => {
           >
             encodeMnemonic
           </Button>
-          <Text>{encodeMnemonic}</Text>
+
+          <Button
+            onPress={async () => {
+              try {
+                Clipboard.setString(JSON.stringify('0x40b7e4d201d1d7230c4dc89728d23157c786f6da') || '');
+              } catch (error) {
+                setUniqueId(`error getUniqueId=====>${JSON.stringify(error)}`);
+              }
+            }}
+          >
+            0x40b7e4d201d1d7230c4dc89728d23157c786f6da
+          </Button>
+          <Text>{symbolSupport}</Text>
           <Button
             onPress={async () => {
               try {
@@ -81,7 +122,6 @@ const Test = (props: Props) => {
           >
             getSymbolSupport
           </Button>
-          <Text>{symbolSupport}</Text>
         </ScrollView>
       </SafeAreaView>
     </Layout>

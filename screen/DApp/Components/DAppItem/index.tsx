@@ -20,11 +20,10 @@ export const DAppItem = (props: DAppItemProps) => {
         <Image source={{ uri: props.coverPicture }} style={styles.avatar} />
         <View style={styles.rightBg}>
           <Text children={props.title} style={styles.title} />
-          <View style={styles.description}>
+          {/* <View style={styles.description}>
             <HTML source={{ html: props.content }} />
-          </View>
-
-          {/* <Text children={props.content} numberOfLines={2} style={styles.description} /> */}
+          </View> */}
+          <Text children={props.summary} numberOfLines={2} style={styles.description} />
         </View>
       </View>
     </TouchableOpacity>
