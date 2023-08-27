@@ -1,11 +1,23 @@
 import { Platform } from 'react-native';
-//
-import RNFS from 'react-native-fs';
 
-export const rootPath = Platform.OS === 'ios' ? RNFS.MainBundlePath : '/res/raw';
-const readFile = Platform.OS === 'ios' ? RNFS.readFile : RNFS.readFileAssets;
-//
-const loadExtFile = (path: string) => readFile(path, 'utf8');
+import RNFS from 'react-native-fs';
+const copyAssetToStorage = async (assetPath, destPath) => {
+  try {
+    await RNFS.copyFileAssets(assetPath, destPath);
+    console.log(`Asset ${assetPath} copied to ${destPath}`);
+  } catch (error) {
+    console.error(`Error copying asset: ${error.message}`);
+  }
+};
+
+if (Platform.OS === 'android') {
+  const assetPath = 'inject_metamask_ext.js';
+  const destPath = `${RNFS.DocumentDirectoryPath}/${assetPath}`;
+  copyAssetToStorage(assetPath, destPath);
+}
+export const rootPath = Platform.OS === 'ios' ? RNFS.MainBundlePath : RNFS.DocumentDirectoryPath;
+// const readFile = Platform.OS === 'ios' ? RNFS.readFile : RNFS.readFileAssets;
+const loadExtFile = (path: string) => RNFS.readFile(path, 'utf8');
 console.log(rootPath);
 let metamaskExt = '';
 const loadMetamaskExt = () => {
