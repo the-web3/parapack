@@ -15,6 +15,8 @@ import Big from 'big.js';
 import BottomOverlay from '@components/BottomOverlay';
 import { showToast } from '@common/utils/platform';
 import { getFlush } from '@api/common';
+import Spinner from 'react-native-loading-spinner-overlay';
+import { SUCCESS_CODE } from '@common/constants';
 
 const FEE_TYPE = [
   {
@@ -45,6 +47,7 @@ const FEE_TYPE = [
 ];
 const TransferPayment = ({ navigation, route }) => {
   const { t } = useTranslation();
+  const [loading, setLoading] = useState(false);
   const [token, seToken] = useState<WalletBalance>();
 
   const [form, setForm] = useState({
@@ -69,120 +72,138 @@ const TransferPayment = ({ navigation, route }) => {
   };
 
   const handleConfirmed = async () => {
-    const [wallet_uuid, nonceRes] = await Promise.all([
-      getData('wallet_uuid'),
-      walletNonce({
-        chain: token?.chain as string,
-        symbol: token?.symbol as string,
-        address: token?.address as string,
-      }),
-    ]);
-
-    const sqliteData = await executeQuery({
-      customExec: (tx, resolve, reject) => {
-        tx.executeSql(
-          `
-          SELECT * 
-          FROM asset 
-          WHERE chain_id = (
-            SELECT id
-            FROM chain
-            WHERE chainName = ?
-          )
-          AND tokenName = ?
-          AND contract_addr = ?
-      `,
-          [token?.chain, token?.symbol, token?.contract_addr],
-          (txObj, resultSet) => {
-            if (resultSet.rows.length > 0) {
-              const { contractUnit, chainListId } = resultSet.rows.item(0);
-              console.log(888888, resultSet.rows.item(0), nonceRes);
-              tx.executeSql(
-                `
-                    SELECT * 
-                    FROM account 
-                    WHERE wallet_id = (
-                      SELECT id
-                      FROM wallet
-                      WHERE wallet_uuid = ?
-                    )
-                    AND address = ?
-                `,
-                [wallet_uuid, token?.address],
-                async (txObj2, resultSet2) => {
-                  if (resultSet2.rows.length > 0) {
-                    // 获取第一条数据
-
-                    // const gasPriceInGwei = new Big(gas?.[`${activeType}`]).toNumber(); // Example gas price in Gwei
-                    // const gasLimit = new Big(`${gas?.gasLimit}`).toNumber();
-                    const accountData = resultSet2.rows.item(0);
-                    const params = {
-                      privateKey: accountData.priv_key.replace('0x', ''),
-                      nonce: Number(nonceRes.data?.nonce || 0),
-                      from: token?.address,
-                      to: form.toAddr || '',
-                      amount: form.amount,
-                      gasPrice: new Big(activeType === 'custom' ? gasPrice : gas?.[`${activeType}`]).toNumber(),
-                      gasLimit: new Big(`${activeType === 'custom' ? gasLimit : gas?.gasLimit}`).toNumber(),
-                      decimal: contractUnit, //contractUnit
-                      chainId: chainListId,
-                      tokenAddress: '0x00',
-                      // gasLimit: 21000,
-                      // gasPrice: 750000000000,
-                      // privateKey: '0cc9a688f5608f4b5ae64444d936282ca5ff1fcf9cdd09fe34d4475a5b1a8d65',
-                      // nonce: 0,
-                      // from: '0x1c176b36166F74BB5DBC19a340a896A68DeA1385',
-                      // to: '0x36FCde42B307915a94542132AbE5b273bFfF4376',
-                      // gasLimit: 21000,
-                      // decimal: 18,
-                      // chainId: 1,
-                      // tokenAddress: '0x00',
-                    };
-                    console.log(
-                      77777,
-                      token?.symbol.toLowerCase(),
-                      CHAIN_MAP[token?.chain] || token?.chain?.toLocaleLowerCase(),
-                      params
-                    );
-                    try {
-                      const raw_tx = await SignTransaction(
+    setLoading(true);
+    try {
+      const [wallet_uuid, nonceRes] = await Promise.all([
+        getData('wallet_uuid'),
+        walletNonce({
+          chain: token?.chain as string,
+          symbol: token?.symbol as string,
+          address: token?.address as string,
+        }),
+      ]);
+      const sqliteData = await executeQuery({
+        customExec: (tx, resolve, reject) => {
+          tx.executeSql(
+            `
+            SELECT *
+            FROM asset
+            WHERE chain_id = (
+              SELECT id
+              FROM chain
+              WHERE chainName = ?
+            )
+            AND tokenName = ?
+            AND contract_addr = ?
+        `,
+            [token?.chain, token?.symbol, token?.contract_addr],
+            (txObj, resultSet) => {
+              if (resultSet.rows.length > 0) {
+                const { contractUnit, chainListId } = resultSet.rows.item(0);
+                console.log(888888, resultSet.rows.item(0), nonceRes);
+                tx.executeSql(
+                  `
+                      SELECT *
+                      FROM account
+                      WHERE wallet_id = (
+                        SELECT id
+                        FROM wallet
+                        WHERE wallet_uuid = ?
+                      )
+                      AND address = ?
+                  `,
+                  [wallet_uuid, token?.address],
+                  async (txObj2, resultSet2) => {
+                    if (resultSet2.rows.length > 0) {
+                      // 获取第一条数据
+                      // const gasPriceInGwei = new Big(gas?.[`${activeType}`]).toNumber(); // Example gas price in Gwei
+                      // const gasLimit = new Big(`${gas?.gasLimit}`).toNumber();
+                      const accountData = resultSet2.rows.item(0);
+                      const params = {
+                        privateKey: accountData.priv_key.replace('0x', ''),
+                        nonce: Number(nonceRes.data?.nonce || 0),
+                        from: token?.address,
+                        to: form.toAddr || '',
+                        amount: form.amount,
+                        gasPrice: new Big(activeType === 'custom' ? gasPrice : gas?.[`${activeType}`]).toNumber(),
+                        gasLimit: new Big(`${activeType === 'custom' ? gasLimit : gas?.gasLimit}`).toNumber(),
+                        decimal: contractUnit, //contractUnit
+                        chainId: chainListId,
+                        tokenAddress: token?.contract_addr ? token?.contract_addr : '0x00',
+                        // gasLimit: 21000,
+                        // gasPrice: 750000000000,
+                        // privateKey: '0cc9a688f5608f4b5ae64444d936282ca5ff1fcf9cdd09fe34d4475a5b1a8d65',
+                        // nonce: 0,
+                        // from: '0x1c176b36166F74BB5DBC19a340a896A68DeA1385',
+                        // to: '0x36FCde42B307915a94542132AbE5b273bFfF4376',
+                        // gasLimit: 21000,
+                        // decimal: 18,
+                        // chainId: 1,
+                        // tokenAddress: '0x00',
+                      };
+                      console.log(
+                        77777,
+                        JSON.stringify(token),
+                        token?.symbol.toLowerCase(),
                         CHAIN_MAP[token?.chain] || token?.chain?.toLocaleLowerCase(),
                         params
                       );
-                      const res = await transfer({
-                        raw_tx: raw_tx as string,
-                        chain: token?.chain as string,
-                        symbol: token?.symbol as string,
-                      });
-                      console.log(
-                        'transfer =====>',
-                        {
+                      try {
+                        const raw_tx = await SignTransaction(
+                          CHAIN_MAP[token?.chain] || token?.chain?.toLocaleLowerCase(),
+                          params
+                        );
+                        const res = await transfer({
                           raw_tx: raw_tx as string,
                           chain: token?.chain as string,
                           symbol: token?.symbol as string,
-                        },
-                        res
-                      );
-                    } catch (e) {
-                      showToast(`${e}`);
-                      console.log('raw_tx', e);
+                        });
+                        console.log(
+                          'transfer =====>',
+                          {
+                            raw_tx: raw_tx as string,
+                            chain: token?.chain as string,
+                            symbol: token?.symbol as string,
+                          },
+                          res
+                        );
+                        if (res.code === SUCCESS_CODE) {
+                          showToast('转账成功', {
+                            onHide: () => {
+                              navigation?.navigate('home', {
+                                tab: 'asset',
+                              });
+                            },
+                          });
+                        }
+                        setLoading(false);
+                      } catch (e) {
+                        showToast(`${e}`);
+                        console.log('raw_tx', e);
+                        setLoading(false);
+                      }
+                    } else {
+                      console.log('Account not found.');
+                      setLoading(false);
                     }
-                  } else {
-                    console.log('Account not found.');
+                  },
+                  (txObj) => {
+                    console.log('Error executing SQL query:', txObj);
+                    setLoading(false);
                   }
-                },
-                (txObj) => {
-                  console.log('Error executing SQL query:', txObj);
-                }
-              );
+                );
+              }
+            },
+            (txObj) => {
+              console.log('Error executing SQL query:', txObj);
+              setLoading(false);
             }
-          },
-          (txObj) => {
-            console.log('Error executing SQL query:', txObj);
-          }
-        );
-      },
-    });
+          );
+        },
+      });
+    } catch (e) {
+      setLoading(false);
+    }
   };
 
   const handleSelect = (type) => {
@@ -481,6 +502,7 @@ const TransferPayment = ({ navigation, route }) => {
           <Button onPress={handleConfirmed}>确定</Button>
         </BottomOverlay>
       </SafeAreaView>
+      <Spinner visible={loading} />
     </Layout>
   );
 };
