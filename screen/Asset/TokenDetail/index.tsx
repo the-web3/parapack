@@ -54,6 +54,7 @@ const chartConfig = {
   },
 };
 const TokenDetail = (props: Props) => {
+  const [activity, setActivity] = useState<Record<string, any>>({});
   const [index, setIndex] = useState(0);
   const [kLine, setKLine] = useState<{ labels: string[]; datasets: any[] }>({
     labels: [],
@@ -187,10 +188,14 @@ const TokenDetail = (props: Props) => {
       getData('wallet_uuid'),
       getData('current_token_detail'),
     ]);
+    const current_token_detail_obj = JSON.parse(current_token_detail);
+    props.navigation?.setOptions({
+      title: `${current_token_detail_obj?.symbol}详情`,
+    });
     setTokenInfo({
       device_id,
       wallet_uuid,
-      tokenDetail: JSON.parse(current_token_detail),
+      tokenDetail: current_token_detail_obj,
     });
   };
 
@@ -211,6 +216,24 @@ const TokenDetail = (props: Props) => {
     setIndex(e);
     getTransferRecord(e - 1);
   };
+
+  const rqDatas = React.useCallback(async () => {
+    try {
+      if (tokenInfo?.tokenDetail?.symbol) {
+        const activityRes = await getActivity({
+          pageNum: '1',
+          pageSize: '10',
+          status: 1,
+          symbol: tokenInfo?.tokenDetail?.symbol,
+        });
+        setActivity(activityRes.data);
+      }
+    } catch (e) {}
+  }, [tokenInfo?.tokenDetail?.symbol]);
+  useEffect(() => {
+    // 在组件挂载或标题更新时执行
+    rqDatas();
+  }, [rqDatas]);
 
   return (
     <Layout
@@ -343,20 +366,22 @@ const TokenDetail = (props: Props) => {
             )}
           </View>
         </LinearGradient>
-        <View style={{ paddingHorizontal: 16, marginVertical: 15 }}>
-          <TouchableOpacity
-            onPress={() => {
-              props?.navigation.navigate('coinDetail');
-            }}
-            style={styles.bannerContainer}
-          >
-            <Image
-              source={require('@assets/images/banner1.png')}
-              style={styles.banner}
-              // PlaceholderContent={<ActivityIndicator />}
-            />
-          </TouchableOpacity>
-        </View>
+        {activity?.lists?.length > 0 && (
+          <View style={{ paddingHorizontal: 16, marginVertical: 15 }}>
+            <TouchableOpacity
+              onPress={() => {
+                props?.navigation.navigate('coinDetail');
+              }}
+              style={styles.bannerContainer}
+            >
+              <Image
+                source={{ uri: activity?.lists[0]?.coverPicture }}
+                style={styles.banner}
+                // PlaceholderContent={<ActivityIndicator />}
+              />
+            </TouchableOpacity>
+          </View>
+        )}
         <View style={styles.scrollContainer1}>
           <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 32 }}>
             <View style={{ flex: 1 }}>

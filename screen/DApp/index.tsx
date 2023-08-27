@@ -72,7 +72,7 @@ export const DAppScreen = (props: DAppProps) => {
         pageSize: 10,
         symbol: 'eth',
       });
-      // console.log('noticesRes', JSON.stringify(noticesRes));
+      console.log('noticesRes', JSON.stringify(noticesRes));
       setNotices(noticesRes.data);
     } catch (e) {}
   };
@@ -152,8 +152,7 @@ export const DAppScreen = (props: DAppProps) => {
       <View style={style.notice}>
         <Button icon={<Icon name={'sound'} size={17} color={theme.colors.grey4} />} size={'sm'} color={'transparent'} />
         <Text style={style.noticeText} numberOfLines={1}>
-          {notices?.lists?.length ? notices.lists[0].content : ''}
-          {/* <HTML source={{ html: notices?.lists?.length ? notices.lists[0].content : '' }} /> */}
+          {notices?.lists?.length ? notices.lists[0].summary : ''}
         </Text>
         <Button
           icon={<FontAwesomeIcon name={'navicon'} size={18} color={theme.colors.grey4} />}
@@ -281,7 +280,7 @@ const useStyles = makeStyles((theme, props: DAppProps) => {
       flex: 1,
     },
     wrapper: {
-      height: 150,
+      // height: 150,
     },
     slide: {
       flex: 1,

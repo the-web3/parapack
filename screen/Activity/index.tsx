@@ -4,6 +4,8 @@ import { Button, Input, Image, Text } from '@rneui/themed';
 import { getActivity } from '@api/home';
 import { View, ScrollView, SafeAreaView } from 'react-native';
 import { makeStyles, useTheme } from '@rneui/themed';
+import moment from 'moment';
+import { ActivityItems } from './Components/ActivityItems';
 const Activity = ({ navigation }) => {
   const styles = useStyles();
   const { theme } = useTheme();
@@ -52,40 +54,7 @@ const Activity = ({ navigation }) => {
       </View>
       <ScrollView style={styles.main}>
         {activity?.lists?.map((item, index) => (
-          <View style={styles.card} key={index}>
-            <View style={styles.bannerContainer}>
-              <Image
-                source={{ uri: item.coverPicture }}
-                style={styles.banner}
-                // PlaceholderContent={<ActivityIndicator />}
-              />
-            </View>
-            <View style={styles.titleContainer}>
-              <Text style={styles.title} numberOfLines={1}>
-                {item.title}
-              </Text>
-              <Text style={styles.time}>{item.ctime}</Text>
-            </View>
-            <View style={styles.titleContainer}>
-              <View style={{ flexDirection: 'row' }}>
-                <IconFont name="shoukuanzhanghao" />
-                <Text style={styles.people}>747</Text>
-                <IconFont name="a-lujing1" />
-                <Text style={styles.dollar}>1633.11</Text>
-              </View>
-
-              <Button
-                buttonStyle={styles.btn}
-                titleStyle={{ fontWeight: 'bold', fontSize: 11, lineHeight: 16 }}
-                size="sm"
-                onPress={() => {
-                  navigation.navigate('DAppDetail', { params: item });
-                }}
-              >
-                进入活动
-              </Button>
-            </View>
-          </View>
+          <ActivityItems item={item} key={index} navigation={navigation} />
         ))}
         <View style={{ height: 30 }} />
       </ScrollView>
@@ -115,54 +84,6 @@ const useStyles = makeStyles((theme) => {
       paddingVertical: 16,
       backgroundColor: theme.colors.grey5,
       flex: 1,
-    },
-    card: {
-      backgroundColor: theme.colors.white,
-      borderRadius: 8,
-      paddingHorizontal: 15,
-      paddingVertical: 7,
-      marginBottom: 15,
-    },
-    bannerContainer: {
-      height: 94,
-    },
-    banner: {
-      width: '100%',
-      height: '100%',
-      aspectRatio: 1,
-    },
-    titleContainer: {
-      display: 'flex',
-      flexDirection: 'row',
-      flexWrap: 'nowrap',
-      alignItems: 'center',
-      marginVertical: 6,
-      justifyContent: 'space-between',
-    },
-    title: {
-      color: theme.colors.black,
-      flex: 1,
-      marginRight: 16,
-    },
-    time: {
-      color: 'rgba(153, 153, 153, 1)',
-    },
-    people: {
-      color: 'rgba(99, 79, 247, 1)',
-      fontWeight: '500',
-      alignItems: 'center',
-      marginLeft: 4,
-      marginRight: 13,
-    },
-    dollar: {
-      color: 'rgba(252, 183, 43, 1)',
-      fontWeight: '500',
-      alignItems: 'center',
-      marginLeft: 4,
-    },
-    btn: {
-      borderRadius: 30,
-      width: 84,
     },
   };
 });

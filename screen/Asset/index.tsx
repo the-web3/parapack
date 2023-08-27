@@ -69,7 +69,6 @@ const Asset = (props: Props) => {
     const device_id = await getUniqueId();
     const res = await getDeviceBalance({
       device_id,
-      // device_id: 'bd1aae254aa24f14',
     });
     console.log('getDeviceBalance', JSON.stringify(res));
     if (res?.data?.token_list?.length <= 0) {
@@ -96,12 +95,11 @@ const Asset = (props: Props) => {
   useFocusEffect(
     React.useCallback(() => {
       getFlush();
-      // { device_id: 'bd1aae254aa24f14' }
       getWalletInfo();
       getTableInfo();
     }, [])
   );
-  console.log(88888, JSON.stringify(currentWallet));
+  // console.log(88888, JSON.stringify(currentWallet));
   return (
     <SafeAreaView>
       <LinearGradient

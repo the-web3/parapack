@@ -453,7 +453,7 @@ const TransferPayment = ({ navigation, route }) => {
         <BottomOverlay visible={visible} title={'交易详情'} onBackdropPress={toggleOverlay}>
           <View style={{ marginTop: 16 }}>
             <View style={{ marginBottom: 16 }}>
-              <Text style={{ fontSize: 16 }}>{token?.chain}</Text>
+              <Text style={{ fontSize: 16 }}>{token?.symbol}</Text>
             </View>
             <View style={{ marginBottom: 16 }}>
               <View>
