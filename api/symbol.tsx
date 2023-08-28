@@ -1,4 +1,5 @@
 import http from '@common/utils/http';
+import { getLanguage } from '@common/utils/platform';
 import { IResponse } from 'typings/global';
 export interface SymbolSupportDatum {
   /**
@@ -198,6 +199,15 @@ export interface Medium {
    */
   url?: string;
 }
-export function getSymbolInfo(data: { 'wallet-language': string }): Promise<IResponse<SymbolInfoData | null>> {
-  return http.post(`/symbol/info`, data);
+export interface SymbolInfoParams {
+  chain: 'string';
+  symbol: 'string';
+  contract_addr: 'string';
+}
+export function getSymbolInfo(data: SymbolInfoParams): Promise<IResponse<SymbolInfoData | null>> {
+  return http.post(`/symbol/info`, data, {
+    headers: {
+      'wallet-language': getLanguage(),
+    },
+  });
 }
