@@ -44,6 +44,7 @@ const getWallet = async (chainId: any) => {
         );
       },
     })) as any;
+    return sqliteData;
   } catch (e) {
     return Promise.resolve({ account: {} });
   }
