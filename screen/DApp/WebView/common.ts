@@ -4,6 +4,7 @@ let _webviewBridge: any = null;
 import Web3 from 'web3';
 import { getData } from '@common/utils/storage';
 import { executeQuery, BLOCK_CHAIN_ID_MAP } from '@common/utils/sqlite';
+import { getTableInfo } from '@common/wallet';
 
 //TODO TEMP Web3
 const web3 = new Web3(new Web3.providers.HttpProvider(Wallet.eth.uri));
@@ -12,6 +13,7 @@ const getWallet = async (chainId: any) => {
   try {
     const wallet_uuid = await getData('wallet_uuid');
     console.warn('wallet_uuid:', wallet_uuid);
+
     //blockchain ID
     // TODO please ext it when need suport other EVM chains
     // const chainId = BLOCK_CHAIN_ID_MAP.Ethereum;
@@ -61,8 +63,8 @@ export const onBridgeMessage = async (event: any, webviewBridge: any) => {
   try {
     console.warn('sqliteData:', sqliteData);
     // TODO temp Wallet.eth.x
-    const privateKey = sqliteData?.account?.priv_key.replace('0x', '') ?? Wallet.eth.privateKey;
-    const address = sqliteData?.account?.address ?? Wallet.eth.address;
+    const privateKey = sqliteData?.account?.priv_key.replace('0x', '');
+    const address = sqliteData?.account?.address;
     console.warn('privateKey:', privateKey);
     console.warn('address:', address);
 
@@ -74,7 +76,6 @@ export const onBridgeMessage = async (event: any, webviewBridge: any) => {
       privateKey: privateKey,
     });
   } catch (e) {
-    console.log('123123132111');
     injectJavaScript(
       errorParams(messageId, {
         code: -32603,
