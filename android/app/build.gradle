@@ -178,6 +178,7 @@ dependencies {
         implementation jscFlavor
     }
     implementation project(':react-native-camera')
+    implementation project(':react-native-fs')
     
 }
 apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
