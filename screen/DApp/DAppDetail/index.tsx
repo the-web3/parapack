@@ -111,6 +111,7 @@ export const DAppDetail = (props: DAppDetailParam) => {
       });
       setAppDetail(dAppDetail.data);
       console.log('dAppDetail trd:', dAppDetail);
+      console.log('appDetail?.medium:',appDetail?.medium);
     } catch (e) {
       console.log('dAppDetail e:', e);
     }
@@ -124,6 +125,11 @@ export const DAppDetail = (props: DAppDetailParam) => {
     }
     props?.navigation.navigate('DAppWebView', { params: { uri: dAppProps.url, title: appDetail.title } });
   };
+
+  const onBuyPress = () => {
+    props?.navigation.navigate('swap');
+  }
+
   const onMedium = async (url: string) => {
     try {
       const canOpen = await Linking.canOpenURL(url);
@@ -138,9 +144,12 @@ export const DAppDetail = (props: DAppDetailParam) => {
   }
 
   const medium = useMemo(() => {
-    return JSON.parse(appDetail?.medium?? '[]') ?? []
+    console.log('appDetail medium:',appDetail.medium);
+    if (!appDetail?.medium) {
+      return []
+    }
+    return (JSON.parse(appDetail?.medium?? '[]') ?? []).filter((v:any) => v.url !== '');
   },[appDetail]);
-  console.log('medium:',medium);
 
   return (
     <View style={styles.container}>
@@ -197,7 +206,7 @@ export const DAppDetail = (props: DAppDetailParam) => {
               onPress={() => onMedium(value.url)}
             >
               {/* <IconFont name="a-Group217" /> */}
-              <Image source={{uri: value.logo ?? ''}}/>
+              <Image source={{uri: value.logo ?? ''}} style={{width:12,height:12}}/>
             </TouchableOpacity>
             ))
           }
@@ -213,7 +222,7 @@ export const DAppDetail = (props: DAppDetailParam) => {
             </View>
           </View>
           <Text style={{ color: '#8C8C8C', fontSize: 10 }}>ETH/USDT</Text>
-          <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={onBuyPress}>
             <Text style={{ color: '#3B28CC', fontWeight: '500' }} children="去兑换 >" />
           </TouchableOpacity>
         </View>
@@ -251,50 +260,54 @@ export const DAppDetail = (props: DAppDetailParam) => {
             />
           ))}
         </Carousel>
-        <View style={{color: '#5D5D5D', fontSize: 10, marginHorizontal: 20, marginTop: 30 }}>
-          {/* <Text style={{color: '#5D5D5D', fontSize: 12}}>{dAppProps.content}</Text> */}
-          <HTML source={{ html: appDetail.content }} />
-        </View>
+        {
+          (appDetail.news ?? []).map((v: any, i: number) => {
+            return (
+              <View style={{ flexDirection: 'column', backgroundColor: '#F2F3F6', borderRadius: 10, margin: 20 }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}>
+                <Image
+                  source={{ uri: v.coverPicture }}
+                  style={{
+                    width: 20,
+                    height: 20,
+                    borderRadius: 10,
+                  }}
+                />
+                <Text style={{ marginHorizontal: 5, fontSize: 12, color: '#252525',maxWidth:'70%'}}>{v.title}</Text>
+                {/* <IconFont name="a-Group217" size={15} />
+                <IconFont name="a-Group217" size={15} />
+                <IconFont name="a-Group217" size={15} />
+                <IconFont name="a-Group217" size={15} />
+                <IconFont name="a-Group217" size={15} /> */}
+                {/* <Text style={{ fontSize: 10, color: '#5D5D5D' }}>星期一</Text> */}
+                <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                  {/* <IconFont name="a-Group217" size={25} /> */}
+                  <Text style={{ marginHorizontal: 5, fontSize: 10, color: '#5D5D5D' }}>{moment(v.ctime).format('yy/MM/DD')}</Text>
+                </View>
+              </View>
+              <View style={{ padding: 10, margin: 5, marginTop: 0, backgroundColor: '#FFF', borderRadius: 10 }}>
+                <View style={{ fontSize: 20, fontWeight: 'bold', color: '#252525' }}>
+                  {/* {v.summary} */}
+                  <HTML source={{ html: v.summary }} />
+                </View>
+                <View style={{ fontSize: 12, color: '#8C8C8C' }}>
+                <HTML source={{ html: v.content }} />
+                  {/* 2023年5月12日，全球最大加密货币交易所币安宣布将退出加拿大市场，并称这是由于“与稳定币相关的新指南和对加密货币交易所的投资者限制”不再适合币安。
+                  [25] 2023年5月21日，币安公告称，将暂停波场币（TORN）存款，直至另行通知。 [26]
+                  据《华尔街日报》和彭博2023年6月13日消息，被美国证监会（SEC）起诉的币安美国可能不会面临全面资产冻结，该公司曾表示全面资产冻结或致其业务严重受损。
+                  [29] */}
+                </View>
+              </View>
+            </View>
+            )
+          })
+        }
         {/* <View style={{ color: '#5D5D5D', fontSize: 12, marginHorizontal: 20, marginTop: 30 }}>
           {
             (notices?.lists ?? []).map((v: any, i: number) => (
               <HTML source={{ html: v.content }} key={i}/>
             ))
             }
-        </View> */}
-        {/* <View style={{ flexDirection: 'column', backgroundColor: '#F2F3F6', borderRadius: 10, margin: 20 }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}>
-            <Image
-              source={{ uri: 'https://randomuser.me/api/portraits/men/36.jpg' }}
-              style={{
-                width: 20,
-                height: 20,
-                borderRadius: 10,
-              }}
-            />
-            <Text style={{ marginHorizontal: 5, fontSize: 12, color: '#252525' }}>Biance</Text>
-            <IconFont name="a-Group217" size={15} />
-            <IconFont name="a-Group217" size={15} />
-            <IconFont name="a-Group217" size={15} />
-            <IconFont name="a-Group217" size={15} />
-            <IconFont name="a-Group217" size={15} />
-            <Text style={{ marginHorizontal: 5, fontSize: 10, color: '#5D5D5D' }}>05/18</Text>
-            <Text style={{ fontSize: 10, color: '#5D5D5D' }}>星期一</Text>
-            <View style={{ flex: 1, alignItems: 'flex-end' }}>
-              <IconFont name="a-Group217" size={25} />
-            </View>
-          </View>
-          <View style={{ padding: 10, margin: 5, marginTop: 0, backgroundColor: '#FFF', borderRadius: 10 }}>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#252525' }}>
-              投资者恐慌出逃！币安过去24小时资金净流
-            </Text>
-            <Text style={{ fontSize: 12, color: '#8C8C8C' }}>
-              2023年5月12日，全球最大加密货币交易所币安宣布将退出加拿大市场，并称这是由于“与稳定币相关的新指南和对加密货币交易所的投资者限制”不再适合币安。
-              [25] 2023年5月21日，币安公告称，将暂停波场币（TORN）存款，直至另行通知。 [26]
-              据《华尔街日报》和彭博2023年6月13日消息，被美国证监会（SEC）起诉的币安美国可能不会面临全面资产冻结，该公司曾表示全面资产冻结或致其业务严重受损。
-              [29]
-            </Text>
-          </View>
         </View> */}
       </ScrollView>
     </View>
