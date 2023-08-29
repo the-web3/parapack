@@ -49,29 +49,11 @@ export const getDAppGroup = (params: NoticeProps) => {
     );
 };
 
-export const getDAppDetail = (params: any) => {
-    return http.post(
-        '/contentPage',
-        {
-            id: params.id,
-        },
-        {
-            headers: {
-                'wallet-language': getLanguage(),
-            },
-        }
-    );
-};
-
 export const getTags = () => {
-    return http.post(
-        '/tags', 
-       '',
-       {
+    return http.post('/tags', '', {
         headers: {
             //TODO 服务端没配置英文
             // 'wallet-language': getLanguage(),
-        }
-       }
-    )
-}
+        },
+    });
+};

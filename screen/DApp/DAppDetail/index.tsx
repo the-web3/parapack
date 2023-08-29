@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
-import { makeStyles, useTheme } from '@rneui/themed';
-import { View, ScrollView, Image, Text, SafeAreaView, Dimensions, TouchableOpacity, Linking } from 'react-native';
+import { makeStyles } from '@rneui/themed';
+import { View, ScrollView, Image, Text, Dimensions, TouchableOpacity, Linking } from 'react-native';
 import IconFont from '@assets/iconfont';
 import { getSymbolKline } from '@api/symbol';
 import moment from 'moment';
 import { LineChart } from 'react-native-chart-kit';
-import { getDAppDetail, getBanners,getNotices } from '@api/dApp';
+import { getBanners } from '@api/dApp';
 import { getData } from '@common/utils/storage';
 import { showToast } from '@common/utils/platform';
 import { Carousel } from 'react-native-ui-lib';
@@ -60,24 +60,21 @@ export const DAppDetail = (props: DAppDetailParam) => {
       },
     ],
   });
-  const [appDetail, setAppDetail] = useState({});
-  const [notices, setNotices] = useState<Record<string, any>>({});
+  // const [notices, setNotices] = useState<Record<string, any>>({});
   const [dAppProps] = useState(props?.route?.params?.params);
 
   useEffect(() => {
     initKLine();
-    rqDAppDetail();
     getBanners().then((banners) => {
       setBanners(banners.data);
     });
-    getNotices({
-      pageNum: 1,
-      pageSize: 10,
-      symbol: 'eth',
-    }).then((noticesRes: any) => {
-      setNotices(noticesRes.data)
-    });
-;
+    // getNotices({
+    //   pageNum: 1,
+    //   pageSize: 10,
+    //   symbol: 'eth',
+    // }).then((noticesRes: any) => {
+    //   setNotices(noticesRes.data);
+    // });
   }, []);
 
   const initKLine = useCallback(async () => {
@@ -104,65 +101,52 @@ export const DAppDetail = (props: DAppDetailParam) => {
     }
   }, []);
 
-  const rqDAppDetail = async () => {
-    try {
-      const dAppDetail = await getDAppDetail({
-        id: dAppProps.contentPageId ?? 0,
-      });
-      setAppDetail(dAppDetail.data);
-      console.log('dAppDetail trd:', dAppDetail);
-      console.log('appDetail?.medium:',appDetail?.medium);
-    } catch (e) {
-      console.log('dAppDetail e:', e);
-    }
-  };
-
   const onPress = async () => {
     const wallet_uuid = await getData('wallet_uuid');
     if (!wallet_uuid || wallet_uuid === '{}') {
       showToast('No Wallet');
       return;
     }
-    props?.navigation.navigate('DAppWebView', { params: { uri: dAppProps.url, title: appDetail.title } });
+    props?.navigation.navigate('DAppWebView', { params: { uri: dAppProps.url, title: dAppProps?.title } });
   };
 
   const onBuyPress = () => {
     props?.navigation.navigate('swap');
-  }
+  };
 
   const onMedium = async (url: string) => {
     try {
       const canOpen = await Linking.canOpenURL(url);
       if (canOpen) {
         Linking.openURL(url);
-      }else {
-        showToast('can not open url:'+ url);
+      } else {
+        showToast('can not open url:' + url);
       }
     } catch (e: any) {
       showToast(e.message ?? e);
     }
-  }
+  };
 
   const medium = useMemo(() => {
-    console.log('appDetail medium:',appDetail.medium);
-    if (!appDetail?.medium) {
-      return []
+    console.log('appDetail medium:', dAppProps?.medium);
+    if (!dAppProps?.medium) {
+      return [];
     }
-    return (JSON.parse(appDetail?.medium?? '[]') ?? []).filter((v:any) => v.url !== '');
-  },[appDetail]);
+    return (JSON.parse(dAppProps?.medium ?? '[]') ?? []).filter((v: any) => v.url !== '');
+  }, [dAppProps]);
 
   return (
     <View style={styles.container}>
       <ScrollView>
         <View style={styles.headerBg}>
           <Image
-            source={{ uri: appDetail.coverPicture ?? '' }}
+            source={{ uri: dAppProps?.coverPicture ?? '' }}
             style={{ width: 85, height: 85, borderRadius: 15, overflow: 'hidden' }}
           />
           <View style={{ flex: 1, flexDirection: 'column', gap: 3, marginLeft: 15 }}>
-            <Text style={{ color: '#252525', fontSize: 16, fontWeight: '500' }}>{appDetail.title}</Text>
+            <Text style={{ color: '#252525', fontSize: 16, fontWeight: '500' }}>{dAppProps?.title}</Text>
             <Text style={{ color: '#AEAEAE', fontSize: 13 }} numberOfLines={1}>
-              {appDetail.summary}
+              {dAppProps?.summary}
             </Text>
             <View
               style={{
@@ -185,15 +169,14 @@ export const DAppDetail = (props: DAppDetailParam) => {
             </View>
           </View>
         </View>
-        <View style={{color: '#5D5D5D', fontSize: 10, marginHorizontal: 20, marginTop: 10 }}>
+        <View style={{ color: '#5D5D5D', fontSize: 10, marginHorizontal: 20, marginTop: 10 }}>
           {/* <Text style={{color: '#5D5D5D', fontSize: 12}}>{dAppProps.content}</Text> */}
-          <HTML source={{ html: appDetail.content }} />
+          <HTML source={{ html: dAppProps?.content }} />
         </View>
-              
+
         <View style={{ flexDirection: 'row', gap: 10, margin: 20 }}>
-          {
-            (medium || []).map((value: any, i: number) => (
-              <TouchableOpacity
+          {(medium || []).map((value: any, i: number) => (
+            <TouchableOpacity
               key={i}
               style={{
                 width: 70,
@@ -206,10 +189,9 @@ export const DAppDetail = (props: DAppDetailParam) => {
               onPress={() => onMedium(value.url)}
             >
               {/* <IconFont name="a-Group217" /> */}
-              <Image source={{uri: value.logo ?? ''}} style={{width:12,height:12}}/>
+              <Image source={{ uri: value.logo ?? '' }} style={{ width: 12, height: 12 }} />
             </TouchableOpacity>
-            ))
-          }
+          ))}
         </View>
         <View
           style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20 }}
@@ -260,10 +242,9 @@ export const DAppDetail = (props: DAppDetailParam) => {
             />
           ))}
         </Carousel>
-        {
-          (appDetail.news ?? []).map((v: any, i: number) => {
-            return (
-              <View style={{ flexDirection: 'column', backgroundColor: '#F2F3F6', borderRadius: 10, margin: 20 }}>
+        {(dAppProps?.news ?? []).map((v: any, i: number) => {
+          return (
+            <View style={{ flexDirection: 'column', backgroundColor: '#F2F3F6', borderRadius: 10, margin: 20 }} key={i}>
               <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}>
                 <Image
                   source={{ uri: v.coverPicture }}
@@ -273,7 +254,7 @@ export const DAppDetail = (props: DAppDetailParam) => {
                     borderRadius: 10,
                   }}
                 />
-                <Text style={{ marginHorizontal: 5, fontSize: 12, color: '#252525',maxWidth:'70%'}}>{v.title}</Text>
+                <Text style={{ marginHorizontal: 5, fontSize: 12, color: '#252525', maxWidth: '70%' }}>{v.title}</Text>
                 {/* <IconFont name="a-Group217" size={15} />
                 <IconFont name="a-Group217" size={15} />
                 <IconFont name="a-Group217" size={15} />
@@ -282,7 +263,9 @@ export const DAppDetail = (props: DAppDetailParam) => {
                 {/* <Text style={{ fontSize: 10, color: '#5D5D5D' }}>星期一</Text> */}
                 <View style={{ flex: 1, alignItems: 'flex-end' }}>
                   {/* <IconFont name="a-Group217" size={25} /> */}
-                  <Text style={{ marginHorizontal: 5, fontSize: 10, color: '#5D5D5D' }}>{moment(v.ctime).format('yy/MM/DD')}</Text>
+                  <Text style={{ marginHorizontal: 5, fontSize: 10, color: '#5D5D5D' }}>
+                    {moment(v.ctime).format('yy/MM/DD')}
+                  </Text>
                 </View>
               </View>
               <View style={{ padding: 10, margin: 5, marginTop: 0, backgroundColor: '#FFF', borderRadius: 10 }}>
@@ -291,7 +274,7 @@ export const DAppDetail = (props: DAppDetailParam) => {
                   <HTML source={{ html: v.summary }} />
                 </View>
                 <View style={{ fontSize: 12, color: '#8C8C8C' }}>
-                <HTML source={{ html: v.content }} />
+                  <HTML source={{ html: v.content }} />
                   {/* 2023年5月12日，全球最大加密货币交易所币安宣布将退出加拿大市场，并称这是由于“与稳定币相关的新指南和对加密货币交易所的投资者限制”不再适合币安。
                   [25] 2023年5月21日，币安公告称，将暂停波场币（TORN）存款，直至另行通知。 [26]
                   据《华尔街日报》和彭博2023年6月13日消息，被美国证监会（SEC）起诉的币安美国可能不会面临全面资产冻结，该公司曾表示全面资产冻结或致其业务严重受损。
@@ -299,9 +282,8 @@ export const DAppDetail = (props: DAppDetailParam) => {
                 </View>
               </View>
             </View>
-            )
-          })
-        }
+          );
+        })}
         {/* <View style={{ color: '#5D5D5D', fontSize: 12, marginHorizontal: 20, marginTop: 30 }}>
           {
             (notices?.lists ?? []).map((v: any, i: number) => (
