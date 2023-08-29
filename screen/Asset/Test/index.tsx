@@ -7,7 +7,13 @@ import { rules } from '@common/utils/validation';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { showToast } from '@common/utils/platform';
 import { createTest, getTableInfo } from '@common/wallet';
-import { CreateMnemonic, DecodeMnemonic, EncodeMnemonic } from 'savourlabs-wallet-sdk/wallet';
+import {
+  CreateAddress,
+  CreateMnemonic,
+  DecodeMnemonic,
+  EncodeMnemonic,
+  MnemonicToSeed,
+} from 'savourlabs-wallet-sdk/wallet';
 import { getData, storeData } from '@common/utils/storage';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { executeQuery } from '@common/utils/sqlite';
@@ -29,6 +35,18 @@ const Test = (props: Props) => {
         <ScrollView>
           <Button
             onPress={async () => {
+              // const seed = MnemonicToSeed({
+              //   mnemonic: 'pet apology neither maximum return surge cigar bridge sudden twelve sea cycle',
+              //   password: '',
+              // });
+              // let account = CreateAddress({
+              //   chain: 'btc',
+              //   seedHex: seed.toString('hex'),
+              //   index: 0,
+              //   receiveOrChange: 0,
+              //   network: 'mainnet',
+              // });
+              // console.log(111111, account);
               props?.navigation?.navigate('guide');
             }}
           >
