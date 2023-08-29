@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { useTranslation } from 'react-i18next';
 import { DAppItem } from '@screen/DApp/Components/DAppItem';
-import { getBanners, getDAppGroup, getNotices } from '@api/dApp';
+import { getBanners, getDAppGroup, getNotices, getTags } from '@api/dApp';
 import { Button, Input, Text } from '@rneui/themed';
 import { getActivity } from '@api/home';
 import { Carousel } from 'react-native-ui-lib';
@@ -31,6 +31,7 @@ export const DAppScreen = (props: DAppProps) => {
   const [notices, setNotices] = useState<Record<string, any>>({});
   const [dAppGroup, setDAppGroup] = useState<Record<string, any>>({});
   const [activity, setActivity] = useState<Record<string, any>>({});
+  const [tags, setTags] = useState<string[]>([]);
 
   useEffect(() => {
     rqDatas();
@@ -67,14 +68,18 @@ export const DAppScreen = (props: DAppProps) => {
       });
       console.log('noticesRes', JSON.stringify(noticesRes));
       setNotices(noticesRes.data);
+
+      const tagsRes = await getTags();
+      console.log('tagRes:',JSON.stringify(tags));
+      setTags(tagsRes.data);
     } catch (e) {}
   };
 
-  const onTagPress = () => {
-    props?.navigation.navigate('DAppList');
+  const onTagPress = (tag?: string) => {
+    props?.navigation.navigate('DAppList', {params: {type: 'group',tag}});
   };
-  const onShowAll = () => {
-    props?.navigation.navigate('DAppList');
+  const onShowAll = (type: string) => {
+    props?.navigation.navigate('DAppList', {params: {type}});
   };
 
   const onHotPress = (params: any) => {
@@ -119,7 +124,6 @@ export const DAppScreen = (props: DAppProps) => {
             style={{
               height: 180,
               width: width - 30,
-              backgroundColor:'red'
             }}
           />
         ))}
@@ -142,12 +146,12 @@ export const DAppScreen = (props: DAppProps) => {
           showsHorizontalScrollIndicator={false}
           bounces={false}
         >
-          {classifyButtons.map((v, index) => (
+          {(classifyButtons || []).map((v, index) => (
             <Button
               icon={<Icon name={v.icon} size={18} color={'#3B28CC'} />}
-              title={v.name}
+              title={v.tagDesc ?? v.name}
               key={index}
-              onPress={onTagPress}
+              onPress={() => onTagPress()}
               titleStyle={style.scrBtnTitle}
               buttonStyle={style.scrBtnContainer}
             />
@@ -155,7 +159,7 @@ export const DAppScreen = (props: DAppProps) => {
         </ScrollView>
       </View>
       <View style={{ marginTop: 20 }}>
-        <ContentHeader leftTitle={t('dApp.recommendList')} rightTitle={t('dApp.seeAll')} onRightClick={onShowAll} />
+        <ContentHeader leftTitle={t('dApp.recommendList')} rightTitle={t('dApp.seeAll')} onRightClick={() => onShowAll('group')} />
         <ScrollView
           style={style.scrollView}
           contentContainerStyle={[style.scrollViewContentView]}
@@ -173,7 +177,7 @@ export const DAppScreen = (props: DAppProps) => {
         <View style={{ marginVertical: 20, marginHorizontal: 20, backgroundColor: theme.colors.grey5, height: 1 }} />
       </View>
       <View style={{ flex: 1 }}>
-        <ContentHeader leftTitle={t('dApp.activityHotList')} rightTitle={t('dApp.seeAll')} onRightClick={onShowAll} />
+        <ContentHeader leftTitle={t('dApp.activityHotList')} rightTitle={t('dApp.seeAll')} onRightClick={() => onShowAll('activity')} />
         <ScrollView contentContainerStyle={{ paddingBottom: 20, minHeight: 200 }}>
           {activity?.lists?.map((v, i) => (
             <DAppItem {...v} key={v.title + String(i)} onPress={() => onHotPress(v)} />

@@ -13,6 +13,7 @@ interface NoticeProps {
     pageNum?: number;
     pageSize?: number;
     symbol?: string;
+    tag?: string;
     // walletLanguage: string;
 }
 
@@ -61,3 +62,16 @@ export const getDAppDetail = (params: any) => {
         }
     );
 };
+
+export const getTags = () => {
+    return http.post(
+        '/tags', 
+       '',
+       {
+        headers: {
+            //TODO 服务端没配置英文
+            // 'wallet-language': getLanguage(),
+        }
+       }
+    )
+}

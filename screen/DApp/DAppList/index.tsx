@@ -11,9 +11,10 @@ interface DAppListProps {
 }
 
 export const DAppList = (props: DAppListProps) => {
-  const [dAppGroup, setDAppGroup] = useState<Record<string, any>>({});
-  const [activity, setActivity] = useState<Record<string, any>>({});
-
+  // const [dAppGroup, setDAppGroup] = useState<Record<string, any>>({});
+  // const [activity, setActivity] = useState<Record<string, any>>({});
+  const [dAppData, setDAppData] = useState<Record<string, any>>({});
+  
   const onPress = (params: any) => {
     props?.navigation.navigate('DAppDetail', { params });
   };
@@ -23,27 +24,40 @@ export const DAppList = (props: DAppListProps) => {
   }, []);
 
   const initData = async () => {
-    const activityRes = await getActivity({
-      pageNum: '1',
-      pageSize: '10',
-      status: 1,
-    });
-    setActivity(activityRes.data);
+    const {type, tag} = props.route?.params.params ;
+    let sourceData;
+    if (type == 'group') {
+      let params = {
+        pageNum: 1,
+        pageSize: 50,
+        symbol: 'eth'
+      };
+      if (tag) {
+        params = {...params, tag} as any;
+      }
 
-    const dAppGroupRes = await getDAppGroup({
-      pageNum: 1,
-      pageSize: 10,
-      symbol: 'eth',
-    });
-    setDAppGroup(dAppGroupRes.data);
-    console.log('dAppGroup:', dAppGroup);
+    sourceData = await getDAppGroup(params);
+    console.warn('sourceData222:',sourceData);
+    }else if (type === 'activity') {
+      let params = {
+        pageNum: '1',
+        pageSize: '50',
+        status: 1,
+      };
+      if (tag) {
+        params = {...params, tag} as any;
+      }
+      sourceData = await getActivity(params);
+    }
+    console.warn('sourceData11:',sourceData);
+    setDAppData(sourceData.data);
   };
 
   const styles = useStyles(props);
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={{ paddingBottom: 46 }}>
-        {(dAppGroup?.lists || []).map((v, i) => (
+        {(dAppData?.lists || []).map((v, i) => (
           <DAppItem
             {...v}
             key={v.title + String(i)}
