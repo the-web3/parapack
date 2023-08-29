@@ -49,9 +49,9 @@ export const DAppWebView = (props: DAppWebViewProps) => {
         containerStyle={styles.container}
         source={{ uri: propsData.uri }}
         ref={(e) => (webviewBridge = e)}
-        onLoadStart={() => {
-          Platform.OS === 'android' && webviewBridge.injectJavaScript(injectJavaScript ?? '');
-        }}
+        // onLoadStart={() => {
+        //   Platform.OS === 'android' && webviewBridge.injectJavaScript(injectJavaScript ?? '');
+        // }}
         shouldStartLoad={true}
         startInLoadingState={true}
         automaticallyAdjustContentInsets={false}
@@ -61,10 +61,10 @@ export const DAppWebView = (props: DAppWebViewProps) => {
         domStorageEnabled={true}
         decelerationRate="normal"
         useWebKit={true}
-        injectedJavaScriptBeforeContentLoaded={Platform.OS === 'ios' ? injectJavaScript : ''}
+        injectedJavaScriptBeforeContentLoaded={injectJavaScript}
         onMessage={onMessage}
-        injectedJavaScriptBeforeLoad={injectJavaScript}
-        injectedJavaScript={injectJavaScript}
+        // injectedJavaScriptBeforeLoad={injectJavaScript}
+        // injectedJavaScript={injectJavaScript}
         onLoadProgress={onProgress}
         onError={onError}
         renderError={onRError}
