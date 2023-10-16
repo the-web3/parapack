@@ -119,97 +119,102 @@ export const DAppScreen = (props: DAppProps) => {
           leftIcon={<Icon name="search1" />}
           placeholder="输入Dapp网站"
         />
-        <Icon name="scan1" style={{ marginLeft: 5 }} size={24} color={theme.colors.black} />
+        <IconFont name="a-31-saoma" style={{ marginLeft: 5 }} />
       </View>
-      <Carousel
-        key={0}
-        style={style.banner}
-        autoplay={true}
-        pageWidth={width - 40}
-        itemSpacings={0}
-        containerMarginHorizontal={0}
-        initialPage={0}
-        containerStyle={{ height: 140 }}
-        allowAccessibleLayout
-      >
-        {(banners.lists || []).map((v: any, i: number) => (
-          <Image
-            source={{ uri: v.img }}
-            key={i}
-            style={{
-              height: 140,
-              width: '100%',
-              borderRadius: 12,
-            }}
-          />
-        ))}
-      </Carousel>
-      <View style={style.notice}>
-        <Button icon={<Icon name={'sound'} size={17} color={theme.colors.grey4} />} size={'sm'} color={'transparent'} />
-        <Text style={style.noticeText} numberOfLines={1}>
-          {notices?.lists?.length ? notices.lists[0].summary : ''}
-        </Text>
-        <Button
-          icon={<FontAwesomeIcon name={'navicon'} size={18} color={theme.colors.grey4} />}
-          size={'sm'}
-          color={'transparent'}
-        />
-      </View>
-      <View>
-        <ScrollView
-          style={style.scrollView}
-          contentContainerStyle={style.scrollViewContentView}
-          showsHorizontalScrollIndicator={false}
-          bounces={false}
+      <ScrollView contentContainerStyle={{ paddingBottom: 20, minHeight: 200 }}>
+        <Carousel
+          key={0}
+          style={style.banner}
+          autoplay={true}
+          pageWidth={width - 40}
+          itemSpacings={0}
+          containerMarginHorizontal={0}
+          initialPage={0}
+          containerStyle={{ height: 140 }}
+          allowAccessibleLayout
         >
-          {(classifyButtons || []).map((v, index) => {
-            return (
-              <Button
-                icon={<IconFont name={v.icon} size={19} color={'#3B28CC'} />}
-                title={v.tagDesc ?? v.name}
-                key={index}
-                onPress={() => onTagPress()}
-                titleStyle={style.scrBtnTitle}
-                buttonStyle={style.scrBtnContainer}
-              />
-            );
-          })}
-        </ScrollView>
-      </View>
-      <View style={{ marginTop: 20 }}>
-        <ContentHeader
-          leftTitle={t('dApp.recommendList')}
-          rightTitle={t('dApp.seeAll')}
-          onRightClick={() => onShowAll('group')}
-        />
-        <ScrollView
-          style={style.scrollView}
-          contentContainerStyle={[style.scrollViewContentView]}
-          showsHorizontalScrollIndicator={false}
-          bounces={false}
-          horizontal={true}
-        >
-          {dAppGroup?.lists?.map((v, index) => (
-            <Button buttonStyle={style.recommendItem} onPress={() => onRecommendPress(v)} key={index}>
-              <Image source={{ uri: v.coverPicture }} style={{ height: 90, width: 90, borderRadius: 5 }} />
-              <Text numberOfLines={1} ellipsizeMode="tail" children={v.title} style={style.scrBtnTitle} />
-            </Button>
+          {(banners.lists || []).map((v: any, i: number) => (
+            <Image
+              source={{ uri: v.img }}
+              key={i}
+              style={{
+                height: 140,
+                width: '100%',
+                borderRadius: 12,
+              }}
+            />
           ))}
-        </ScrollView>
-        <View style={{ marginVertical: 20, marginHorizontal: 20, backgroundColor: theme.colors.grey5, height: 1 }} />
-      </View>
-      <View style={{ flex: 1 }}>
-        <ContentHeader
-          leftTitle={t('dApp.activityHotList')}
-          rightTitle={t('dApp.seeAll')}
-          onRightClick={() => onShowAll('activity')}
-        />
-        <ScrollView contentContainerStyle={{ paddingBottom: 20, minHeight: 200 }}>
+        </Carousel>
+        <View style={style.notice}>
+          <Button
+            icon={<Icon name={'sound'} size={17} color={theme.colors.grey4} />}
+            size={'sm'}
+            color={'transparent'}
+          />
+          <Text style={style.noticeText} numberOfLines={1}>
+            {notices?.lists?.length ? notices.lists[0].summary : ''}
+          </Text>
+          <Button
+            icon={<FontAwesomeIcon name={'navicon'} size={18} color={theme.colors.grey4} />}
+            size={'sm'}
+            color={'transparent'}
+          />
+        </View>
+        <View>
+          <ScrollView
+            style={style.scrollView}
+            contentContainerStyle={style.scrollViewContentView}
+            showsHorizontalScrollIndicator={false}
+            bounces={false}
+          >
+            {(classifyButtons || []).map((v, index) => {
+              return (
+                <Button
+                  icon={<IconFont name={v.icon} size={19} color={'#3B28CC'} />}
+                  title={v.tagDesc ?? v.name}
+                  key={index}
+                  onPress={() => onTagPress()}
+                  titleStyle={style.scrBtnTitle}
+                  buttonStyle={style.scrBtnContainer}
+                />
+              );
+            })}
+          </ScrollView>
+        </View>
+        <View style={{ marginTop: 20 }}>
+          <ContentHeader
+            leftTitle={t('dApp.recommendList')}
+            rightTitle={t('dApp.seeAll')}
+            onRightClick={() => onShowAll('group')}
+          />
+          <ScrollView
+            style={style.scrollView}
+            contentContainerStyle={[style.scrollViewContentView]}
+            showsHorizontalScrollIndicator={false}
+            bounces={false}
+            horizontal={true}
+          >
+            {dAppGroup?.lists?.map((v, index) => (
+              <Button buttonStyle={style.recommendItem} onPress={() => onRecommendPress(v)} key={index}>
+                <Image source={{ uri: v.coverPicture }} style={{ height: 90, width: 90, borderRadius: 5 }} />
+                <Text numberOfLines={1} ellipsizeMode="tail" children={v.title} style={style.scrBtnTitle} />
+              </Button>
+            ))}
+          </ScrollView>
+          <View style={{ marginVertical: 20, marginHorizontal: 20, backgroundColor: theme.colors.grey5, height: 1 }} />
+        </View>
+        <View style={{ flex: 1 }}>
+          <ContentHeader
+            leftTitle={t('dApp.activityHotList')}
+            rightTitle={t('dApp.seeAll')}
+            onRightClick={() => onShowAll('activity')}
+          />
+
           {activity?.lists?.map((v, i) => (
             <DAppItem {...v} key={v.title + String(i)} onPress={() => onHotPress(v)} />
           ))}
-        </ScrollView>
-      </View>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
