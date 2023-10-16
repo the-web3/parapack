@@ -201,7 +201,7 @@ export interface TransferRecordParams {
   contractAddr?: string;
   symbol: string;
   type?: number; //类型，1=转入，0=转出
-  ownerAddr: 'string';
+  ownerAddr: string;
   pageNum: number;
   pageSize: number;
 }
@@ -318,4 +318,24 @@ export function walletNonce(data: { address: string; chain: string; symbol: stri
   }>
 > {
   return http.post(`/wallet/nonce`, data);
+}
+
+export function btcGasPrice(data: {}): Promise<IResponse<{ gasPrice: number; symbolRate: number }>> {
+  return http.post(`/wallet/btc/gasPrice`, data);
+}
+
+export function getUtxo(data: { address: string }): Promise<
+  IResponse<
+    {
+      device_id: string;
+      wallet_uuid: string;
+      chain: string;
+      symbol: string;
+      contract_addr: string;
+      address: string;
+      index: 0;
+    }[]
+  >
+> {
+  return http.post(`/wallet/utxo`, data);
 }

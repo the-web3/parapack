@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { SafeAreaView, ScrollView, TouchableOpacity, View, Clipboard } from 'react-native';
-import { Button, Input, Text, makeStyles } from '@rneui/themed';
+import { Button, Input, Text, makeStyles, useTheme } from '@rneui/themed';
 import Layout from '@components/Layout';
 import { rules } from '@common/utils/validation';
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -13,6 +13,7 @@ import {
   DecodeMnemonic,
   EncodeMnemonic,
   MnemonicToSeed,
+  SignTransaction,
 } from 'savourlabs-wallet-sdk/wallet';
 import { getData, storeData } from '@common/utils/storage';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -29,6 +30,8 @@ const Test = (props: Props) => {
   const [uniqueId, setUniqueId] = useState('');
   const [encodeMnemonic, setEncodeMnemonic] = useState('');
   const [symbolSupport, setSymbolSupport] = useState('');
+  const { theme }: { theme: CustomTheme<CustomColors> } = useTheme();
+  console.log('Layout', theme.colors);
   return (
     <Layout>
       <SafeAreaView>
@@ -47,6 +50,28 @@ const Test = (props: Props) => {
               //   network: 'mainnet',
               // });
               // console.log(111111, account);
+              // const data = {
+              //   inputs: [
+              //     {
+              //       address: '1H1oAqmdfTNECrrHFAJ4AhbTUyPcQjrf72',
+              //       txid: '209706b97a9aed047df158bf57cfbdad94a5e9bd9ac5261034448ec4590bab8f',
+              //       amount: 100000000,
+              //       vout: 0,
+              //     },
+              //   ],
+              //   outputs: [
+              //     {
+              //       amount: 100000000,
+              //       address: '1H1oAqmdfTNECrrHFAJ4AhbTUyPcQjrf72',
+              //     },
+              //   ],
+              // };
+              // const rawHex = SignTransaction('btc', {
+              //   privateKey: '60164bec9512d004af7f71e7ed868c8e9ac2cc6234d8b682037ec80547595f2e',
+              //   signObj: data,
+              //   network: 'mainnet',
+              // });
+              // console.log(rawHex);
               props?.navigation?.navigate('guide');
             }}
           >

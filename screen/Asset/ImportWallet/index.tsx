@@ -143,7 +143,7 @@ const ImportWallet = (props: Props) => {
     <Layout
       fixedChildren={
         <View style={styles.button}>
-          <Button onPress={handleImportWallet}>创建钱包</Button>
+          <Button onPress={handleImportWallet}>导入钱包</Button>
         </View>
       }
     >

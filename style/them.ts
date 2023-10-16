@@ -1,4 +1,7 @@
 import { darkColors, lightColors } from '@rneui/base';
+import { PixelRatio } from 'react-native';
+const pixelDensity = PixelRatio.get();
+console.log(7777777, pixelDensity);
 // 定义一个扩展了 Colors 类型的自定义类型
 export type CustomColors = typeof defineTheme;
 const customTheme = {
@@ -43,8 +46,10 @@ export const defineTheme = {
   components: {
     Button: {
       radius: 6, // 自定义圆角大小
+      // height: pixelDensity >= 3 ? 120 : pixelDensity >= 2 ? 80 : 40,
       titleStyle: {
         lineHeight: 20,
+        // lineHeight: pixelDensity >= 3 ? 120 : pixelDensity >= 2 ? 80 : 40,
       },
     },
     Input: {

@@ -9,17 +9,33 @@ import { getBanners, getDAppGroup, getNotices, getTags } from '@api/dApp';
 import { Button, Input, Text } from '@rneui/themed';
 import { getActivity } from '@api/home';
 import { Carousel } from 'react-native-ui-lib';
-import HTML from 'react-native-render-html';
-import Swiper from 'react-native-swiper';
+import IconFont from '@assets/iconfont';
 interface DAppProps {
   navigation?: any;
+  mode?: string;
 }
 
 const classifyButtons = [
-  { id: 0, icon: 'barchart', name: '排行榜' },
-  { id: 1, icon: 'clockcircleo', name: '最新上线' },
-  { id: 2, icon: 'pay-circle-o1', name: '理财' },
-  { id: 3, icon: 'bulb1', name: 'Defi' },
+  {
+    id: 0,
+    icon: 'barchart',
+    name: '排行榜',
+  },
+  {
+    id: 1,
+    icon: 'clockcircleo',
+    name: '最新上线',
+  },
+  {
+    id: 2,
+    icon: 'pay-circle-o1',
+    name: '理财',
+  },
+  {
+    id: 3,
+    icon: 'bulb1',
+    name: 'Defi',
+  },
 ];
 
 export const DAppScreen = (props: DAppProps) => {
@@ -41,7 +57,7 @@ export const DAppScreen = (props: DAppProps) => {
     try {
       const banners = await getBanners();
       setBanners(banners.data);
-      console.log('banners:',banners);
+      console.log('banners:', banners);
       const activityRes = await getActivity({
         pageNum: '1',
         pageSize: '10',
@@ -56,30 +72,30 @@ export const DAppScreen = (props: DAppProps) => {
         symbol: 'eth',
       });
       // console.log('dAppGroupRes', JSON.stringify(dAppGroupRes));
-      console.log('banners', JSON.stringify(banners));
-      console.log('activityRes', JSON.stringify(activityRes));
+      // console.log('banners', JSON.stringify(banners));
+      // console.log('activityRes', JSON.stringify(activityRes));
       setDAppGroup(dAppGroupRes.data);
-      console.log('dAppGroupRes:', JSON.stringify(dAppGroupRes.data));
+      // console.log('dAppGroupRes:', JSON.stringify(dAppGroupRes.data));
 
       const noticesRes = await getNotices({
         pageNum: 1,
         pageSize: 10,
         symbol: 'eth',
       });
-      console.log('noticesRes', JSON.stringify(noticesRes));
+      // console.log('noticesRes', JSON.stringify(noticesRes));
       setNotices(noticesRes.data);
 
       const tagsRes = await getTags();
-      console.log('tagRes:',JSON.stringify(tags));
+      // console.log('tagRes:', JSON.stringify(tags));
       setTags(tagsRes.data);
     } catch (e) {}
   };
 
   const onTagPress = (tag?: string) => {
-    props?.navigation.navigate('DAppList', {params: {type: 'group',tag}});
+    props?.navigation.navigate('DAppList', { params: { type: 'group', tag } });
   };
   const onShowAll = (type: string) => {
-    props?.navigation.navigate('DAppList', {params: {type}});
+    props?.navigation.navigate('DAppList', { params: { type } });
   };
 
   const onHotPress = (params: any) => {
@@ -88,7 +104,7 @@ export const DAppScreen = (props: DAppProps) => {
   const onRecommendPress = (params: any) => {
     props?.navigation.navigate('DAppDetail', { params });
   };
-  console.log('banners.lists:',banners.lists);
+  console.log('banners.lists:', banners.lists);
 
   return (
     <SafeAreaView style={[style.container, { height: Dimensions.get('window').height - 100 }]}>
@@ -109,21 +125,21 @@ export const DAppScreen = (props: DAppProps) => {
         key={0}
         style={style.banner}
         autoplay={true}
-        pageWidth={width - 30}
+        pageWidth={width - 40}
         itemSpacings={0}
         containerMarginHorizontal={0}
         initialPage={0}
-        containerStyle={{height: 180}}
+        containerStyle={{ height: 140 }}
         allowAccessibleLayout
       >
-        {(banners.lists || []).map((v: any, i: number) => ( 
-            // <HTML source={{ html: v.content }} />
+        {(banners.lists || []).map((v: any, i: number) => (
           <Image
             source={{ uri: v.img }}
             key={i}
             style={{
-              height: 180,
-              width: width - 30,
+              height: 140,
+              width: '100%',
+              borderRadius: 12,
             }}
           />
         ))}
@@ -146,20 +162,26 @@ export const DAppScreen = (props: DAppProps) => {
           showsHorizontalScrollIndicator={false}
           bounces={false}
         >
-          {(classifyButtons || []).map((v, index) => (
-            <Button
-              icon={<Icon name={v.icon} size={18} color={'#3B28CC'} />}
-              title={v.tagDesc ?? v.name}
-              key={index}
-              onPress={() => onTagPress()}
-              titleStyle={style.scrBtnTitle}
-              buttonStyle={style.scrBtnContainer}
-            />
-          ))}
+          {(classifyButtons || []).map((v, index) => {
+            return (
+              <Button
+                icon={<IconFont name={v.icon} size={19} color={'#3B28CC'} />}
+                title={v.tagDesc ?? v.name}
+                key={index}
+                onPress={() => onTagPress()}
+                titleStyle={style.scrBtnTitle}
+                buttonStyle={style.scrBtnContainer}
+              />
+            );
+          })}
         </ScrollView>
       </View>
       <View style={{ marginTop: 20 }}>
-        <ContentHeader leftTitle={t('dApp.recommendList')} rightTitle={t('dApp.seeAll')} onRightClick={() => onShowAll('group')} />
+        <ContentHeader
+          leftTitle={t('dApp.recommendList')}
+          rightTitle={t('dApp.seeAll')}
+          onRightClick={() => onShowAll('group')}
+        />
         <ScrollView
           style={style.scrollView}
           contentContainerStyle={[style.scrollViewContentView]}
@@ -177,7 +199,11 @@ export const DAppScreen = (props: DAppProps) => {
         <View style={{ marginVertical: 20, marginHorizontal: 20, backgroundColor: theme.colors.grey5, height: 1 }} />
       </View>
       <View style={{ flex: 1 }}>
-        <ContentHeader leftTitle={t('dApp.activityHotList')} rightTitle={t('dApp.seeAll')} onRightClick={() => onShowAll('activity')} />
+        <ContentHeader
+          leftTitle={t('dApp.activityHotList')}
+          rightTitle={t('dApp.seeAll')}
+          onRightClick={() => onShowAll('activity')}
+        />
         <ScrollView contentContainerStyle={{ paddingBottom: 20, minHeight: 200 }}>
           {activity?.lists?.map((v, i) => (
             <DAppItem {...v} key={v.title + String(i)} onPress={() => onHotPress(v)} />
@@ -209,7 +235,6 @@ const ContentHeader = (props: ContentHeaderProps) => {
           children={props?.leftTitle}
           style={{
             fontSize: 16,
-            fontWeight: 'bold',
           }}
         />
       )}
@@ -304,15 +329,15 @@ const useStyles = makeStyles((theme, props: DAppProps) => {
     },
     scrBtnContainer: {
       gap: 6,
-      paddingHorizontal: 12,
+      height: 32,
       borderRadius: 25,
       justifyContent: 'flex-start',
-      backgroundColor: '#F2F3F6',
+      backgroundColor: theme?.mode === 'dark' ? '#F1F1F1' : '#F2F3F6',
     },
     scrBtnTitle: {
-      fontSize: 13,
-      fontWeight: '500',
-      color: theme.colors.black,
+      fontSize: 12,
+      lineHeight: 17,
+      color: '#333333',
     },
     recommendItem: {
       gap: 2,
@@ -320,9 +345,10 @@ const useStyles = makeStyles((theme, props: DAppProps) => {
       paddingBottom: 5,
       paddingHorizontal: 7,
       flexDirection: 'column',
-      backgroundColor: '#F2F3F6',
+      backgroundColor: theme?.mode === 'dark' ? '#F1F1F1' : '#FFFFFF',
       borderRadius: 10,
       width: 98,
+      elevation: 5,
     },
   };
 });
