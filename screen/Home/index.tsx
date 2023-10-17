@@ -8,7 +8,7 @@ import { DAppScreen } from '@screen/DApp';
 import Swap from '@screen/Swap';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { StatusBar, Text, TouchableOpacity, View, useColorScheme } from 'react-native';
+import { Image, StatusBar, Text, TouchableOpacity, View, useColorScheme } from 'react-native';
 const Screen2 = () => {
   return <Text />;
 };
@@ -82,7 +82,12 @@ const App = (props: any) => {
                   onPress={() => props.navigation.navigate('home', { tab: item.title })}
                 >
                   {/* <Icon name={item.icon} size={15} color={color} /> */}
-                  <IconFont name={item.icon} color={color} />
+                  {item.icon === 'duihuandianjiqian' ? (
+                    <IconFont name={tab !== item.title ? item.icon : `${item.icon}-active`} />
+                  ) : (
+                    <IconFont name={item.icon} color={color} />
+                  )}
+
                   <Text
                     style={{
                       ...styles.title,

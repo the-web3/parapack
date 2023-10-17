@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { ActivityIndicator, Image, View } from 'react-native';
 import { Button, Text, makeStyles } from '@rneui/themed';
 import { showToast } from '@common/utils/platform';
 // import {StackNavigationProp} from '@react-navigation/stack';
@@ -25,7 +25,13 @@ const Guide = (props: Props) => {
     <View style={styles.container}>
       <View style={{ justifyContent: 'center', alignItems: 'center' }}>
         <View style={styles.logo}>
-          <Text>LOGO</Text>
+          <Image
+            // source={BASE_URI}
+            source={require('@assets/images/guid.png')}
+            style={styles.img}
+            // containerStyle={styles.item}
+            PlaceholderContent={<ActivityIndicator />}
+          />
         </View>
       </View>
       <View style={styles.button}>
@@ -42,13 +48,13 @@ const Guide = (props: Props) => {
         <Button
           onPress={handleImportWallet}
           buttonStyle={{
-            backgroundColor: '#F1F1FF',
+            backgroundColor: 'RGBA(241, 241, 255, 1)',
             marginTop: 12,
           }}
           title={
             <View>
-              <Text style={{ textAlign: 'center' }}>导入钱包</Text>
-              <Text style={{ fontSize: 10, textAlign: 'center', marginTop: 8 }}>将已有钱包导入</Text>
+              <Text style={{ textAlign: 'center', color: '#000' }}>导入钱包</Text>
+              <Text style={{ fontSize: 10, textAlign: 'center', marginTop: 8, color: '#000' }}>将已有钱包导入</Text>
             </View>
           }
           titleStyle={{ color: 'white', flexDirection: 'column' }}
@@ -68,6 +74,10 @@ const useStyles = makeStyles((theme, props: Props) => {
       paddingLeft: 25,
       paddingRight: 25,
     },
+    img: {
+      height: 240,
+      width: 240,
+    },
     button: {
       position: 'absolute',
       left: 0,
@@ -79,9 +89,8 @@ const useStyles = makeStyles((theme, props: Props) => {
       color: '#4D6EF5',
     },
     logo: {
-      backgroundColor: '#AEAEAE',
-      height: 180,
-      width: 180,
+      height: 240,
+      width: 240,
       justifyContent: 'center',
       alignItems: 'center',
       marginTop: 100,

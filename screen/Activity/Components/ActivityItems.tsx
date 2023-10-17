@@ -51,7 +51,8 @@ export const ActivityItems = ({ item, navigation }: ActivityItemsProps) => {
 
 const useStyles = makeStyles((theme) => ({
   card: {
-    backgroundColor: theme.colors.white,
+    // backgroundColor: theme.colors.white,
+    backgroundColor: theme?.mode === 'dark' ? '#F1F1F1' : theme.colors.white,
     borderRadius: 8,
     paddingHorizontal: 15,
     paddingVertical: 7,
@@ -83,7 +84,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'space-between',
   },
   title: {
-    color: theme.colors.black,
+    color: '#333333',
     flex: 1,
     marginRight: 16,
   },

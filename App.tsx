@@ -56,6 +56,7 @@ const App = () => {
       //   symbol: 'USDT',
       // });
       const res = await getSymbolSupport({});
+      console.log(11111, res);
       // const res = await getAddressBalance({
       //   address: '0xA3AFA38476cF8b967e712dD878376030f52a841A',
       //   chain: 'Ethereum',

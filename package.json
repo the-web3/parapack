@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "postinstall": "rn-nodeify --install buffer,events,process,stream,util,inherits,fs,path --hack --yarn",
+    "postinstall": "rn-nodeify --install buffer,events,process,stream,util,inherits,fs,path,url --hack --yarn",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "lint": "eslint .",
@@ -59,6 +59,7 @@
     "react-native-picker-select": "^8.0.4",
     "react-native-qrcode-scanner": "^1.5.5",
     "react-native-qrcode-svg": "^6.2.0",
+    "react-native-randombytes": "^3.6.1",
     "react-native-reanimated": "^3.3.0",
     "react-native-render-html": "^6.3.4",
     "react-native-root-toast": "^3.4.1",
@@ -72,9 +73,10 @@
     "react-native-view-shot": "^3.7.0",
     "react-native-webview": "^13.2.2",
     "readable-stream": "^4.4.0",
-    "savourlabs-wallet-sdk": "^2.0.2",
+    "savourlabs-wallet-sdk": "2.0.3",
     "stream": "^0.0.2",
     "stream-browserify": "^3.0.0",
+    "url": "~0.10.1",
     "util": "~0.10.3",
     "uuid": "^9.0.0",
     "web3": "^4.0.3"
