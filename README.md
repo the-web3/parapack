@@ -15,7 +15,8 @@ Homebrew 3.6.15
 2. node
 
 ```
-brew install node
+brew install node (MacOS)
+sudo apt install node (Ubuntu)
 
 <!-- check if success -->
 $ node --version
@@ -27,11 +28,17 @@ $ npm --version
 3. Watchman
 
 ```
-brew install watchman
+brew install watchman (MacOS)
+choco install watchman (Windows)
 
-<!-- check if success -->
+<!-- check if success --> (MacOS)
 $ watchman --version
 2023.02.20.00
+
+<!-- check if success --> (Windows)
+$ watchman --version
+2023.10.08.00
+
 ```
 
 ### Android need install
@@ -44,7 +51,7 @@ $ brew install --cask zulu11
 
 <!-- check if success -->
 $ java --version
-java 16.0.2 2021-07-20 
+java 16.0.2 2021-07-20
 $ javac --version
 javac 16.0.2
 ```
@@ -99,7 +106,7 @@ npx react-native run-ios
 - android
 
 ```
- npx react-native run-android 
+ npx react-native run-android
 
 ```
 
@@ -118,7 +125,7 @@ go to android folder,exec
 cd android
 ./gradlew clean
 cd ../
-npx react-native build-android --mode=release  
+npx react-native build-android --mode=release
 
 ```
 
