@@ -1,0 +1,35 @@
+/* tslint:disable */
+/* eslint-disable */
+
+import React, { FunctionComponent } from 'react';
+import { ViewProps } from 'react-native';
+import { Svg, GProps, Path } from 'react-native-svg';
+import { getIconColor } from './helper';
+
+interface Props extends GProps, ViewProps {
+  size?: number;
+  color?: string | string[];
+}
+
+let IconEyeOpen: FunctionComponent<Props> = ({ size, color, ...rest }) => {
+  return (
+    <Svg viewBox="0 0 1592 1024" width={size} height={size} {...rest}>
+      <Path
+        d="M1110.698667 789.959111c-94.094222 51.2-195.356444 87.722667-311.068445 87.722667C502.897778 877.681778 242.346667 614.4 155.648 512c57.799111-65.877333 202.524444-219.477333 390.712889-299.918222L430.535111 102.4C242.460444 204.8 104.903111 351.118222 32.540444 431.559111c-43.349333 51.2-43.349333 116.963556 0 168.163556C148.366222 724.081778 437.816889 1024 799.630222 1024c159.175111 0 296.618667-58.481778 419.612445-131.640889l-108.544-102.4z m455.907555-365.681778C1450.666667 299.918222 1161.329778 0 799.630222 0c-65.194667 0-130.275556 7.281778-188.188444 29.240889L734.435556 153.6c21.731556-7.281778 43.463111-7.281778 65.194666-7.281778 296.618667 0 557.169778 263.281778 643.982222 365.681778-36.181333 43.918222-101.262222 109.681778-180.906666 175.559111l101.262222 102.4c86.812444-73.159111 159.288889-146.318222 195.356444-197.518222 43.463111-43.918222 43.463111-116.963556 7.281778-168.163556z"
+        fill={getIconColor(color, 0, '#A3ADFF')}
+      />
+      <Path
+        d="M796.444444 455.111111m-227.555555 0a227.555556 227.555556 0 1 0 455.111111 0 227.555556 227.555556 0 1 0-455.111111 0Z"
+        fill={getIconColor(color, 1, '#A3ADFF')}
+      />
+    </Svg>
+  );
+};
+
+IconEyeOpen.defaultProps = {
+  size: 18,
+};
+
+IconEyeOpen = React.memo ? React.memo(IconEyeOpen) : IconEyeOpen;
+
+export default IconEyeOpen;

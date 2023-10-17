@@ -144,7 +144,8 @@ const useStyles = makeStyles((theme: CustomTheme<CustomColors>) => {
     main: {
       padding: 24,
       flex: 1,
-      backgroundColor: theme.colors.grey,
+      // backgroundColor: theme.colors.grey,
+      backgroundColor: theme?.mode === 'dark' ? theme.colors.white : '#F5F5F5',
     },
     searchBar: {
       backgroundColor: theme.colors.white,
@@ -173,7 +174,8 @@ const useStyles = makeStyles((theme: CustomTheme<CustomColors>) => {
       lineHeight: 25,
     },
     swapCard: {
-      backgroundColor: theme.colors.white,
+      // backgroundColor: theme.colors.white,
+      backgroundColor: theme?.mode === 'dark' ? '#F1F1F1' : theme.colors.white,
       borderRadius: 12,
       marginBottom: 20,
       paddingHorizontal: 24,
@@ -186,11 +188,13 @@ const useStyles = makeStyles((theme: CustomTheme<CustomColors>) => {
       marginTop: 12,
     },
     sell: {
-      color: theme.colors.grey2,
+      // color: theme.colors.grey2,
+      color: '#161414',
       fontSize: 11,
     },
     balance: {
-      color: theme.colors.grey0,
+      // color: theme.colors.grey0,
+      color: '#1F1D1D',
       fontSize: 11,
     },
     chain: {

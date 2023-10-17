@@ -18,7 +18,7 @@ const Activity = ({ navigation }) => {
         status: 1,
         // symbol,
       });
-      console.log(1111111, JSON.stringify(activityRes));
+      // console.log(1111111, JSON.stringify(activityRes));
       setActivity(activityRes.data);
     } catch (e) {}
   };
@@ -82,7 +82,9 @@ const useStyles = makeStyles((theme) => {
     main: {
       paddingHorizontal: 15,
       paddingVertical: 16,
-      backgroundColor: theme.colors.grey5,
+      // backgroundColor: theme.colors.grey5,
+      // backgroundColor: theme?.mode === 'dark' ? '#F1F1F1' : '#F5F5F5',
+      backgroundColor: theme?.mode === 'dark' ? theme.colors.white : '#F5F5F5',
       flex: 1,
     },
   };

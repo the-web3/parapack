@@ -738,7 +738,7 @@ export const addToken = async (params: {
         });
         if (account) {
             try {
-                const { address, publicKey, privateKey } = JSON.parse(account);
+                const { address, publicKey, privateKey } = typeof account === 'string' ? JSON.parse(account) : account;
                 const submitObj = {
                     device_id,
                     wallet_uuid,

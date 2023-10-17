@@ -1,13 +1,20 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { SafeAreaView, ScrollView, TouchableOpacity, View, Clipboard } from 'react-native';
-import { Button, Input, Text, makeStyles } from '@rneui/themed';
+import { Button, Input, Text, makeStyles, useTheme } from '@rneui/themed';
 import Layout from '@components/Layout';
 import { rules } from '@common/utils/validation';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { showToast } from '@common/utils/platform';
 import { createTest, getTableInfo } from '@common/wallet';
-import { CreateMnemonic, DecodeMnemonic, EncodeMnemonic } from 'savourlabs-wallet-sdk/wallet';
+import {
+  CreateAddress,
+  CreateMnemonic,
+  DecodeMnemonic,
+  EncodeMnemonic,
+  MnemonicToSeed,
+  SignTransaction,
+} from 'savourlabs-wallet-sdk/wallet';
 import { getData, storeData } from '@common/utils/storage';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { executeQuery } from '@common/utils/sqlite';
@@ -23,12 +30,48 @@ const Test = (props: Props) => {
   const [uniqueId, setUniqueId] = useState('');
   const [encodeMnemonic, setEncodeMnemonic] = useState('');
   const [symbolSupport, setSymbolSupport] = useState('');
+  const { theme }: { theme: CustomTheme<CustomColors> } = useTheme();
+  console.log('Layout', theme.colors);
   return (
     <Layout>
       <SafeAreaView>
         <ScrollView>
           <Button
             onPress={async () => {
+              // const seed = MnemonicToSeed({
+              //   mnemonic: 'pet apology neither maximum return surge cigar bridge sudden twelve sea cycle',
+              //   password: '',
+              // });
+              // let account = CreateAddress({
+              //   chain: 'btc',
+              //   seedHex: seed.toString('hex'),
+              //   index: 0,
+              //   receiveOrChange: 0,
+              //   network: 'mainnet',
+              // });
+              // console.log(111111, account);
+              // const data = {
+              //   inputs: [
+              //     {
+              //       address: '1H1oAqmdfTNECrrHFAJ4AhbTUyPcQjrf72',
+              //       txid: '209706b97a9aed047df158bf57cfbdad94a5e9bd9ac5261034448ec4590bab8f',
+              //       amount: 100000000,
+              //       vout: 0,
+              //     },
+              //   ],
+              //   outputs: [
+              //     {
+              //       amount: 100000000,
+              //       address: '1H1oAqmdfTNECrrHFAJ4AhbTUyPcQjrf72',
+              //     },
+              //   ],
+              // };
+              // const rawHex = SignTransaction('btc', {
+              //   privateKey: '60164bec9512d004af7f71e7ed868c8e9ac2cc6234d8b682037ec80547595f2e',
+              //   signObj: data,
+              //   network: 'mainnet',
+              // });
+              // console.log(rawHex);
               props?.navigation?.navigate('guide');
             }}
           >

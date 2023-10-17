@@ -19,7 +19,7 @@ const StartBackup = ({ navigation, route }: any) => {
           <View>
             <Image
               // source={BASE_URI}
-              source={require('../../../assets/images/empty.png')}
+              source={require('@assets/images/empty.png')}
               style={styles.img}
               // containerStyle={styles.item}
               PlaceholderContent={<ActivityIndicator />}

@@ -1,5 +1,81 @@
 # parapack
 
+## setup
+
+1. Homebrew
+
+```
+ /bin/zsh -c "$(curl -fsSL <https://gitee.com/cunkai/HomebrewCN/raw/master/Homebrew.sh>)"
+
+<!-- check if success -->
+$ brew --version
+Homebrew 3.6.15
+```
+
+2. node
+
+```
+brew install node
+
+<!-- check if success -->
+$ node --version
+v19.7.0
+$ npm --version
+9.5.0
+```
+
+3. Watchman
+
+```
+brew install watchman
+
+<!-- check if success -->
+$ watchman --version
+2023.02.20.00
+```
+
+### Android need install
+
+1. Java Development Kit（JDK
+
+```
+$ brew tap homebrew/cask-versions
+$ brew install --cask zulu11
+
+<!-- check if success -->
+$ java --version
+java 16.0.2 2021-07-20 
+$ javac --version
+javac 16.0.2
+```
+
+2. Android Studio
+
+3. Install Android Emulator
+
+### IOS need install
+
+1. The Ruby version that React Native 0.71 relies on is 2.7.6
+
+```
+brew install rbenv ruby-build
+rbenv init
+echo 'eval "$(rbenv init - zsh)"' >> ~/.zshrc
+rbenv install 2.7.6
+rbenv global 2.7.6
+```
+
+2. Xcode
+3. CocoaPods
+
+```
+sudo gem install cocoapods
+
+<!-- check if success -->
+pod --version
+1.11.3
+```
+
 when you install new package need go ios folder execute
 
 ```

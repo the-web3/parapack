@@ -1,7 +1,6 @@
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import { makeStyles } from '@rneui/themed';
-import HTML from 'react-native-render-html';
 
 interface DAppItemProps {
   avatar: string;
