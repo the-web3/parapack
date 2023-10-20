@@ -62,6 +62,7 @@ export const DAppDetail = (props: DAppDetailParam) => {
   });
   // const [notices, setNotices] = useState<Record<string, any>>({});
   const [dAppProps] = useState(props?.route?.params?.params);
+  console.log(11111, dAppProps);
 
   useEffect(() => {
     initKLine();
@@ -80,7 +81,7 @@ export const DAppDetail = (props: DAppDetailParam) => {
   const initKLine = useCallback(async () => {
     //TODO 接口不通
     const res = await getSymbolKline({
-      symbol: 'ETH',
+      symbol: dAppProps?.symbol,
     });
     if (res.data) {
       const currentKLine = (res.data.kline || []).filter((item, index) => index < 10);
@@ -203,7 +204,7 @@ export const DAppDetail = (props: DAppDetailParam) => {
               <Text style={{ color: '#25AC4E', fontSize: 12 }}>+5.31%</Text>
             </View>
           </View>
-          <Text style={{ color: '#8C8C8C', fontSize: 10 }}>ETH/USDT</Text>
+          <Text style={{ color: '#8C8C8C', fontSize: 10 }}>{dAppProps?.symbol}/USDT</Text>
           <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={onBuyPress}>
             <Text style={{ color: '#3B28CC', fontWeight: '500' }} children="去兑换 >" />
           </TouchableOpacity>

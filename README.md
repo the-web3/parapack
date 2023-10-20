@@ -137,6 +137,21 @@ change iconfont.json's symbol_url, exec shell
 npx iconfont-rn
 ```
 
+example the name no need have icon start
+
+```
+  <IconFont name="a-Group217" />
+```
+
+### other icon
+
+<https://oblador.github.io/react-native-vector-icons/>
+
+```
+import Icon from 'react-native-vector-icons/AntDesign';
+<Icon name="caretdown" style={{ marginLeft: 8 }} />
+```
+
 ## savourlabs-wallet-sdk/wallet
 
 when use `savourlabs-wallet-sdk/wallet` need chain is our symbol.toLowerCase()

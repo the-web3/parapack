@@ -82,9 +82,7 @@ const useStyles = makeStyles((theme) => {
     main: {
       paddingHorizontal: 15,
       paddingVertical: 16,
-      // backgroundColor: theme.colors.grey5,
-      // backgroundColor: theme?.mode === 'dark' ? '#F1F1F1' : '#F5F5F5',
-      backgroundColor: theme?.mode === 'dark' ? theme.colors.white : '#F5F5F5',
+      backgroundColor: theme.colors?.backgroundGrey,
       flex: 1,
     },
   };
