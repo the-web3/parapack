@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { View, ScrollView, Dimensions, Image, SafeAreaView, useWindowDimensions } from 'react-native';
+import {
+  View,
+  ScrollView,
+  Dimensions,
+  Image,
+  SafeAreaView,
+  useWindowDimensions,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 import { makeStyles, useTheme } from '@rneui/themed';
 import Icon from 'react-native-vector-icons/AntDesign';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
@@ -53,6 +62,21 @@ export const DAppScreen = (props: DAppProps) => {
     rqDatas();
   }, []);
 
+  const renderGroupedItems = (list) => {
+    const groupedItems = [];
+    for (let i = 0; i < list.length; i += 2) {
+      groupedItems.push(
+        <View style={{ flexDirection: 'column' }} key={i}>
+          <DAppItem {...list[i]} key={list[i].title} onPress={() => onHotPress(list[i])} />
+          {list[i + 1] ? (
+            <DAppItem {...list[i + 1]} key={list[i + 1].title} onPress={() => onHotPress(list[i + 1])} />
+          ) : null}
+        </View>
+      );
+    }
+    return groupedItems;
+  };
+
   const rqDatas = async () => {
     try {
       const banners = await getBanners();
@@ -104,6 +128,7 @@ export const DAppScreen = (props: DAppProps) => {
   const onRecommendPress = (params: any) => {
     props?.navigation.navigate('DAppDetail', { params });
   };
+
   console.log('banners.lists:', banners.lists);
 
   return (
@@ -203,7 +228,7 @@ export const DAppScreen = (props: DAppProps) => {
           </ScrollView>
           <View style={{ marginVertical: 20, marginHorizontal: 20, backgroundColor: theme.colors.grey5, height: 1 }} />
         </View>
-        <View style={{ flex: 1 }}>
+        {/* <View style={{ flex: 1 }}>
           <ContentHeader
             leftTitle={t('dApp.activityHotList')}
             rightTitle={t('dApp.seeAll')}
@@ -213,11 +238,51 @@ export const DAppScreen = (props: DAppProps) => {
           {activity?.lists?.map((v, i) => (
             <DAppItem {...v} key={v.title + String(i)} onPress={() => onHotPress(v)} />
           ))}
+        </View> */}
+        {/* news news news news news */}
+        <View style={{ ...styles.firstContainer, marginBottom: 20 }}>
+          <ContentHeader
+            leftTitle={t('dApp.activityHotList')}
+            rightTitle={t('dApp.seeAll')}
+            onRightClick={() => onShowAll('activity')}
+          />
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {renderGroupedItems(activity?.lists || [])}
+          </ScrollView>
+        </View>
+        <View style={{ flex: 1 }}>
+          <TouchableOpacity onPress={() => onShowAll('activity')}>
+            <ContentHeader leftTitle={t('dApp.developerapplication')} onRightClick={() => onShowAll('activity')} />
+          </TouchableOpacity>
+        </View>
+        <View style={{ flex: 1 }}>
+          <TouchableOpacity onPress={() => onShowAll('activity')}>
+            <ContentHeader leftTitle={t('dApp.reportquestion')} onRightClick={() => onShowAll('activity')} />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.container}>
+          <TouchableOpacity onPress={() => onShowAll('DeveloperOnboarding')}>
+            <ContentHeader leftTitle={t('dApp.DeveloperOnboarding')} onRightClick={() => onShowAll('activity')} />
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  firstContainer: {
+    flex: 1,
+    flexShrink: 1,
+    width: '90%',
+    height: '90%',
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 
 interface ContentHeaderProps {
   leftTitle?: string | null | undefined;
