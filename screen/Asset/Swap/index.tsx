@@ -27,6 +27,7 @@ const Swap = (props: Props) => {
     props?.navigation.navigate('startBackup');
   };
   const styles = useStyles(props);
+
   return (
     <Layout>
       <SafeAreaView>
@@ -139,14 +140,12 @@ const Swap = (props: Props) => {
                   <TextInput
                     keyboardType="numeric"
                     style={{
-                      // color: '#C8C8C8',
                       fontSize: 26,
                       lineHeight: 30,
                       fontWeight: 'bold',
                       minWidth: 100,
                       textAlign: 'right',
                     }}
-                    // placeholderTextColor={'gray'}
                     onChangeText={(buy) => {
                       setMoney((prev) => {
                         return {
@@ -158,16 +157,6 @@ const Swap = (props: Props) => {
                     placeholder="0.00"
                     value={money.buy}
                   />
-                  {/* <Text
-                  style={{
-                    color: '#C8C8C8',
-                    fontSize: 26,
-                    lineHeight: 30,
-                    fontWeight: 'bold',
-                  }}
-                >
-                  0.00
-                </Text> */}
                 </View>
               </View>
             </View>
@@ -198,7 +187,6 @@ const Swap = (props: Props) => {
 };
 
 const useStyles = makeStyles((theme, props: Props) => {
-  // console.log(11111, theme.colors, props);
   return {};
 });
 export default Swap;

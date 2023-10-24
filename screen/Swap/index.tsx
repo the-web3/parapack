@@ -45,7 +45,7 @@ const Swap = (props: Props) => {
               style={{
                 ...styles.chain,
                 borderBottomWidth: 1,
-                borderColor: 'rgba(22, 20, 20, 0.45)',
+                borderColor: theme.colors.grey0,
                 borderStyle: 'dashed',
               }}
             >
@@ -66,7 +66,7 @@ const Swap = (props: Props) => {
                       };
                     });
                   }}
-                  placeholder="Enter text"
+                  placeholder="0.00"
                   value={money.sell}
                 />
               </View>
@@ -107,7 +107,7 @@ const Swap = (props: Props) => {
                       };
                     });
                   }}
-                  placeholder="Enter text"
+                  placeholder="0.00"
                   value={money.sell}
                 />
               </View>
@@ -186,13 +186,13 @@ const useStyles = makeStyles((theme: CustomTheme<CustomColors>) => {
       marginTop: 12,
     },
     sell: {
-      // color: theme.colors.grey2,
-      color: '#161414',
+      color: theme.colors.grey2,
+      // color: '#161414',
       fontSize: 11,
     },
     balance: {
-      // color: theme.colors.grey0,
-      color: '#1F1D1D',
+      color: theme.colors.grey0,
+      // color: '#1F1D1D',
       fontSize: 11,
     },
     chain: {

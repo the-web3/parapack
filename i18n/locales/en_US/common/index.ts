@@ -3,6 +3,6 @@ export default {
   ecology: 'ecology',
   activity: 'activity',
   swap: 'swap',
-  chat: 'chat',
+  video: 'video',
   asset: 'asset',
 };

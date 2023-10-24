@@ -26,8 +26,8 @@ const BAR = [
     title: 'swap',
   },
   {
-    icon: 'liaotiandianjiqian',
-    title: 'chat',
+    icon: 'a-bianzu4',
+    title: 'video',
   },
   {
     icon: 'zichandianjiqian',
@@ -50,7 +50,7 @@ const App = (props: any) => {
         return <Activity {...prop} />;
       case 'swap':
         return <Swap {...prop} />;
-      case 'chat':
+      case 'video':
         return <Test {...prop} />;
       case 'asset':
         return <Asset {...prop} />;
