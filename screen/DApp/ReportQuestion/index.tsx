@@ -1,94 +1,94 @@
 import React from 'react';
-import { View, TextInput, StyleSheet, TouchableOpacity, Text } from 'react-native';
-
-const Box = () => {
-  return <View style={styles.box} />;
-};
-
-type UploadProps = {
-  onUpload: () => void;
-};
-
-const Upload = ({ onUpload }: UploadProps) => {
-  return (
-    <View style={styles.uploadBox}>
-      <TouchableOpacity style={styles.uploadButton} onPress={onUpload}>
-        <Text style={styles.uploadButtonText}>Upload</Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
+import { View, Text, TextInput } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome'; // You can choose any icon library you prefer
 
 const ReportQuestion = () => {
-  const handleUpload = () => {
-    alert('File upload triggered!');
-  };
-
   return (
-    <View style={styles.container}>
-      <View style={styles.boxContainer}>
-        {[...Array(3)].map((_, index) => (
-          <Box key={index} />
-        ))}
-      </View>
-      <View style={[styles.boxContainer, { justifyContent: 'space-between' }]}>
-        {[...Array(2)].map((_, index) => (
-          <Box key={index + 3} />
-        ))}
+    <View style={{ flex: 1, padding: 20 }}>
+      {/* Top 3 Boxes with Icons */}
+      <View style={{ flexDirection: 'row', marginBottom: 20 }}>
+        <View style={{ ...squareBoxStyles, marginRight: 10 }}>
+          <Icon name="user" size={30} />
+          <Text>Name 1</Text>
+        </View>
+        <View style={{ ...squareBoxStyles, marginRight: 10 }}>
+          <Icon name="user" size={30} />
+          <Text>Name 2</Text>
+        </View>
+        <View style={{ ...squareBoxStyles, marginRight: 10 }}>
+          <Icon name="user" size={30} />
+          <Text>Name 3</Text>
+        </View>
       </View>
 
-      <Upload onUpload={handleUpload} />
-      <TextInput style={styles.textInput} placeholder="Enter text..." />
+      {/* Two Square Boxes with Icons */}
+      <View style={{ flexDirection: 'row', marginBottom: 20 }}>
+        <View style={{ ...squareBoxStyles, marginRight: 10 }}>
+          <Icon name="star" size={30} />
+          <Text>Icon 1</Text>
+        </View>
+        <View style={{ ...squareBoxStyles, marginLeft: 10 }}>
+          <Icon name="heart" size={30} />
+          <Text>Icon 2</Text>
+        </View>
+      </View>
+
+      <View>
+        <Text style={{ fontWeight: 'bold', fontSize: 20, marginBottom: 20 }}>开发者申请</Text>
+      </View>
+
+      {/* Review Line */}
+      <View style={{ width: 40, height: 40, flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
+        <View style={plusBoxStyles}>
+          <Text>+</Text>
+        </View>
+        <Text>Review</Text>
+      </View>
+
+      {/* Content Text Input */}
+      <View style={contentInputStyles}>
+        <TextInput placeholder="Enter your content here" multiline />
+      </View>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    justifyContent: 'space-between',
-  },
-  boxContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  box: {
-    flex: 1,
-    backgroundColor: 'gray',
-    marginHorizontal: 5,
-    borderRadius: 10,
-    height: 60,
-  },
-  uploadBox: {
-    height: 60,
-    borderRadius: 10,
-    backgroundColor: 'gray',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  uploadButton: {
-    width: 50,
-    height: 50,
-    backgroundColor: 'white',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 25,
-  },
-  uploadButtonText: {
-    color: 'gray',
-  },
-  textInput: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    paddingHorizontal: 10,
-  },
-});
+// Rest of the styles remain the same as in the previous response
+const boxStyles = {
+  width: '30%',
+  height: 50,
+  backgroundColor: 'lightgray',
+  justifyContent: 'center',
+  alignItems: 'center',
+};
 
+const squareBoxStyles = {
+  width: '30%',
+  aspectRatio: 1, // Makes it a square
+  backgroundColor: 'lightgray',
+  justifyContent: 'center',
+  alignItems: 'center',
+};
+
+const lineStyles = {
+  flexDirection: 'row',
+  alignItems: 'center',
+  marginBottom: 20,
+};
+
+const plusBoxStyles = {
+  width: 30,
+  height: 30,
+  backgroundColor: 'lightgray',
+  justifyContent: 'center',
+  alignItems: 'center',
+};
+
+const contentInputStyles = {
+  borderColor: 'lightgray',
+  borderWidth: 1,
+  borderRadius: 5,
+  paddingHorizontal: 10,
+  paddingVertical: 5,
+};
 export default ReportQuestion;
-function alert(arg0: string) {
-  throw new Error('Function not implemented.');
-}
