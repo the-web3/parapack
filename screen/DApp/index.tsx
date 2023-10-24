@@ -19,6 +19,7 @@ import { Button, Input, Text } from '@rneui/themed';
 import { getActivity } from '@api/home';
 import { Carousel } from 'react-native-ui-lib';
 import IconFont from '@assets/iconfont';
+
 interface DAppProps {
   navigation?: any;
   mode?: string;
@@ -129,6 +130,17 @@ export const DAppScreen = (props: DAppProps) => {
     props?.navigation.navigate('DAppDetail', { params });
   };
 
+  const onDevloperApplication = () => {
+    props?.navigation.navigate('DevloperApplication');
+  };
+
+  const onReport = () => {
+    props?.navigation.navigate('ReportQuestion');
+  };
+
+  const onDeveloperOnboarding = (tag?: string) => {
+    props?.navigation.navigate('DeveloperOnboarding');
+  };
   console.log('banners.lists:', banners.lists);
 
   return (
@@ -250,19 +262,32 @@ export const DAppScreen = (props: DAppProps) => {
             {renderGroupedItems(activity?.lists || [])}
           </ScrollView>
         </View>
-        <View style={{ flex: 1 }}>
-          <TouchableOpacity onPress={() => onShowAll('activity')}>
-            <ContentHeader leftTitle={t('dApp.developerapplication')} onRightClick={() => onShowAll('activity')} />
-          </TouchableOpacity>
-        </View>
-        <View style={{ flex: 1 }}>
-          <TouchableOpacity onPress={() => onShowAll('activity')}>
-            <ContentHeader leftTitle={t('dApp.reportquestion')} onRightClick={() => onShowAll('activity')} />
-          </TouchableOpacity>
-        </View>
+
         <View style={styles.container}>
-          <TouchableOpacity onPress={() => onShowAll('DeveloperOnboarding')}>
-            <ContentHeader leftTitle={t('dApp.DeveloperOnboarding')} onRightClick={() => onShowAll('activity')} />
+          <Text style={styles.buttonText}>更多</Text>
+        </View>
+
+        <View style={styles.container}>
+          <TouchableOpacity onPress={() => onShowAll('DevloperApplication')}>
+            <Text style={styles.buttonTexts}>关于 ParaPack</Text>
+          </TouchableOpacity>
+        </View>
+        {/* small below the parapack */}
+        <View style={styles.container}>
+          <TouchableOpacity onPress={() => onReport()}>
+            <Text style={styles.buttonTexts}>{t('dApp.reportquestion')}</Text>
+          </TouchableOpacity>
+        </View>
+        {/* longest sentence */}
+        <View style={styles.container}>
+          <TouchableOpacity onPress={() => onDeveloperOnboarding('DeveloperOnboarding')}>
+            <Text style={styles.buttonTexts}>{t('dApp.DeveloperOnboarding')}</Text>
+          </TouchableOpacity>
+        </View>
+        {/* given button with color */}
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', width: '100%' }}>
+          <TouchableOpacity onPress={() => onDevloperApplication()}>
+            <Text style={styles.buttonsText}>{t('dApp.developerapplication')} </Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -280,7 +305,32 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'flex-start',
+  },
+  buttonText: {
+    backgroundColor: 'transparent',
+    color: 'white',
+    padding: 10,
+    borderRadius: 5,
+    textAlign: 'center',
+    fontSize: 16,
+  },
+  buttonsText: {
+    backgroundColor: '#e0e0e0',
+    color: 'blue',
+    padding: 10,
+    borderRadius: 5,
+    textAlign: 'center',
+    fontSize: 16,
+  },
+  buttonTexts: {
+    backgroundColor: 'transparent',
+    color: 'blue',
+    padding: 10,
+    borderRadius: 5,
+    textAlign: 'center',
+    fontSize: 16,
+    marginBottom: 10,
   },
 });
 
