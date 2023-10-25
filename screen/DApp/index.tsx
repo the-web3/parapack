@@ -141,6 +141,10 @@ export const DAppScreen = (props: DAppProps) => {
   const onDeveloperOnboarding = (tag?: string) => {
     props?.navigation.navigate('DeveloperOnboarding');
   };
+
+  const onParapack = () => {
+    props?.navigation.navigate('Parapack');
+  };
   console.log('banners.lists:', banners.lists);
 
   return (
@@ -268,7 +272,7 @@ export const DAppScreen = (props: DAppProps) => {
         </View>
 
         <View style={styles.container}>
-          <TouchableOpacity onPress={() => onShowAll('DevloperApplication')}>
+          <TouchableOpacity onPress={() => onParapack('Parapack')}>
             <Text style={styles.buttonTexts}>关于 ParaPack</Text>
           </TouchableOpacity>
         </View>
