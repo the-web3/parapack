@@ -1,8 +1,18 @@
 import React from 'react';
-import { ScrollView, Text, TextInput, StyleSheet, Appearance, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { ScrollView, Text, TextInput, StyleSheet, Appearance, View, TouchableOpacity } from 'react-native';
 import { Button } from 'react-native-ui-lib';
+interface DAppProps {
+  navigation?: any;
+  mode?: string;
+}
 
-const DeveloperApplication = () => {
+const DeveloperApplication = (props: DAppProps) => {
+  const { t } = useTranslation();
+  const onConfirm = () => {
+    props?.navigation.navigate('SubmitScreen');
+  };
+
   const colorScheme = Appearance.getColorScheme();
   const isDarkMode = colorScheme === 'dark';
 
@@ -111,7 +121,9 @@ const DeveloperApplication = () => {
       <Text style={styles.labels}>*需签署免责声明及协议（平台免责，且有权</Text>
 
       <View style={{ paddingBottom: 50 }}>
-        <Button label="提交申请" />
+        <Button onPress={() => onConfirm()}>
+          <Text>{t('dApp.submit')} </Text>
+        </Button>
       </View>
     </ScrollView>
   );
