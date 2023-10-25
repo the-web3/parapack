@@ -5,6 +5,7 @@ import DeveloperOnboarding from '@screen/DApp/DeveloperOnboarding';
 import DevloperApplication from '@screen/DApp/DevloperApplication';
 import ReportQuestion from '@screen/DApp/ReportQuestion';
 import SubmitScreen from '@screen/DApp/Submit';
+import Review from '@screen/DApp/Review';
 
 // Just a simple option please optimize
 const _getOptions = (title: string) => {
@@ -49,6 +50,11 @@ const menus = [
     name: 'SubmitScreen',
     options: _getOptions(''),
     component: SubmitScreen,
+  },
+  {
+    name: 'Review',
+    options: _getOptions(''),
+    component: Review,
   },
 ];
 
