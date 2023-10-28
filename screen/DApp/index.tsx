@@ -155,9 +155,14 @@ export const DAppScreen = (props: DAppProps) => {
   const navigation = useNavigation();
   return (
     <SafeAreaView style={[style.container, { height: Dimensions.get('window').height - 100 }]}>
+      {/* ------------------------ */}
       <View style={style.searchBar}>
+        <TouchableOpacity>
+          <IconFont name="a-logopeise" style={{ marginRight: 35, marginTop: 11 }} />
+        </TouchableOpacity>
+
         <Input
-          containerStyle={{ marginLeft: -25 }}
+          containerStyle={{ marginLeft: -50, marginTop: 11 }}
           inputContainerStyle={style.inputContainer}
           errorProps={{ display: 'none' }}
           inputStyle={{
@@ -166,8 +171,11 @@ export const DAppScreen = (props: DAppProps) => {
           leftIcon={<Icon name="search1" />}
           placeholder="输入Dapp网站"
         />
-        <IconFont name="a-31-saoma" style={{ marginLeft: 5 }} />
+        <TouchableOpacity>
+          <IconFont name="a-31-saoma" style={{ marginLeft: -18, marginTop: 11 }} />
+        </TouchableOpacity>
       </View>
+      {/* --------------------- */}
       <ScrollView contentContainerStyle={{ paddingBottom: 20, minHeight: 200 }}>
         <Carousel
           key={0}
@@ -253,7 +261,7 @@ export const DAppScreen = (props: DAppProps) => {
           </ScrollView>
           <View style={{ marginVertical: 20, marginHorizontal: 20, backgroundColor: theme.colors.grey5, height: 1 }} />
         </View>
-        {/* <View style={{ flex: 1 }}>
+        <View style={{ flex: 1 }}>
           <ContentHeader
             leftTitle={t('dApp.activityHotList')}
             rightTitle={t('dApp.seeAll')}
@@ -263,9 +271,10 @@ export const DAppScreen = (props: DAppProps) => {
           {activity?.lists?.map((v, i) => (
             <DAppItem {...v} key={v.title + String(i)} onPress={() => onHotPress(v)} />
           ))}
-        </View> */}
+        </View>
         {/* news news news news news */}
-        <View style={{ ...styles.firstContainer, marginBottom: 20 }}>
+
+        {/* <View style={{ ...styles.firstContainer, marginBottom: 20 }}>
           <ContentHeader
             leftTitle={t('dApp.activityHotList')}
             rightTitle={t('dApp.seeAll')}
@@ -274,7 +283,7 @@ export const DAppScreen = (props: DAppProps) => {
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             {renderGroupedItems(activity?.lists || [])}
           </ScrollView>
-        </View>
+        </View> */}
 
         <View style={styles.container}>
           <Text style={styles.buttonText}>更多</Text>
@@ -297,10 +306,16 @@ export const DAppScreen = (props: DAppProps) => {
             <Text style={styles.buttonTexts}>{t('dApp.DeveloperOnboarding')}</Text>
           </TouchableOpacity>
         </View>
-        {/* given button with color */}
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', width: '100%' }}>
-          <TouchableOpacity onPress={() => onDevloperApplication()}>
-            <Text style={styles.buttonsText}>{t('dApp.developerapplication')} </Text>
+        <View style={styles.row}>
+          <TouchableOpacity style={styles.button} onPress={() => onDevloperApplication()}>
+            <Text style={styles.buttonText}>{t('dApp.developerapplication')} </Text>
+          </TouchableOpacity>
+        </View>
+        <View style={[styles.container, { marginTop: 20 }]}>
+          <TouchableOpacity onPress={() => onDeveloperOnboarding('DeveloperOnboarding')}>
+            <Text style={styles.buttonTexts}>
+              Terms and Regulation <Text style={styles.buttonTexts}>{'>'}</Text>
+            </Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -315,22 +330,46 @@ const styles = StyleSheet.create({
     width: '90%',
     height: '90%',
   },
+
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  button: {
+    borderRadius: 10,
+    padding: 10,
+    backgroundColor: '#f2f3f6',
+    width: 350,
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'flex-start',
+    marginLeft: 20,
+  },
+  leftButton: {
+    marginRight: 10,
+  },
+  rightButton: {
+    marginLeft: 10,
+  },
+  containers: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   buttonText: {
     backgroundColor: 'transparent',
-    color: 'white',
     padding: 10,
+    color: '#6f61d6',
     borderRadius: 5,
     textAlign: 'center',
     fontSize: 16,
   },
   buttonsText: {
     backgroundColor: '#e0e0e0',
-    color: 'blue',
+    color: '#6f61d6',
     padding: 10,
     borderRadius: 5,
     textAlign: 'center',
@@ -338,7 +377,7 @@ const styles = StyleSheet.create({
   },
   buttonTexts: {
     backgroundColor: 'transparent',
-    color: 'blue',
+    color: '#6f61d6',
     padding: 10,
     borderRadius: 5,
     textAlign: 'center',
@@ -405,7 +444,7 @@ const useStyles = makeStyles((theme, props: DAppProps) => {
       height: 36,
       minHeight: 36,
       borderRadius: 24,
-      width: Dimensions.get('window').width - 75,
+      width: Dimensions.get('window').width - 95,
       borderColor: theme.colors.grey5,
     },
     banner: {
