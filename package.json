@@ -19,6 +19,7 @@
     "@react-navigation/native": "^6.1.6",
     "@react-navigation/native-stack": "^6.9.12",
     "@react-navigation/stack": "^6.3.16",
+    "react-native-document-picker": "^6.0.2",
     "@rneui/base": "^4.0.0-rc.7",
     "@rneui/themed": "^4.0.0-rc.7",
     "@types/big.js": "^6.2.0",
