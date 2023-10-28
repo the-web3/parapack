@@ -7,6 +7,7 @@ import ReportQuestion from '@screen/DApp/ReportQuestion';
 import SubmitScreen from '@screen/DApp/Submit';
 import Review from '@screen/DApp/Review';
 import Parapack from '@screen/DApp/Parapack';
+import NewsArticle from '@screen/DApp/NewsArticle';
 
 // Just a simple option please optimize
 const _getOptions = (title: string) => {
@@ -61,6 +62,11 @@ const menus = [
     name: 'Parapack',
     options: _getOptions(''),
     component: Parapack,
+  },
+  {
+    name: 'NewsArticle',
+    options: _getOptions(''),
+    component: NewsArticle,
   },
 ];
 

@@ -19,6 +19,7 @@ import { Button, Input, Text } from '@rneui/themed';
 import { getActivity } from '@api/home';
 import { Carousel } from 'react-native-ui-lib';
 import IconFont from '@assets/iconfont';
+import { useNavigation } from '@react-navigation/native';
 
 interface DAppProps {
   navigation?: any;
@@ -134,6 +135,10 @@ export const DAppScreen = (props: DAppProps) => {
     props?.navigation.navigate('DevloperApplication');
   };
 
+  const onNewsArticle = () => {
+    props?.navigation.navigate('NewsArticle');
+  };
+
   const onReport = () => {
     props?.navigation.navigate('ReportQuestion');
   };
@@ -147,6 +152,7 @@ export const DAppScreen = (props: DAppProps) => {
   };
   console.log('banners.lists:', banners.lists);
 
+  const navigation = useNavigation();
   return (
     <SafeAreaView style={[style.container, { height: Dimensions.get('window').height - 100 }]}>
       <View style={style.searchBar}>
@@ -187,14 +193,17 @@ export const DAppScreen = (props: DAppProps) => {
           ))}
         </Carousel>
         <View style={style.notice}>
+          {/* button speaker */}
           <Button
             icon={<Icon name={'sound'} size={17} color={theme.colors.grey4} />}
             size={'sm'}
             color={'transparent'}
           />
-          <Text style={style.noticeText} numberOfLines={1}>
-            {notices?.lists?.length ? notices.lists[0].summary : ''}
-          </Text>
+          <TouchableOpacity style={style.noticeText} onPress={() => onNewsArticle()}>
+            <Text style={style.noticeText} numberOfLines={1}>
+              {notices?.lists?.length ? notices.lists[0].summary : ''}
+            </Text>
+          </TouchableOpacity>
           <Button
             icon={<FontAwesomeIcon name={'navicon'} size={18} color={theme.colors.grey4} />}
             size={'sm'}
