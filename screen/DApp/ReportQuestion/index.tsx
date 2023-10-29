@@ -1,27 +1,27 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import DocumentPicker from 'react-native-document-picker';
+// import DocumentPicker from 'react-native-document-picker';
 
 const ReportQuestion = ({ isDarkMode }: { isDarkMode: boolean }) => {
   const handlePress = async () => {
-    try {
-      const result = await DocumentPicker.pick({
-        type: [DocumentPicker.types.allFiles],
-      });
-      console.log(
-        'URI: ' + result.uri,
-        'Type: ' + result.type,
-        'File Name: ' + result.name,
-        'File Size: ' + result.size
-      );
-    } catch (err) {
-      if (DocumentPicker.isCancel(err)) {
-        Alert.alert('File selection was cancelled');
-      } else {
-        throw err;
-      }
-    }
+    // try {
+    //   const result = await DocumentPicker.pick({
+    //     type: [DocumentPicker.types.allFiles],
+    //   });
+    //   console.log(
+    //     'URI: ' + result.uri,
+    //     'Type: ' + result.type,
+    //     'File Name: ' + result.name,
+    //     'File Size: ' + result.size
+    //   );
+    // } catch (err) {
+    //   if (DocumentPicker.isCancel(err)) {
+    //     Alert.alert('File selection was cancelled');
+    //   } else {
+    //     throw err;
+    //   }
+    // }
   };
   const [reviewText, setReviewText] = useState('');
   return (
