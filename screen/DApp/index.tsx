@@ -8,8 +8,6 @@ import {
   useWindowDimensions,
   StyleSheet,
   TouchableOpacity,
-  FlatList,
-  Switch,
 } from 'react-native';
 import { makeStyles, useTheme } from '@rneui/themed';
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -208,7 +206,7 @@ export const DAppScreen = (props: DAppProps) => {
             size={'sm'}
             color={'transparent'}
           />
-          <TouchableOpacity style={style.noticeText} onPress={() => onNewsArticle()}>
+          <TouchableOpacity style={[style.noticeText, { marginTop: 4 }]} onPress={() => onNewsArticle()}>
             <Text style={style.noticeText} numberOfLines={1}>
               {notices?.lists?.length ? notices.lists[0].summary : ''}
             </Text>
@@ -695,9 +693,6 @@ const useStyles = makeStyles((theme, props: DAppProps) => {
       overflow: 'hidden',
       flex: 1,
     },
-    wrapper: {
-      // height: 150,
-    },
     slide: {
       flex: 1,
       justifyContent: 'center',
@@ -723,7 +718,7 @@ const useStyles = makeStyles((theme, props: DAppProps) => {
       flexDirection: 'row',
     },
     noticeText: {
-      flex: 1,
+      flex: 5,
       color: '#8c8c8c',
       fontSize: 12,
     },
@@ -733,7 +728,6 @@ const useStyles = makeStyles((theme, props: DAppProps) => {
     },
     scrollView: {
       flex: 1,
-      // flexDirection: 'row',
     },
     scrollViewContentView: {
       gap: 5,
