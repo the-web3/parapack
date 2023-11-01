@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 // import DocumentPicker from 'react-native-document-picker';
 
 const ReportQuestion = ({ isDarkMode }: { isDarkMode: boolean }) => {
@@ -34,12 +35,14 @@ const ReportQuestion = ({ isDarkMode }: { isDarkMode: boolean }) => {
               ...squareBoxStyles,
               marginRight: 10,
               backgroundColor: isDarkMode ? '#444' : '#f5f5f5',
+              borderRadius: 4,
             }}
             onPress={() => {
               /* Handle button press here */
             }}
           >
-            <Icon name="user" size={30} color={isDarkMode ? 'white' : 'black'} />
+            <MaterialIcons name="domain" size={30} color={isDarkMode ? 'white' : 'black'} />
+            {/* <Icon name="user" size={30} color={isDarkMode ? 'white' : 'black'} /> */}
             <Text style={{ color: isDarkMode ? 'white' : 'black' }}>账户问题</Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -47,12 +50,14 @@ const ReportQuestion = ({ isDarkMode }: { isDarkMode: boolean }) => {
               ...squareBoxStyles,
               marginRight: 10,
               backgroundColor: isDarkMode ? '#444' : '#f5f5f5',
+              borderRadius: 4,
             }}
             onPress={() => {
               /* Handle button press here */
             }}
           >
-            <Icon name="user" size={30} color={isDarkMode ? 'white' : 'black'} />
+            {/* <Icon name="user" size={30} color={isDarkMode ? 'white' : 'black'} /> */}
+            <MaterialIcons name="electrical-services" size={30} color={isDarkMode ? 'white' : 'black'} />
             <Text style={{ color: isDarkMode ? 'white' : 'black' }}>交易问题</Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -60,12 +65,14 @@ const ReportQuestion = ({ isDarkMode }: { isDarkMode: boolean }) => {
               ...squareBoxStyles,
               marginRight: 10,
               backgroundColor: isDarkMode ? '#444' : '#f5f5f5',
+              borderRadius: 4,
             }}
             onPress={() => {
               /* Handle button press here */
             }}
           >
-            <Icon name="user" size={30} color={isDarkMode ? 'white' : 'black'} />
+            {/* <Icon name="user" size={30} color={isDarkMode ? 'white' : 'black'} /> */}
+            <MaterialIcons name="messenger" size={30} color={isDarkMode ? 'white' : 'black'} />
             <Text style={{ color: isDarkMode ? 'white' : 'black' }}>操作体验</Text>
           </TouchableOpacity>
         </View>
@@ -77,12 +84,13 @@ const ReportQuestion = ({ isDarkMode }: { isDarkMode: boolean }) => {
               ...squareBoxStyles,
               marginRight: 10,
               backgroundColor: isDarkMode ? '#444' : '#f5f5f5',
+              borderRadius: 4,
             }}
             onPress={() => {
               /* Handle button press here */
             }}
           >
-            <Icon name="star" size={30} color={isDarkMode ? 'white' : 'black'} />
+            <MaterialIcons name="message" size={30} color={isDarkMode ? 'white' : 'black'} />
             <Text style={{ color: isDarkMode ? 'white' : 'black' }}>功能建议</Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -90,12 +98,13 @@ const ReportQuestion = ({ isDarkMode }: { isDarkMode: boolean }) => {
               ...squareBoxStyles,
               marginLeft: 10,
               backgroundColor: isDarkMode ? '#444' : '#f5f5f5',
+              borderRadius: 4,
             }}
             onPress={() => {
               /* Handle button press here */
             }}
           >
-            <Icon name="heart" size={30} color={isDarkMode ? 'white' : 'black'} />
+            <MaterialIcons name="mail" size={30} color={isDarkMode ? 'white' : 'black'} />
             <Text style={{ color: isDarkMode ? 'white' : 'black' }}>其它反馈</Text>
           </TouchableOpacity>
         </View>
@@ -123,6 +132,7 @@ const ReportQuestion = ({ isDarkMode }: { isDarkMode: boolean }) => {
           style={{
             ...styles.reviewContainer,
             backgroundColor: isDarkMode ? '#444' : '#f5f5f5',
+            borderRadius: 8,
           }}
         >
           <TextInput
@@ -130,6 +140,7 @@ const ReportQuestion = ({ isDarkMode }: { isDarkMode: boolean }) => {
               ...styles.reviewText,
               color: isDarkMode ? 'white' : 'black',
               marginBottom: 48,
+              marginLeft: 15,
             }}
             value={reviewText}
             onChangeText={setReviewText}
@@ -140,7 +151,8 @@ const ReportQuestion = ({ isDarkMode }: { isDarkMode: boolean }) => {
           <TouchableOpacity
             style={{
               backgroundColor: isDarkMode ? '#444' : '#f5f5f5',
-              marginLeft: 10,
+              marginLeft: 15,
+              marginBottom: 15,
             }}
             onPress={() => {
               /* Handle button press here */
@@ -191,10 +203,12 @@ const ReportQuestion = ({ isDarkMode }: { isDarkMode: boolean }) => {
         </View>
 
         {/* Content Text Input */}
-        <TouchableOpacity
-          style={contentInputStyles}
-          onPress={() => {
-            /* Handle button press here */
+        <View
+          style={{
+            ...styles.reviewContainers,
+            backgroundColor: isDarkMode ? '#444' : '#f5f5f5',
+            borderRadius: 8,
+            marginBottom: 40.5,
           }}
         >
           <TextInput
@@ -202,10 +216,11 @@ const ReportQuestion = ({ isDarkMode }: { isDarkMode: boolean }) => {
             placeholderTextColor={isDarkMode ? '#aaa' : '#555'}
             multiline
             style={{
+              marginLeft: 16,
               color: isDarkMode ? 'white' : 'black',
             }}
           />
-        </TouchableOpacity>
+        </View>
 
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.buttonStyle} onPress={handlePress}>
@@ -222,6 +237,13 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     borderRadius: 20,
     height: 180,
+  },
+
+  reviewContainers: {
+    marginTop: 10,
+    marginBottom: 20,
+    borderRadius: 20,
+    height: 44,
   },
 
   lineStyles: {

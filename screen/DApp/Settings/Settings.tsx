@@ -35,7 +35,7 @@ export const Settings = (props: DAppProps) => {
           </View>
         </View>
 
-        <View style={{ position: 'absolute', top: 70, right: 20 }}>
+        <View style={{ position: 'absolute', top: 50, right: 20 }}>
           <View
             style={{
               flexDirection: 'row',
