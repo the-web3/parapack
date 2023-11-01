@@ -21,6 +21,8 @@ import { getActivity } from '@api/home';
 import { Carousel } from 'react-native-ui-lib';
 import IconFont from '@assets/iconfont';
 
+const screenHeight = Dimensions.get('window').height;
+
 interface DAppProps {
   navigation?: any;
   mode?: string;
@@ -150,13 +152,18 @@ export const DAppScreen = (props: DAppProps) => {
   const onParapack = () => {
     props?.navigation.navigate('Parapack');
   };
+
+  const onIcon = () => {
+    props?.navigation.navigate('Settings');
+  };
+
   console.log('banners.lists:', banners.lists);
 
   return (
     <SafeAreaView style={[style.container, { height: Dimensions.get('window').height - 100 }]}>
       {/* ------------------------ */}
       <View style={style.searchBar}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => onIcon()}>
           <IconFont name="a-logopeise" style={{ marginRight: 35, marginTop: 11 }} />
         </TouchableOpacity>
 
@@ -479,33 +486,23 @@ export const DAppScreen = (props: DAppProps) => {
           </ScrollView>
           <View style={{ marginVertical: 20, marginHorizontal: 20, backgroundColor: theme.colors.grey5, height: 1 }} />
         </View>
-        {/* news news news news news */}
-        {/* <View style={{ ...styles.firstContainer, marginBottom: 20 }}>
-          <ContentHeader
-            leftTitle={t('dApp.activityHotList')}
-            rightTitle={t('dApp.seeAll')}
-            onRightClick={() => onShowAll('activity')}
-          />
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {renderGroupedItems(activity?.lists || [])}
-          </ScrollView>
-        </View> */}
-        <View style={styles.container}>
+
+        <View style={[styles.container, { marginBottom: screenHeight * 0.0146 }]}>
           <Text style={styles.more}>更多</Text>
         </View>
-        <View style={styles.container}>
+        <View style={[styles.container, { marginBottom: screenHeight * 0.0146 }]}>
           <TouchableOpacity onPress={() => onParapack()}>
             <Text style={styles.buttonTexts}>关于 ParaPack</Text>
           </TouchableOpacity>
         </View>
         {/* small below the parapack */}
-        <View style={styles.container}>
+        <View style={[styles.container, { marginBottom: screenHeight * 0.0146 }]}>
           <TouchableOpacity onPress={() => onReport()}>
             <Text style={styles.buttonTexts}>{t('dApp.reportquestion')}</Text>
           </TouchableOpacity>
         </View>
         {/* longest sentence */}
-        <View style={styles.container}>
+        <View style={[styles.container, { marginBottom: 26 }]}>
           <TouchableOpacity onPress={() => onDeveloperOnboarding('DeveloperOnboarding')}>
             <Text style={styles.buttonTexts}>{t('dApp.DeveloperOnboarding')}</Text>
           </TouchableOpacity>
@@ -564,10 +561,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   button: {
-    borderRadius: 10,
+    borderRadius: 6,
     padding: 10,
-    backgroundColor: '#f2f3f6',
-    width: 350,
+    backgroundColor: '#F2F3F6',
+    width: 326,
+    height: 40,
+    marginLeft: 24, // Added 24 dp left margin
+    marginRight: 24, //
   },
   container: {
     flex: 1,
@@ -588,20 +588,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   buttonText: {
-    backgroundColor: 'transparent',
-    padding: 10,
-    color: '#6f61d6',
-    borderRadius: 5,
-    textAlign: 'center',
+    color: '#695BD4',
     fontSize: 16,
+    textAlign: 'center',
   },
+
   more: {
     backgroundColor: 'transparent',
     padding: 10,
     color: 'black',
-    borderRadius: 5,
     textAlign: 'center',
     fontSize: 16,
+    marginLeft: -7,
   },
 
   buttonsText: {
@@ -613,13 +611,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   buttonTexts: {
-    backgroundColor: 'transparent',
-    color: '#6f61d6',
-    padding: 10,
-    borderRadius: 5,
+    color: '#695BD4',
+    fontSize: 14,
     textAlign: 'center',
-    fontSize: 16,
     marginBottom: 10,
+    marginLeft: 2,
+    marginRight: 24,
   },
 });
 

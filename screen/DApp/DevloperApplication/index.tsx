@@ -1,3 +1,4 @@
+import instance from '@common/utils/http';
 import { useState } from 'react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -8,6 +9,7 @@ interface DAppProps {
   navigation?: any;
   mode?: string;
 }
+
 const DeveloperApplication = (props: DAppProps) => {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -38,21 +40,20 @@ const DeveloperApplication = (props: DAppProps) => {
       capital,
       device_id: 'your-device-id',
     };
-    fetch('https://example/dev/apply', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    })
-      .then((response) => response.json())
-      .then((data) => {
+    instance
+      .post('/dev/apply', data)
+      .then((response) => {
+        console.log(data);
+        // Handle success
+        console.log('Response data:', response);
+        // Navigate to SubmitScreen
         props?.navigation.navigate('SubmitScreen');
-        console.log({ data }, 'data is submitted');
+        console.log({ data: response.data }, 'data is submitted');
       })
       .catch((error) => {
+        console.error('Error Response:', error.response);
+        console.error('Error Details:', error.message);
         props?.navigation.navigate('SubmitScreen');
-        console.error({ error }, 'data failed submitted');
       });
   };
 

@@ -141,7 +141,7 @@ export const DAppDetail = (props: DAppDetailParam) => {
         <View style={styles.headerBg}>
           <Image
             source={{ uri: dAppProps?.coverPicture ?? '' }}
-            style={{ width: 85, height: 85, borderRadius: 15, overflow: 'hidden' }}
+            style={{ width: 100, height: 100, borderRadius: 15, overflow: 'hidden' }}
           />
           <View style={{ flex: 1, flexDirection: 'column', gap: 3, marginLeft: 15 }}>
             <Text style={{ color: '#252525', fontSize: 16, fontWeight: '500' }}>{dAppProps?.title}</Text>
@@ -238,6 +238,7 @@ export const DAppDetail = (props: DAppDetailParam) => {
               style={{
                 height: 150,
                 width: width - 30,
+                borderRadius: 10,
               }}
             />
           ))}
