@@ -19,10 +19,6 @@ export const Settings = (props: DAppProps) => {
       }}
       style={{ flex: 10, height: '30%' }}
     >
-      <StatusBar
-        backgroundColor="#3B28CC" // 替换为你想要的背景颜色
-        barStyle="light-content" // 替换为你想要的图标和文字颜色
-      />
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <View style={{ position: 'absolute', top: 30, left: 20 }}>
           <Image

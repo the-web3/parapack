@@ -61,11 +61,11 @@ const menus = [
     options: _getOptions('入驻申请'),
     component: Review,
   },
-  {
-    name: 'Settings',
-    options: _getOptions('入驻申请'),
-    component: Settings,
-  },
+  // {
+  //   name: 'Settings',
+  //   options: _getOptions(''),
+  //   component: Settings,
+  // },
   {
     name: 'Parapack',
     options: _getOptions(''),
