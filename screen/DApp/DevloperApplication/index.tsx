@@ -74,38 +74,46 @@ const DeveloperApplication = (props: DAppProps) => {
     label: {
       color: isDarkMode ? '#fff' : '#000',
       fontSize: isSmallScreen ? 8 : 10,
+      marginLeft: isSmallScreen ? 10 : 20,
       marginBottom: isSmallScreen ? 5 : 10,
     },
     text: {
       color: isDarkMode ? '#fff' : '#000',
       fontSize: isSmallScreen ? 12 : 14,
+      marginLeft: isSmallScreen ? 10 : 20,
       marginBottom: isSmallScreen ? 5 : 10,
     },
     labels: {
       color: isDarkMode ? '#808080' : '#000',
       fontSize: isSmallScreen ? 10 : 12,
       marginBottom: isSmallScreen ? 5 : 10,
+      marginLeft: isSmallScreen ? 10 : 20,
     },
     input: {
       // backgroundColor: isDarkMode ? '#333' : '#f2f2f2',
       color: isDarkMode ? '#fff' : '#000',
       borderRadius: 5,
       padding: isSmallScreen ? 5 : 10,
+      marginLeft: isSmallScreen ? 10 : 20,
       marginBottom: isSmallScreen ? 5 : 10, // Updated marginBottom
       fontSize: isSmallScreen ? 12 : 14,
     },
     button: {
       borderRadius: isSmallScreen ? 5 : 10,
       paddingVertical: isSmallScreen ? 10 : 15,
+      marginLeft: isSmallScreen ? 10 : 20,
       paddingHorizontal: isSmallScreen ? 15 : 20,
+      marginRight: isSmallScreen ? 10 : 20,
     },
     buttonText: {
       color: '#fff',
       fontSize: isSmallScreen ? 14 : 16,
+      marginLeft: isSmallScreen ? 10 : 20,
     },
     divider: {
       borderBottomColor: isDarkMode ? '#999' : '#ccc',
       borderBottomWidth: 1,
+      marginLeft: isSmallScreen ? 10 : 20,
       marginBottom: isSmallScreen ? 5 : 10, // Updated marginBottom
     },
   });

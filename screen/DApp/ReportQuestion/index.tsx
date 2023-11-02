@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 // import DocumentPicker from 'react-native-document-picker';
@@ -41,9 +41,29 @@ const ReportQuestion = ({ isDarkMode }: { isDarkMode: boolean }) => {
               /* Handle button press here */
             }}
           >
-            <MaterialIcons name="domain" size={30} color={isDarkMode ? 'white' : 'black'} />
+            <Image
+              source={require('assets/images/Electric.png')}
+              style={{ width: 30, height: 30, tintColor: isDarkMode ? 'white' : '#999b9a' }}
+            />
             {/* <Icon name="user" size={30} color={isDarkMode ? 'white' : 'black'} /> */}
-            <Text style={{ color: isDarkMode ? 'white' : 'black' }}>账户问题</Text>
+            <Text style={{ color: isDarkMode ? 'white' : '#999b9a' }}>账户问题</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              ...squareBoxStyles,
+              marginRight: 10,
+              backgroundColor: isDarkMode ? '#444' : '#f5f5f5',
+              borderRadius: 4,
+            }}
+            onPress={() => {
+              /* Handle button press here */
+            }}
+          >
+            <Image
+              source={require('assets/images/mode.png')}
+              style={{ width: 30, height: 30, tintColor: isDarkMode ? 'white' : '#999b9a' }}
+            />
+            <Text style={{ color: isDarkMode ? 'white' : '#999b9a' }}>交易问题</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={{
@@ -57,23 +77,11 @@ const ReportQuestion = ({ isDarkMode }: { isDarkMode: boolean }) => {
             }}
           >
             {/* <Icon name="user" size={30} color={isDarkMode ? 'white' : 'black'} /> */}
-            <MaterialIcons name="electrical-services" size={30} color={isDarkMode ? 'white' : 'black'} />
-            <Text style={{ color: isDarkMode ? 'white' : 'black' }}>交易问题</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              ...squareBoxStyles,
-              marginRight: 10,
-              backgroundColor: isDarkMode ? '#444' : '#f5f5f5',
-              borderRadius: 4,
-            }}
-            onPress={() => {
-              /* Handle button press here */
-            }}
-          >
-            {/* <Icon name="user" size={30} color={isDarkMode ? 'white' : 'black'} /> */}
-            <MaterialIcons name="messenger" size={30} color={isDarkMode ? 'white' : 'black'} />
-            <Text style={{ color: isDarkMode ? 'white' : 'black' }}>操作体验</Text>
+            <Image
+              source={require('assets/images/telegram.png')}
+              style={{ width: 30, height: 30, tintColor: isDarkMode ? 'white' : '#999b9a' }}
+            />
+            <Text style={{ color: isDarkMode ? 'white' : '#999b9a' }}>操作体验</Text>
           </TouchableOpacity>
         </View>
 
@@ -90,8 +98,11 @@ const ReportQuestion = ({ isDarkMode }: { isDarkMode: boolean }) => {
               /* Handle button press here */
             }}
           >
-            <MaterialIcons name="message" size={30} color={isDarkMode ? 'white' : 'black'} />
-            <Text style={{ color: isDarkMode ? 'white' : 'black' }}>功能建议</Text>
+            <Image
+              source={require('assets/images/icons.png')}
+              style={{ width: 30, height: 30, tintColor: isDarkMode ? 'white' : '#999b9a' }}
+            />
+            <Text style={{ color: isDarkMode ? 'white' : '#999b9a' }}>功能建议</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={{
@@ -104,8 +115,8 @@ const ReportQuestion = ({ isDarkMode }: { isDarkMode: boolean }) => {
               /* Handle button press here */
             }}
           >
-            <MaterialIcons name="mail" size={30} color={isDarkMode ? 'white' : 'black'} />
-            <Text style={{ color: isDarkMode ? 'white' : 'black' }}>其它反馈</Text>
+            <MaterialIcons name="mail" size={30} color={isDarkMode ? 'white' : '#999b9a'} />
+            <Text style={{ color: isDarkMode ? 'white' : '#999b9a' }}>其它反馈</Text>
           </TouchableOpacity>
         </View>
 
@@ -138,14 +149,14 @@ const ReportQuestion = ({ isDarkMode }: { isDarkMode: boolean }) => {
           <TextInput
             style={{
               ...styles.reviewText,
-              color: isDarkMode ? 'white' : 'black',
+              color: isDarkMode ? 'white' : '#999b9a',
               marginBottom: 48,
               marginLeft: 15,
             }}
             value={reviewText}
             onChangeText={setReviewText}
             placeholder="Write your review here"
-            placeholderTextColor={isDarkMode ? 'gray' : '#a9a9a9'}
+            placeholderTextColor={isDarkMode ? 'gray' : '#999b9a'}
             multiline
           />
           <TouchableOpacity
@@ -162,7 +173,7 @@ const ReportQuestion = ({ isDarkMode }: { isDarkMode: boolean }) => {
               <Text
                 style={{
                   ...styles.plusText,
-                  color: isDarkMode ? 'white' : 'black',
+                  color: isDarkMode ? 'white' : '#999b9a',
                 }}
               >
                 +
@@ -231,6 +242,7 @@ const ReportQuestion = ({ isDarkMode }: { isDarkMode: boolean }) => {
     </ScrollView>
   );
 };
+
 const styles = StyleSheet.create({
   reviewContainer: {
     marginTop: 10,

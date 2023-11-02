@@ -164,7 +164,7 @@ export const DAppScreen = (props: DAppProps) => {
       {/* ------------------------ */}
       <View style={style.searchBar}>
         <TouchableOpacity onPress={() => onIcon()}>
-          <IconFont name="a-logopeise" style={{ marginRight: 35, marginTop: 11 }} />
+          <IconFont name="a-logopeise" style={{ marginRight: 35, marginTop: 11 }} size={25} />
         </TouchableOpacity>
 
         <Input
