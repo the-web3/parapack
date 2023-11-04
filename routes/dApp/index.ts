@@ -11,6 +11,7 @@ import NewsArticle from '@screen/DApp/NewsArticle';
 import Settings from '@screen/DApp/Settings/Settings';
 import Setting from '@screen/DApp/Setting';
 import News from '@screen/DApp/News';
+import { DAppDetails } from '@screen/DApp/DAppDetails';
 
 // Just a simple option please optimize
 const _getOptions = (title: string) => {
@@ -61,11 +62,11 @@ const menus = [
     options: _getOptions('入驻申请'),
     component: Review,
   },
-  // {
-  //   name: 'Settings',
-  //   options: _getOptions(''),
-  //   component: Settings,
-  // },
+  {
+    name: 'DAppDetails',
+    options: _getOptions('苹方-简 中黑体'),
+    component: DAppDetails,
+  },
   {
     name: 'Parapack',
     options: _getOptions(''),

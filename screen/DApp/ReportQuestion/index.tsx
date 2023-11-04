@@ -1,6 +1,9 @@
+import { SUCCESS_CODE } from '@common/constants';
 import instance from '@common/utils/http';
+import { Button } from '@rneui/themed';
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
+import { getUniqueId } from 'react-native-device-info';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 interface DAppProps {
   navigation?: any;
@@ -32,33 +35,40 @@ const ReportQuestion = (props: DAppProps) => {
   const handlePress = async () => {
     const typeToSubmit = type || 'defaultType';
     console.log('Submitting type:', typeToSubmit); // Debug log
-
-    let formData = new FormData();
+    const [device_id] = await Promise.all([getUniqueId()]);
+    const formData = new FormData();
     formData.append('type', typeToSubmit);
     formData.append('content', content);
     formData.append('contact', contact);
+    formData.append('deviceId', device_id);
 
-    imgs.forEach((img, index) => {
-      formData.append(`imgs[${index}]`, img);
-    });
+    if (imgs.length === 0) {
+      formData.append('imgs', null);
+    } else {
+      imgs.forEach((img, index) => {
+        formData.append(`imgs[${index}]`, img);
+      });
+    }
 
     console.log('Submitting data:', formData);
 
     instance
       .post('/issue', formData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          'Content-Type': 'multipart/form-data', // 设置正确的内容类型
         },
       })
       .then((response) => {
         console.log('Response data:', response);
-        props?.navigation.navigate('SubmitScreen');
-        console.log({ data: response.data }, 'data is submitted');
+        if (response?.code === SUCCESS_CODE) {
+          props?.navigate('home', {
+            tab: 'ecology',
+          });
+        }
       })
       .catch((error) => {
         console.error('Error Response:', error.response);
         console.error('Error Details:', error.message);
-        props?.navigation.navigate('SubmitScreen');
       });
   };
 
@@ -267,12 +277,7 @@ const ReportQuestion = (props: DAppProps) => {
             }}
           />
         </View>
-
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.buttonStyle} onPress={handlePress}>
-            <Text style={styles.buttonText}>提交</Text>
-          </TouchableOpacity>
-        </View>
+        <Button onPress={handlePress}>提交</Button>
       </View>
     </ScrollView>
   );

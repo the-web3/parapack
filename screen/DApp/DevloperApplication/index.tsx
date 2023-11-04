@@ -1,5 +1,5 @@
 import instance from '@common/utils/http';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, Text, TextInput, StyleSheet, Appearance, View, Dimensions } from 'react-native';
@@ -23,7 +23,14 @@ const DeveloperApplication = (props: DAppProps) => {
   const [contract, setContract] = useState('');
   const [exchange, setExchange] = useState('');
   const [capital, setCapital] = useState('');
+  const [device_id, setDevice_id] = useState('');
   const { t } = useTranslation();
+
+  useEffect(() => {
+    const deviceId = '12345'; // Replace with your device id logic
+    setDevice_id(deviceId);
+  }, []);
+
   const onConfirm = () => {
     const data = {
       email,
@@ -38,15 +45,13 @@ const DeveloperApplication = (props: DAppProps) => {
       contract,
       exchange,
       capital,
-      device_id: 'your-device-id',
+      device_id,
     };
     instance
       .post('/dev/apply', data)
       .then((response) => {
         console.log(data);
-        // Handle success
         console.log('Response data:', response);
-        // Navigate to SubmitScreen
         props?.navigation.navigate('SubmitScreen');
         console.log({ data: response.data }, 'data is submitted');
       })
