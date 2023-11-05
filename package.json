@@ -52,6 +52,7 @@
     "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "^2.12.0",
     "react-native-get-random-values": "^1.9.0",
+    "react-native-image-picker": "^7.0.2",
     "react-native-level-fs": "^3.0.0",
     "react-native-linear-gradient": "^2.6.2",
     "react-native-loading-spinner-overlay": "^3.0.1",

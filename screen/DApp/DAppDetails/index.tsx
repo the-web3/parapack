@@ -182,7 +182,7 @@ export const DAppDetails = (props: DAppProps) => {
             </View>
           </View>
         </View>
-        <View style={[styles.headerBg, { marginLeft: 20, marginBottom: 20 }]}>
+        <View style={[styles.headerBg, { marginLeft: 5, marginBottom: 20 }]}>
           <Text style={{ fontWeight: 'bold', fontSize: 18, color: 'black' }}>一键完成任务</Text>
         </View>
         <TouchableOpacity
@@ -204,11 +204,11 @@ export const DAppDetails = (props: DAppProps) => {
             取消申请
           </Text>
         </TouchableOpacity>
-        <Text style={{ fontWeight: 'bold', fontSize: 18, color: 'black', marginLeft: 30, marginBottom: 16 }}>
+        <Text style={{ fontWeight: 'bold', fontSize: 18, color: 'black', marginLeft: 25, marginBottom: 16 }}>
           一项一项完成任务
         </Text>
         {/* forward */}
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 18, marginLeft: 40 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 18, marginLeft: 25 }}>
           <FontAwesome name="twitter" size={20} color="blue" />
           <Text style={{ fontSize: 14, color: 'black', marginLeft: 10 }}>转发@4metas帖子</Text>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 100 }}>
@@ -219,7 +219,7 @@ export const DAppDetails = (props: DAppProps) => {
           </View>
         </View>
         {/* like */}
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 18, marginLeft: 40 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 18, marginLeft: 25 }}>
           <FontAwesome name="apple" size={20} color="blue" />
           <Text style={{ fontSize: 14, color: 'black', marginLeft: 10 }}>转发@4metas帖子</Text>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 100 }}>
@@ -230,7 +230,7 @@ export const DAppDetails = (props: DAppProps) => {
           </View>
         </View>
         {/* follow */}
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 18, marginLeft: 40 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 18, marginLeft: 25 }}>
           <FontAwesome name="telegram" size={20} color="blue" />
           <Text style={{ fontSize: 14, color: 'black', marginLeft: 10 }}>转发@4metas帖子</Text>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 100 }}>
@@ -241,7 +241,7 @@ export const DAppDetails = (props: DAppProps) => {
           </View>
         </View>
         {/* join */}
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 18, marginLeft: 40 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 18, marginLeft: 25 }}>
           <FontAwesome name="link" size={20} color="blue" />
           <Text style={{ fontSize: 14, color: 'black', marginLeft: 10 }}>转发@4metas帖子</Text>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 130 }}>
@@ -249,14 +249,14 @@ export const DAppDetails = (props: DAppProps) => {
           </View>
         </View>
         {/* go */}
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 35.5, marginLeft: 40 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 35.5, marginLeft: 25 }}>
           <FontAwesome name="twitter" size={20} color="blue" />
           <Text style={{ fontSize: 14, color: 'black', marginLeft: 10 }}>转发@4metas帖子</Text>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 140 }}>
             <Text style={{ marginLeft: 5, color: '#2a9ff0' }}>去</Text>
           </View>
         </View>
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 3.5, marginLeft: 40 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 3.5, marginLeft: 25 }}>
           <FontAwesome name="group" size={20} color="blue" />
           <Text style={{ fontSize: 12, color: 'black', marginLeft: 10 }}>747人已加入</Text>
         </View>

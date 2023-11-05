@@ -2,13 +2,32 @@ import { SUCCESS_CODE } from '@common/constants';
 import instance from '@common/utils/http';
 import { Button } from '@rneui/themed';
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Image, Dimensions } from 'react-native';
 import { getUniqueId } from 'react-native-device-info';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 interface DAppProps {
   navigation?: any;
   mode?: string;
 }
+
+import ImagePicker from 'react-native-image-picker';
+
+// ...
+
+const [selectedImage, setSelectedImage] = useState(null);
+
+const handleImageSelection = () => {
+  console.log('Selecting image...'); // Debug log
+  ImagePicker.launchImageLibrary({}, (response) => {
+    if (response.didCancel) {
+      console.log('User cancelled image picker');
+    } else if (response.error) {
+      console.log('ImagePicker Error: ', response.error);
+    } else {
+      setSelectedImage(response.uri);
+    }
+  });
+};
 
 const ReportQuestion = (props: DAppProps) => {
   const handleImagePicker = () => {
@@ -71,6 +90,9 @@ const ReportQuestion = (props: DAppProps) => {
         console.error('Error Details:', error.message);
       });
   };
+
+  const { height } = Dimensions.get('window');
+  const reviewContainerHeight = height * 0.25;
 
   return (
     <ScrollView>
@@ -186,14 +208,20 @@ const ReportQuestion = (props: DAppProps) => {
             ...styles.reviewContainer,
             backgroundColor: '#f5f5f5',
             borderRadius: 8,
+            height: 200,
+            width: 320,
+            flexDirection: 'column',
+            alignItems: 'flex-start',
           }}
         >
           <TextInput
             style={{
               ...styles.reviewText,
               color: '#999b9a',
-              marginBottom: 48,
+              marginBottom: 10,
               marginLeft: 15,
+              fontSize: 16,
+              padding: 10,
             }}
             value={content}
             onChangeText={setContent}
@@ -203,25 +231,22 @@ const ReportQuestion = (props: DAppProps) => {
           />
           <TouchableOpacity
             style={{
-              backgroundColor: '#f5f5f5',
-              marginLeft: 15,
-              marginBottom: 15,
+              ...squareBoxStyles,
+              marginRight: 10,
+              backgroundColor: type === '功能建议' ? '#d9f7be' : '#f5f5f5',
+              borderRadius: 4,
             }}
-            onPress={() => {
-              handleImagePicker;
-              console.log('Image picker pressed');
-            }}
+            onPress={handleImageSelection}
           >
-            <View style={styles.plusBoxStyles}>
-              <Text
-                style={{
-                  ...styles.plusText,
-                  color: '#999b9a',
-                }}
-              >
-                +
-              </Text>
-            </View>
+            {selectedImage ? (
+              <Image source={{ uri: selectedImage }} style={{ width: 30, height: 30 }} />
+            ) : (
+              <Image
+                source={require('assets/images/icons.png')}
+                style={{ width: 30, height: 30, tintColor: '#999b9a' }}
+              />
+            )}
+            <Text style={{ color: '#999b9a' }}>功能建议</Text>
           </TouchableOpacity>
         </View>
 
@@ -288,7 +313,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 20,
     borderRadius: 20,
-    height: 180,
   },
 
   reviewContainers: {
