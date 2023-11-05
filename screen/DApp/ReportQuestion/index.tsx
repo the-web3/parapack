@@ -66,6 +66,7 @@ const ReportQuestion = (props: DAppProps) => {
       })
       .then((response) => {
         console.log('Response data:', response);
+        console.log('Data is Submitted', { response });
         if (response?.code === SUCCESS_CODE) {
           props?.navigate('home', {
             tab: 'ecology',
