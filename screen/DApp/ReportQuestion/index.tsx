@@ -5,48 +5,35 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Image, Dimensions } from 'react-native';
 import { getUniqueId } from 'react-native-device-info';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import ImagePicker, { ImageLibraryOptions, MediaType, ImagePickerResponse } from 'react-native-image-picker';
+import { launchImageLibrary } from 'react-native-image-picker';
+
 interface DAppProps {
   navigation?: any;
   mode?: string;
 }
 
-import ImagePicker from 'react-native-image-picker';
-
-// ...
-
-const [selectedImage, setSelectedImage] = useState(null);
-
-const handleImageSelection = () => {
-  console.log('Selecting image...'); // Debug log
-  ImagePicker.launchImageLibrary({}, (response) => {
-    if (response.didCancel) {
-      console.log('User cancelled image picker');
-    } else if (response.error) {
-      console.log('ImagePicker Error: ', response.error);
-    } else {
-      setSelectedImage(response.uri);
-    }
-  });
-};
-
 const ReportQuestion = (props: DAppProps) => {
+  const [imgs, setImgs] = useState<Array<string>>([]);
+
   const handleImagePicker = () => {
-    const options = {
-      title: 'Select Image',
-      storageOptions: {
-        skipBackup: true,
-        path: 'images',
-      },
+    const options: ImageLibraryOptions = {
       mediaType: 'photo',
-      quality: 0.5,
-      maxWidth: 500,
-      maxHeight: 500,
-      multiple: true, // Allow multiple image selection
-      maxFiles: 10, // Set maximum number of images to be selected
     };
+
+    launchImageLibrary(options, (response) => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.errorCode) {
+        console.log('ImagePicker Error: ', response.errorMessage);
+      } else if (response.assets && response.assets.length > 0) {
+        const source = { uri: response.assets[0].uri };
+        console.log('response', source);
+        setImgs([...imgs, source]);
+      }
+    });
   };
 
-  const [imgs, setImgs] = useState([]);
   const [type, setType] = useState('');
   const [content, setContent] = useState('');
   const [contact, setContact] = useState('');
@@ -90,9 +77,6 @@ const ReportQuestion = (props: DAppProps) => {
         console.error('Error Details:', error.message);
       });
   };
-
-  const { height } = Dimensions.get('window');
-  const reviewContainerHeight = height * 0.25;
 
   return (
     <ScrollView>
@@ -231,22 +215,25 @@ const ReportQuestion = (props: DAppProps) => {
           />
           <TouchableOpacity
             style={{
-              ...squareBoxStyles,
-              marginRight: 10,
-              backgroundColor: type === '功能建议' ? '#d9f7be' : '#f5f5f5',
-              borderRadius: 4,
+              marginLeft: 15,
+              marginTop: 40,
+              marginBottom: 15,
             }}
-            onPress={handleImageSelection}
+            onPress={() => {
+              handleImagePicker();
+              console.log('Image picker pressed');
+            }}
           >
-            {selectedImage ? (
-              <Image source={{ uri: selectedImage }} style={{ width: 30, height: 30 }} />
-            ) : (
-              <Image
-                source={require('assets/images/icons.png')}
-                style={{ width: 30, height: 30, tintColor: '#999b9a' }}
-              />
-            )}
-            <Text style={{ color: '#999b9a' }}>功能建议</Text>
+            <View style={styles.plusBoxStyles}>
+              <Text
+                style={{
+                  ...styles.plusText,
+                  color: '#999b9a',
+                }}
+              >
+                +
+              </Text>
+            </View>
           </TouchableOpacity>
         </View>
 
