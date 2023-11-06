@@ -1,3 +1,4 @@
+import instance from '@common/utils/http';
 import { View, Text, StyleSheet, TouchableOpacity, Appearance, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 interface DAppProps {
@@ -20,7 +21,27 @@ const SubmitScreen = (props: DAppProps) => {
   const marginTop = height * 0.01;
 
   const Onreview = () => {
-    props?.navigation.navigate('Review');
+    const data = {
+      device_id: '12345',
+    };
+
+    instance
+      .post('/dev/status', data)
+      .then((response) => {
+        console.log('Status updated:', response.data);
+        props?.navigation.navigate('Review');
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.error('Server responded with an error:', error.response.data);
+          console.error('Status code:', error.response.status);
+        } else if (error.request) {
+          console.error('No response received:', error.request);
+        } else {
+          console.error('Error setting up the request:', error.message);
+        }
+        props?.navigation.navigate('Review');
+      });
   };
 
   return (

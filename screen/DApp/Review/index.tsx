@@ -1,62 +1,60 @@
-import { View, Text, StyleSheet, TouchableOpacity, Appearance, Dimensions } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Layout from '@components/Layout';
+import { Button } from '@rneui/themed';
+import { View, Text, StyleSheet, TouchableOpacity, Appearance, Dimensions, SafeAreaView, Image } from 'react-native';
+import instance from '@common/utils/http';
 
 interface DAppProps {
   navigation?: any;
   mode?: string;
 }
+
 const Review = (props: DAppProps) => {
   const colorScheme = Appearance.getColorScheme();
   const isDarkMode = colorScheme === 'dark';
   const { width, height } = Dimensions.get('window');
   const iconSize = width * 0.5;
-  const buttonWidth = width * 0.8;
-  const buttonHeight = height * 0.07;
-  const borderRadius = width * 0.02;
   const fontTextSize = width * 0.05;
   const textSize = width * 0.03;
   const marginBottom = height * 0.05;
   const textsMarginBottom = height * 0.35;
   const marginTop = height * 0.01;
 
-  const Onreview = () => {
-    props?.navigation.navigate('Review'); // pass screen name as a prop
+  const onCancel = () => {
+    instance
+      .delete('/dev/cancel')
+      .then((response) => {
+        console.log('Cancel request sent successfully');
+        props?.navigation.navigate('DevloperApplication');
+      })
+      .catch((error) => {
+        console.error('Error cancelling request:', error);
+      });
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: isDarkMode ? '#000' : '#fff', marginBottom: 10 }]}>
-      <View style={[styles.iconContainer, { marginBottom, marginTop }]}>
-        <Icon name="check" size={iconSize} color="#3b28cc" />
-      </View>
-      <Text style={[styles.fonttext, { fontSize: fontTextSize, marginTop }]}>资料审核中...</Text>
+    <Layout
+      fixedChildren={
+        <View>
+          <Button onPress={onCancel}>取消申请</Button>
+        </View>
+      }
+    >
+      <SafeAreaView>
+        <View style={[styles.container, { backgroundColor: isDarkMode ? '#000' : '#fff', marginBottom: 10 }]}>
+          <View style={[styles.iconContainer, { marginBottom, marginTop }]}>
+            <Image
+              source={require('assets/images/iconfont.png')}
+              style={{ width: 130, height: 130, tintColor: 'blue' }}
+            />
+          </View>
+          <Text style={[styles.fonttext, { fontSize: fontTextSize, marginTop }]}>资料审核中...</Text>
 
-      <Text style={[styles.texts, { fontSize: textSize, marginBottom: textsMarginBottom }]}>
-        审核通过后, 会以邮件形式通知
-      </Text>
-
-      <TouchableOpacity
-        style={[
-          styles.button,
-          {
-            backgroundColor: '#3b28cc',
-            width: buttonWidth,
-            height: buttonHeight,
-            borderRadius,
-            marginTop: height * 0.02, // Adjusted marginTop
-          },
-        ]}
-        onPress={() => Onreview()}
-      >
-        <Text
-          style={[
-            styles.buttonText,
-            { fontSize: fontTextSize, fontWeight: 'bold', color: isDarkMode ? 'white' : '#fff' },
-          ]}
-        >
-          取消申请
-        </Text>
-      </TouchableOpacity>
-    </View>
+          <Text style={[styles.texts, { fontSize: textSize, marginBottom: textsMarginBottom }]}>
+            审核通过后, 会以邮件形式通知
+          </Text>
+        </View>
+      </SafeAreaView>
+    </Layout>
   );
 };
 

@@ -8,6 +8,10 @@ import SubmitScreen from '@screen/DApp/Submit';
 import Review from '@screen/DApp/Review';
 import Parapack from '@screen/DApp/Parapack';
 import NewsArticle from '@screen/DApp/NewsArticle';
+import Settings from '@screen/DApp/Settings/Settings';
+import Setting from '@screen/DApp/Setting';
+import News from '@screen/DApp/News';
+import { DAppDetails } from '@screen/DApp/DAppDetails';
 
 // Just a simple option please optimize
 const _getOptions = (title: string) => {
@@ -35,28 +39,33 @@ const menus = [
   },
   {
     name: 'ReportQuestion',
-    options: _getOptions(''),
+    options: _getOptions('报告问题'),
     component: ReportQuestion,
   },
   {
     name: 'DevloperApplication',
-    options: _getOptions(''),
+    options: _getOptions('入驻申请'),
     component: DevloperApplication,
   },
   {
     name: 'DeveloperOnboarding',
-    options: _getOptions(''),
+    options: _getOptions('开发者入驻规则及协议'),
     component: DeveloperOnboarding,
   },
   {
     name: 'SubmitScreen',
-    options: _getOptions(''),
+    options: _getOptions('入驻申请'),
     component: SubmitScreen,
   },
   {
     name: 'Review',
-    options: _getOptions(''),
+    options: _getOptions('入驻申请'),
     component: Review,
+  },
+  {
+    name: 'DAppDetails',
+    options: _getOptions('苹方-简 中黑体'),
+    component: DAppDetails,
   },
   {
     name: 'Parapack',
@@ -67,6 +76,16 @@ const menus = [
     name: 'NewsArticle',
     options: _getOptions(''),
     component: NewsArticle,
+  },
+  {
+    name: 'Setting',
+    options: _getOptions('设置'),
+    component: Setting,
+  },
+  {
+    name: 'News',
+    options: _getOptions('公告詳情'),
+    component: News,
   },
 ];
 
