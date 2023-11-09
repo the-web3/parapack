@@ -39,7 +39,7 @@ export const ActivityItems = ({ item, navigation }: ActivityItemsProps) => {
           titleStyle={{ fontWeight: 'bold', fontSize: 11, lineHeight: 16 }}
           size="sm"
           onPress={() => {
-            navigation.navigate('DAppDetail', { params: item });
+            navigation.navigate('DAppDetails', { params: item });
           }}
         >
           进入活动

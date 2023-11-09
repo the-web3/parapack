@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import instance from '@common/utils/http';
+import { useState, useEffect } from 'react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, Text, TextInput, StyleSheet, Appearance, View, Dimensions } from 'react-native';
@@ -8,6 +9,7 @@ interface DAppProps {
   navigation?: any;
   mode?: string;
 }
+
 const DeveloperApplication = (props: DAppProps) => {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -21,7 +23,14 @@ const DeveloperApplication = (props: DAppProps) => {
   const [contract, setContract] = useState('');
   const [exchange, setExchange] = useState('');
   const [capital, setCapital] = useState('');
+  const [device_id, setDevice_id] = useState('');
   const { t } = useTranslation();
+
+  useEffect(() => {
+    const deviceId = '12345'; // Replace with your device id logic
+    setDevice_id(deviceId);
+  }, []);
+
   const onConfirm = () => {
     const data = {
       email,
@@ -36,23 +45,20 @@ const DeveloperApplication = (props: DAppProps) => {
       contract,
       exchange,
       capital,
-      device_id: 'your-device-id',
+      device_id,
     };
-    fetch('https://example/dev/apply', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    })
-      .then((response) => response.json())
-      .then((data) => {
+    instance
+      .post('/dev/apply', data)
+      .then((response) => {
+        console.log(data);
+        console.log('Response data:', response);
         props?.navigation.navigate('SubmitScreen');
-        console.log({ data }, 'data is submitted');
+        console.log({ data: response.data }, 'data is submitted');
       })
       .catch((error) => {
+        console.error('Error Response:', error.response);
+        console.error('Error Details:', error.message);
         props?.navigation.navigate('SubmitScreen');
-        console.error({ error }, 'data failed submitted');
       });
   };
 
@@ -73,38 +79,46 @@ const DeveloperApplication = (props: DAppProps) => {
     label: {
       color: isDarkMode ? '#fff' : '#000',
       fontSize: isSmallScreen ? 8 : 10,
+      marginLeft: isSmallScreen ? 10 : 20,
       marginBottom: isSmallScreen ? 5 : 10,
     },
     text: {
       color: isDarkMode ? '#fff' : '#000',
       fontSize: isSmallScreen ? 12 : 14,
+      marginLeft: isSmallScreen ? 10 : 20,
       marginBottom: isSmallScreen ? 5 : 10,
     },
     labels: {
       color: isDarkMode ? '#808080' : '#000',
       fontSize: isSmallScreen ? 10 : 12,
       marginBottom: isSmallScreen ? 5 : 10,
+      marginLeft: isSmallScreen ? 10 : 20,
     },
     input: {
       // backgroundColor: isDarkMode ? '#333' : '#f2f2f2',
       color: isDarkMode ? '#fff' : '#000',
       borderRadius: 5,
       padding: isSmallScreen ? 5 : 10,
+      marginLeft: isSmallScreen ? 10 : 20,
       marginBottom: isSmallScreen ? 5 : 10, // Updated marginBottom
       fontSize: isSmallScreen ? 12 : 14,
     },
     button: {
       borderRadius: isSmallScreen ? 5 : 10,
       paddingVertical: isSmallScreen ? 10 : 15,
+      marginLeft: isSmallScreen ? 10 : 20,
       paddingHorizontal: isSmallScreen ? 15 : 20,
+      marginRight: isSmallScreen ? 10 : 20,
     },
     buttonText: {
       color: '#fff',
       fontSize: isSmallScreen ? 14 : 16,
+      marginLeft: isSmallScreen ? 10 : 20,
     },
     divider: {
       borderBottomColor: isDarkMode ? '#999' : '#ccc',
       borderBottomWidth: 1,
+      marginLeft: isSmallScreen ? 10 : 20,
       marginBottom: isSmallScreen ? 5 : 10, // Updated marginBottom
     },
   });

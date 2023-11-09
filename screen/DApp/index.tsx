@@ -9,7 +9,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import { makeStyles, useTheme } from '@rneui/themed';
+import { ListItem, makeStyles, useTheme } from '@rneui/themed';
 import Icon from 'react-native-vector-icons/AntDesign';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { useTranslation } from 'react-i18next';
@@ -17,9 +17,10 @@ import { DAppItem } from '@screen/DApp/Components/DAppItem';
 import { DAppItems } from '@screen/DApp/Components/DAppItem';
 import { getBanners, getDAppGroup, getNotices, getTags } from '@api/dApp';
 import { Button, Input, Text } from '@rneui/themed';
-import { getActivity } from '@api/home';
 import { Carousel } from 'react-native-ui-lib';
 import IconFont from '@assets/iconfont';
+
+const screenHeight = Dimensions.get('window').height;
 
 interface DAppProps {
   navigation?: any;
@@ -57,9 +58,13 @@ export const DAppScreen = (props: DAppProps) => {
   const [banners, setBanners] = useState<Record<string, any>>({});
   const [notices, setNotices] = useState<Record<string, any>>({});
   const [dAppGroup, setDAppGroup] = useState<Record<string, any>>({});
-  const [activity, setActivity] = useState<Record<string, any>>({});
+  const [dAppGroupTime, setDAppGroupTime] = useState<Record<string, any>>({});
+  const [dAppGroupNew, setDAppGroupNew] = useState<Record<string, any>>({});
+  const [dAppGroupHot, setDAppGroupHot] = useState<Record<string, any>>({});
+  const [dAppGroupLike, setDAppGroupLike] = useState<Record<string, any>>({});
   const [tags, setTags] = useState<string[]>([]);
   const [selectedTime, setSelectedTime] = useState('6小时');
+
   useEffect(() => {
     rqDatas();
   }, []);
@@ -84,24 +89,36 @@ export const DAppScreen = (props: DAppProps) => {
       const banners = await getBanners();
       setBanners(banners.data);
       console.log('banners:', banners);
-      const activityRes = await getActivity({
-        pageNum: '1',
-        pageSize: '10',
-        status: 1,
-        // symbol,
-      });
-      setActivity(activityRes.data);
 
       const dAppGroupRes = await getDAppGroup({
         pageNum: 1,
         pageSize: 10,
         symbol: 'eth',
       });
-      // console.log('dAppGroupRes', JSON.stringify(dAppGroupRes));
-      // console.log('banners', JSON.stringify(banners));
-      // console.log('activityRes', JSON.stringify(activityRes));
       setDAppGroup(dAppGroupRes.data);
-      // console.log('dAppGroupRes:', JSON.stringify(dAppGroupRes.data));
+
+      const dAppGroupLikeRes = await getDAppGroup({
+        pageNum: 1,
+        pageSize: 10,
+        symbol: 'eth',
+      });
+      setDAppGroupLike(dAppGroupLikeRes.data);
+
+      const dAppGroupHotRes = await getDAppGroup({
+        pageNum: 1,
+        pageSize: 10,
+        symbol: 'eth',
+        tag: 'hot',
+      });
+      setDAppGroupHot(dAppGroupHotRes.data);
+
+      const dAppGroupNewRes = await getDAppGroup({
+        pageNum: 1,
+        pageSize: 10,
+        symbol: 'eth',
+        tag: 'new',
+      });
+      setDAppGroupNew(dAppGroupNewRes.data);
 
       const noticesRes = await getNotices({
         pageNum: 1,
@@ -131,8 +148,17 @@ export const DAppScreen = (props: DAppProps) => {
     props?.navigation.navigate('DAppDetail', { params });
   };
 
+  const [hasFilledForm, setHasFilledForm] = useState(false);
+
   const onDevloperApplication = () => {
-    props?.navigation.navigate('DevloperApplication');
+    if (hasFilledForm) {
+      console.log('navigate to submit page');
+      props?.navigation.navigate('SubmitScreen');
+    } else {
+      console.log('navigate to developer application form');
+      props?.navigation.navigate('DevloperApplication');
+      setHasFilledForm(true);
+    }
   };
 
   const onNewsArticle = () => {
@@ -150,14 +176,30 @@ export const DAppScreen = (props: DAppProps) => {
   const onParapack = () => {
     props?.navigation.navigate('Parapack');
   };
+
+  const onIcon = () => {
+    props?.navigation.navigate('Settings');
+  };
+
   console.log('banners.lists:', banners.lists);
+
+  useEffect(() => {
+    getDAppGroup({
+      pageNum: 1,
+      pageSize: 10,
+      symbol: 'eth',
+      timeType: selectedTime === '6小时' ? '6h' : ' 24h', //24h
+    }).then((dAppGroupTimeRes) => {
+      setDAppGroupTime(dAppGroupTimeRes.data);
+    });
+  }, [selectedTime]);
 
   return (
     <SafeAreaView style={[style.container, { height: Dimensions.get('window').height - 100 }]}>
       {/* ------------------------ */}
       <View style={style.searchBar}>
-        <TouchableOpacity>
-          <IconFont name="a-logopeise" style={{ marginRight: 35, marginTop: 11 }} />
+        <TouchableOpacity onPress={() => onIcon()}>
+          <IconFont name="a-logopeise" style={{ marginRight: 35, marginTop: 11 }} size={25} />
         </TouchableOpacity>
 
         <Input
@@ -246,7 +288,6 @@ export const DAppScreen = (props: DAppProps) => {
             onRightClick={() => onShowAll('group')}
           />
           <ScrollView
-            style={style.scrollView}
             contentContainerStyle={[style.scrollViewContentView]}
             showsHorizontalScrollIndicator={false}
             bounces={false}
@@ -275,7 +316,7 @@ export const DAppScreen = (props: DAppProps) => {
             bounces={false}
             horizontal={true}
           >
-            {activity?.lists?.map((v, i) => (
+            {dAppGroupHot?.lists?.slice(0, 3).map((v, i) => (
               <View style={{ width: 250 }}>
                 <DAppItem {...v} key={v.title + String(i)} onPress={() => onHotPress(v)} />
               </View>
@@ -288,7 +329,7 @@ export const DAppScreen = (props: DAppProps) => {
             bounces={false}
             horizontal={true}
           >
-            {activity?.lists?.map((v, i) => (
+            {dAppGroupHot?.lists?.slice(3, 6).map((v, i) => (
               <View style={{ width: 250 }}>
                 <DAppItem {...v} key={v.title + String(i)} onPress={() => onHotPress(v)} />
               </View>
@@ -302,7 +343,7 @@ export const DAppScreen = (props: DAppProps) => {
             bounces={false}
             horizontal={true}
           >
-            {activity?.lists?.map((v, i) => (
+            {dAppGroupHot?.lists?.slice(6, 9).map((v, i) => (
               <View style={{ width: 250 }}>
                 <DAppItem {...v} key={v.title + String(i)} onPress={() => onHotPress(v)} />
               </View>
@@ -346,7 +387,7 @@ export const DAppScreen = (props: DAppProps) => {
             bounces={false}
             horizontal={true}
           >
-            {activity?.lists?.map((v, i) => (
+            {dAppGroupTime?.lists?.slice(0, 3)?.map((v, i) => (
               <View style={{ width: 250 }}>
                 <DAppItems {...v} key={v.title + String(i)} onPress={() => onHotPress(v)} />
               </View>
@@ -359,7 +400,7 @@ export const DAppScreen = (props: DAppProps) => {
             bounces={false}
             horizontal={true}
           >
-            {activity?.lists?.map((v, i) => (
+            {dAppGroupTime?.lists?.slice(3, 6)?.map((v, i) => (
               <View style={{ width: 250 }}>
                 <DAppItems {...v} key={v.title + String(i)} onPress={() => onHotPress(v)} />
               </View>
@@ -373,7 +414,7 @@ export const DAppScreen = (props: DAppProps) => {
             bounces={false}
             horizontal={true}
           >
-            {activity?.lists?.map((v, i) => (
+            {dAppGroupTime?.lists?.slice(6, 9)?.map((v, i) => (
               <View style={{ width: 250 }}>
                 <DAppItems {...v} key={v.title + String(i)} onPress={() => onHotPress(v)} />
               </View>
@@ -395,7 +436,7 @@ export const DAppScreen = (props: DAppProps) => {
             bounces={false}
             horizontal={true}
           >
-            {activity?.lists?.map((v, i) => (
+            {dAppGroupNew?.lists?.slice(0, 3).map((v, i) => (
               <View style={{ width: 250 }}>
                 <DAppItem {...v} key={v.title + String(i)} onPress={() => onHotPress(v)} />
               </View>
@@ -408,7 +449,7 @@ export const DAppScreen = (props: DAppProps) => {
             bounces={false}
             horizontal={true}
           >
-            {activity?.lists?.map((v, i) => (
+            {dAppGroupNew?.lists?.slice(3, 6).map((v, i) => (
               <View style={{ width: 250 }}>
                 <DAppItem {...v} key={v.title + String(i)} onPress={() => onHotPress(v)} />
               </View>
@@ -422,7 +463,7 @@ export const DAppScreen = (props: DAppProps) => {
             bounces={false}
             horizontal={true}
           >
-            {activity?.lists?.map((v, i) => (
+            {dAppGroupNew?.lists?.slice(6, 9).map((v, i) => (
               <View style={{ width: 250 }}>
                 <DAppItem {...v} key={v.title + String(i)} onPress={() => onHotPress(v)} />
               </View>
@@ -444,7 +485,7 @@ export const DAppScreen = (props: DAppProps) => {
             bounces={false}
             horizontal={true}
           >
-            {activity?.lists?.map((v, i) => (
+            {dAppGroupLike?.lists?.slice(0, 3).map((v, i) => (
               <View style={{ width: 250 }}>
                 <DAppItem {...v} key={v.title + String(i)} onPress={() => onHotPress(v)} />
               </View>
@@ -457,7 +498,7 @@ export const DAppScreen = (props: DAppProps) => {
             bounces={false}
             horizontal={true}
           >
-            {activity?.lists?.map((v, i) => (
+            {dAppGroupLike?.lists?.slice(3, 6).map((v, i) => (
               <View style={{ width: 250 }}>
                 <DAppItem {...v} key={v.title + String(i)} onPress={() => onHotPress(v)} />
               </View>
@@ -471,7 +512,7 @@ export const DAppScreen = (props: DAppProps) => {
             bounces={false}
             horizontal={true}
           >
-            {activity?.lists?.map((v, i) => (
+            {dAppGroupLike?.lists?.slice(6, 9).map((v, i) => (
               <View style={{ width: 250 }}>
                 <DAppItem {...v} key={v.title + String(i)} onPress={() => onHotPress(v)} />
               </View>
@@ -479,41 +520,42 @@ export const DAppScreen = (props: DAppProps) => {
           </ScrollView>
           <View style={{ marginVertical: 20, marginHorizontal: 20, backgroundColor: theme.colors.grey5, height: 1 }} />
         </View>
-        {/* news news news news news */}
-        {/* <View style={{ ...styles.firstContainer, marginBottom: 20 }}>
-          <ContentHeader
-            leftTitle={t('dApp.activityHotList')}
-            rightTitle={t('dApp.seeAll')}
-            onRightClick={() => onShowAll('activity')}
-          />
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {renderGroupedItems(activity?.lists || [])}
-          </ScrollView>
-        </View> */}
-        <View style={styles.container}>
+
+        <View
+          style={[
+            {
+              marginLeft: 16,
+              marginRight: 16,
+              marginBottom: screenHeight * 0.0146,
+            },
+          ]}
+        >
           <Text style={styles.more}>更多</Text>
-        </View>
-        <View style={styles.container}>
-          <TouchableOpacity onPress={() => onParapack()}>
-            <Text style={styles.buttonTexts}>关于 ParaPack</Text>
-          </TouchableOpacity>
-        </View>
-        {/* small below the parapack */}
-        <View style={styles.container}>
-          <TouchableOpacity onPress={() => onReport()}>
-            <Text style={styles.buttonTexts}>{t('dApp.reportquestion')}</Text>
-          </TouchableOpacity>
-        </View>
-        {/* longest sentence */}
-        <View style={styles.container}>
-          <TouchableOpacity onPress={() => onDeveloperOnboarding('DeveloperOnboarding')}>
-            <Text style={styles.buttonTexts}>{t('dApp.DeveloperOnboarding')}</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.row}>
-          <TouchableOpacity style={styles.button} onPress={() => onDevloperApplication()}>
-            <Text style={styles.buttonText}>{t('dApp.developerapplication')} </Text>
-          </TouchableOpacity>
+          <ListItem bottomDivider containerStyle={{ paddingTop: 0, paddingBottom: 0 }}>
+            <TouchableOpacity onPress={() => onParapack()}>
+              <Text style={styles.buttonTexts}>关于 ParaPack</Text>
+            </TouchableOpacity>
+          </ListItem>
+          {/* small below the parapack */}
+          <ListItem bottomDivider containerStyle={{ paddingTop: 10, paddingBottom: 0 }}>
+            <TouchableOpacity onPress={() => onReport()}>
+              <Text style={styles.buttonTexts}>{t('dApp.reportquestion')}</Text>
+            </TouchableOpacity>
+          </ListItem>
+          {/* longest sentence */}
+          <ListItem containerStyle={{ paddingTop: 10, paddingBottom: 0 }}>
+            <TouchableOpacity onPress={() => onDeveloperOnboarding('DeveloperOnboarding')}>
+              <Text style={styles.buttonTexts}>{t('dApp.DeveloperOnboarding')}</Text>
+            </TouchableOpacity>
+          </ListItem>
+          <Button
+            onPress={onDevloperApplication}
+            buttonStyle={{
+              backgroundColor: '#F2F3F6',
+            }}
+          >
+            <Text style={{ color: '#695BD4' }}>{t('dApp.developerapplication')}</Text>
+          </Button>
         </View>
         <View style={[styles.container, { marginTop: 20 }]}>
           <TouchableOpacity onPress={() => onDeveloperOnboarding('DeveloperOnboarding')}>
@@ -564,10 +606,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   button: {
-    borderRadius: 10,
+    borderRadius: 6,
     padding: 10,
-    backgroundColor: '#f2f3f6',
-    width: 350,
+    backgroundColor: '#F2F3F6',
+    width: 326,
+    height: 40,
+    marginLeft: 24, // Added 24 dp left margin
+    marginRight: 24, //
   },
   container: {
     flex: 1,
@@ -588,19 +633,15 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   buttonText: {
-    backgroundColor: 'transparent',
-    padding: 10,
-    color: '#6f61d6',
-    borderRadius: 5,
-    textAlign: 'center',
+    color: '#695BD4',
     fontSize: 16,
+    textAlign: 'center',
   },
+
   more: {
     backgroundColor: 'transparent',
     padding: 10,
     color: 'black',
-    borderRadius: 5,
-    textAlign: 'center',
     fontSize: 16,
   },
 
@@ -613,13 +654,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   buttonTexts: {
-    backgroundColor: 'transparent',
-    color: '#6f61d6',
-    padding: 10,
-    borderRadius: 5,
+    color: '#695BD4',
+    fontSize: 14,
     textAlign: 'center',
-    fontSize: 16,
     marginBottom: 10,
+    marginLeft: 2,
+    marginRight: 24,
   },
 });
 
@@ -759,6 +799,7 @@ const useStyles = makeStyles((theme, props: DAppProps) => {
     recommendItem: {
       gap: 2,
       paddingTop: 7,
+      marginRight: 8,
       paddingBottom: 5,
       paddingHorizontal: 7,
       flexDirection: 'column',

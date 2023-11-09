@@ -1,4 +1,5 @@
 import ScannerScreen from '@screen/Common/ScannerScreen';
+import Settings from '@screen/DApp/Settings/Settings';
 import Guide from '@screen/Guide';
 import SplashScreen from '@screen/SplashScreen';
 const menus = [
@@ -27,6 +28,14 @@ const menus = [
       headerShadowVisible: false,
     },
     component: ScannerScreen,
+  },
+  {
+    name: 'Settings',
+    options: {
+      headerShown: false,
+      headerShadowVisible: false,
+    },
+    component: Settings,
   },
 ];
 
