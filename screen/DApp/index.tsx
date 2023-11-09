@@ -1,15 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import { View, ScrollView, Dimensions, Image, SafeAreaView, useWindowDimensions } from 'react-native';
+import {
+  View,
+  ScrollView,
+  Dimensions,
+  Image,
+  SafeAreaView,
+  useWindowDimensions,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 import { makeStyles, useTheme } from '@rneui/themed';
 import Icon from 'react-native-vector-icons/AntDesign';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { useTranslation } from 'react-i18next';
 import { DAppItem } from '@screen/DApp/Components/DAppItem';
+import { DAppItems } from '@screen/DApp/Components/DAppItem';
 import { getBanners, getDAppGroup, getNotices, getTags } from '@api/dApp';
 import { Button, Input, Text } from '@rneui/themed';
 import { getActivity } from '@api/home';
 import { Carousel } from 'react-native-ui-lib';
 import IconFont from '@assets/iconfont';
+
 interface DAppProps {
   navigation?: any;
   mode?: string;
@@ -48,10 +59,25 @@ export const DAppScreen = (props: DAppProps) => {
   const [dAppGroup, setDAppGroup] = useState<Record<string, any>>({});
   const [activity, setActivity] = useState<Record<string, any>>({});
   const [tags, setTags] = useState<string[]>([]);
-
+  const [selectedTime, setSelectedTime] = useState('6小时');
   useEffect(() => {
     rqDatas();
   }, []);
+
+  const renderGroupedItems = (list) => {
+    const groupedItems = [];
+    for (let i = 0; i < list.length; i += 2) {
+      groupedItems.push(
+        <View style={{ flexDirection: 'column' }} key={i}>
+          <DAppItem {...list[i]} key={list[i].title} onPress={() => onHotPress(list[i])} />
+          {list[i + 1] ? (
+            <DAppItem {...list[i + 1]} key={list[i + 1].title} onPress={() => onHotPress(list[i + 1])} />
+          ) : null}
+        </View>
+      );
+    }
+    return groupedItems;
+  };
 
   const rqDatas = async () => {
     try {
@@ -104,13 +130,38 @@ export const DAppScreen = (props: DAppProps) => {
   const onRecommendPress = (params: any) => {
     props?.navigation.navigate('DAppDetail', { params });
   };
+
+  const onDevloperApplication = () => {
+    props?.navigation.navigate('DevloperApplication');
+  };
+
+  const onNewsArticle = () => {
+    props?.navigation.navigate('NewsArticle');
+  };
+
+  const onReport = () => {
+    props?.navigation.navigate('ReportQuestion');
+  };
+
+  const onDeveloperOnboarding = (tag?: string) => {
+    props?.navigation.navigate('DeveloperOnboarding');
+  };
+
+  const onParapack = () => {
+    props?.navigation.navigate('Parapack');
+  };
   console.log('banners.lists:', banners.lists);
 
   return (
     <SafeAreaView style={[style.container, { height: Dimensions.get('window').height - 100 }]}>
+      {/* ------------------------ */}
       <View style={style.searchBar}>
+        <TouchableOpacity>
+          <IconFont name="a-logopeise" style={{ marginRight: 35, marginTop: 11 }} />
+        </TouchableOpacity>
+
         <Input
-          containerStyle={{ marginLeft: -25 }}
+          containerStyle={{ marginLeft: -50, marginTop: 11 }}
           inputContainerStyle={style.inputContainer}
           errorProps={{ display: 'none' }}
           inputStyle={{
@@ -119,8 +170,11 @@ export const DAppScreen = (props: DAppProps) => {
           leftIcon={<Icon name="search1" />}
           placeholder="输入Dapp网站"
         />
-        <IconFont name="a-31-saoma" style={{ marginLeft: 5 }} />
+        <TouchableOpacity>
+          <IconFont name="a-31-saoma" style={{ marginLeft: -18, marginTop: 11 }} />
+        </TouchableOpacity>
       </View>
+      {/* --------------------- */}
       <ScrollView contentContainerStyle={{ paddingBottom: 20, minHeight: 200 }}>
         <Carousel
           key={0}
@@ -146,14 +200,17 @@ export const DAppScreen = (props: DAppProps) => {
           ))}
         </Carousel>
         <View style={style.notice}>
+          {/* button speaker */}
           <Button
             icon={<Icon name={'sound'} size={17} color={theme.colors.grey4} />}
             size={'sm'}
             color={'transparent'}
           />
-          <Text style={style.noticeText} numberOfLines={1}>
-            {notices?.lists?.length ? notices.lists[0].summary : ''}
-          </Text>
+          <TouchableOpacity style={[style.noticeText, { marginTop: 4 }]} onPress={() => onNewsArticle()}>
+            <Text style={style.noticeText} numberOfLines={1}>
+              {notices?.lists?.length ? notices.lists[0].summary : ''}
+            </Text>
+          </TouchableOpacity>
           <Button
             icon={<FontAwesomeIcon name={'navicon'} size={18} color={theme.colors.grey4} />}
             size={'sm'}
@@ -181,6 +238,7 @@ export const DAppScreen = (props: DAppProps) => {
             })}
           </ScrollView>
         </View>
+        {/* chinese language for the hot activity */}
         <View style={{ marginTop: 20 }}>
           <ContentHeader
             leftTitle={t('dApp.recommendList')}
@@ -203,21 +261,367 @@ export const DAppScreen = (props: DAppProps) => {
           </ScrollView>
           <View style={{ marginVertical: 20, marginHorizontal: 20, backgroundColor: theme.colors.grey5, height: 1 }} />
         </View>
-        <View style={{ flex: 1 }}>
+        {/* for the hot activity */}
+        <View style={{ marginTop: 1 }}>
+          <ContentHeader
+            leftTitle={t('dApp.hotActivity')}
+            rightTitle={t('dApp.seeAll')}
+            onRightClick={() => onShowAll('group')}
+          />
+          <ScrollView
+            style={style.scrollView}
+            contentContainerStyle={[style.scrollViewContent]}
+            showsHorizontalScrollIndicator={false}
+            bounces={false}
+            horizontal={true}
+          >
+            {activity?.lists?.map((v, i) => (
+              <View style={{ width: 250 }}>
+                <DAppItem {...v} key={v.title + String(i)} onPress={() => onHotPress(v)} />
+              </View>
+            ))}
+          </ScrollView>
+          <ScrollView
+            style={style.scrollView}
+            contentContainerStyle={[style.scrollViewContent]}
+            showsHorizontalScrollIndicator={false}
+            bounces={false}
+            horizontal={true}
+          >
+            {activity?.lists?.map((v, i) => (
+              <View style={{ width: 250 }}>
+                <DAppItem {...v} key={v.title + String(i)} onPress={() => onHotPress(v)} />
+              </View>
+            ))}
+          </ScrollView>
+
+          <ScrollView
+            style={style.scrollView}
+            contentContainerStyle={[style.scrollViewContent]}
+            showsHorizontalScrollIndicator={false}
+            bounces={false}
+            horizontal={true}
+          >
+            {activity?.lists?.map((v, i) => (
+              <View style={{ width: 250 }}>
+                <DAppItem {...v} key={v.title + String(i)} onPress={() => onHotPress(v)} />
+              </View>
+            ))}
+          </ScrollView>
+          <View style={{ marginVertical: 20, marginHorizontal: 20, backgroundColor: theme.colors.grey5, height: 1 }} />
+        </View>
+
+        {/* 6b 24b view all */}
+        <View style={{ marginTop: 1 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+            <View style={[toggleStyles.toggleContainer, { marginRight: 40 }]}>
+              <TouchableOpacity
+                style={[
+                  toggleStyles.toggleButton,
+                  selectedTime === '6小时' ? toggleStyles.toggleSelected : null,
+                  { width: 80 },
+                ]}
+                onPress={() => setSelectedTime('6小时')}
+              >
+                <Text style={[toggleStyles.toggleText, { fontSize: 12 }]}>6小时</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  toggleStyles.toggleButton,
+                  selectedTime === '24小时' ? toggleStyles.toggleSelected : null,
+                  { width: 80 },
+                ]}
+                onPress={() => setSelectedTime('24小时')}
+              >
+                <Text style={[toggleStyles.toggleText, { fontSize: 12 }]}>24小时</Text>
+              </TouchableOpacity>
+            </View>
+
+            <ContentHeader rightTitle={t('dApp.seeAll')} onRightClick={() => onShowAll('group')} />
+          </View>
+          <ScrollView
+            style={style.scrollView}
+            contentContainerStyle={[style.scrollViewContentEco]}
+            showsHorizontalScrollIndicator={false}
+            bounces={false}
+            horizontal={true}
+          >
+            {activity?.lists?.map((v, i) => (
+              <View style={{ width: 250 }}>
+                <DAppItems {...v} key={v.title + String(i)} onPress={() => onHotPress(v)} />
+              </View>
+            ))}
+          </ScrollView>
+          <ScrollView
+            style={style.scrollView}
+            contentContainerStyle={[style.scrollViewContentEco]}
+            showsHorizontalScrollIndicator={false}
+            bounces={false}
+            horizontal={true}
+          >
+            {activity?.lists?.map((v, i) => (
+              <View style={{ width: 250 }}>
+                <DAppItems {...v} key={v.title + String(i)} onPress={() => onHotPress(v)} />
+              </View>
+            ))}
+          </ScrollView>
+
+          <ScrollView
+            style={style.scrollView}
+            contentContainerStyle={[style.scrollViewContentEco]}
+            showsHorizontalScrollIndicator={false}
+            bounces={false}
+            horizontal={true}
+          >
+            {activity?.lists?.map((v, i) => (
+              <View style={{ width: 250 }}>
+                <DAppItems {...v} key={v.title + String(i)} onPress={() => onHotPress(v)} />
+              </View>
+            ))}
+          </ScrollView>
+          <View style={{ marginVertical: 20, marginHorizontal: 20, backgroundColor: theme.colors.grey5, height: 1 }} />
+        </View>
+        {/* new ecosystem */}
+        <View style={{ marginTop: 1 }}>
+          <ContentHeader
+            leftTitle={t('dApp.newEcosystems')}
+            rightTitle={t('dApp.seeAll')}
+            onRightClick={() => onShowAll('group')}
+          />
+          <ScrollView
+            style={style.scrollView}
+            contentContainerStyle={[style.scrollViewContent]}
+            showsHorizontalScrollIndicator={false}
+            bounces={false}
+            horizontal={true}
+          >
+            {activity?.lists?.map((v, i) => (
+              <View style={{ width: 250 }}>
+                <DAppItem {...v} key={v.title + String(i)} onPress={() => onHotPress(v)} />
+              </View>
+            ))}
+          </ScrollView>
+          <ScrollView
+            style={style.scrollView}
+            contentContainerStyle={[style.scrollViewContent]}
+            showsHorizontalScrollIndicator={false}
+            bounces={false}
+            horizontal={true}
+          >
+            {activity?.lists?.map((v, i) => (
+              <View style={{ width: 250 }}>
+                <DAppItem {...v} key={v.title + String(i)} onPress={() => onHotPress(v)} />
+              </View>
+            ))}
+          </ScrollView>
+
+          <ScrollView
+            style={style.scrollView}
+            contentContainerStyle={[style.scrollViewContent]}
+            showsHorizontalScrollIndicator={false}
+            bounces={false}
+            horizontal={true}
+          >
+            {activity?.lists?.map((v, i) => (
+              <View style={{ width: 250 }}>
+                <DAppItem {...v} key={v.title + String(i)} onPress={() => onHotPress(v)} />
+              </View>
+            ))}
+          </ScrollView>
+          <View style={{ marginVertical: 20, marginHorizontal: 20, backgroundColor: theme.colors.grey5, height: 1 }} />
+        </View>
+        {/* you like */}
+        <View style={{ marginTop: 1 }}>
+          <ContentHeader
+            leftTitle={t('dApp.youlike')}
+            rightTitle={t('dApp.seeAll')}
+            onRightClick={() => onShowAll('group')}
+          />
+          <ScrollView
+            style={style.scrollView}
+            contentContainerStyle={[style.scrollViewContent]}
+            showsHorizontalScrollIndicator={false}
+            bounces={false}
+            horizontal={true}
+          >
+            {activity?.lists?.map((v, i) => (
+              <View style={{ width: 250 }}>
+                <DAppItem {...v} key={v.title + String(i)} onPress={() => onHotPress(v)} />
+              </View>
+            ))}
+          </ScrollView>
+          <ScrollView
+            style={style.scrollView}
+            contentContainerStyle={[style.scrollViewContent]}
+            showsHorizontalScrollIndicator={false}
+            bounces={false}
+            horizontal={true}
+          >
+            {activity?.lists?.map((v, i) => (
+              <View style={{ width: 250 }}>
+                <DAppItem {...v} key={v.title + String(i)} onPress={() => onHotPress(v)} />
+              </View>
+            ))}
+          </ScrollView>
+
+          <ScrollView
+            style={style.scrollView}
+            contentContainerStyle={[style.scrollViewContent]}
+            showsHorizontalScrollIndicator={false}
+            bounces={false}
+            horizontal={true}
+          >
+            {activity?.lists?.map((v, i) => (
+              <View style={{ width: 250 }}>
+                <DAppItem {...v} key={v.title + String(i)} onPress={() => onHotPress(v)} />
+              </View>
+            ))}
+          </ScrollView>
+          <View style={{ marginVertical: 20, marginHorizontal: 20, backgroundColor: theme.colors.grey5, height: 1 }} />
+        </View>
+        {/* news news news news news */}
+        {/* <View style={{ ...styles.firstContainer, marginBottom: 20 }}>
           <ContentHeader
             leftTitle={t('dApp.activityHotList')}
             rightTitle={t('dApp.seeAll')}
             onRightClick={() => onShowAll('activity')}
           />
-
-          {activity?.lists?.map((v, i) => (
-            <DAppItem {...v} key={v.title + String(i)} onPress={() => onHotPress(v)} />
-          ))}
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {renderGroupedItems(activity?.lists || [])}
+          </ScrollView>
+        </View> */}
+        <View style={styles.container}>
+          <Text style={styles.more}>更多</Text>
+        </View>
+        <View style={styles.container}>
+          <TouchableOpacity onPress={() => onParapack()}>
+            <Text style={styles.buttonTexts}>关于 ParaPack</Text>
+          </TouchableOpacity>
+        </View>
+        {/* small below the parapack */}
+        <View style={styles.container}>
+          <TouchableOpacity onPress={() => onReport()}>
+            <Text style={styles.buttonTexts}>{t('dApp.reportquestion')}</Text>
+          </TouchableOpacity>
+        </View>
+        {/* longest sentence */}
+        <View style={styles.container}>
+          <TouchableOpacity onPress={() => onDeveloperOnboarding('DeveloperOnboarding')}>
+            <Text style={styles.buttonTexts}>{t('dApp.DeveloperOnboarding')}</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.row}>
+          <TouchableOpacity style={styles.button} onPress={() => onDevloperApplication()}>
+            <Text style={styles.buttonText}>{t('dApp.developerapplication')} </Text>
+          </TouchableOpacity>
+        </View>
+        <View style={[styles.container, { marginTop: 20 }]}>
+          <TouchableOpacity onPress={() => onDeveloperOnboarding('DeveloperOnboarding')}>
+            <Text style={styles.buttonTexts}>
+              Terms and Regulation <Text style={styles.buttonTexts}>{'>'}</Text>
+            </Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
   );
 };
+const toggleStyles = StyleSheet.create({
+  toggleContainer: {
+    flexDirection: 'row',
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: '#f2f3f6',
+    width: 130,
+  },
+  toggleButton: {
+    flex: 1,
+    padding: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#f2f3f6',
+    borderRadius: 15,
+  },
+  toggleSelected: {
+    backgroundColor: '#ffffff',
+  },
+  toggleText: {
+    fontSize: 10,
+  },
+});
+
+const styles = StyleSheet.create({
+  firstContainer: {
+    flex: 1,
+    flexShrink: 1,
+    width: '90%',
+    height: '90%',
+  },
+
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  button: {
+    borderRadius: 10,
+    padding: 10,
+    backgroundColor: '#f2f3f6',
+    width: 350,
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    marginLeft: 20,
+  },
+
+  leftButton: {
+    marginRight: 10,
+  },
+  rightButton: {
+    marginLeft: 10,
+  },
+  containers: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  buttonText: {
+    backgroundColor: 'transparent',
+    padding: 10,
+    color: '#6f61d6',
+    borderRadius: 5,
+    textAlign: 'center',
+    fontSize: 16,
+  },
+  more: {
+    backgroundColor: 'transparent',
+    padding: 10,
+    color: 'black',
+    borderRadius: 5,
+    textAlign: 'center',
+    fontSize: 16,
+  },
+
+  buttonsText: {
+    backgroundColor: '#e0e0e0',
+    color: '#6f61d6',
+    padding: 10,
+    borderRadius: 5,
+    textAlign: 'center',
+    fontSize: 16,
+  },
+  buttonTexts: {
+    backgroundColor: 'transparent',
+    color: '#6f61d6',
+    padding: 10,
+    borderRadius: 5,
+    textAlign: 'center',
+    fontSize: 16,
+    marginBottom: 10,
+  },
+});
 
 interface ContentHeaderProps {
   leftTitle?: string | null | undefined;
@@ -243,6 +647,7 @@ const ContentHeader = (props: ContentHeaderProps) => {
           }}
         />
       )}
+
       {props.rightTitle && (
         <Text
           children={props?.rightTitle}
@@ -277,7 +682,7 @@ const useStyles = makeStyles((theme, props: DAppProps) => {
       height: 36,
       minHeight: 36,
       borderRadius: 24,
-      width: Dimensions.get('window').width - 75,
+      width: Dimensions.get('window').width - 95,
       borderColor: theme.colors.grey5,
     },
     banner: {
@@ -287,9 +692,6 @@ const useStyles = makeStyles((theme, props: DAppProps) => {
       borderRadius: 10,
       overflow: 'hidden',
       flex: 1,
-    },
-    wrapper: {
-      // height: 150,
     },
     slide: {
       flex: 1,
@@ -316,7 +718,7 @@ const useStyles = makeStyles((theme, props: DAppProps) => {
       flexDirection: 'row',
     },
     noticeText: {
-      flex: 1,
+      flex: 5,
       color: '#8c8c8c',
       fontSize: 12,
     },
@@ -325,11 +727,21 @@ const useStyles = makeStyles((theme, props: DAppProps) => {
       borderRadius: 5,
     },
     scrollView: {
-      flexDirection: 'row',
+      flex: 1,
     },
     scrollViewContentView: {
       gap: 5,
       paddingHorizontal: 20,
+      flexDirection: 'row',
+    },
+    scrollViewContent: {
+      gap: -50,
+      paddingHorizontal: 1,
+      flexDirection: 'row',
+    },
+    scrollViewContentEco: {
+      gap: -100,
+      paddingHorizontal: 1,
       flexDirection: 'row',
     },
     scrBtnContainer: {
