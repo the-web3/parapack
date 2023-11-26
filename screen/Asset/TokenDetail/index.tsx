@@ -30,28 +30,12 @@ const chartConfig = {
   backgroundColor: '#F5F5FF',
   backgroundGradientFrom: '#F5F5FF',
   backgroundGradientTo: '#F5F5FF',
-  // backgroundGradientFrom: 'RGBA(171, 159, 241, 1)',
-  // backgroundGradientTo: 'RGBA(93, 76, 215, 1)',
   decimalPlaces: 0,
-  yAxisLabel: '$',
-  yAxisSuffix: 'k',
-  // yAxisInterval: 100,
   color: (opacity = 1) => `rgba(171, 159, 241, ${opacity})`,
-  style: {
-    // verticalLines: {
-    //   strokeWidth: 0,
-    //   strokeDasharray: [4, 4], // 设置虚线样式
-    //   stroke: 'rgba(0, 0, 0, 0.5)',
-    // },
-    // horizontalLines: {
-    //   strokeWidth: 0,
-    //   strokeDasharray: [4, 4], // 设置虚线样式
-    //   stroke: 'rgba(0, 0, 0, 0.5)',
-    // },
-    // axisLineColor: 'red', // 坐标轴线的颜色
-    // axisLineWidth: 2, // 坐标轴线的宽度
-    // 其他样式属性
-  },
+  style: {},
+  yLabelsOffset: 0,
+  // propsForDots: { opacity: 0 },
+  labelColor: (opacity = 1) => `#C8C8C8`,
 };
 const TokenDetail = (props: Props) => {
   const [activity, setActivity] = useState<Record<string, any>>({});
@@ -295,220 +279,217 @@ const TokenDetail = (props: Props) => {
         </View>
       }
     >
-      <StatusBar
-        backgroundColor="#3251EA" // 替换为你想要的背景颜色
-        barStyle="light-content" // 替换为你想要的图标和文字颜色
-      />
+      <StatusBar backgroundColor="transparent" translucent={true} />
       <SafeAreaView style={[styles.container, { height: Dimensions.get('window').height }]}>
-        <LinearGradient
-          colors={['#3251EA', '#3251EA']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 0, y: 1 }}
-          style={styles.gradient}
-        >
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginHorizontal: 32,
-              paddingBottom: 22,
-            }}
+        <ScrollView>
+          <LinearGradient
+            colors={['#3251EA', '#3251EA']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 0, y: 1 }}
+            style={styles.gradient}
           >
-            <View>
-              <Text style={{ fontSize: 52, color: '#ECECEC' }}>
-                {addressBalance?.balance}
-                <Text style={{ fontSize: 12, color: '#ECECEC' }}>{addressBalance?.tokenName}</Text>
-              </Text>
-              <Text style={{ fontSize: 14, color: '#ECECEC' }}>≈${addressBalance?.asset_usd}</Text>
-            </View>
-          </View>
-          <View style={styles.scrollContainer}>
             <View
               style={{
                 flexDirection: 'row',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                paddingHorizontal: 26,
+                marginHorizontal: 32,
+                paddingBottom: 22,
               }}
             >
-              <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
-                <Text style={{ fontSize: 18 }}>{addressBalance?.tokenName} =</Text>
-                <Text style={{ fontSize: 14 }}>${addressBalance?.asset_usd}</Text>
-              </View>
-              <TouchableOpacity
-                onPress={() => {
-                  props?.navigation.navigate('swap');
-                }}
-              >
-                <Text style={{ color: '#3B28CC', fontSize: 12 }}>
-                  去兑换 <Icon name="right" />
+              <View>
+                <Text style={{ fontSize: 52, color: '#ECECEC' }}>
+                  {addressBalance?.balance}
+                  <Text style={{ fontSize: 12, color: '#ECECEC' }}>{addressBalance?.tokenName}</Text>
                 </Text>
-              </TouchableOpacity>
+                <Text style={{ fontSize: 14, color: '#ECECEC' }}>≈${addressBalance?.asset_usd}</Text>
+              </View>
             </View>
-            {kLine.labels.length > 0 && kLine.datasets[0].data.length > 0 && (
-              <LineChart
-                data={kLine}
-                height={160}
-                width={width - 26}
-                // yLabelsOffset={50}
-                // withVerticalLabels={false}
-                // withHorizontalLabels={false}
-                // withInnerLines={false}
-                withOuterLines={false}
-                chartConfig={chartConfig}
-                yAxisInterval={100}
-                bezier
+            <View style={styles.scrollContainer}>
+              <View
                 style={{
-                  paddingTop: 16,
-                }}
-              />
-            )}
-          </View>
-        </LinearGradient>
-        {activity?.lists?.length > 0 && (
-          <View style={{ paddingHorizontal: 16, marginVertical: 15 }}>
-            <TouchableOpacity
-              onPress={() => {
-                props?.navigation.navigate('coinDetail');
-              }}
-              style={styles.bannerContainer}
-            >
-              <Image
-                source={{ uri: activity?.lists[0]?.coverPicture }}
-                style={styles.banner}
-                // PlaceholderContent={<ActivityIndicator />}
-              />
-            </TouchableOpacity>
-          </View>
-        )}
-        <View style={styles.scrollContainer1}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 32 }}>
-            <View style={{ flex: 1 }}>
-              <Tab
-                value={index}
-                onChange={handleChange}
-                dense
-                indicatorStyle={{
-                  backgroundColor: '#3B28CC',
-                  height: 4,
-                  borderRadius: 2,
-                }}
-                titleStyle={(active: boolean) => {
-                  return { fontSize: 12, marginVertical: 8, color: active ? '#3B28CC' : '#AEAEAE' };
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  paddingHorizontal: 26,
                 }}
               >
-                <Tab.Item>全部</Tab.Item>
-                <Tab.Item>转出</Tab.Item>
-                <Tab.Item>转入</Tab.Item>
-              </Tab>
-            </View>
-            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-              <TouchableOpacity
-                onPress={() => {
-                  props?.navigation.navigate('searchHistory');
-                }}
-              >
-                <View
-                  style={{
-                    width: 24,
-                    height: 24,
-                    backgroundColor: '#F3F3F3',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderRadius: 6,
-                    marginRight: 6,
+                <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
+                  <Text style={{ fontSize: 18 }}>{addressBalance?.tokenName} =</Text>
+                  <Text style={{ fontSize: 14 }}>${addressBalance?.asset_usd}</Text>
+                </View>
+                <TouchableOpacity
+                  onPress={() => {
+                    props?.navigation.navigate('swap');
                   }}
                 >
-                  <Icon name="search1" color={'#5A5A5A'} />
-                </View>
+                  <Text style={{ color: '#3B28CC', fontSize: 12 }}>
+                    去兑换 <Icon name="right" />
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              {kLine.labels.length > 0 && kLine.datasets[0].data.length > 0 && (
+                <LineChart
+                  data={kLine}
+                  height={170}
+                  width={width + 30}
+                  withOuterLines={false}
+                  chartConfig={chartConfig as any}
+                  yAxisInterval={3}
+                  bezier
+                  withHorizontalLabels={false}
+                  style={{
+                    marginLeft: -40,
+                    paddingTop: 16,
+                  }}
+                />
+              )}
+            </View>
+          </LinearGradient>
+          {activity?.lists?.length > 0 && (
+            <View style={{ paddingHorizontal: 16, marginVertical: 15 }}>
+              <TouchableOpacity
+                onPress={() => {
+                  props?.navigation.navigate('coinDetail');
+                }}
+                style={styles.bannerContainer}
+              >
+                <Image
+                  source={{ uri: activity?.lists[0]?.coverPicture }}
+                  style={styles.banner}
+                  // PlaceholderContent={<ActivityIndicator />}
+                />
               </TouchableOpacity>
             </View>
-          </View>
-          <View style={{ flex: 1, paddingBottom: 380 }}>
-            <TabView value={index} onChange={handleChange} animationType="spring">
-              {[-1, 0, 1].map((item) => {
-                return (
-                  <TabView.Item style={{ width: '100%' }} key={item}>
-                    <ScrollView style={{ paddingHorizontal: 25 }}>
-                      {record[item]?.lists?.length > 0 ? (
-                        record[item]?.lists?.map((item) => (
-                          <TouchableOpacity
-                            key={item}
-                            onPress={() => {
-                              props?.navigation.navigate('coinDetail');
-                            }}
-                          >
-                            <View
-                              style={{
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                borderBottomWidth: 1,
-                                borderColor: '#F9F9F9',
-                                paddingVertical: 10,
+          )}
+          <View style={styles.scrollContainer1}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 32 }}>
+              <View style={{ flex: 1 }}>
+                <Tab
+                  value={index}
+                  onChange={handleChange}
+                  dense
+                  indicatorStyle={{
+                    backgroundColor: '#3B28CC',
+                    height: 4,
+                    borderRadius: 2,
+                  }}
+                  titleStyle={(active: boolean) => {
+                    return { fontSize: 12, marginVertical: 8, color: active ? '#3B28CC' : '#AEAEAE' };
+                  }}
+                >
+                  <Tab.Item>全部</Tab.Item>
+                  <Tab.Item>转出</Tab.Item>
+                  <Tab.Item>转入</Tab.Item>
+                </Tab>
+              </View>
+              <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    props?.navigation.navigate('searchHistory');
+                  }}
+                >
+                  <View
+                    style={{
+                      width: 24,
+                      height: 24,
+                      backgroundColor: '#F3F3F3',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: 6,
+                      marginRight: 6,
+                    }}
+                  >
+                    <Icon name="search1" color={'#5A5A5A'} />
+                  </View>
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View style={{ flex: 1, paddingBottom: 380 }}>
+              <TabView value={index} onChange={handleChange} animationType="spring">
+                {[-1, 0, 1].map((item) => {
+                  return (
+                    <TabView.Item style={{ width: '100%' }} key={item}>
+                      <ScrollView style={{ paddingHorizontal: 25 }} showsVerticalScrollIndicator={false}>
+                        {record[item]?.lists?.length > 0 ? (
+                          record[item]?.lists?.map((item) => (
+                            <TouchableOpacity
+                              key={item}
+                              onPress={() => {
+                                props?.navigation.navigate('coinDetail');
                               }}
                             >
-                              {/* <Avatar rounded source={{ uri: 'https://randomuser.me/api/portraits/men/36.jpg' }} /> */}
                               <View
                                 style={{
-                                  backgroundColor: 'rgba(240, 240, 255, 1)',
-                                  height: 21,
-                                  width: 21,
-                                  borderRadius: 100,
+                                  flexDirection: 'row',
                                   alignItems: 'center',
-                                  justifyContent: 'center',
+                                  borderBottomWidth: 1,
+                                  borderColor: '#F9F9F9',
+                                  paddingVertical: 10,
                                 }}
                               >
-                                <Icon
-                                  name="pay-circle-o1"
-                                  color={'rgba(59, 40, 204, 1)'}
-                                  style={{ backgroundColor: 'rgba(240, 240, 255, 1)', borderRadius: 100 }}
-                                />
-                              </View>
+                                {/* <Avatar rounded source={{ uri: 'https://randomuser.me/api/portraits/men/36.jpg' }} /> */}
+                                <View
+                                  style={{
+                                    backgroundColor: 'rgba(240, 240, 255, 1)',
+                                    height: 21,
+                                    width: 21,
+                                    borderRadius: 100,
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                  }}
+                                >
+                                  <Icon
+                                    name="pay-circle-o1"
+                                    color={'rgba(59, 40, 204, 1)'}
+                                    style={{ backgroundColor: 'rgba(240, 240, 255, 1)', borderRadius: 100 }}
+                                  />
+                                </View>
 
-                              <View style={{ flex: 1, marginRight: 14, marginLeft: 10 }}>
-                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
-                                  <Text>{item.type === 0 ? '转出' : '转入'}</Text>
-                                  <Text>{item.amount}</Text>
-                                </View>
-                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
-                                  <View style={{ flexDirection: 'row' }}>
-                                    <Text style={styles.listPrice}>¥ {item.amount}</Text>
+                                <View style={{ flex: 1, marginRight: 14, marginLeft: 10 }}>
+                                  <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
+                                    <Text>{item.type === 0 ? '转出' : '转入'}</Text>
+                                    <Text>{item.amount}</Text>
                                   </View>
-                                  <View>
-                                    <Text style={{ color: '#999999' }}>{moment(item.ctime).format('DD.MM.YY')}</Text>
+                                  <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
+                                    <View style={{ flexDirection: 'row' }}>
+                                      <Text style={styles.listPrice}>¥ {item.amount}</Text>
+                                    </View>
+                                    <View>
+                                      <Text style={{ color: '#999999' }}>{moment(item.ctime).format('DD.MM.YY')}</Text>
+                                    </View>
                                   </View>
                                 </View>
                               </View>
+                            </TouchableOpacity>
+                          ))
+                        ) : (
+                          <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                            <View>
+                              <Image
+                                source={require('@assets/images/emptyRecord.png')}
+                                style={styles.img}
+                                PlaceholderContent={<ActivityIndicator />}
+                              />
                             </View>
-                          </TouchableOpacity>
-                        ))
-                      ) : (
-                        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                          <View>
-                            <Image
-                              source={require('@assets/images/emptyRecord.png')}
-                              style={styles.img}
-                              PlaceholderContent={<ActivityIndicator />}
-                            />
+                            <Text style={{ fontSize: 10, marginTop: 18, marginBottom: 28, color: '#AEAEAE' }}>
+                              暂无数据
+                            </Text>
                           </View>
-                          <Text style={{ fontSize: 10, marginTop: 18, marginBottom: 28, color: '#AEAEAE' }}>
-                            暂无数据
-                          </Text>
-                        </View>
-                      )}
-                      {/* {record[item].loading && (
+                        )}
+                        {/* {record[item].loading && (
                         <View style={{ justifyContent: 'center', alignItems: 'center', paddingVertical: 16 }}>
                           <Text>Loading...</Text>
                         </View>
                       )} */}
-                    </ScrollView>
-                  </TabView.Item>
-                );
-              })}
-            </TabView>
+                      </ScrollView>
+                    </TabView.Item>
+                  );
+                })}
+              </TabView>
+            </View>
           </View>
-        </View>
+        </ScrollView>
       </SafeAreaView>
     </Layout>
   );
@@ -578,7 +559,7 @@ const useStyles = makeStyles((theme, props: Props) => {
       backgroundColor: theme.colors.white,
     },
     bannerContainer: {
-      height: 59,
+      height: 99,
     },
     banner: {
       width: '100%',

@@ -1,7 +1,6 @@
 import { getNotices } from '@api/dApp';
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import moment from 'moment';
 
 interface DAppProps {
@@ -11,9 +10,9 @@ interface DAppProps {
 
 const NewsArticle = (props: DAppProps) => {
   const onRecommendPress = (params: any) => {
-    props?.navigation.navigate('News', { params });
+    props?.navigation.navigate('News', { ...params });
   };
-  const navigation = useNavigation();
+
   const [notices, setNotices] = useState<{ id: number; title: string; summary: string; ctime: string }[]>([]);
 
   useEffect(() => {
@@ -23,7 +22,6 @@ const NewsArticle = (props: DAppProps) => {
         pageSize: 10,
         symbol: 'eth',
       });
-      console.log('noticesRes', noticesRes);
       setNotices(noticesRes.data.lists);
     };
     fetchNotices();
@@ -32,7 +30,15 @@ const NewsArticle = (props: DAppProps) => {
   return (
     <View style={styles.container}>
       {notices?.map((notice, index) => (
-        <TouchableOpacity style={styles.noticeContainer} key={index} onPress={() => onRecommendPress(index)}>
+        <TouchableOpacity
+          style={styles.noticeContainer}
+          key={index}
+          onPress={() =>
+            onRecommendPress({
+              ...notice,
+            })
+          }
+        >
           <Text style={[styles.noticeId, { marginTop: 6 }]}>{notice.id}</Text>
           <View style={[styles.noticeContent, { marginLeft: 28 }]}>
             <Text style={[styles.noticeTitle, { marginTop: 0 }]} numberOfLines={1}>

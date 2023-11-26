@@ -7,6 +7,7 @@ import _ from 'lodash';
 import { transferRecord } from '@api/wallet';
 import { getData } from '@common/utils/storage';
 import moment from 'moment';
+import IconFont from '@assets/iconfont';
 type Props = {
   fullWidth?: boolean;
   navigation: any;
@@ -51,7 +52,7 @@ const SearchHistory = (props: Props) => {
 
   return (
     <SafeAreaView style={{ backgroundColor: '#F6F7FC' }}>
-      <StatusBar backgroundColor={'#F6F7FC'} barStyle={`dark-content`} />
+      {/* <StatusBar backgroundColor="transparent" translucent={true} /> */}
       <View style={styles.top}>
         <View style={{ flexDirection: 'row-reverse', alignItems: 'center' }}>
           <SearchBar
@@ -68,6 +69,8 @@ const SearchHistory = (props: Props) => {
             inputStyle={{
               height: 22,
             }}
+            searchIcon={<IconFont name="a-110" size={16} />}
+            cancelButtonTitle={'取消'}
             leftIconContainerStyle={{}}
             rightIconContainerStyle={{}}
             loadingProps={{}}
@@ -75,7 +78,7 @@ const SearchHistory = (props: Props) => {
               setSearch(newVal);
               handleSearchDebounced(newVal);
             }}
-            placeholder="Type query here..."
+            placeholder=""
             placeholderTextColor="#888"
             value={search}
           />
@@ -89,7 +92,7 @@ const SearchHistory = (props: Props) => {
         </View>
       </View>
       <View style={styles.body}>
-        <ScrollView style={{ minHeight: '100%' }}>
+        <ScrollView style={{ minHeight: '100%' }} showsVerticalScrollIndicator={false}>
           {record?.data?.lists?.length > 0 ? (
             record?.data?.lists?.map((item) => (
               <TouchableOpacity

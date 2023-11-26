@@ -1,6 +1,6 @@
 import IconFont from '@assets/iconfont';
 import React, { useEffect } from 'react';
-import { StatusBar, StyleSheet, Text, View } from 'react-native';
+import { ImageBackground, StatusBar, StyleSheet, Text, View } from 'react-native';
 
 const SplashScreen = ({ navigation }) => {
   useEffect(() => {
@@ -53,16 +53,13 @@ const SplashScreen = ({ navigation }) => {
 
   return (
     <>
-      <StatusBar
-        backgroundColor="#3B28CC" // 替换为你想要的背景颜色
-        barStyle="light-content" // 替换为你想要的图标和文字颜色
-      />
-      <View style={styles.container}>
+      <StatusBar backgroundColor="transparent" translucent={true} />
+      <ImageBackground source={require('@assets/images/bg.png')} style={styles.container}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <IconFont name="a-logopeise" size={83} color="#fff" />
           <Text style={{ color: '#fff', fontSize: 24 }}>ParaPack</Text>
         </View>
-      </View>
+      </ImageBackground>
     </>
   );
 };
@@ -73,6 +70,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#3B28CC',
+    height: '100%',
   },
   logo: {
     width: 200,

@@ -22,11 +22,11 @@ const BAR = [
     title: 'activity',
   },
   {
-    icon: 'duihuandianjiqian',
+    icon: 'a-3',
     title: 'swap',
   },
   {
-    icon: 'a-bianzu4',
+    icon: 'a-41',
     title: 'video',
   },
   {
@@ -67,6 +67,8 @@ const App = (props: any) => {
       <StatusBar
         backgroundColor={theme.colors.background} // 替换为你想要的背景颜色
         barStyle={`${mode === 'light' ? 'dark' : 'light'}-content`} // 替换为你想要的图标和文字颜色
+        translucent={false}
+        // backgroundColor="transparent"
       />
       <LayoutNormal
         fixedStyle={styles.bottom}
@@ -81,13 +83,7 @@ const App = (props: any) => {
                   key={item.title}
                   onPress={() => props.navigation.navigate('home', { tab: item.title })}
                 >
-                  {/* <Icon name={item.icon} size={15} color={color} /> */}
-                  {item.icon === 'duihuandianjiqian' ? (
-                    <IconFont name={tab !== item.title ? item.icon : `${item.icon}-active`} />
-                  ) : (
-                    <IconFont name={item.icon} color={color} />
-                  )}
-
+                  <IconFont name={item.icon} color={color} />
                   <Text
                     style={{
                       ...styles.title,

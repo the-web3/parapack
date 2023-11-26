@@ -7,11 +7,12 @@ import Icon from 'react-native-vector-icons/AntDesign';
 type Props = {
   visible: boolean;
   title: string;
+  after?: React.ReactNode;
   children: React.ReactNode;
   onBackdropPress?: () => void;
 };
 
-const BottomOverlay: FC<Props> = ({ visible, title, onBackdropPress, children }) => {
+const BottomOverlay: FC<Props> = ({ visible, title, after, onBackdropPress, children }) => {
   const { theme }: { theme: CustomTheme<CustomColors> } = useTheme();
   const styles = useStyles(theme);
   return (
@@ -23,9 +24,10 @@ const BottomOverlay: FC<Props> = ({ visible, title, onBackdropPress, children })
           </TouchableOpacity>
 
           <Text style={styles.title}>{title}</Text>
+          {after && after}
         </View>
         <View style={{ maxHeight: 300 }}>
-          <ScrollView>{children}</ScrollView>
+          <ScrollView showsVerticalScrollIndicator={false}>{children}</ScrollView>
         </View>
       </>
     </Overlay>
@@ -45,8 +47,9 @@ const useStyles = makeStyles((theme: any) => {
     },
     containerContent: {
       flexDirection: 'row',
-      alignItems: 'baseline',
-      justifyContent: 'center',
+      alignItems: 'center',
+      // justifyContent: 'center',
+      justifyContent: 'space-between',
       position: 'relative',
       // paddingHorizontal: 32,
       paddingBottom: 12,
@@ -54,7 +57,12 @@ const useStyles = makeStyles((theme: any) => {
       // borderBottomColor: '#E9E9E9',
     },
     title: { color: '#000', fontSize: 14, fontWeight: 500 },
-    close: { position: 'absolute', left: 0, top: 6 },
+    after: {
+      // position: 'absolute', right: 0, top: 6
+    },
+    close: {
+      // position: 'absolute', left: 0, top: 6
+    },
     closeIcon: { color: 'rgba(93, 93, 93, 1)', fontSize: 16 },
   };
 });

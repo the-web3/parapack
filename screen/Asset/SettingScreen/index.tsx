@@ -139,7 +139,7 @@ const SettingScreen = (props) => {
             }}
             titleStyle={{ marginHorizontal: 20, color: 'rgba(208, 31, 31, 1)' }}
           >
-            删除
+            删除钱包
           </Button>
         </View>
       }

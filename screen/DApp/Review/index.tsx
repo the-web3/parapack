@@ -1,7 +1,8 @@
 import Layout from '@components/Layout';
 import { Button } from '@rneui/themed';
-import { View, Text, StyleSheet, TouchableOpacity, Appearance, Dimensions, SafeAreaView, Image } from 'react-native';
-import instance from '@common/utils/http';
+import { View, Text, StyleSheet, Appearance, Dimensions, SafeAreaView, Image } from 'react-native';
+import { getUniqueId } from 'react-native-device-info';
+import { cancelApplication } from '@api/dApp';
 
 interface DAppProps {
   navigation?: any;
@@ -12,16 +13,17 @@ const Review = (props: DAppProps) => {
   const colorScheme = Appearance.getColorScheme();
   const isDarkMode = colorScheme === 'dark';
   const { width, height } = Dimensions.get('window');
-  const iconSize = width * 0.5;
   const fontTextSize = width * 0.05;
   const textSize = width * 0.03;
   const marginBottom = height * 0.05;
   const textsMarginBottom = height * 0.35;
   const marginTop = height * 0.01;
 
-  const onCancel = () => {
-    instance
-      .delete('/dev/cancel')
+  const onCancel = async () => {
+    const [device_id] = await Promise.all([getUniqueId()]);
+    cancelApplication({
+      device_id,
+    })
       .then((response) => {
         console.log('Cancel request sent successfully');
         props?.navigation.navigate('DevloperApplication');

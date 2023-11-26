@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { SafeAreaView, ScrollView, StatusBar, TouchableOpacity, View } from 'react-native';
 import { Avatar, SearchBar, Text, makeStyles, useTheme } from '@rneui/themed';
 import Icon from 'react-native-vector-icons/AntDesign';
-import Spinner from 'react-native-loading-spinner-overlay';
+import IconFont from '@assets/iconfont';
 import _ from 'lodash';
 import { DeviceBalanceTokenList, getDeviceBalance } from '@api/wallet';
 import { getUniqueId } from 'react-native-device-info';
@@ -17,6 +17,7 @@ const SearchToken = (props: Props) => {
   const { theme }: { theme: CustomTheme<CustomColors> } = useTheme();
   const [search, setSearch] = useState('');
   const [tokenList, setTokenList] = useState<DeviceBalanceTokenList>({});
+  const [alltokenList, setAllTokenList] = useState<DeviceBalanceTokenList>({});
 
   const initList = async (params = {}) => {
     const [device_id, wallet_uuid] = await Promise.all([getUniqueId(), getData('wallet_uuid')]);
@@ -26,16 +27,18 @@ const SearchToken = (props: Props) => {
     });
     if (res.data) {
       setTokenList(res.data?.token_list[0] || {});
+      setAllTokenList(res.data?.token_list[0] || {});
     }
   };
 
   const filterList = useMemo(() => {
-    return tokenList?.wallet_balance;
-  }, [tokenList]);
+    return alltokenList?.wallet_balance;
+  }, [alltokenList]);
 
   useEffect(() => {
     initList();
   }, [props.navigation]);
+
   const goToAsset = () => {
     props.navigation.navigate('home', {
       tab: 'asset',
@@ -43,7 +46,15 @@ const SearchToken = (props: Props) => {
   };
 
   const handleSearch = (symbol: string) => {
-    initList({ symbol });
+    const newObj = {
+      ...alltokenList,
+      wallet_balance: tokenList?.wallet_balance.filter((item) => {
+        const regex = new RegExp(symbol, 'i');
+        const isMatch = regex.test(item.symbol);
+        return isMatch;
+      }),
+    };
+    setAllTokenList(newObj);
   };
 
   const handleSearchDebounced = useCallback(_.debounce(handleSearch, 500), []);
@@ -67,6 +78,8 @@ const SearchToken = (props: Props) => {
             inputStyle={{
               height: 22,
             }}
+            searchIcon={<IconFont name="a-110" size={16} />}
+            cancelButtonTitle={'取消'}
             leftIconContainerStyle={{}}
             rightIconContainerStyle={{}}
             loadingProps={{}}
@@ -74,7 +87,7 @@ const SearchToken = (props: Props) => {
               setSearch(newVal);
               handleSearchDebounced(newVal);
             }}
-            placeholder="Type query here..."
+            placeholder=""
             placeholderTextColor="#888"
             value={search}
           />
@@ -90,7 +103,7 @@ const SearchToken = (props: Props) => {
         </TouchableOpacity>
       </View>
       <View style={styles.body}>
-        <ScrollView style={{ minHeight: '100%' }}>
+        <ScrollView style={{ minHeight: '100%' }} showsVerticalScrollIndicator={false}>
           {(filterList || []).map((item: any, index) => (
             <TouchableOpacity
               key={`${item.symbol}${item.contract_addr}${item.address}${index}`}

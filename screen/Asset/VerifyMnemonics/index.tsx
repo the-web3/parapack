@@ -79,6 +79,7 @@ const VerifyMnemonics = (props: Record<string, any>) => {
       const { key, value } = selectMnemonics[i];
       if (!value || originMnemonics[key] !== value) {
         showToast('助记词顺序有误');
+        return;
       }
     }
     // TODO: 助记词存sqlite
@@ -97,7 +98,6 @@ const VerifyMnemonics = (props: Record<string, any>) => {
       });
       navigation?.navigate?.('home', { tab: 'asset' });
     }
-    console.log(2222, res);
   };
   useEffect(() => {
     setSelectMnemonics(generateRandomNumbers());

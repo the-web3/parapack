@@ -24,7 +24,7 @@ export const DAppWebView = (props: DAppWebViewProps) => {
   useEffect(() => {
     //props.route?.params.params.title
     console.log('props.route?.params.params.title:', props.route?.params.params.title);
-    (props as any)?.navigation.setOptions({ title: props.route?.params.params.title ?? 'DApp' });
+    (props as any)?.navigation.setOptions({ title: props.route?.params.params.title ?? '' });
   }, []);
 
   const injectJavaScript = useMemo(() => {

@@ -10,8 +10,6 @@ interface DAppListProps {
 }
 
 export const DAppList = (props: DAppListProps) => {
-  // const [dAppGroup, setDAppGroup] = useState<Record<string, any>>({});
-  // const [activity, setActivity] = useState<Record<string, any>>({});
   const [dAppData, setDAppData] = useState<Record<string, any>>({});
 
   const onPress = (params: any) => {
@@ -20,20 +18,19 @@ export const DAppList = (props: DAppListProps) => {
 
   useEffect(() => {
     initData();
+    (props as any)?.navigation.setOptions({ title: props.route?.params.title ?? 'DApp' });
   }, []);
 
   const initData = async () => {
-    const { type, tag } = props.route?.params.params;
+    const { type, ...rest } = props.route?.params.params;
     let sourceData;
-    if (type == 'group') {
+    if (type === 'group') {
       let params = {
         pageNum: 1,
         pageSize: 50,
         symbol: 'eth',
+        ...rest,
       };
-      if (tag) {
-        params = { ...params, tag } as any;
-      }
 
       sourceData = await getDAppGroup(params);
       console.warn('sourceData222:', sourceData);
@@ -42,10 +39,8 @@ export const DAppList = (props: DAppListProps) => {
         pageNum: '1',
         pageSize: '50',
         status: 1,
+        ...rest,
       };
-      if (tag) {
-        params = { ...params, tag } as any;
-      }
       sourceData = await getActivity(params);
     }
     console.warn('sourceData11:', sourceData);
@@ -55,7 +50,7 @@ export const DAppList = (props: DAppListProps) => {
   const styles = useStyles(props);
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={{ paddingBottom: 46 }}>
+      <ScrollView contentContainerStyle={{ paddingBottom: 46 }} showsVerticalScrollIndicator={false}>
         {(dAppData?.lists || []).map((v, i) => (
           <DAppItem
             {...v}

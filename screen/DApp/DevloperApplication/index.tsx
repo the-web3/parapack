@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, Text, TextInput, StyleSheet, Appearance, View, Dimensions } from 'react-native';
+import { getUniqueId } from 'react-native-device-info';
 import { Button } from 'react-native-ui-lib';
 // replace with your button component
 interface DAppProps {
@@ -23,15 +24,10 @@ const DeveloperApplication = (props: DAppProps) => {
   const [contract, setContract] = useState('');
   const [exchange, setExchange] = useState('');
   const [capital, setCapital] = useState('');
-  const [device_id, setDevice_id] = useState('');
   const { t } = useTranslation();
 
-  useEffect(() => {
-    const deviceId = '12345'; // Replace with your device id logic
-    setDevice_id(deviceId);
-  }, []);
-
-  const onConfirm = () => {
+  const onConfirm = async () => {
+    const [device_id] = await Promise.all([getUniqueId()]);
     const data = {
       email,
       phone,
@@ -50,14 +46,12 @@ const DeveloperApplication = (props: DAppProps) => {
     instance
       .post('/dev/apply', data)
       .then((response) => {
-        console.log(data);
-        console.log('Response data:', response);
         props?.navigation.navigate('SubmitScreen');
-        console.log({ data: response.data }, 'data is submitted');
+        // console.log({ data: response.data }, 'data is submitted');
       })
       .catch((error) => {
-        console.error('Error Response:', error.response);
-        console.error('Error Details:', error.message);
+        // console.error('Error Response:', error.response);
+        // console.error('Error Details:', error.message);
         props?.navigation.navigate('SubmitScreen');
       });
   };
@@ -124,13 +118,12 @@ const DeveloperApplication = (props: DAppProps) => {
   });
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <Text style={styles.text}>开发者申请</Text>
       <Text style={styles.labels}>需 审核， 需 KYC， 需签署 免责协议</Text>
       <Text style={[styles.label, { marginTop: 20 }]}>开发者联系邮箱</Text>
       <TextInput
         style={styles.input}
-        placeholder="ninsoidnk@gmail.com"
         placeholderTextColor={isDarkMode ? '#999' : '#ccc'}
         onChangeText={setEmail}
         value={email}
@@ -139,7 +132,6 @@ const DeveloperApplication = (props: DAppProps) => {
       <Text style={styles.label}>电话 (+082)</Text>
       <TextInput
         style={styles.input}
-        placeholder="08214992848395"
         placeholderTextColor={isDarkMode ? '#999' : '#ccc'}
         onChangeText={setPhone}
         value={phone}
@@ -149,7 +141,6 @@ const DeveloperApplication = (props: DAppProps) => {
         <Text style={styles.label}>电报 (Telegram)</Text>
         <TextInput
           style={styles.input}
-          placeholder="windy0293"
           placeholderTextColor={isDarkMode ? '#999' : '#ccc'}
           onChangeText={setTelegram}
           value={telegram}
@@ -157,12 +148,11 @@ const DeveloperApplication = (props: DAppProps) => {
       </View>
       <View style={styles.divider} />
       <Text style={styles.label}>Twitter</Text>
-      <TextInput style={styles.input} placeholder="windy0293" placeholderTextColor={isDarkMode ? '#999' : '#ccc'} />
+      <TextInput style={styles.input} placeholderTextColor={isDarkMode ? '#999' : '#ccc'} />
       <View style={styles.divider} />
       <Text style={styles.label}>Discord</Text>
       <TextInput
         style={styles.input}
-        placeholder="windy0293"
         placeholderTextColor={isDarkMode ? '#999' : '#ccc'}
         onChangeText={setDiscord}
         value={discord}
@@ -172,7 +162,6 @@ const DeveloperApplication = (props: DAppProps) => {
       <Text style={styles.label}>项目/应用名称</Text>
       <TextInput
         style={styles.input}
-        placeholder="windy0293"
         placeholderTextColor={isDarkMode ? '#999' : '#ccc'}
         onChangeText={setProject}
         value={project}
@@ -182,7 +171,6 @@ const DeveloperApplication = (props: DAppProps) => {
       <Text style={styles.label}>项目/应用名称</Text>
       <TextInput
         style={styles.input}
-        placeholder="opensea"
         placeholderTextColor={isDarkMode ? '#999' : '#ccc'}
         onChangeText={setDomain}
         value={domain}
@@ -191,7 +179,6 @@ const DeveloperApplication = (props: DAppProps) => {
       <Text style={styles.label}>项目/应用官网</Text>
       <TextInput
         style={styles.input}
-        placeholder="www.opeasea.com"
         placeholderTextColor={isDarkMode ? '#999' : '#ccc'}
         onChangeText={setType}
         value={type}
@@ -201,7 +188,6 @@ const DeveloperApplication = (props: DAppProps) => {
       <Text style={styles.label}>应⽤团队创始⼈kyc，及对应⽩⽪书</Text>
       <TextInput
         style={styles.input}
-        placeholder="NFT发行, NFT交易平台"
         placeholderTextColor={isDarkMode ? '#999' : '#ccc'}
         onChangeText={setFounder}
         value={founder}
@@ -211,7 +197,6 @@ const DeveloperApplication = (props: DAppProps) => {
       <Text style={styles.label}>Token名称</Text>
       <TextInput
         style={styles.input}
-        placeholder="www.opeasea.com"
         placeholderTextColor={isDarkMode ? '#999' : '#ccc'}
         onChangeText={setToken}
         value={token}
@@ -221,7 +206,6 @@ const DeveloperApplication = (props: DAppProps) => {
       <Text style={styles.label}>Token合约</Text>
       <TextInput
         style={styles.input}
-        placeholder="www.opeasea.com"
         placeholderTextColor={isDarkMode ? '#999' : '#ccc'}
         onChangeText={setContract}
         value={contract}
@@ -231,7 +215,6 @@ const DeveloperApplication = (props: DAppProps) => {
       <Text style={styles.label}>Token上所信息</Text>
       <TextInput
         style={styles.input}
-        placeholder="www.opeasea.com"
         placeholderTextColor={isDarkMode ? '#999' : '#ccc'}
         onChangeText={setExchange}
         value={exchange}
@@ -241,7 +224,6 @@ const DeveloperApplication = (props: DAppProps) => {
       <Text style={styles.label}>资本机构信息</Text>
       <TextInput
         style={styles.input}
-        placeholder="www.opeasea.com"
         placeholderTextColor={isDarkMode ? '#999' : '#ccc'}
         onChangeText={setCapital}
         value={capital}

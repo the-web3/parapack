@@ -44,10 +44,7 @@ const Collection = (props) => {
   console.log(11111, tokenDetail);
   return (
     <>
-      <StatusBar
-        backgroundColor="#3B28CC" // 替换为你想要的背景颜色
-        barStyle="light-content" // 替换为你想要的图标和文字颜色
-      />
+      {/* <StatusBar backgroundColor="transparent" translucent={true} /> */}
       <View style={styles.container}>
         <View>
           <ViewShot ref={viewShotRef}>

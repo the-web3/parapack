@@ -10,6 +10,7 @@ import { getUniqueId } from 'react-native-device-info';
 import { SUPPORT_CHAIN_NAME, addToken } from '@common/wallet';
 import Spinner from 'react-native-loading-spinner-overlay';
 import _ from 'lodash';
+import IconFont from '@assets/iconfont';
 type Props = {
   fullWidth?: boolean;
   navigation: any;
@@ -73,7 +74,6 @@ const AddToken = (props: Props) => {
   };
 
   const handleSearchDebounced = useCallback(_.debounce(handleSearch, 500), []);
-
   return (
     <SafeAreaView style={{ backgroundColor: '#F6F7FC' }}>
       <StatusBar backgroundColor={'#F6F7FC'} barStyle={`dark-content`} />
@@ -94,6 +94,8 @@ const AddToken = (props: Props) => {
             inputStyle={{
               height: 22,
             }}
+            searchIcon={<IconFont name="a-110" size={16} />}
+            cancelButtonTitle={'取消'}
             leftIconContainerStyle={{}}
             rightIconContainerStyle={{}}
             loadingProps={{}}
@@ -102,7 +104,7 @@ const AddToken = (props: Props) => {
               handleSearchDebounced(newVal);
             }}
             // onClearText={() => console.log(onClearText())}
-            placeholder="Type query here..."
+            placeholder=""
             placeholderTextColor="#888"
             // cancelButtonTitle="取消"
             // cancelButtonProps={{}}
@@ -122,7 +124,11 @@ const AddToken = (props: Props) => {
       </View>
       <View style={styles.body}>
         <Text style={styles.title}>热门币种</Text>
-        <ScrollView style={{ minHeight: '100%' }} contentContainerStyle={{ paddingBottom: 300 }}>
+        <ScrollView
+          style={{ minHeight: '100%' }}
+          contentContainerStyle={{ paddingBottom: 300 }}
+          showsVerticalScrollIndicator={false}
+        >
           {(filterList || []).map((item) => (
             <TouchableOpacity
               key={`${item?.symbol}_${item.contractAddr}`}

@@ -108,7 +108,7 @@ const Asset = (props: Props) => {
         end={{ x: 0, y: 1 }}
         style={styles.gradient}
       >
-        <View style={styles.topBar}>
+        {/* <View style={styles.topBar}>
           <View style={{ flexDirection: 'row' }}>
             <TouchableOpacity
               onPress={() => {
@@ -185,6 +185,9 @@ const Asset = (props: Props) => {
               <Icon name="scan1" size={24} color={theme.colors.black} />
             </TouchableOpacity>
           </View>
+        </View> */}
+        <View style={{ marginTop: 14, justifyContent: 'center', flexDirection: 'row' }}>
+          <Text style={{ fontWeight: 500, color: '#333', fontSize: 16 }}>我的资产</Text>
         </View>
         <View style={styles.card}>
           <View style={styles.cardBetween}>
@@ -316,7 +319,11 @@ const Asset = (props: Props) => {
           <View style={{ flex: 1 }}>
             <TabView value={index} onChange={setIndex} animationType="spring">
               <TabView.Item style={{ width: '100%' }}>
-                <ScrollView style={{ paddingHorizontal: 25 }} contentContainerStyle={{ paddingBottom: 300 }}>
+                <ScrollView
+                  style={{ paddingHorizontal: 25 }}
+                  contentContainerStyle={{ paddingBottom: 300 }}
+                  showsVerticalScrollIndicator={false}
+                >
                   {(currentWallet?.wallet_balance || []).map((item: any, index) => (
                     <TouchableOpacity
                       key={`${item.symbol}${item.contract_addr}${item.address}${index}`}
@@ -384,7 +391,22 @@ const Asset = (props: Props) => {
             </TabView>
           </View>
         </View>
-        <BottomOverlay visible={visible} title="选择钱包" onBackdropPress={toggleOverlay}>
+        <BottomOverlay
+          visible={visible}
+          title="选择钱包"
+          after={
+            <TouchableOpacity
+              onPress={() => {
+                props?.navigation.navigate('settingScreen', {
+                  wallet_uuid: currentWallet?.wallet_uuid,
+                });
+              }}
+            >
+              <IconFont name="gengduoshezhi" />
+            </TouchableOpacity>
+          }
+          onBackdropPress={toggleOverlay}
+        >
           {(walletInfo?.token_list || []).map((item) => (
             <TouchableOpacity
               key={item.wallet_uuid}
@@ -431,7 +453,7 @@ const Asset = (props: Props) => {
                       </View>
                     </TouchableOpacity>
                   )}
-                  <Icon name="edit" size={16} style={{ color: '#000', fontSize: 18 }} />
+                  <IconFont name="zhongmingming" size={16} />
                 </View>
               </View>
             </TouchableOpacity>

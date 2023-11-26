@@ -34,7 +34,7 @@ const Swap = (props: Props) => {
         </View>
         <IconFont name="xiangqing" />
       </View>
-      <ScrollView style={styles.main}>
+      <ScrollView style={styles.main} showsVerticalScrollIndicator={false}>
         <View style={styles.swapCard}>
           <View>
             <View style={styles.swapCardTitle}>

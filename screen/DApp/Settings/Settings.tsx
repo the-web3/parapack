@@ -1,6 +1,10 @@
-import React from 'react';
+import IconFont from '@assets/iconfont';
+import React, { useEffect, useState } from 'react';
 import { View, Text, ImageBackground, Image, TouchableOpacity, ScrollView, StatusBar } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import AntdIcon from 'react-native-vector-icons/AntDesign';
+import { makeStyles, useTheme } from '@rneui/themed';
+import { getData } from '@common/utils/storage';
 
 interface DAppProps {
   navigation?: any;
@@ -8,234 +12,237 @@ interface DAppProps {
 }
 
 export const Settings = (props: DAppProps) => {
+  const { theme }: { theme: CustomTheme<CustomColors> } = useTheme();
+  const styles = useStyles();
+  const [currentWallet, setCurrentWallet] = useState<DeviceBalanceTokenList>();
   const onSetting = () => {
-    props?.navigation.navigate('Setting');
+    props?.navigation.navigate('Setting', {
+      wallet_uuid: currentWallet?.wallet_uuid,
+    });
+    // props?.navigation.navigate('settingScreen', {
+    //   wallet_uuid: currentWallet?.wallet_uuid,
+    // });
   };
+  useEffect(() => {
+    getData('wallet_uuid').then((wallet_uuid) => {
+      setCurrentWallet({
+        wallet_uuid,
+      });
+    });
+  }, []);
 
   return (
-    <ImageBackground
-      source={{
-        uri: 'https://img.freepik.com/free-vector/gradient-dynamic-blue-lines-background_23-2148995756.jpg?size=626&ext=jpg',
-      }}
-      style={{ flex: 10, height: '30%' }}
-    >
-      <StatusBar
-        backgroundColor="#3B28CC" // 替换为你想要的背景颜色
-        barStyle="light-content" // 替换为你想要的图标和文字颜色
-      />
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <View style={{ position: 'absolute', top: 30, left: 20 }}>
-          <Image
-            source={{
-              uri: 'https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671142.jpg?size=626&ext=jpg&ga=GA1.1.1987313552.1698824392&semt=sph',
-            }}
-            style={{ width: 43, height: 43, borderRadius: 40 }}
+    <ImageBackground source={require('@assets/images/centerBg.png')} style={{ flex: 10, height: 287 }}>
+      <StatusBar backgroundColor="transparent" translucent={true} />
+      <View style={{ paddingHorizontal: 30, marginTop: 34 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+          <IconFont
+            name="a-11"
+            style={{ marginRight: 35, marginTop: 11, backgroundColor: '#F0F0FF', borderRadius: 44 }}
+            size={43}
           />
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={{ marginTop: 10, fontSize: 18, fontWeight: 'semibold', color: 'white' }}>我的钱包</Text>
-            <TouchableOpacity style={{ marginLeft: 5, marginTop: 11 }}>
-              <MaterialIcons name="chevron-right" size={25} color="white" />
-            </TouchableOpacity>
+          <View>
+            <View
+              style={{
+                flexDirection: 'row',
+                backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                borderRadius: 21.5,
+                width: 96,
+                justifyContent: 'space-between',
+                paddingVertical: 10,
+                paddingHorizontal: 19,
+                alignItems: 'center',
+                borderColor: '#fff',
+                borderWidth: 0.5,
+              }}
+            >
+              <TouchableOpacity onPress={() => onSetting()}>
+                <IconFont name="a-261" />
+              </TouchableOpacity>
+              <TouchableOpacity>
+                <IconFont name="a-271" />
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
-
-        <View style={{ position: 'absolute', top: 50, right: 20 }}>
-          <View
-            style={{
-              flexDirection: 'row',
-              backgroundColor: 'rgba(255, 255, 255, 0.2)',
-              borderRadius: 21.5,
-              width: 96,
-              height: 40,
-              justifyContent: 'space-between',
-              paddingHorizontal: 19,
-              alignItems: 'center',
-            }}
-          >
-            <TouchableOpacity onPress={() => onSetting()}>
-              <MaterialIcons name="settings" size={19} color="black" />
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <MaterialIcons name="wifi" size={19} color="black" />
-            </TouchableOpacity>
-          </View>
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 20, marginBottom: 30 }}>
+          <Text style={{ fontSize: 24, fontWeight: 600, color: 'white' }}>我的钱包</Text>
+          <TouchableOpacity style={{ marginLeft: 10 }}>
+            <AntdIcon name="caretright" size={14} color="white" />
+          </TouchableOpacity>
         </View>
       </View>
-
       <View
         style={{
-          backgroundColor: 'white',
           borderTopLeftRadius: 24,
           borderTopRightRadius: 24,
-          paddingHorizontal: 20,
-          height: '82.75%',
+          paddingHorizontal: 15,
+          backgroundColor: theme.colors?.backgroundGrey,
+          paddingTop: 20,
+          flex: 1,
         }}
       >
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <View
             style={{
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-between',
-              paddingVertical: 20,
-              marginBottom: 60,
-              marginLeft: 25,
-              marginRight: 25,
+              padding: 20,
+              marginBottom: 20,
+              backgroundColor: theme.colors?.white,
+              borderRadius: 12,
             }}
           >
             <TouchableOpacity style={{ alignItems: 'center' }}>
-              <MaterialIcons name="mail" size={30} color="gray" />
-              <Text style={{ marginTop: 10 }}>红包</Text>
+              <Image style={styles.circle} source={require('@assets/images/38.png')} />
+              <Text style={styles.text1}>红包</Text>
             </TouchableOpacity>
             <TouchableOpacity style={{ alignItems: 'center' }}>
-              <MaterialIcons name="ballot" size={30} color="gray" />
-              <Text style={{ marginTop: 10 }}>空投</Text>
+              <Image style={styles.circle} source={require('@assets/images/39.png')} />
+              <Text style={styles.text1}>空投</Text>
             </TouchableOpacity>
             <TouchableOpacity style={{ alignItems: 'center' }}>
-              <MaterialIcons name="people" size={30} color="gray" />
-              <Text style={{ marginTop: 10 }}>邀请</Text>
+              <Image style={styles.circle} source={require('@assets/images/40.png')} />
+              <Text style={styles.text1}>邀请</Text>
             </TouchableOpacity>
             <TouchableOpacity style={{ alignItems: 'center' }}>
-              <MaterialIcons name="scatter-plot" size={30} color="gray" />
-              <Text style={{ marginTop: 10 }}>钱包学院</Text>
+              <Image style={styles.circle} source={require('@assets/images/41.png')} />
+              <Text style={styles.text1}>钱包学院</Text>
             </TouchableOpacity>
+          </View>
+          <View style={styles.bg}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Text style={styles.title}>绑定社交媒体</Text>
+              <Text style={{ fontSize: 12, color: '#8C8C8C' }}>查看更多</Text>
+            </View>
+
+            <View style={styles.item}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <IconFont name="video" />
+                <Text style={styles.text}>Twitter</Text>
+              </View>
+              <TouchableOpacity>
+                <AntdIcon name="right" size={14} color={theme.colors.black} />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.item}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <IconFont name="video" />
+                <Text style={styles.text}>Discord</Text>
+              </View>
+              <TouchableOpacity>
+                <AntdIcon name="right" size={14} color={theme.colors.black} />
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={styles.bg}>
+            <Text style={styles.title}>账户</Text>
+            <View style={styles.item}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <IconFont name="a-9" />
+                <Text style={styles.text}>地址本</Text>
+              </View>
+              <TouchableOpacity>
+                <AntdIcon name="right" size={14} color={theme.colors.black} />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.item}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <IconFont name="a-10" />
+                <Text style={styles.text}>云钱包</Text>
+              </View>
+              <TouchableOpacity>
+                <AntdIcon name="right" size={14} color={theme.colors.black} />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.item}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <IconFont name="a-111" />
+                <Text style={styles.text}>活动通知</Text>
+              </View>
+              <TouchableOpacity>
+                <AntdIcon name="right" size={14} color={theme.colors.black} />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.item}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <IconFont name="a-12" />
+                <Text style={styles.text}>备份助记词</Text>
+              </View>
+              <TouchableOpacity>
+                <AntdIcon name="right" size={14} color={theme.colors.black} />
+              </TouchableOpacity>
+            </View>
+
+            <View style={[styles.item, { paddingBottom: 0 }]}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <IconFont name="a-13" />
+                <Text style={styles.text}>安全与隐私</Text>
+              </View>
+              <TouchableOpacity>
+                <AntdIcon name="right" size={14} color={theme.colors.black} />
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={styles.bg}>
+            <Text style={styles.title}>我参与的活动</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 20 }}>
+              <IconFont name="a-11" style={{ backgroundColor: '#F0F0FF', borderRadius: 44 }} size={43} />
+              <View style={{ marginLeft: 10 }}>
+                <Text style={{ color: 'black', fontWeight: 'regular', fontSize: 13 }}>Bitget合约</Text>
+                <Text style={{ color: 'gray', fontSize: 11 }}>在银河系中最受欢迎的去中心化平台上交..</Text>
+              </View>
+            </View>
+            <View style={[styles.item, { paddingTop: 0 }]}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <IconFont name="a-14" />
+                <Text style={styles.text}>联系客服</Text>
+              </View>
+              <TouchableOpacity>
+                <AntdIcon name="right" size={14} color={theme.colors.black} />
+              </TouchableOpacity>
+            </View>
+            <View style={[styles.item, { paddingBottom: 0 }]}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <IconFont name="a-15" />
+                <Text style={styles.text}>帮助中心</Text>
+              </View>
+              <TouchableOpacity>
+                <AntdIcon name="right" size={14} color={theme.colors.black} />
+              </TouchableOpacity>
+            </View>
           </View>
 
-          {/* roww */}
-          <Text style={{ marginLeft: 5, fontWeight: 'bold', fontSize: 20, color: 'black' }}>账户</Text>
-          <View
-            style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 20 }}
-          >
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <MaterialIcons name="people" size={30} color="gray" />
-              <Text style={{ marginLeft: 10, color: 'black', fontSize: 14 }}>地址本</Text>
+          <View style={styles.bg}>
+            <Text style={styles.title}>加入我们</Text>
+            <View style={styles.item}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <IconFont name="a-16" />
+                <Text style={styles.text}>招募代理</Text>
+              </View>
+              <TouchableOpacity>
+                <AntdIcon name="right" size={14} color={theme.colors.black} />
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity>
-              <MaterialIcons name="chevron-right" size={30} color="gray" />
-            </TouchableOpacity>
-          </View>
-          <View
-            style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 20 }}
-          >
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <MaterialIcons name="folder" size={30} color="gray" />
-              <Text style={{ marginLeft: 10, color: 'black', fontSize: 14 }}>云钱包</Text>
+            <View style={styles.item}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <IconFont name="a-17" />
+                <Text style={styles.text}>全球社区</Text>
+              </View>
+              <TouchableOpacity>
+                <AntdIcon name="right" size={14} color={theme.colors.black} />
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity>
-              <MaterialIcons name="chevron-right" size={30} color="gray" />
-            </TouchableOpacity>
-          </View>
-          <View
-            style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 20 }}
-          >
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <MaterialIcons name="crop-square" size={30} color="gray" />
-              <Text style={{ marginLeft: 10, color: 'black' }}>活动通知</Text>
+            <View style={[styles.item, { paddingBottom: 0 }]}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <IconFont name="a-181" />
+                <Text style={styles.text}>工作机会</Text>
+              </View>
+              <TouchableOpacity>
+                <AntdIcon name="right" size={14} color={theme.colors.black} />
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity>
-              <MaterialIcons name="chevron-right" size={30} color="gray" />
-            </TouchableOpacity>
-          </View>
-          <View
-            style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 20 }}
-          >
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <MaterialIcons name="request-page" size={30} color="gray" />
-              <Text style={{ marginLeft: 10, color: 'black' }}>备份助记词</Text>
-            </View>
-            <TouchableOpacity>
-              <MaterialIcons name="chevron-right" size={30} color="gray" />
-            </TouchableOpacity>
-          </View>
-
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              paddingVertical: 20,
-              marginBottom: 40,
-            }}
-          >
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <MaterialIcons name="library-add-check" size={30} color="gray" />
-              <Text style={{ marginLeft: 10, color: 'black' }}>安全与隐私</Text>
-            </View>
-            <TouchableOpacity>
-              <MaterialIcons name="chevron-right" size={30} color="gray" />
-            </TouchableOpacity>
-          </View>
-
-          <Text style={{ marginLeft: 5, fontWeight: 'bold', fontSize: 16, color: 'black' }}>我参与的活动</Text>
-          <View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 20 }}>
-            <MaterialIcons name="request-page" size={43} color="gray" />
-            <View style={{ marginLeft: 10 }}>
-              <Text style={{ color: 'black', fontWeight: 'regular', fontSize: 13 }}>Bitget合约</Text>
-              <Text style={{ color: 'gray', fontSize: 11 }}>在银河系中最受欢迎的去中心化平台上交..</Text>
-            </View>
-          </View>
-          <View
-            style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 20 }}
-          >
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <MaterialIcons name="request-page" size={30} color="gray" />
-              <Text style={{ marginLeft: 10, color: 'black', fontSize: 14 }}>备份助记词</Text>
-            </View>
-            <TouchableOpacity>
-              <MaterialIcons name="chevron-right" size={30} color="gray" />
-            </TouchableOpacity>
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              paddingVertical: 20,
-              marginBottom: 60,
-            }}
-          >
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <MaterialIcons name="library-add-check" size={30} color="gray" />
-              <Text style={{ marginLeft: 10, color: 'black' }}>安全与隐私</Text>
-            </View>
-            <TouchableOpacity>
-              <MaterialIcons name="chevron-right" size={30} color="gray" />
-            </TouchableOpacity>
-          </View>
-
-          <Text style={{ marginLeft: 5, fontWeight: 'bold', fontSize: 16, color: 'black' }}>加入我们</Text>
-          <View
-            style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 20 }}
-          >
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <MaterialIcons name="request-page" size={30} color="gray" />
-              <Text style={{ marginLeft: 10, color: 'black' }}>备份助记词</Text>
-            </View>
-            <TouchableOpacity>
-              <MaterialIcons name="chevron-right" size={30} color="gray" />
-            </TouchableOpacity>
-          </View>
-          <View
-            style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 20 }}
-          >
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <MaterialIcons name="library-add-check" size={30} color="gray" />
-              <Text style={{ marginLeft: 10, color: 'black' }}>安全与隐私</Text>
-            </View>
-            <TouchableOpacity>
-              <MaterialIcons name="chevron-right" size={30} color="gray" />
-            </TouchableOpacity>
-          </View>
-          <View
-            style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 20 }}
-          >
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <MaterialIcons name="request-page" size={30} color="gray" />
-              <Text style={{ marginLeft: 10, color: 'black' }}>备份助记词</Text>
-            </View>
-            <TouchableOpacity>
-              <MaterialIcons name="chevron-right" size={30} color="gray" />
-            </TouchableOpacity>
           </View>
         </ScrollView>
       </View>
@@ -243,4 +250,45 @@ export const Settings = (props: DAppProps) => {
   );
 };
 
+const useStyles = makeStyles((theme: any) => {
+  return {
+    circle: {
+      backgroundColor: '#F4F4F4',
+      borderRadius: 44,
+      width: 49,
+      height: 49,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    text1: {
+      color: theme.colors.black,
+      fontSize: 14,
+      fontWeight: 400,
+      marginTop: 10,
+    },
+    text: {
+      color: theme.colors.black,
+      fontSize: 14,
+      fontWeight: 400,
+      marginLeft: 8,
+    },
+    bg: {
+      padding: 20,
+      marginBottom: 20,
+      backgroundColor: theme.colors?.white,
+      borderRadius: 12,
+    },
+    title: {
+      fontWeight: 'bold',
+      fontSize: 16,
+      color: theme.colors.black,
+    },
+    item: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingVertical: 15,
+    },
+  };
+});
 export default Settings;

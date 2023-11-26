@@ -1,30 +1,37 @@
 import IconFont from '@assets/iconfont';
-import React, { useEffect, useState } from 'react';
-import { Button, Input, Image, Text } from '@rneui/themed';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Input } from '@rneui/themed';
 import { getActivity } from '@api/home';
 import { View, ScrollView, SafeAreaView } from 'react-native';
 import { makeStyles, useTheme } from '@rneui/themed';
-import moment from 'moment';
 import { ActivityItems } from './Components/ActivityItems';
+import _ from 'lodash';
 const Activity = ({ navigation }) => {
   const styles = useStyles();
   const { theme } = useTheme();
   const [activity, setActivity] = useState<Record<string, any>>({});
-  const rqDatas = async () => {
+  const [search, setSearch] = useState('');
+  const rqDatas = async (params = {}) => {
     try {
       const activityRes = await getActivity({
         pageNum: '1',
         pageSize: '10',
         status: 1,
-        // symbol,
+        ...params,
       });
-      // console.log(1111111, JSON.stringify(activityRes));
       setActivity(activityRes.data);
     } catch (e) {}
   };
   useEffect(() => {
     rqDatas();
   }, []);
+  const handleSearch = (symbol: string) => {
+    rqDatas({
+      symbol,
+    });
+  };
+
+  const handleSearchDebounced = useCallback(_.debounce(handleSearch, 500), []);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.searchBar}>
@@ -49,10 +56,15 @@ const Activity = ({ navigation }) => {
             }}
             rightIcon={<IconFont name="a-huaban1" />}
             placeholder="搜索你想要了解的活动..."
+            onChangeText={(newVal) => {
+              setSearch(newVal);
+              handleSearchDebounced(newVal);
+            }}
+            value={search}
           />
         </View>
       </View>
-      <ScrollView style={styles.main}>
+      <ScrollView style={styles.main} showsVerticalScrollIndicator={false}>
         {activity?.lists?.map((item, index) => (
           <ActivityItems item={item} key={index} navigation={navigation} />
         ))}

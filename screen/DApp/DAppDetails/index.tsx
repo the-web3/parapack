@@ -124,7 +124,7 @@ export const DAppDetails = (props: DAppProps) => {
 
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <Carousel
           key={0}
           style={styles.banner}

@@ -35,7 +35,7 @@ const Test = (props: Props) => {
   return (
     <Layout>
       <SafeAreaView>
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <Button
             onPress={async () => {
               // const seed = MnemonicToSeed({
