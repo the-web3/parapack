@@ -9,7 +9,7 @@ import { getData } from '@common/utils/storage';
 import { showToast } from '@common/utils/platform';
 import HTML from 'react-native-render-html';
 import ReportBottom from '@components/ReportBottom';
-import Icon from 'react-native-vector-icons/AntDesign';
+import IconFont from '@assets/iconfont';
 
 interface DAppDetailParam {
   navigation?: any;
@@ -139,8 +139,7 @@ export const DAppDetail = (props: DAppDetailParam) => {
                 <Text style={{ color: '#FFF' }}>了解</Text>
               </TouchableOpacity>
               <TouchableOpacity>
-                {/* <IconFont name="share" /> */}
-                <Icon name="export" style={{ marginLeft: 8, color: '#5D5D5D', fontSize: 16 }} />
+                <IconFont name="a-112" />
               </TouchableOpacity>
             </View>
           </View>
@@ -180,7 +179,7 @@ export const DAppDetail = (props: DAppDetailParam) => {
             <View style={{ marginTop: 1, width: 3, height: 15, backgroundColor: '#25AC4E', borderRadius: 2 }} />
             <View style={{ flexDirection: 'column', gap: 3, marginLeft: 5 }}>
               <Text style={{ color: '#252525', fontSize: 15, fontWeight: '500' }}>${showData.price}</Text>
-              <Text style={{ color: showData.rose > 0 ? '#25AC4E' : 'red', fontSize: 12 }}>+{showData.rose}%</Text>
+              <Text style={{ color: showData.rose >= 0 ? '#25AC4E' : 'red', fontSize: 12 }}>{showData.rose}%</Text>
             </View>
           </View>
           <Text style={{ color: '#8C8C8C', fontSize: 10 }}>{dAppProps?.symbol}/USDT</Text>

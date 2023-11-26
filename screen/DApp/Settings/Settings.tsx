@@ -119,7 +119,7 @@ export const Settings = (props: DAppProps) => {
 
             <View style={styles.item}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <IconFont name="video" />
+                <IconFont name="a-31" />
                 <Text style={styles.text}>Twitter</Text>
               </View>
               <TouchableOpacity>
@@ -188,7 +188,7 @@ export const Settings = (props: DAppProps) => {
           <View style={styles.bg}>
             <Text style={styles.title}>我参与的活动</Text>
             <View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 20 }}>
-              <IconFont name="a-11" style={{ backgroundColor: '#F0F0FF', borderRadius: 44 }} size={43} />
+              <Image style={{ width: 43, height: 43 }} source={require('@assets/images/2.png')} />
               <View style={{ marginLeft: 10 }}>
                 <Text style={{ color: 'black', fontWeight: 'regular', fontSize: 13 }}>Bitget合约</Text>
                 <Text style={{ color: 'gray', fontSize: 11 }}>在银河系中最受欢迎的去中心化平台上交..</Text>
