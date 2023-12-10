@@ -1,6 +1,6 @@
 import { Button } from '@rneui/themed';
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, SafeAreaView, FlatList } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, SafeAreaView } from 'react-native';
 import { getUniqueId } from 'react-native-device-info';
 import ImagePicker, { ImageLibraryOptions, MediaType, ImagePickerResponse } from 'react-native-image-picker';
 import { launchImageLibrary } from 'react-native-image-picker';
@@ -8,6 +8,8 @@ import IconFont from '@assets/iconfont';
 import Layout from '@components/Layout';
 import { report } from '@api/dApp';
 import Icon from 'react-native-vector-icons/AntDesign';
+import { SUCCESS_CODE } from '@common/constants';
+import { showToast } from '@common/utils/platform';
 const FormData = require('form-data');
 
 interface DAppProps {
@@ -91,17 +93,20 @@ const ReportQuestion = (props: DAppProps) => {
         }
       });
     }
-
-    console.log('Submitting data:', JSON.stringify(formdata));
+    // console.log('Submitting data:', JSON.stringify(formdata));
     report(formdata)
       .then((response) => {
-        console.log('Response data:', JSON.stringify(response));
+        // console.log('Response data:', JSON.stringify(response));
         // console.log('Data is Submitted', { response });
-        // if (response?.code === SUCCESS_CODE) {
-        //   props?.navigate('home', {
-        //     tab: 'ecology',
-        //   });
-        // }
+        if (response?.code === SUCCESS_CODE) {
+          showToast('提交成功!', {
+            onHide: () => {
+              props?.navigation?.navigate('home', {
+                tab: 'ecology',
+              });
+            },
+          });
+        }
       })
       .catch((error) => {
         console.error('Error Response:', JSON.stringify(error));

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { ActivityIndicator, Image, SafeAreaView, ScrollView, TouchableOpacity, View } from 'react-native';
-import { Avatar, Overlay, Tab, TabView, Text, makeStyles, useTheme } from '@rneui/themed';
+import { Avatar, Button, Tab, TabView, Text, makeStyles, useTheme } from '@rneui/themed';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { useTranslation } from 'react-i18next';
@@ -458,6 +458,15 @@ const Asset = (props: Props) => {
               </View>
             </TouchableOpacity>
           ))}
+          <View style={{ marginTop: 16 }}>
+            <Button
+              onPress={async () => {
+                props?.navigation?.navigate('guide');
+              }}
+            >
+              添加钱包
+            </Button>
+          </View>
         </BottomOverlay>
         {/* <Overlay
           isVisible={visible}

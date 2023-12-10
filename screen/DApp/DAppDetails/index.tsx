@@ -86,14 +86,17 @@ export const DAppDetails = (props: DAppProps) => {
   const [dAppProps] = useState(props?.route?.params?.params);
 
   useEffect(() => {
-    initKLine();
+    if (dAppProps?.symbol !== '') {
+      initKLine();
+    }
+
     getBanners().then((banners) => {
       setBanners(banners.data);
     });
   }, []);
 
   const initKLine = useCallback(async () => {
-    //TODO 接口不通
+    console.log(111111, dAppProps);
     const res = await getSymbolKline({
       symbol: 'ETH',
     });

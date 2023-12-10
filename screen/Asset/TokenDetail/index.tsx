@@ -48,6 +48,7 @@ const TokenDetail = (props: Props) => {
       },
     ],
   });
+  const [symbolPrice, setSymbolPrice] = useState('0');
   const [addressBalance, setAddressBalance] = useState<any>();
   const [tokenInfo, setTokenInfo] = useState<Record<string, any>>({});
   const [record, setRecord] = useState<any>({
@@ -86,21 +87,23 @@ const TokenDetail = (props: Props) => {
   }, [tokenInfo]);
 
   const initKLine = useCallback(async () => {
-    //TODO 接口不通
     const res = await getSymbolKline({
       symbol: tokenInfo?.tokenDetail?.symbol as string,
     });
+
     if (res.data) {
       const currentKLine = (res.data.kline || []).filter((item, index) => index < 10);
+      const priceList = currentKLine.map((item) => Number(item.price));
       setKLine({
         labels: currentKLine.map((item) => moment(item.time).format('ss')) as string[],
         datasets: [
           {
-            data: currentKLine.map((item) => Number(item.price)) as number[],
+            data: priceList as number[],
             color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`, // 设置折线颜色
           },
         ],
       });
+      setSymbolPrice(priceList[priceList?.length - 1]);
     }
   }, [tokenInfo]);
 
@@ -128,7 +131,6 @@ const TokenDetail = (props: Props) => {
         params.type = type;
       }
       const res = await transferRecord(params);
-      console.log(44444, params, JSON.stringify(res));
       if (res.data) {
         setRecord((prev: any) => {
           return {
@@ -163,7 +165,6 @@ const TokenDetail = (props: Props) => {
       status: 1,
       symbol,
     });
-    console.log(55555, res);
   }, [tokenInfo]);
 
   const initInfo = async () => {
@@ -315,8 +316,8 @@ const TokenDetail = (props: Props) => {
                 }}
               >
                 <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
-                  <Text style={{ fontSize: 18 }}>{addressBalance?.tokenName} =</Text>
-                  <Text style={{ fontSize: 14 }}>${addressBalance?.asset_usd}</Text>
+                  <Text style={{ fontSize: 18 }}>{addressBalance?.tokenName} = </Text>
+                  <Text style={{ fontSize: 14 }}>${symbolPrice}</Text>
                 </View>
                 <TouchableOpacity
                   onPress={() => {
@@ -332,10 +333,12 @@ const TokenDetail = (props: Props) => {
                 <LineChart
                   data={kLine}
                   height={170}
-                  width={width + 30}
+                  width={width + 60}
                   withOuterLines={false}
                   chartConfig={chartConfig as any}
                   yAxisInterval={3}
+                  withHorizontalLines={false}
+                  withVerticalLines={false}
                   bezier
                   withHorizontalLabels={false}
                   style={{
@@ -496,7 +499,6 @@ const TokenDetail = (props: Props) => {
 };
 
 const useStyles = makeStyles((theme, props: Props) => {
-  // console.log(11111, theme.colors, props);
   return {
     gradient: {
       // height: '100%',

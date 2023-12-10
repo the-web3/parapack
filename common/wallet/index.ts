@@ -1,7 +1,6 @@
 import { SymbolSupportDatum, getSymbolSupport } from '@api/symbol';
 import { addSymbolToken, createWallet, getAddressBalance, getDeviceBalance } from '@api/wallet';
 import { SUCCESS_CODE } from '@common/constants';
-import { showToast } from '@common/utils/platform';
 import {
     BLOCK_CHAIN_ID_MAP,
     PrivateWalletBalance,

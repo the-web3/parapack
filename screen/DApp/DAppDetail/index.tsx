@@ -20,7 +20,9 @@ const chartConfig = {
   backgroundGradientTo: '#FFF',
   decimalPlaces: 0,
   yLabelsOffset: 0,
-  propsForDots: { opacity: 0 },
+  propsForDots: {
+    opacity: 0,
+  },
   color: (opacity = 1) => {
     return `rgba(173, 165, 232, ${opacity})`;
   },
@@ -43,7 +45,9 @@ export const DAppDetail = (props: DAppDetailParam) => {
   console.log(11111, dAppProps);
 
   useEffect(() => {
-    initKLine();
+    if (dAppProps?.symbol !== '') {
+      initKLine();
+    }
     // getNotices({
     //   pageNum: 1,
     //   pageSize: 10,
@@ -109,7 +113,6 @@ export const DAppDetail = (props: DAppDetailParam) => {
     }
     return (JSON.parse(dAppProps?.medium ?? '[]') ?? []).filter((v: any) => v.url !== '');
   }, [dAppProps]);
-
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -172,37 +175,49 @@ export const DAppDetail = (props: DAppDetailParam) => {
             </TouchableOpacity>
           ))}
         </ScrollView>
-        <View
-          style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20 }}
-        >
-          <View style={{ flexDirection: 'row' }}>
-            <View style={{ marginTop: 1, width: 3, height: 15, backgroundColor: '#25AC4E', borderRadius: 2 }} />
-            <View style={{ flexDirection: 'column', gap: 3, marginLeft: 5 }}>
-              <Text style={{ color: '#252525', fontSize: 15, fontWeight: '500' }}>${showData.price}</Text>
-              <Text style={{ color: showData.rose >= 0 ? '#25AC4E' : 'red', fontSize: 12 }}>{showData.rose}%</Text>
+        {dAppProps?.symbol !== '' && (
+          <>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                paddingHorizontal: 20,
+              }}
+            >
+              <View style={{ flexDirection: 'row' }}>
+                <View style={{ marginTop: 1, width: 3, height: 15, backgroundColor: '#25AC4E', borderRadius: 2 }} />
+                <View style={{ flexDirection: 'column', gap: 3, marginLeft: 5 }}>
+                  <Text style={{ color: '#252525', fontSize: 15, fontWeight: '500' }}>${showData.price}</Text>
+                  <Text style={{ color: showData.rose >= 0 ? '#25AC4E' : 'red', fontSize: 12 }}>{showData.rose}%</Text>
+                </View>
+              </View>
+              <Text style={{ color: '#8C8C8C', fontSize: 10 }}>{dAppProps?.symbol}/USDT</Text>
+              <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={onBuyPress}>
+                <Text style={{ color: '#3B28CC', fontWeight: '500' }} children="去兑换 >" />
+              </TouchableOpacity>
             </View>
-          </View>
-          <Text style={{ color: '#8C8C8C', fontSize: 10 }}>{dAppProps?.symbol}/USDT</Text>
-          <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={onBuyPress}>
-            <Text style={{ color: '#3B28CC', fontWeight: '500' }} children="去兑换 >" />
-          </TouchableOpacity>
-        </View>
-        {kLine.datasets.length > 0 && (
-          <LineChart
-            data={kLine}
-            height={170}
-            width={width + 30}
-            withOuterLines={false}
-            chartConfig={chartConfig as any}
-            yAxisInterval={3}
-            bezier
-            withHorizontalLabels={false}
-            style={{
-              marginLeft: -40,
-              paddingTop: 16,
-            }}
-          />
+            {kLine.datasets.length > 0 && (
+              <LineChart
+                data={kLine}
+                height={170}
+                width={width + 60}
+                withOuterLines={false}
+                chartConfig={chartConfig as any}
+                withHorizontalLines={false}
+                withVerticalLines={false}
+                yAxisInterval={3}
+                bezier
+                withHorizontalLabels={false}
+                style={{
+                  marginLeft: -40,
+                  paddingTop: 16,
+                }}
+              />
+            )}
+          </>
         )}
+
         {(dAppProps?.news ?? []).map((v: any, i: number) => {
           return (
             <View style={{ flexDirection: 'column', backgroundColor: '#F2F3F6', borderRadius: 10, margin: 20 }} key={i}>

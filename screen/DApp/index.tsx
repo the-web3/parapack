@@ -13,7 +13,7 @@ import { makeStyles, useTheme } from '@rneui/themed';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { useTranslation } from 'react-i18next';
 import { DAppItem } from '@screen/DApp/Components/DAppItem';
-import { DAppItems } from '@screen/DApp/Components/DAppItem';
+// import { DAppItems } from '@screen/DApp/Components/DAppItem';
 import { getBanners, getDAppGroup, getDevInfo, getNotices, getTags } from '@api/dApp';
 import { Button, Input, Text } from '@rneui/themed';
 import IconFont from '@assets/iconfont';
@@ -56,6 +56,7 @@ export const DAppScreen = (props: DAppProps) => {
         pageNum: 1,
         pageSize: 10,
         symbol: 'eth',
+        tag: 'recommend',
       });
       setDAppGroup(dAppGroupRes.data);
 
@@ -259,7 +260,14 @@ export const DAppScreen = (props: DAppProps) => {
           <ContentHeader
             leftTitle={t('dApp.recommendList')}
             rightTitle={t('dApp.seeAll')}
-            onRightClick={() => onShowAll({}, t('dApp.recommendList'))}
+            onRightClick={() =>
+              onShowAll(
+                {
+                  tag: 'recommend',
+                },
+                t('dApp.recommendList')
+              )
+            }
           />
           <ScrollView
             contentContainerStyle={[style.scrollViewContentView]}

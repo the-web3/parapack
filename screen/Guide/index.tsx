@@ -48,7 +48,7 @@ const Guide = (props: Props) => {
         <Button
           onPress={handleImportWallet}
           buttonStyle={{
-            backgroundColor: 'RGBA(241, 241, 255, 1)',
+            backgroundColor: '#f1f1ff',
             marginTop: 12,
           }}
           title={

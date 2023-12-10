@@ -48,7 +48,7 @@ const SearchToken = (props: Props) => {
   const handleSearch = (symbol: string) => {
     const newObj = {
       ...alltokenList,
-      wallet_balance: tokenList?.wallet_balance.filter((item) => {
+      wallet_balance: (tokenList?.wallet_balance || []).filter((item) => {
         const regex = new RegExp(symbol, 'i');
         const isMatch = regex.test(item.symbol);
         return isMatch;

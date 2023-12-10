@@ -4,13 +4,15 @@ import { SafeAreaView, ScrollView, StatusBar, TouchableOpacity, View } from 'rea
 import { Avatar, SearchBar, Text, makeStyles, useTheme } from '@rneui/themed';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { SymbolSupportDatum, Token, getSymbolSupport } from '@api/symbol';
-import { walletSymbols } from '@api/wallet';
+import { deleteWallet, walletSymbols } from '@api/wallet';
 import { getData } from '@common/utils/storage';
 import { getUniqueId } from 'react-native-device-info';
 import { SUPPORT_CHAIN_NAME, addToken } from '@common/wallet';
 import Spinner from 'react-native-loading-spinner-overlay';
 import _ from 'lodash';
 import IconFont from '@assets/iconfont';
+import { showToast } from '@common/utils/platform';
+import { SUCCESS_CODE } from '@common/constants';
 type Props = {
   fullWidth?: boolean;
   navigation: any;
@@ -23,11 +25,16 @@ const AddToken = (props: Props) => {
   const [list, setList] = useState<SymbolSupportDatum[]>([]);
   const [supportList, setSupportList] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [walletInfo, setWalletInfo] = useState({});
 
   const initList = async (params = {}) => {
     const [device_id, wallet_uuid] = await Promise.all([getUniqueId(), getData('wallet_uuid')]);
+    setWalletInfo({
+      device_id,
+      wallet_uuid,
+    });
     const [res, supportRes] = await Promise.all([getSymbolSupport(params), walletSymbols({ device_id, wallet_uuid })]);
-    // console.log(11111, JSON.stringify(res), params);
+    // console.log(11111, JSON.stringify(res), JSON.stringify(supportRes), params);
     if (res.data) {
       setList(res.data);
       setSupportList(supportRes.data);
@@ -35,27 +42,26 @@ const AddToken = (props: Props) => {
   };
 
   const filterList = React.useMemo(() => {
-    return (list || [])
-      ?.filter((item) =>
-        // item.hot &&
-        SUPPORT_CHAIN_NAME.includes(item.chainName)
-      )
-      .reduce((total: Token[], supportChian) => {
-        if (supportChian.token.length > 0) {
-          const { chainName, symbol } = supportChian;
-          const curTokens = supportChian.token
-            // .filter((currentToken) => currentToken.tokenHot)
-            .map((item) => {
-              const added =
-                supportList.findIndex(
-                  (addedChian: any) => addedChian.chain === chainName && addedChian.contractAddr === item.contractAddr
-                ) !== -1;
-              return { ...item, chainName, symbol, added };
-            });
-          return [...total, ...curTokens];
-        }
-        return [...total];
-      }, []) as ListItem[];
+    return (
+      (list || [])
+        // ?.filter((item) => SUPPORT_CHAIN_NAME.includes(item.chainName))
+        .reduce((total: Token[], supportChian) => {
+          if (supportChian.token.length > 0) {
+            const { chainName, symbol } = supportChian;
+            const curTokens = supportChian.token
+              // .filter((currentToken) => currentToken.tokenHot)
+              .map((item) => {
+                const added =
+                  supportList.findIndex(
+                    (addedChian: any) => addedChian.chain === chainName && addedChian.contractAddr === item.contractAddr
+                  ) !== -1;
+                return { ...item, chainName, symbol, added };
+              });
+            return [...total, ...curTokens];
+          }
+          return [...total];
+        }, []) as ListItem[]
+    );
   }, [list, supportList]);
 
   useEffect(() => {
@@ -132,19 +138,44 @@ const AddToken = (props: Props) => {
           {(filterList || []).map((item) => (
             <TouchableOpacity
               key={`${item?.symbol}_${item.contractAddr}`}
-              disabled={item?.added}
+              // disabled={item?.added}
               onPress={async () => {
-                setLoading(true);
-                const res = await addToken({
-                  contract_addr: item.contractAddr || '',
-                  symbol: item.symbol,
-                  chain: item.chainName,
-                  tokenName: item.tokenName,
-                }).finally(() => {
-                  setLoading(false);
-                });
-                if (res) {
-                  goToAsset();
+                if (item?.added) {
+                  const params = {
+                    ...walletInfo,
+                    chain: item.chainName,
+                    symbol: item.symbol,
+                    contract_addr: item.contractAddr,
+                  };
+                  try {
+                    const res = await deleteWallet(params);
+                    if (res.code === SUCCESS_CODE) {
+                      // updateWalletTable(wallet_uuid, {
+                      //   key: 'is_del = ?',
+                      //   value: [1],
+                      // });
+                      showToast('删除成功', {
+                        onHide: () => {
+                          initList();
+                        },
+                      });
+                    }
+                  } catch (e) {
+                    console.log(111111, e);
+                  }
+                } else {
+                  setLoading(true);
+                  const res = await addToken({
+                    contract_addr: item.contractAddr || '',
+                    symbol: item.symbol,
+                    chain: item.chainName,
+                    tokenName: item.tokenName,
+                  }).finally(() => {
+                    setLoading(false);
+                  });
+                  if (res) {
+                    goToAsset();
+                  }
                 }
               }}
             >
