@@ -15,9 +15,11 @@ type Props = {
 
 const Guide = (props: Props) => {
   const createNewWallet = () => {
+    console.log(1111111);
     props?.navigation.navigate('createWallet');
   };
   const handleImportWallet = () => {
+    console.log(222222);
     props?.navigation.navigate('importWallet');
   };
   const styles = useStyles(props);

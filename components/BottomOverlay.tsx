@@ -44,6 +44,7 @@ const useStyles = makeStyles((theme: any) => {
       backgroundColor: 'white',
       borderTopLeftRadius: 20,
       borderTopRightRadius: 20,
+      zIndex: -1,
     },
     containerContent: {
       flexDirection: 'row',

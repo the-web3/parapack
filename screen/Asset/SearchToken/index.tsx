@@ -61,7 +61,7 @@ const SearchToken = (props: Props) => {
 
   return (
     <SafeAreaView style={{ backgroundColor: '#F6F7FC' }}>
-      <StatusBar backgroundColor={'#F6F7FC'} barStyle={`dark-content`} />
+      <StatusBar backgroundColor={'#F6F7FC'} barStyle={`dark-content`} translucent={false} />
       <View style={styles.top}>
         <View style={{ flexDirection: 'row-reverse', alignItems: 'center' }}>
           <SearchBar

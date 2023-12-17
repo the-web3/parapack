@@ -4,7 +4,7 @@ import { SafeAreaView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import Layout from '../../../components/Layout';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { useTranslation } from 'react-i18next';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import {
   SymbolGasData,
   WalletBalance,
@@ -26,6 +26,8 @@ import { showToast } from '@common/utils/platform';
 import { getFlush } from '@api/common';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { SUCCESS_CODE } from '@common/constants';
+import { useFocusEffect } from '@react-navigation/native';
+import Toast from 'react-native-root-toast';
 
 const FEE_TYPE = [
   {
@@ -54,14 +56,15 @@ const FEE_TYPE = [
     title: '自定义',
   },
 ];
-const TransferPayment = ({ navigation, route }) => {
+const TransferPayment = (props: any) => {
+  const { navigation, route } = props;
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [token, seToken] = useState<WalletBalance>();
 
   const [form, setForm] = useState({
     fromAddr: '',
-    toAddr: route?.params?.address || '',
+    toAddr: route?.params?.address || '0xef678a4d6b40a9555b028839472c21c0d2aebc62',
     amount: '',
     symbol: '',
     contractAddr: '',
@@ -136,8 +139,10 @@ const TransferPayment = ({ navigation, route }) => {
               },
             });
           }
+          toggleOverlay();
           setLoading(false);
         } catch (e) {
+          toggleOverlay();
           showToast(`${e}`);
           console.log('raw_tx', e);
           setLoading(false);
@@ -245,18 +250,24 @@ const TransferPayment = ({ navigation, route }) => {
                               },
                             });
                           }
+                          toggleOverlay();
                           setLoading(false);
                         } catch (e) {
+                          toggleOverlay();
                           showToast(`${e}`);
                           console.log('raw_tx', e);
                           setLoading(false);
                         }
                       } else {
+                        toggleOverlay();
+                        showToast(`Account not found.`);
                         console.log('Account not found.');
                         setLoading(false);
                       }
                     },
                     (txObj) => {
+                      toggleOverlay();
+                      showToast(`Error executing SQL query:`);
                       console.log('Error executing SQL query:', txObj);
                       setLoading(false);
                     }
@@ -311,6 +322,7 @@ const TransferPayment = ({ navigation, route }) => {
         setBtcGas(gasRes?.data);
       }
     } else {
+      setBtc(false);
       const [addressBalanceRes, gasRes] = await Promise.all([
         getAddressBalance({
           device_id,
@@ -354,12 +366,14 @@ const TransferPayment = ({ navigation, route }) => {
         console.log(11111, gasRes.data);
       }
     }
-  }, [route?.params]);
+  }, []);
 
-  useEffect(() => {
-    getFlush();
-    initData();
-  }, [initData, navigation]);
+  useFocusEffect(
+    React.useCallback(() => {
+      getFlush();
+      initData();
+    }, [initData])
+  );
 
   const handleOpen = () => {
     if (!form?.toAddr) {
@@ -411,6 +425,7 @@ const TransferPayment = ({ navigation, route }) => {
       }
     }
   }, [isbtc, btcGas, activeType, gasLimit, gasPrice, gas, list]);
+
   return (
     <Layout
       fixedChildren={

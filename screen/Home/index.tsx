@@ -9,9 +9,6 @@ import Swap from '@screen/Swap';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, StatusBar, Text, TouchableOpacity, View, useColorScheme } from 'react-native';
-const Screen2 = () => {
-  return <Text />;
-};
 const BAR = [
   {
     icon: 'shengtaidianjiqian',

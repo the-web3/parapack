@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, StatusBar, TouchableOpacity, View } from 'react-native';
-import { Avatar, SearchBar, Text, makeStyles, useTheme } from '@rneui/themed';
+import { Avatar, SearchBar, Text, makeStyles } from '@rneui/themed';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { SymbolSupportDatum, Token, getSymbolSupport } from '@api/symbol';
 import { deleteWallet, walletSymbols } from '@api/wallet';
@@ -20,7 +20,6 @@ type Props = {
 type ListItem = Token & { chainName: string; symbol: string };
 const AddToken = (props: Props) => {
   const styles = useStyles(props);
-  const { theme }: { theme: CustomTheme<CustomColors> } = useTheme();
   const [search, setSearch] = useState('');
   const [list, setList] = useState<SymbolSupportDatum[]>([]);
   const [supportList, setSupportList] = useState<any[]>([]);
@@ -28,6 +27,7 @@ const AddToken = (props: Props) => {
   const [walletInfo, setWalletInfo] = useState({});
 
   const initList = async (params = {}) => {
+    setLoading(true);
     const [device_id, wallet_uuid] = await Promise.all([getUniqueId(), getData('wallet_uuid')]);
     setWalletInfo({
       device_id,
@@ -39,6 +39,7 @@ const AddToken = (props: Props) => {
       setList(res.data);
       setSupportList(supportRes.data);
     }
+    setLoading(false);
   };
 
   const filterList = React.useMemo(() => {
@@ -137,23 +138,18 @@ const AddToken = (props: Props) => {
         >
           {(filterList || []).map((item) => (
             <TouchableOpacity
-              key={`${item?.symbol}_${item.contractAddr}`}
-              // disabled={item?.added}
+              key={`${item?.chainName}_${item?.tokenName}_${item.contractAddr}`}
               onPress={async () => {
                 if (item?.added) {
                   const params = {
                     ...walletInfo,
                     chain: item.chainName,
-                    symbol: item.symbol,
+                    symbol: item.tokenName,
                     contract_addr: item.contractAddr,
                   };
                   try {
                     const res = await deleteWallet(params);
                     if (res.code === SUCCESS_CODE) {
-                      // updateWalletTable(wallet_uuid, {
-                      //   key: 'is_del = ?',
-                      //   value: [1],
-                      // });
                       showToast('删除成功', {
                         onHide: () => {
                           initList();

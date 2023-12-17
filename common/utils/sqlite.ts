@@ -44,7 +44,7 @@ export const BLOCK_CHAIN_ID_MAP = {
   Avalanche: 43114, //Avalanche C-Chain
   zkSync: 324, //zkSync Era Mainnet
   TRON: 1231, //Ultron Mainnet
-};
+}; // chainListId
 
 export const TABLE_MAP = {
   //is_del (0:not deleted 1:delete)

@@ -220,13 +220,12 @@ const Asset = (props: Props) => {
           >
             <View style={styles.price}>
               <Text style={{ color: '#fff', fontSize: 40, lineHeight: 47 }}>
-                ¥{priceShow ? currentWallet?.wallet_asset_cny || 0 : '******'}
+                ¥{priceShow ? (Number(currentWallet?.wallet_asset_cny) || 0)?.toFixed?.(4) : '******'}
               </Text>
-              <Icon
-                name="eyeo"
-                size={12}
-                color="#fff"
+              <IconFont
+                name={priceShow ? 'eye-open' : 'eye-close'}
                 style={{ marginLeft: 3 }}
+                size={12}
                 onPress={() => {
                   setPriceShow(!priceShow);
                 }}
@@ -261,7 +260,6 @@ const Asset = (props: Props) => {
               >
                 <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                   <IconFont name={item.icon} style={{ marginRight: 6 }} size={12} />
-                  {/* <Icon name={item.icon} size={15} style={{ marginRight: 6, color: '#000' }} /> */}
                   <Text style={{ lineHeight: 16, color: '#000' }}>{t(`asset.${item.title}`)}</Text>
                 </View>
               </TouchableOpacity>
@@ -347,7 +345,7 @@ const Asset = (props: Props) => {
                               <Text style={styles.listPrice}>{item.chain}</Text>
                             </View>
                             <View>
-                              <Text style={{ color: '#999999' }}>¥{item.asset_cny}</Text>
+                              <Text style={{ color: '#999999' }}>¥{(Number(item.asset_cny) || 0)?.toFixed?.(4)}</Text>
                             </View>
                           </View>
                         </View>
