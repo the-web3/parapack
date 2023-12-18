@@ -86,7 +86,11 @@ pod --version
 when you install new package need go ios folder execute
 
 ```
- pod install
+1 - sudo xcode-select --switch /Applications/Xcode.app 
+2 - sudo gem install cocoapods-clean
+3 - pod deintegrate
+4 - pod clean ( this is no longer available )
+5 - pod install --verbose  
 ```
 
 ## start

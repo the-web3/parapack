@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "postinstall": "rn-nodeify --install buffer,events,process,stream,util,inherits,fs,path,url --hack --yarn",
-    "android": "react-native run-android",
-    "ios": "react-native run-ios",
+    "android": "react-native run-android --verbose",
+    "ios": "react-native run-ios --verbose",
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest"
