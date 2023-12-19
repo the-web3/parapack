@@ -1,6 +1,6 @@
 import IconFont from '@assets/iconfont';
 import LayoutNormal from '@components/LayoutNormal';
-import { makeStyles, useTheme } from '@rneui/themed';
+import { makeStyles, useTheme, useThemeMode } from '@rneui/themed';
 import Activity from '@screen/Activity';
 import Asset from '@screen/Asset';
 import Test from '@screen/Asset/Test';
@@ -8,7 +8,7 @@ import { DAppScreen } from '@screen/DApp';
 import Swap from '@screen/Swap';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Image, StatusBar, Text, TouchableOpacity, View, useColorScheme } from 'react-native';
+import { Image, StatusBar, Text, TouchableOpacity, View } from 'react-native';
 const BAR = [
   {
     icon: 'shengtaidianjiqian',
@@ -32,7 +32,7 @@ const BAR = [
   },
 ];
 const App = (props: any) => {
-  const mode = useColorScheme() || 'light';
+  const { mode } = useThemeMode()
   const { theme }: { theme: CustomTheme<CustomColors> } = useTheme();
   const { t } = useTranslation();
   // 获取传递的参数
@@ -65,7 +65,7 @@ const App = (props: any) => {
         backgroundColor={theme.colors.background} // 替换为你想要的背景颜色
         barStyle={`${mode === 'light' ? 'dark' : 'light'}-content`} // 替换为你想要的图标和文字颜色
         translucent={false}
-        // backgroundColor="transparent"
+      // backgroundColor="transparent"
       />
       <LayoutNormal
         fixedStyle={styles.bottom}

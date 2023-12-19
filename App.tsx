@@ -35,7 +35,7 @@ import { getUniqueId } from 'react-native-device-info';
 const RESET_SQLITE_TAG = '2';
 
 const App = () => {
-  const mode = useColorScheme() || 'light';
+  const mode = getData("colorTheme") || useColorScheme() || 'light';
   const theme = createTheme({
     ...defineTheme,
     mode,
@@ -71,7 +71,7 @@ const App = () => {
         // console.log(111111, JSON.stringify(res));
         insertOrUpdateChainAssetTable(chainList);
       }
-    } catch (e) {}
+    } catch (e) { }
   };
 
   const initWalletToken = async () => {
@@ -193,13 +193,13 @@ const App = () => {
             theme={
               mode === 'dark'
                 ? {
-                    dark: true,
-                    colors: DarkTheme.colors,
-                  }
+                  dark: true,
+                  colors: DarkTheme.colors,
+                }
                 : {
-                    dark: false,
-                    colors: DefaultTheme.colors,
-                  }
+                  dark: false,
+                  colors: DefaultTheme.colors,
+                }
             }
           >
             <Stack.Navigator>
