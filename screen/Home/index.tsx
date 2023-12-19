@@ -1,6 +1,6 @@
 import IconFont from '@assets/iconfont';
 import LayoutNormal from '@components/LayoutNormal';
-import { makeStyles, useTheme, useThemeMode } from '@rneui/themed';
+import { makeStyles, useTheme, useThemeMode, ThemeMode } from '@rneui/themed';
 import Activity from '@screen/Activity';
 import Asset from '@screen/Asset';
 import Test from '@screen/Asset/Test';
@@ -9,6 +9,7 @@ import Swap from '@screen/Swap';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, StatusBar, Text, TouchableOpacity, View } from 'react-native';
+import { getData } from '@common/utils/storage';
 const BAR = [
   {
     icon: 'shengtaidianjiqian',
@@ -32,7 +33,7 @@ const BAR = [
   },
 ];
 const App = (props: any) => {
-  const { mode } = useThemeMode()
+  const { mode, setMode } = useThemeMode()
   const { theme }: { theme: CustomTheme<CustomColors> } = useTheme();
   const { t } = useTranslation();
   // 获取传递的参数
@@ -59,6 +60,18 @@ const App = (props: any) => {
     // 在这里执行你想要的操作
     console.log('Home 页面重新渲染了');
   }, [props.navigation]);
+
+  useEffect(() => {
+    // init the color Theme
+    getData("colorTheme").then((value) => {
+      if (value !== '{}') {
+        setMode(value as ThemeMode)
+      } else {
+        setMode(mode)
+      }
+    })
+  }, [])
+
   return (
     <>
       <StatusBar

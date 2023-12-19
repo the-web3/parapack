@@ -35,10 +35,10 @@ import { getUniqueId } from 'react-native-device-info';
 const RESET_SQLITE_TAG = '2';
 
 const App = () => {
-  const mode = getData("colorTheme") || useColorScheme() || 'light';
+  const mode = useColorScheme() || 'light';
   const theme = createTheme({
     ...defineTheme,
-    mode,
+    mode
   });
 
   const initList = async () => {
