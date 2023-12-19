@@ -1,5 +1,6 @@
 import Toast from 'react-native-root-toast';
 import * as RNLocalize from 'react-native-localize';
+import { getValidLan } from '../../i18n/index'
 
 export const showToast = (
     msg: string,
@@ -20,8 +21,8 @@ export const showToast = (
     });
 };
 
-export const getLanguage = () => {
+export const getLanguage = async () => {
     const systemLanguages = RNLocalize.getLocales()?.[0];
-    return `${systemLanguages.languageCode}_${systemLanguages.countryCode}`;
-    // return `zh_CN`;
+    const cacheLan = await getValidLan()
+    return cacheLan.replace(/-/g, '_') || `${systemLanguages.languageCode}_${systemLanguages.countryCode}`;
 };
