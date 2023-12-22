@@ -3,6 +3,6 @@ export default {
   ecology: '生态',
   activity: '活动',
   swap: '兑换',
-  chat: '聊天',
+  video: '视频',
   asset: '资产',
 };

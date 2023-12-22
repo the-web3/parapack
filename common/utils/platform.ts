@@ -22,5 +22,6 @@ export const showToast = (
 
 export const getLanguage = () => {
     const systemLanguages = RNLocalize.getLocales()?.[0];
-    return `${systemLanguages.languageCode}_${systemLanguages.countryCode}`;
+    // return `${systemLanguages.languageCode}_${systemLanguages.countryCode}`;
+    return `zh_CN`;
 };

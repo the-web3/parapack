@@ -1,15 +1,18 @@
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, StatusBar, TouchableOpacity, View } from 'react-native';
-import { Avatar, SearchBar, Text, makeStyles, useTheme } from '@rneui/themed';
+import { Avatar, SearchBar, Text, makeStyles } from '@rneui/themed';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { SymbolSupportDatum, Token, getSymbolSupport } from '@api/symbol';
-import { walletSymbols } from '@api/wallet';
+import { deleteWallet, walletSymbols } from '@api/wallet';
 import { getData } from '@common/utils/storage';
 import { getUniqueId } from 'react-native-device-info';
 import { SUPPORT_CHAIN_NAME, addToken } from '@common/wallet';
 import Spinner from 'react-native-loading-spinner-overlay';
 import _ from 'lodash';
+import IconFont from '@assets/iconfont';
+import { showToast } from '@common/utils/platform';
+import { SUCCESS_CODE } from '@common/constants';
 type Props = {
   fullWidth?: boolean;
   navigation: any;
@@ -17,44 +20,49 @@ type Props = {
 type ListItem = Token & { chainName: string; symbol: string };
 const AddToken = (props: Props) => {
   const styles = useStyles(props);
-  const { theme }: { theme: CustomTheme<CustomColors> } = useTheme();
   const [search, setSearch] = useState('');
   const [list, setList] = useState<SymbolSupportDatum[]>([]);
   const [supportList, setSupportList] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [walletInfo, setWalletInfo] = useState({});
 
   const initList = async (params = {}) => {
+    setLoading(true);
     const [device_id, wallet_uuid] = await Promise.all([getUniqueId(), getData('wallet_uuid')]);
+    setWalletInfo({
+      device_id,
+      wallet_uuid,
+    });
     const [res, supportRes] = await Promise.all([getSymbolSupport(params), walletSymbols({ device_id, wallet_uuid })]);
-    // console.log(11111, JSON.stringify(res), params);
+    // console.log(11111, JSON.stringify(res), JSON.stringify(supportRes), params);
     if (res.data) {
       setList(res.data);
       setSupportList(supportRes.data);
     }
+    setLoading(false);
   };
 
   const filterList = React.useMemo(() => {
-    return (list || [])
-      ?.filter((item) =>
-        // item.hot &&
-        SUPPORT_CHAIN_NAME.includes(item.chainName)
-      )
-      .reduce((total: Token[], supportChian) => {
-        if (supportChian.token.length > 0) {
-          const { chainName, symbol } = supportChian;
-          const curTokens = supportChian.token
-            // .filter((currentToken) => currentToken.tokenHot)
-            .map((item) => {
-              const added =
-                supportList.findIndex(
-                  (addedChian: any) => addedChian.chain === chainName && addedChian.contractAddr === item.contractAddr
-                ) !== -1;
-              return { ...item, chainName, symbol, added };
-            });
-          return [...total, ...curTokens];
-        }
-        return [...total];
-      }, []) as ListItem[];
+    return (
+      (list || [])
+        // ?.filter((item) => SUPPORT_CHAIN_NAME.includes(item.chainName))
+        .reduce((total: Token[], supportChian) => {
+          if (supportChian.token.length > 0) {
+            const { chainName, symbol } = supportChian;
+            const curTokens = supportChian.token
+              // .filter((currentToken) => currentToken.tokenHot)
+              .map((item) => {
+                const added =
+                  supportList.findIndex(
+                    (addedChian: any) => addedChian.chain === chainName && addedChian.contractAddr === item.contractAddr
+                  ) !== -1;
+                return { ...item, chainName, symbol, added };
+              });
+            return [...total, ...curTokens];
+          }
+          return [...total];
+        }, []) as ListItem[]
+    );
   }, [list, supportList]);
 
   useEffect(() => {
@@ -73,7 +81,6 @@ const AddToken = (props: Props) => {
   };
 
   const handleSearchDebounced = useCallback(_.debounce(handleSearch, 500), []);
-
   return (
     <SafeAreaView style={{ backgroundColor: '#F6F7FC' }}>
       <StatusBar backgroundColor={'#F6F7FC'} barStyle={`dark-content`} />
@@ -94,6 +101,8 @@ const AddToken = (props: Props) => {
             inputStyle={{
               height: 22,
             }}
+            searchIcon={<IconFont name="a-110" size={16} />}
+            cancelButtonTitle={'取消'}
             leftIconContainerStyle={{}}
             rightIconContainerStyle={{}}
             loadingProps={{}}
@@ -102,7 +111,7 @@ const AddToken = (props: Props) => {
               handleSearchDebounced(newVal);
             }}
             // onClearText={() => console.log(onClearText())}
-            placeholder="Type query here..."
+            placeholder=""
             placeholderTextColor="#888"
             // cancelButtonTitle="取消"
             // cancelButtonProps={{}}
@@ -122,23 +131,47 @@ const AddToken = (props: Props) => {
       </View>
       <View style={styles.body}>
         <Text style={styles.title}>热门币种</Text>
-        <ScrollView style={{ minHeight: '100%' }} contentContainerStyle={{ paddingBottom: 300 }}>
+        <ScrollView
+          style={{ minHeight: '100%' }}
+          contentContainerStyle={{ paddingBottom: 300 }}
+          showsVerticalScrollIndicator={false}
+        >
           {(filterList || []).map((item) => (
             <TouchableOpacity
-              key={`${item?.symbol}_${item.contractAddr}`}
-              disabled={item?.added}
+              key={`${item?.chainName}_${item?.tokenName}_${item.contractAddr}`}
               onPress={async () => {
-                setLoading(true);
-                const res = await addToken({
-                  contract_addr: item.contractAddr || '',
-                  symbol: item.symbol,
-                  chain: item.chainName,
-                  tokenName: item.tokenName,
-                }).finally(() => {
-                  setLoading(false);
-                });
-                if (res) {
-                  goToAsset();
+                if (item?.added) {
+                  const params = {
+                    ...walletInfo,
+                    chain: item.chainName,
+                    symbol: item.tokenName,
+                    contract_addr: item.contractAddr,
+                  };
+                  try {
+                    const res = await deleteWallet(params);
+                    if (res.code === SUCCESS_CODE) {
+                      showToast('删除成功', {
+                        onHide: () => {
+                          initList();
+                        },
+                      });
+                    }
+                  } catch (e) {
+                    console.log(111111, e);
+                  }
+                } else {
+                  setLoading(true);
+                  const res = await addToken({
+                    contract_addr: item.contractAddr || '',
+                    symbol: item.symbol,
+                    chain: item.chainName,
+                    tokenName: item.tokenName,
+                  }).finally(() => {
+                    setLoading(false);
+                  });
+                  if (res) {
+                    goToAsset();
+                  }
                 }
               }}
             >

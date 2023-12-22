@@ -15,9 +15,11 @@ type Props = {
 
 const Guide = (props: Props) => {
   const createNewWallet = () => {
+    console.log(1111111);
     props?.navigation.navigate('createWallet');
   };
   const handleImportWallet = () => {
+    console.log(222222);
     props?.navigation.navigate('importWallet');
   };
   const styles = useStyles(props);
@@ -48,7 +50,7 @@ const Guide = (props: Props) => {
         <Button
           onPress={handleImportWallet}
           buttonStyle={{
-            backgroundColor: 'RGBA(241, 241, 255, 1)',
+            backgroundColor: '#f1f1ff',
             marginTop: 12,
           }}
           title={

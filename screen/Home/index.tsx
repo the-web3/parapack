@@ -9,9 +9,6 @@ import Swap from '@screen/Swap';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, StatusBar, Text, TouchableOpacity, View, useColorScheme } from 'react-native';
-const Screen2 = () => {
-  return <Text />;
-};
 const BAR = [
   {
     icon: 'shengtaidianjiqian',
@@ -22,12 +19,12 @@ const BAR = [
     title: 'activity',
   },
   {
-    icon: 'duihuandianjiqian',
+    icon: 'a-3',
     title: 'swap',
   },
   {
-    icon: 'liaotiandianjiqian',
-    title: 'chat',
+    icon: 'a-41',
+    title: 'video',
   },
   {
     icon: 'zichandianjiqian',
@@ -50,7 +47,7 @@ const App = (props: any) => {
         return <Activity {...prop} />;
       case 'swap':
         return <Swap {...prop} />;
-      case 'chat':
+      case 'video':
         return <Test {...prop} />;
       case 'asset':
         return <Asset {...prop} />;
@@ -67,6 +64,8 @@ const App = (props: any) => {
       <StatusBar
         backgroundColor={theme.colors.background} // 替换为你想要的背景颜色
         barStyle={`${mode === 'light' ? 'dark' : 'light'}-content`} // 替换为你想要的图标和文字颜色
+        translucent={false}
+        // backgroundColor="transparent"
       />
       <LayoutNormal
         fixedStyle={styles.bottom}
@@ -81,13 +80,7 @@ const App = (props: any) => {
                   key={item.title}
                   onPress={() => props.navigation.navigate('home', { tab: item.title })}
                 >
-                  {/* <Icon name={item.icon} size={15} color={color} /> */}
-                  {item.icon === 'duihuandianjiqian' ? (
-                    <IconFont name={tab !== item.title ? item.icon : `${item.icon}-active`} />
-                  ) : (
-                    <IconFont name={item.icon} color={color} />
-                  )}
-
+                  <IconFont name={item.icon} color={color} />
                   <Text
                     style={{
                       ...styles.title,

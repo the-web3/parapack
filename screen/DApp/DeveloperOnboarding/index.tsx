@@ -49,7 +49,7 @@ const DeveloperOnboarding = () => {
   const colorScheme = useColorScheme();
   const theme = colorScheme === 'dark' ? darkTheme : lightTheme;
   return (
-    <ScrollView style={theme.scrollContainer}>
+    <ScrollView style={theme.scrollContainer} showsVerticalScrollIndicator={false}>
       <View style={theme.container}>
         <View style={{ flexDirection: 'row', alignItems: 'flex-start', marginBottom: height * 0.02 }}>
           <Text style={theme.text}>ParaPack钱包开发者注入规则及协议</Text>

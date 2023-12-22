@@ -24,6 +24,7 @@ const Layout: FC<Props> = ({ children, fixedChildren, fixedStyle = {}, container
           ...styles.containerContent,
           ...containerStyle,
         }}
+        showsVerticalScrollIndicator={false}
       >
         {children}
       </ScrollView>

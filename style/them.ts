@@ -14,7 +14,7 @@ const customTheme = {
 };
 
 export const defineTheme = {
-  // dark 模式下的样式定义
+  // dark mode 模式下的样式定义
   darkColors: {
     ...darkColors,
     // ...Platform.select({
@@ -27,8 +27,12 @@ export const defineTheme = {
     purple2: '#F8F8FF',
     purpleBg: 'rgba(230, 227, 253, 0.45)',
     grey: '#141414',
+    backgroundGrey: '#252525',
+    backgroundGrey1: '#F9FAFC',
+    backgroundWhite: '#1F1F1F',
     // greyTitle: 'rgba(67, 67, 67, 0.45)',
   },
+  //light mode
   lightColors: {
     ...lightColors,
     // ...Platform.select({
@@ -41,6 +45,9 @@ export const defineTheme = {
     purple2: '#F8F8FF',
     purpleBg: 'rgba(230, 227, 253, 1)',
     grey: 'rgba(245, 245, 245, 1)',
+    backgroundGrey: '#F5F5F5',
+    backgroundGrey1: '#F5F5F5',
+    backgroundWhite: '#FFFFFF',
     // greyTitle: 'rgba(67, 67, 67, 1)',
   },
   components: {

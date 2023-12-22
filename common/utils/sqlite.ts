@@ -44,7 +44,7 @@ export const BLOCK_CHAIN_ID_MAP = {
   Avalanche: 43114, //Avalanche C-Chain
   zkSync: 324, //zkSync Era Mainnet
   TRON: 1231, //Ultron Mainnet
-};
+}; // chainListId
 
 export const TABLE_MAP = {
   //is_del (0:not deleted 1:delete)
@@ -61,7 +61,7 @@ export const TABLE_MAP = {
     block_chain_id BIGINT,
     UNIQUE (chainName) ON CONFLICT REPLACE
     `,
-  //asset table :chain_id TokenName  contract_addr 联合唯一键
+  //asset table :chain_id TokenName  contract_addr as Joint unique key 联合唯一键
   asset: `
     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
     "chain_id" BIGINT,

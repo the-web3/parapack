@@ -86,7 +86,11 @@ pod --version
 when you install new package need go ios folder execute
 
 ```
- pod install
+1 - sudo xcode-select --switch /Applications/Xcode.app 
+2 - sudo gem install cocoapods-clean
+3 - pod deintegrate
+4 - pod clean ( this is no longer available )
+5 - pod install --verbose  
 ```
 
 ## start
@@ -135,6 +139,21 @@ change iconfont.json's symbol_url, exec shell
 
 ```
 npx iconfont-rn
+```
+
+example the name no need have icon start
+
+```
+  <IconFont name="a-Group217" />
+```
+
+### other icon
+
+<https://oblador.github.io/react-native-vector-icons/>
+
+```
+import Icon from 'react-native-vector-icons/AntDesign';
+<Icon name="caretdown" style={{ marginLeft: 8 }} />
 ```
 
 ## savourlabs-wallet-sdk/wallet

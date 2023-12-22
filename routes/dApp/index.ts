@@ -8,7 +8,6 @@ import SubmitScreen from '@screen/DApp/Submit';
 import Review from '@screen/DApp/Review';
 import Parapack from '@screen/DApp/Parapack';
 import NewsArticle from '@screen/DApp/NewsArticle';
-import Settings from '@screen/DApp/Settings/Settings';
 import Setting from '@screen/DApp/Setting';
 import News from '@screen/DApp/News';
 import { DAppDetails } from '@screen/DApp/DAppDetails';
@@ -64,7 +63,7 @@ const menus = [
   },
   {
     name: 'DAppDetails',
-    options: _getOptions('苹方-简 中黑体'),
+    options: _getOptions(''),
     component: DAppDetails,
   },
   {
@@ -74,7 +73,7 @@ const menus = [
   },
   {
     name: 'NewsArticle',
-    options: _getOptions(''),
+    options: _getOptions('信息中心'),
     component: NewsArticle,
   },
   {
@@ -84,7 +83,7 @@ const menus = [
   },
   {
     name: 'News',
-    options: _getOptions('公告詳情'),
+    options: _getOptions('公告详情'),
     component: News,
   },
 ];

@@ -60,7 +60,44 @@ export const getTags = () => {
   return http.post('/tags', '', {
     headers: {
       //TODO 服务端没配置英文
-      // 'wallet-language': getLanguage(),
+      'wallet-language': getLanguage(),
+    },
+  });
+};
+
+export const getDevInfo = (params: { device_id: string }) => {
+  return http.post(
+    '/dev/info',
+    {
+      ...params,
+    },
+    {
+      headers: {
+        'wallet-language': getLanguage(),
+      },
+    }
+  );
+};
+
+export const cancelApplication = (params: { device_id: string }) => {
+  return http.post(
+    '/dev/cancel',
+    {
+      ...params,
+    },
+    {
+      headers: {
+        'wallet-language': getLanguage(),
+      },
+    }
+  );
+};
+
+export const report = (formData: any) => {
+  return http.post('/issue', formData, {
+    headers: {
+      'wallet-language': getLanguage(),
+      'Content-Type': 'multipart/form-data',
     },
   });
 };

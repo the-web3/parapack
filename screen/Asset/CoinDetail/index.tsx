@@ -62,7 +62,7 @@ const CoinDetail = (props: Props) => {
       }
     }
   }, [currentTokenDetail?.chain, currentTokenDetail?.contract_addr, currentTokenDetail?.symbol]);
-
+  console.log(8888, symbolDetail?.medium);
   const onMedium = async (url: string) => {
     try {
       const canOpen = await Linking.canOpenURL(url);
@@ -90,10 +90,7 @@ const CoinDetail = (props: Props) => {
 
   return (
     <View style={{ backgroundColor: '#fff', height: '100%' }}>
-      <StatusBar
-        backgroundColor="#fff" // 替换为你想要的背景颜色
-        barStyle="dark-content" // 替换为你想要的图标和文字颜色
-      />
+      {/* <StatusBar backgroundColor="transparent" translucent={true} /> */}
       <View style={{ marginHorizontal: 52, position: 'relative' }}>
         <View
           style={{
@@ -128,7 +125,7 @@ const CoinDetail = (props: Props) => {
 
       <TabView value={index} onChange={setIndex} animationType="spring">
         <TabView.Item style={styles.viewItem}>
-          <ScrollView>
+          <ScrollView showsVerticalScrollIndicator={false}>
             {activity?.lists?.length > 0 ? (
               activity?.lists?.map((item, index) => (
                 <ActivityItems item={item} key={index} navigation={props?.navigation} />
@@ -180,23 +177,18 @@ const CoinDetail = (props: Props) => {
               <Text style={styles.desc}>{symbolDetail?.introduction}</Text>
             </View>
             <Text style={styles.title}>资源</Text>
-            <View style={{ flexDirection: 'row', gap: 10, margin: 20 }}>
-              {(symbolDetail?.medium || []).map((value: any, i: number) => (
-                <TouchableOpacity
-                  key={i}
-                  style={{
-                    width: 70,
-                    height: 26,
-                    backgroundColor: '#F2F3F6',
-                    borderRadius: 14,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                  onPress={() => onMedium(value.url)}
-                >
-                  <Image source={{ uri: value.logo ?? '' }} />
-                </TouchableOpacity>
-              ))}
+            <View style={{ flexDirection: 'row', gap: 10 }}>
+              {symbolDetail?.medium &&
+                (JSON.parse(symbolDetail?.medium) || []).map((value: any, i: number) => (
+                  <TouchableOpacity
+                    key={i}
+                    onPress={() => {
+                      onMedium(value.url);
+                    }}
+                  >
+                    <Image source={{ uri: value.logo ?? '' }} style={{ width: 11, height: 9 }} />
+                  </TouchableOpacity>
+                ))}
             </View>
           </View>
         </TabView.Item>

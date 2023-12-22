@@ -34,7 +34,7 @@ const Swap = (props: Props) => {
         </View>
         <IconFont name="xiangqing" />
       </View>
-      <ScrollView style={styles.main}>
+      <ScrollView style={styles.main} showsVerticalScrollIndicator={false}>
         <View style={styles.swapCard}>
           <View>
             <View style={styles.swapCardTitle}>
@@ -45,7 +45,7 @@ const Swap = (props: Props) => {
               style={{
                 ...styles.chain,
                 borderBottomWidth: 1,
-                borderColor: 'rgba(22, 20, 20, 0.45)',
+                borderColor: theme.colors.grey0,
                 borderStyle: 'dashed',
               }}
             >
@@ -66,7 +66,7 @@ const Swap = (props: Props) => {
                       };
                     });
                   }}
-                  placeholder="Enter text"
+                  placeholder="0.00"
                   value={money.sell}
                 />
               </View>
@@ -107,7 +107,7 @@ const Swap = (props: Props) => {
                       };
                     });
                   }}
-                  placeholder="Enter text"
+                  placeholder="0.00"
                   value={money.sell}
                 />
               </View>
@@ -144,8 +144,7 @@ const useStyles = makeStyles((theme: CustomTheme<CustomColors>) => {
     main: {
       padding: 24,
       flex: 1,
-      // backgroundColor: theme.colors.grey,
-      backgroundColor: theme?.mode === 'dark' ? theme.colors.white : '#F5F5F5',
+      backgroundColor: theme.colors?.backgroundGrey,
     },
     searchBar: {
       backgroundColor: theme.colors.white,
@@ -174,8 +173,7 @@ const useStyles = makeStyles((theme: CustomTheme<CustomColors>) => {
       lineHeight: 25,
     },
     swapCard: {
-      // backgroundColor: theme.colors.white,
-      backgroundColor: theme?.mode === 'dark' ? '#F1F1F1' : theme.colors.white,
+      backgroundColor: theme.colors.backgroundWhite,
       borderRadius: 12,
       marginBottom: 20,
       paddingHorizontal: 24,
@@ -188,13 +186,13 @@ const useStyles = makeStyles((theme: CustomTheme<CustomColors>) => {
       marginTop: 12,
     },
     sell: {
-      // color: theme.colors.grey2,
-      color: '#161414',
+      color: theme.colors.grey2,
+      // color: '#161414',
       fontSize: 11,
     },
     balance: {
-      // color: theme.colors.grey0,
-      color: '#1F1D1D',
+      color: theme.colors.grey0,
+      // color: '#1F1D1D',
       fontSize: 11,
     },
     chain: {

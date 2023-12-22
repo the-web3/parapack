@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Platform, SafeAreaView, View } from 'react-native';
+import { SafeAreaView, View } from 'react-native';
 import RNWebView from 'react-native-webview';
 import { makeStyles } from '@rneui/themed';
 import { getMetamaskExt } from '@common/bridge/inject';
@@ -22,11 +22,9 @@ export const DAppWebView = (props: DAppWebViewProps) => {
   };
 
   useEffect(() => {
-    //props.route?.params.params.title
-    console.log('props.route?.params.params.title:', props.route?.params.params.title);
-    (props as any)?.navigation.setOptions({ title: props.route?.params.params.title ?? 'DApp' });
+    (props as any)?.navigation.setOptions({ title: props.route?.params.params?.title ?? '' });
   }, []);
-
+  console.log(11111, props.route?.params.params);
   const injectJavaScript = useMemo(() => {
     return getMetamaskExt();
   }, []);

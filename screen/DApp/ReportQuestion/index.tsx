@@ -1,18 +1,48 @@
-import { SUCCESS_CODE } from '@common/constants';
-import instance from '@common/utils/http';
 import { Button } from '@rneui/themed';
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Image, Dimensions } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, SafeAreaView } from 'react-native';
 import { getUniqueId } from 'react-native-device-info';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import ImagePicker, { ImageLibraryOptions, MediaType, ImagePickerResponse } from 'react-native-image-picker';
 import { launchImageLibrary } from 'react-native-image-picker';
+import IconFont from '@assets/iconfont';
+import Layout from '@components/Layout';
+import { report } from '@api/dApp';
+import Icon from 'react-native-vector-icons/AntDesign';
+import { SUCCESS_CODE } from '@common/constants';
+import { showToast } from '@common/utils/platform';
+const FormData = require('form-data');
 
 interface DAppProps {
   navigation?: any;
   mode?: string;
 }
-
+const typeList = [
+  {
+    icon: 'a-21',
+    text: '页面闪退',
+    type: 'broken',
+  },
+  {
+    icon: 'a-22',
+    text: '交易问题',
+    type: 'trade',
+  },
+  {
+    icon: 'a-23',
+    text: '操作体验',
+    type: 'operate',
+  },
+  {
+    icon: 'a-24',
+    text: '功能建议',
+    type: 'suggestion',
+  },
+  {
+    icon: 'a-25',
+    text: '其他反馈',
+    type: 'other',
+  },
+];
 const ReportQuestion = (props: DAppProps) => {
   const [imgs, setImgs] = useState<Array<string>>([]);
 
@@ -28,7 +58,6 @@ const ReportQuestion = (props: DAppProps) => {
         console.log('ImagePicker Error: ', response.errorMessage);
       } else if (response.assets && response.assets.length > 0) {
         const source = { uri: response.assets[0].uri };
-        console.log('response', source);
         setImgs([...imgs, source]);
       }
     });
@@ -40,259 +69,196 @@ const ReportQuestion = (props: DAppProps) => {
 
   const handlePress = async () => {
     const typeToSubmit = type || 'defaultType';
-    console.log('Submitting type:', typeToSubmit); // Debug log
     const [device_id] = await Promise.all([getUniqueId()]);
-    const formData = new FormData();
-    formData.append('type', typeToSubmit);
-    formData.append('content', content);
-    formData.append('contact', contact);
-    formData.append('deviceId', device_id);
+    const formdata = new FormData();
+    formdata.append('type', typeToSubmit);
+    formdata.append('content', content);
+    formdata.append('contact', contact);
+    formdata.append('deviceId', device_id);
 
     if (imgs.length === 0) {
-      formData.append('imgs', null);
+      // formdata.append('imgs', null);
     } else {
-      imgs.forEach((img, index) => {
-        formData.append(`imgs[${index}]`, img);
+      imgs.forEach(async (filePath, index) => {
+        try {
+          const uriParts = filePath.uri.split('.');
+          const fileType = uriParts[uriParts.length - 1];
+          formdata.append(`imgs`, {
+            uri: filePath.uri,
+            type: `image/${fileType}`,
+            name: `photo${index}.${fileType}`,
+          });
+        } catch (e) {
+          console.log(111111, e);
+        }
       });
     }
-
-    console.log('Submitting data:', formData);
-
-    instance
-      .post('/issue', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data', // 设置正确的内容类型
-        },
-      })
+    // console.log('Submitting data:', JSON.stringify(formdata));
+    report(formdata)
       .then((response) => {
-        console.log('Response data:', response);
-        console.log('Data is Submitted', { response });
+        // console.log('Response data:', JSON.stringify(response));
+        // console.log('Data is Submitted', { response });
         if (response?.code === SUCCESS_CODE) {
-          props?.navigate('home', {
-            tab: 'ecology',
+          showToast('提交成功!', {
+            onHide: () => {
+              props?.navigation?.navigate('home', {
+                tab: 'ecology',
+              });
+            },
           });
         }
       })
       .catch((error) => {
-        console.error('Error Response:', error.response);
-        console.error('Error Details:', error.message);
+        console.error('Error Response:', JSON.stringify(error));
       });
   };
-
+  const removeImage = (index) => {
+    const updatedImageList = [...imgs];
+    updatedImageList.splice(index, 1);
+    setImgs(updatedImageList);
+  };
   return (
-    <ScrollView>
-      <View style={{ flex: 1, padding: 20, backgroundColor: '#ffffff' }}>
-        {/* Four Square Boxes with Icons */}
-        <View style={{ flexDirection: 'row', marginBottom: 20 }}>
-          <TouchableOpacity
-            style={{
-              ...squareBoxStyles,
-              marginRight: 10,
-              backgroundColor: type === '账户问题' ? '#d9f7be' : '#f5f5f5',
-              borderRadius: 4,
-            }}
-            onPress={() => {
-              setType(type === '账户问题' ? '' : '账户问题');
-            }}
-          >
-            <Image
-              source={require('assets/images/Electric.png')}
-              style={{ width: 30, height: 30, tintColor: '#999b9a' }}
-            />
-            <Text style={{ color: '#999b9a' }}>账户问题</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              ...squareBoxStyles,
-              marginRight: 10,
-              backgroundColor: type === '交易问题' ? '#d9f7be' : '#f5f5f5',
-              borderRadius: 4,
-            }}
-            onPress={() => {
-              setType(type === '交易问题' ? '' : '交易问题');
-            }}
-          >
-            <Image source={require('assets/images/mode.png')} style={{ width: 30, height: 30, tintColor: '#999b9a' }} />
-            <Text style={{ color: '#999b9a' }}>交易问题</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              ...squareBoxStyles,
-              marginRight: 10,
-              backgroundColor: type === '操作体验' ? '#d9f7be' : '#f5f5f5',
-              borderRadius: 4,
-            }}
-            onPress={() => {
-              setType(type === '操作体验' ? '' : '操作体验');
-            }}
-          >
-            <Image
-              source={require('assets/images/telegram.png')}
-              style={{ width: 30, height: 30, tintColor: '#999b9a' }}
-            />
-            <Text style={{ color: '#999b9a' }}>操作体验</Text>
-          </TouchableOpacity>
-        </View>
+    <Layout>
+      <SafeAreaView>
+        <View style={{ flex: 1, backgroundColor: '#ffffff', marginBottom: 100 }}>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+            {typeList.map((item, index) => {
+              return (
+                <TouchableOpacity
+                  key={item.type}
+                  style={{
+                    ...squareBoxStyles,
+                    backgroundColor: type === item.type ? '#d9f7be' : '#f5f5f5',
+                  }}
+                  onPress={() => {
+                    setType(item.type);
+                  }}
+                >
+                  <IconFont name={item.icon} size={16} style={{ marginBottom: 9 }} />
+                  <Text style={{ color: '#999b9a' }}>{item.text}</Text>
+                </TouchableOpacity>
+              );
+            })}
+            <View style={{ width: '30%' }} />
+          </View>
 
-        {/* Two Square Boxes with Icons */}
-        <View style={{ flexDirection: 'row', marginBottom: 20 }}>
-          <TouchableOpacity
-            style={{
-              ...squareBoxStyles,
-              marginRight: 10,
-              backgroundColor: type === '功能建议' ? '#d9f7be' : '#f5f5f5',
-              borderRadius: 4,
-            }}
-            onPress={() => {
-              setType(type === '功能建议' ? '' : '功能建议');
-            }}
-          >
-            <Image
-              source={require('assets/images/icons.png')}
-              style={{ width: 30, height: 30, tintColor: '#999b9a' }}
-            />
-            <Text style={{ color: '#999b9a' }}>功能建议</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              ...squareBoxStyles,
-              marginRight: 10,
-              backgroundColor: type === '其它反馈' ? '#d9f7be' : '#f5f5f5',
-              borderRadius: 4,
-            }}
-            onPress={() => {
-              setType(type === '其它反馈' ? '' : '其它反馈');
-            }}
-          >
-            <MaterialIcons name="mail" size={30} color={'#999b9a'} />
-            <Text style={{ color: '#999b9a' }}>其它反馈</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View
-          style={{
-            padding: 10,
-          }}
-        >
-          <Text
-            style={{
-              fontWeight: 'bold',
-              fontSize: 20,
-              marginBottom: 10,
-              color: 'black',
-            }}
-          >
-            我要反馈
-          </Text>
-        </View>
-
-        {/* Review Line */}
-
-        <View
-          style={{
-            ...styles.reviewContainer,
-            backgroundColor: '#f5f5f5',
-            borderRadius: 8,
-            height: 200,
-            width: 320,
-            flexDirection: 'column',
-            alignItems: 'flex-start',
-          }}
-        >
-          <TextInput
-            style={{
-              ...styles.reviewText,
-              color: '#999b9a',
-              marginBottom: 10,
-              marginLeft: 15,
-              fontSize: 16,
-              padding: 10,
-            }}
-            value={content}
-            onChangeText={setContent}
-            placeholder="Write your review here"
-            placeholderTextColor={'#999b9a'}
-            multiline
-          />
-          <TouchableOpacity
-            style={{
-              marginLeft: 15,
-              marginTop: 40,
-              marginBottom: 15,
-            }}
-            onPress={() => {
-              handleImagePicker();
-              console.log('Image picker pressed');
-            }}
-          >
-            <View style={styles.plusBoxStyles}>
-              <Text
-                style={{
-                  ...styles.plusText,
-                  color: '#999b9a',
-                }}
-              >
-                +
-              </Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-
-        {/* </View> */}
-
-        <View
-          style={{
-            padding: 10,
-          }}
-        >
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View>
             <Text
               style={{
                 fontWeight: 'bold',
                 fontSize: 20,
-                marginBottom: 10,
+                marginBottom: 20,
                 color: 'black',
+                marginTop: 30,
               }}
             >
-              联系方式
-            </Text>
-            <Text
-              style={{
-                fontSize: 12,
-                marginBottom: 10,
-                color: 'black',
-                marginLeft: 10,
-              }}
-            >
-              注：手机号/微信/QQ
+              我要反馈
             </Text>
           </View>
-        </View>
 
-        {/* Content Text Input */}
-        <View
-          style={{
-            ...styles.reviewContainers,
-            backgroundColor: '#f5f5f5',
-            borderRadius: 8,
-            marginBottom: 40.5,
-          }}
-        >
-          <TextInput
-            placeholder="请留下任意一个联系方式"
-            placeholderTextColor={'#555'}
-            multiline
-            onChangeText={setContact}
-            value={contact}
+          <View
             style={{
-              marginLeft: 16,
-              color: 'black',
+              ...styles.reviewContainer,
+              backgroundColor: '#f5f5f5',
+              borderRadius: 8,
+              flexDirection: 'column',
+              alignItems: 'flex-start',
+              paddingHorizontal: 15,
             }}
-          />
+          >
+            <TextInput
+              style={{
+                color: '#999b9a',
+                fontSize: 16,
+                paddingVertical: 20,
+              }}
+              value={content}
+              onChangeText={setContent}
+              placeholder="Write your review here"
+              placeholderTextColor={'#999b9a'}
+              multiline
+            />
+            <View
+              style={{
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                justifyContent: 'space-between',
+                marginTop: 40,
+                marginBottom: 15,
+              }}
+            >
+              {imgs?.map((item, i) => (
+                <View key={i} style={{ position: 'relative' }}>
+                  <Image source={{ uri: item?.uri }} style={styles.imgs} />
+                  <TouchableOpacity onPress={removeImage} style={{ position: 'absolute', top: 4, right: 16 }}>
+                    <Icon name="closecircleo" style={{ color: '#fff' }} />
+                  </TouchableOpacity>
+                </View>
+              ))}
+              <TouchableOpacity style={{}} onPress={handleImagePicker}>
+                <View style={styles.plusBoxStyles}>
+                  <Text
+                    style={{
+                      ...styles.plusText,
+                      color: '#999b9a',
+                    }}
+                  >
+                    +
+                  </Text>
+                </View>
+              </TouchableOpacity>
+              {(imgs.length + 1) % 3 === 0 ? null : <View style={styles.imgs} />}
+            </View>
+          </View>
+
+          <View>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20, marginTop: 30 }}>
+              <Text
+                style={{
+                  fontWeight: 'bold',
+                  fontSize: 20,
+                  color: 'black',
+                }}
+              >
+                联系方式
+              </Text>
+              <Text
+                style={{
+                  fontSize: 12,
+                  color: 'black',
+                  marginLeft: 10,
+                }}
+              >
+                注：手机号/微信/QQ
+              </Text>
+            </View>
+          </View>
+
+          {/* Content Text Input */}
+          <View
+            style={{
+              ...styles.reviewContainers,
+              backgroundColor: '#f5f5f5',
+              borderRadius: 8,
+              marginBottom: 40.5,
+            }}
+          >
+            <TextInput
+              placeholder="请留下任意一个联系方式"
+              placeholderTextColor={'#555'}
+              multiline
+              onChangeText={setContact}
+              value={contact}
+              style={{
+                marginLeft: 15,
+                color: 'black',
+              }}
+            />
+          </View>
+          <Button onPress={handlePress}>提交</Button>
         </View>
-        <Button onPress={handlePress}>提交</Button>
-      </View>
-    </ScrollView>
+      </SafeAreaView>
+    </Layout>
   );
 };
 
@@ -329,15 +295,23 @@ const styles = StyleSheet.create({
     borderStyle: 'dotted',
     borderWidth: 2,
     borderColor: 'black',
+    marginBottom: 10,
+    marginRight: 10,
+  },
+  imgs: {
+    width: 70,
+    height: 70,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+    borderRadius: 10,
+    marginBottom: 10,
+    marginRight: 10,
   },
 
   plusText: {
     fontSize: 24,
     fontWeight: 'bold',
-    borderRadius: 10,
-  },
-  reviewText: {
-    fontSize: 18,
     borderRadius: 10,
   },
   buttonContainer: {
@@ -366,18 +340,12 @@ const styles = StyleSheet.create({
 
 const squareBoxStyles = {
   width: '30%',
-  aspectRatio: 1,
   backgroundColor: 'lightgray',
   justifyContent: 'center',
   alignItems: 'center',
-  borderRadius: 10,
+  borderRadius: 8,
+  marginBottom: 15,
+  paddingVertical: 15,
 };
 
-const contentInputStyles = {
-  borderColor: 'lightgray',
-  borderWidth: 1,
-  borderRadius: 10,
-  paddingHorizontal: 10,
-  paddingVertical: 5,
-};
 export default ReportQuestion;

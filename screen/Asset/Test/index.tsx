@@ -35,9 +35,19 @@ const Test = (props: Props) => {
   return (
     <Layout>
       <SafeAreaView>
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <Button
             onPress={async () => {
+              // console.log(1111111);
+              // const mnemonic = await DecodeMnemonic({
+              //   encrytMnemonic: 'ed43b19d6982c1ffe6afefb7c0659dd2',
+              //   language: 'english',
+              // });
+              // const seed = MnemonicToSeed({
+              //   mnemonic,
+              //   password: '',
+              // });
+              // console.log(3333333, seed);
               // const seed = MnemonicToSeed({
               //   mnemonic: 'pet apology neither maximum return surge cigar bridge sudden twelve sea cycle',
               //   password: '',

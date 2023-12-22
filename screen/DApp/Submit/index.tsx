@@ -1,5 +1,9 @@
+import { cancelApplication } from '@api/dApp';
 import instance from '@common/utils/http';
-import { View, Text, StyleSheet, TouchableOpacity, Appearance, Dimensions } from 'react-native';
+import Layout from '@components/Layout';
+import { Button } from '@rneui/themed';
+import { View, Text, StyleSheet, TouchableOpacity, Appearance, Dimensions, SafeAreaView, Image } from 'react-native';
+import { getUniqueId } from 'react-native-device-info';
 import Icon from 'react-native-vector-icons/FontAwesome';
 interface DAppProps {
   navigation?: any;
@@ -20,55 +24,44 @@ const SubmitScreen = (props: DAppProps) => {
   const textsMarginBottom = height * 0.35;
   const marginTop = height * 0.01;
 
-  const Onreview = () => {
-    const data = {
-      device_id: '12345',
-    };
-
-    instance
-      .post('/dev/status', data)
+  const onCancel = async () => {
+    const [device_id] = await Promise.all([getUniqueId()]);
+    cancelApplication({
+      device_id,
+    })
       .then((response) => {
-        console.log('Status updated:', response.data);
-        props?.navigation.navigate('Review');
+        console.log('Cancel request sent successfully');
+        props?.navigation.navigate('DevloperApplication');
       })
       .catch((error) => {
-        if (error.response) {
-          console.error('Server responded with an error:', error.response.data);
-          console.error('Status code:', error.response.status);
-        } else if (error.request) {
-          console.error('No response received:', error.request);
-        } else {
-          console.error('Error setting up the request:', error.message);
-        }
-        props?.navigation.navigate('Review');
+        console.error('Error cancelling request:', error);
       });
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: isDarkMode ? '#000' : '#fff', marginBottom: 10 }]}>
-      <View style={[styles.iconContainer, { marginBottom, marginTop }]}>
-        <Icon name="check-circle" size={iconSize} color="#3b28cc" />
-      </View>
-      <Text style={[styles.fonttext, { fontSize: fontTextSize, marginTop }]}>提交成功</Text>
+    <Layout
+      fixedChildren={
+        <View>
+          <Button onPress={onCancel}>取消申请</Button>
+        </View>
+      }
+    >
+      <SafeAreaView>
+        <View style={[styles.container, { backgroundColor: isDarkMode ? '#000' : '#fff', marginBottom: 10 }]}>
+          <View style={[styles.iconContainer, { marginBottom, marginTop }]}>
+            <Image
+              source={require('assets/images/iconfont.png')}
+              style={{ width: 130, height: 130, tintColor: 'blue' }}
+            />
+          </View>
+          <Text style={[styles.fonttext, { fontSize: fontTextSize, marginTop }]}>资料审核中...</Text>
 
-      <Text style={[styles.texts, { fontSize: textSize, marginBottom: textsMarginBottom }]}>
-        审核通过后, 会以邮件形式通知
-      </Text>
-
-      <TouchableOpacity
-        style={[styles.button, { backgroundColor: '#3b28cc', width: buttonWidth, height: buttonHeight, borderRadius }]}
-        onPress={() => Onreview()}
-      >
-        <Text
-          style={[
-            styles.buttonText,
-            { fontSize: fontTextSize, fontWeight: 'bold', color: isDarkMode ? 'white' : '#fff' },
-          ]}
-        >
-          取消申请
-        </Text>
-      </TouchableOpacity>
-    </View>
+          <Text style={[styles.texts, { fontSize: textSize, marginBottom: textsMarginBottom }]}>
+            审核通过后, 会以邮件形式通知
+          </Text>
+        </View>
+      </SafeAreaView>
+    </Layout>
   );
 };
 

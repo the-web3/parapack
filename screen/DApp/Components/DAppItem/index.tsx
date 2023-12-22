@@ -24,18 +24,15 @@ interface DAppItemsProps {
 }
 export const DAppItem = (props: DAppItemProps) => {
   const styles = useStyles();
-  const summary = props.summary.substring(0, 20) + '...';
-  const title = props.title.substring(0, 10) + '...';
+  const summary = props.summary;
+  const title = props.title;
   return (
     <TouchableOpacity style={[styles.container, props?.styles]} key={props.title} onPress={props?.onPress}>
       <View style={[styles.content, props?.contentStyles]}>
         <Image source={{ uri: props.coverPicture }} style={styles.avatar} />
         <View style={styles.rightBg}>
-          <Text children={title} style={styles.title} />
-          {/* <View style={styles.description}>
-            <HTML source={{ html: props.content }} />
-          </View> */}
-          <Text children={summary} style={styles.description} />
+          <Text children={title} style={styles.title} numberOfLines={1} />
+          <Text children={summary} style={styles.description} numberOfLines={1} />
         </View>
       </View>
     </TouchableOpacity>

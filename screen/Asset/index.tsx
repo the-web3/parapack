@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { ActivityIndicator, Image, SafeAreaView, ScrollView, TouchableOpacity, View } from 'react-native';
-import { Avatar, Overlay, Tab, TabView, Text, makeStyles, useTheme } from '@rneui/themed';
+import { Avatar, Button, Tab, TabView, Text, makeStyles, useTheme } from '@rneui/themed';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { useTranslation } from 'react-i18next';
@@ -108,7 +108,7 @@ const Asset = (props: Props) => {
         end={{ x: 0, y: 1 }}
         style={styles.gradient}
       >
-        <View style={styles.topBar}>
+        {/* <View style={styles.topBar}>
           <View style={{ flexDirection: 'row' }}>
             <TouchableOpacity
               onPress={() => {
@@ -185,6 +185,9 @@ const Asset = (props: Props) => {
               <Icon name="scan1" size={24} color={theme.colors.black} />
             </TouchableOpacity>
           </View>
+        </View> */}
+        <View style={{ marginTop: 14, justifyContent: 'center', flexDirection: 'row' }}>
+          <Text style={{ fontWeight: 500, color: '#333', fontSize: 16 }}>我的资产</Text>
         </View>
         <View style={styles.card}>
           <View style={styles.cardBetween}>
@@ -217,13 +220,12 @@ const Asset = (props: Props) => {
           >
             <View style={styles.price}>
               <Text style={{ color: '#fff', fontSize: 40, lineHeight: 47 }}>
-                ¥{priceShow ? currentWallet?.wallet_asset_cny || 0 : '******'}
+                ¥{priceShow ? (Number(currentWallet?.wallet_asset_cny) || 0)?.toFixed?.(4) : '******'}
               </Text>
-              <Icon
-                name="eyeo"
-                size={12}
-                color="#fff"
+              <IconFont
+                name={priceShow ? 'eye-open' : 'eye-close'}
                 style={{ marginLeft: 3 }}
+                size={12}
                 onPress={() => {
                   setPriceShow(!priceShow);
                 }}
@@ -258,7 +260,6 @@ const Asset = (props: Props) => {
               >
                 <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                   <IconFont name={item.icon} style={{ marginRight: 6 }} size={12} />
-                  {/* <Icon name={item.icon} size={15} style={{ marginRight: 6, color: '#000' }} /> */}
                   <Text style={{ lineHeight: 16, color: '#000' }}>{t(`asset.${item.title}`)}</Text>
                 </View>
               </TouchableOpacity>
@@ -316,7 +317,11 @@ const Asset = (props: Props) => {
           <View style={{ flex: 1 }}>
             <TabView value={index} onChange={setIndex} animationType="spring">
               <TabView.Item style={{ width: '100%' }}>
-                <ScrollView style={{ paddingHorizontal: 25 }} contentContainerStyle={{ paddingBottom: 300 }}>
+                <ScrollView
+                  style={{ paddingHorizontal: 25 }}
+                  contentContainerStyle={{ paddingBottom: 300 }}
+                  showsVerticalScrollIndicator={false}
+                >
                   {(currentWallet?.wallet_balance || []).map((item: any, index) => (
                     <TouchableOpacity
                       key={`${item.symbol}${item.contract_addr}${item.address}${index}`}
@@ -340,7 +345,7 @@ const Asset = (props: Props) => {
                               <Text style={styles.listPrice}>{item.chain}</Text>
                             </View>
                             <View>
-                              <Text style={{ color: '#999999' }}>¥{item.asset_cny}</Text>
+                              <Text style={{ color: '#999999' }}>¥{(Number(item.asset_cny) || 0)?.toFixed?.(4)}</Text>
                             </View>
                           </View>
                         </View>
@@ -384,7 +389,22 @@ const Asset = (props: Props) => {
             </TabView>
           </View>
         </View>
-        <BottomOverlay visible={visible} title="选择钱包" onBackdropPress={toggleOverlay}>
+        <BottomOverlay
+          visible={visible}
+          title="选择钱包"
+          after={
+            <TouchableOpacity
+              onPress={() => {
+                props?.navigation.navigate('settingScreen', {
+                  wallet_uuid: currentWallet?.wallet_uuid,
+                });
+              }}
+            >
+              <IconFont name="gengduoshezhi" />
+            </TouchableOpacity>
+          }
+          onBackdropPress={toggleOverlay}
+        >
           {(walletInfo?.token_list || []).map((item) => (
             <TouchableOpacity
               key={item.wallet_uuid}
@@ -431,11 +451,20 @@ const Asset = (props: Props) => {
                       </View>
                     </TouchableOpacity>
                   )}
-                  <Icon name="edit" size={16} style={{ color: '#000', fontSize: 18 }} />
+                  <IconFont name="zhongmingming" size={16} />
                 </View>
               </View>
             </TouchableOpacity>
           ))}
+          <View style={{ marginTop: 16 }}>
+            <Button
+              onPress={async () => {
+                props?.navigation?.navigate('guide');
+              }}
+            >
+              添加钱包
+            </Button>
+          </View>
         </BottomOverlay>
         {/* <Overlay
           isVisible={visible}

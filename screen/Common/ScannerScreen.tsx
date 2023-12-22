@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { View, Text } from 'react-native';
+import { useTheme } from '@rneui/themed';
+import React from 'react';
+import { View } from 'react-native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 
 const ScannerScreen = (props) => {
@@ -8,9 +9,10 @@ const ScannerScreen = (props) => {
       address: event.data,
     });
   };
+  const { theme }: { theme: CustomTheme<CustomColors> } = useTheme();
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: theme.colors.white }}>
       <QRCodeScanner onRead={handleBarcodeScan} />
     </View>
   );
