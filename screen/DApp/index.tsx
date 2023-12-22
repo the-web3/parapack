@@ -50,7 +50,7 @@ export const DAppScreen = (props: DAppProps) => {
     try {
       const banners = await getBanners();
       setBanners(banners.data);
-      // console.log('banners:', JSON.stringify(banners));
+      console.log('banners:', JSON.stringify(banners));
 
       const dAppGroupRes = await getDAppGroup({
         pageNum: 1,

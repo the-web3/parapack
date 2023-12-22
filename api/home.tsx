@@ -1,6 +1,6 @@
 import http from '@common/utils/http';
+import { getValidLan } from '@i18n/index';
 import { IResponse } from 'typings/global';
-import { getLanguage } from '@common/utils/platform';
 //活动
 export interface ActivityParams {
   pageNum?: string;
@@ -62,10 +62,11 @@ export interface List {
    */
   value: string;
 }
-export function getActivity(data: ActivityParams): Promise<IResponse<ActivityData>> {
+export async function getActivity(data: ActivityParams): Promise<IResponse<ActivityData>> {
+  const language = await getValidLan();
   return http.post(`/activity`, data, {
     headers: {
-      'wallet-language': getLanguage(),
+      'wallet-language': language,
     },
   });
 }

@@ -1,6 +1,7 @@
-import { View, Text, ScrollView, useColorScheme, Dimensions, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, Dimensions, StyleSheet } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
+import { useThemeMode } from '@rneui/themed';
 
 const lightTheme = StyleSheet.create({
   container: {
@@ -46,8 +47,8 @@ const darkTheme = StyleSheet.create({
 });
 
 const DeveloperOnboarding = () => {
-  const colorScheme = useColorScheme();
-  const theme = colorScheme === 'dark' ? darkTheme : lightTheme;
+  const { mode } = useThemeMode()
+  const theme = mode === 'dark' ? darkTheme : lightTheme;
   return (
     <ScrollView style={theme.scrollContainer} showsVerticalScrollIndicator={false}>
       <View style={theme.container}>

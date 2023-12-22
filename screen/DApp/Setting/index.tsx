@@ -6,7 +6,7 @@ import { DeviceBalanceData, deleteWallet, getDeviceBalance, updateWallet } from 
 import { SUCCESS_CODE } from '@common/constants';
 import { showToast } from '@common/utils/platform';
 import { executeQuery } from '@common/utils/sqlite';
-import { getData } from '@common/utils/storage';
+import { getData, storeData } from '@common/utils/storage';
 import { updateWalletTable } from '@common/wallet';
 import BottomOverlay from '@components/BottomOverlay';
 import Layout from '@components/Layout';
@@ -14,8 +14,10 @@ import ValidatePassword from '@components/ValidatePassword';
 import { getUniqueId } from 'react-native-device-info';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/AntDesign';
+import Toast from 'react-native-root-toast';
+import i18n from 'i18next';
 
-const Setting = (props) => {
+const Setting = (props: any) => {
   const [isEnabled, setIsEnabled] = React.useState(false);
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
   const [walletInfo, setWalletInfo] = useState<DeviceBalanceData>();
@@ -138,7 +140,13 @@ const Setting = (props) => {
             <ListItem.Title>语言</ListItem.Title>
           </ListItem.Content>
           <ListItem.Content right style={{ flexDirection: 'row' }}>
-            <Text style={{ fontSize: 14, color: '#8C8C8C', textAlign: 'right', width: 90 }}>设置语言版本</Text>
+            <TouchableOpacity
+              onPress={() => {
+                props?.navigation?.navigate('Language');
+              }}
+            >
+              <Text style={{ fontSize: 14, color: '#8C8C8C', textAlign: 'right', width: 90 }}>设置语言版本</Text>
+            </TouchableOpacity>
             <ListItem.Chevron />
           </ListItem.Content>
         </ListItem>

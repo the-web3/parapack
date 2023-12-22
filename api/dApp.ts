@@ -1,10 +1,11 @@
 import http from '@common/utils/http';
-import { getLanguage } from '@common/utils/platform';
+import { getValidLan } from '@i18n/index';
 
-export const getBanners = () => {
+export const getBanners = async () => {
+  const language = await getValidLan();
   return http.post('/banners', '', {
     headers: {
-      'wallet-language': getLanguage(),
+      'wallet-language': language,
     },
   });
 };
@@ -20,7 +21,8 @@ interface NoticeProps {
   // walletLanguage: string;
 }
 
-export const getNotices = (params: NoticeProps) => {
+export const getNotices = async (params: NoticeProps) => {
+  const language = await getValidLan();
   return http.post(
     '/news',
     {
@@ -30,13 +32,14 @@ export const getNotices = (params: NoticeProps) => {
     },
     {
       headers: {
-        'wallet-language': getLanguage(),
+        'wallet-language': language,
       },
     }
   );
 };
 
-export const getDAppGroup = (params: NoticeProps) => {
+export const getDAppGroup = async (params: NoticeProps) => {
+  const language = await getValidLan();
   return http.post(
     '/group',
     {
@@ -50,22 +53,24 @@ export const getDAppGroup = (params: NoticeProps) => {
     },
     {
       headers: {
-        'wallet-language': getLanguage(),
+        'wallet-language': language,
       },
     }
   );
 };
 
-export const getTags = () => {
+export const getTags = async () => {
+  const language = await getValidLan();
   return http.post('/tags', '', {
     headers: {
       //TODO 服务端没配置英文
-      'wallet-language': getLanguage(),
+      'wallet-language': language,
     },
   });
 };
 
-export const getDevInfo = (params: { device_id: string }) => {
+export const getDevInfo = async (params: { device_id: string }) => {
+  const language = await getValidLan();
   return http.post(
     '/dev/info',
     {
@@ -73,13 +78,14 @@ export const getDevInfo = (params: { device_id: string }) => {
     },
     {
       headers: {
-        'wallet-language': getLanguage(),
+        'wallet-language': language,
       },
     }
   );
 };
 
-export const cancelApplication = (params: { device_id: string }) => {
+export const cancelApplication = async (params: { device_id: string }) => {
+  const language = await getValidLan();
   return http.post(
     '/dev/cancel',
     {
@@ -87,16 +93,17 @@ export const cancelApplication = (params: { device_id: string }) => {
     },
     {
       headers: {
-        'wallet-language': getLanguage(),
+        'wallet-language': language,
       },
     }
   );
 };
 
-export const report = (formData: any) => {
+export const report = async (formData: any) => {
+  const language = await getValidLan();
   return http.post('/issue', formData, {
     headers: {
-      'wallet-language': getLanguage(),
+      'wallet-language': language,
       'Content-Type': 'multipart/form-data',
     },
   });

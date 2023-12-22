@@ -3,8 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, ImageBackground, Image, TouchableOpacity, ScrollView, StatusBar } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AntdIcon from 'react-native-vector-icons/AntDesign';
-import { makeStyles, useTheme } from '@rneui/themed';
-import { getData } from '@common/utils/storage';
+import { makeStyles, useTheme, useThemeMode } from '@rneui/themed';
+import { getData, storeData } from '@common/utils/storage';
 
 interface DAppProps {
   navigation?: any;
@@ -13,6 +13,7 @@ interface DAppProps {
 
 export const Settings = (props: DAppProps) => {
   const { theme }: { theme: CustomTheme<CustomColors> } = useTheme();
+  const { mode, setMode } = useThemeMode();
   const styles = useStyles();
   const [currentWallet, setCurrentWallet] = useState<DeviceBalanceTokenList>();
   const onSetting = () => {
@@ -23,6 +24,17 @@ export const Settings = (props: DAppProps) => {
     //   wallet_uuid: currentWallet?.wallet_uuid,
     // });
   };
+
+  const changeColorTheme = () => {
+    if (mode === 'dark') {
+      setMode('light');
+      storeData('colorTheme', 'light');
+    } else {
+      setMode('dark');
+      storeData('colorTheme', 'dark');
+    }
+  };
+
   useEffect(() => {
     getData('wallet_uuid').then((wallet_uuid) => {
       setCurrentWallet({
@@ -59,8 +71,8 @@ export const Settings = (props: DAppProps) => {
               <TouchableOpacity onPress={() => onSetting()}>
                 <IconFont name="a-261" />
               </TouchableOpacity>
-              <TouchableOpacity>
-                <IconFont name="a-271" />
+              <TouchableOpacity onPress={changeColorTheme}>
+                <IconFont name={mode === 'dark' ? 'a-271' : 'a-272'} />
               </TouchableOpacity>
             </View>
           </View>
@@ -140,7 +152,7 @@ export const Settings = (props: DAppProps) => {
             <Text style={styles.title}>账户</Text>
             <View style={styles.item}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <IconFont name="a-9" />
+                <IconFont name="a-9" color={theme.colors.black} />
                 <Text style={styles.text}>地址本</Text>
               </View>
               <TouchableOpacity>
@@ -149,7 +161,7 @@ export const Settings = (props: DAppProps) => {
             </View>
             <View style={styles.item}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <IconFont name="a-10" />
+                <IconFont name="a-10" color={theme.colors.black} />
                 <Text style={styles.text}>云钱包</Text>
               </View>
               <TouchableOpacity>
@@ -158,7 +170,7 @@ export const Settings = (props: DAppProps) => {
             </View>
             <View style={styles.item}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <IconFont name="a-111" />
+                <IconFont name="a-111" color={theme.colors.black} />
                 <Text style={styles.text}>活动通知</Text>
               </View>
               <TouchableOpacity>
@@ -167,7 +179,7 @@ export const Settings = (props: DAppProps) => {
             </View>
             <View style={styles.item}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <IconFont name="a-12" />
+                <IconFont name="a-12" color={theme.colors.black} />
                 <Text style={styles.text}>备份助记词</Text>
               </View>
               <TouchableOpacity>
@@ -177,7 +189,7 @@ export const Settings = (props: DAppProps) => {
 
             <View style={[styles.item, { paddingBottom: 0 }]}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <IconFont name="a-13" />
+                <IconFont name="a-13" color={theme.colors.black} />
                 <Text style={styles.text}>安全与隐私</Text>
               </View>
               <TouchableOpacity>
@@ -196,7 +208,7 @@ export const Settings = (props: DAppProps) => {
             </View>
             <View style={[styles.item, { paddingTop: 0 }]}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <IconFont name="a-14" />
+                <IconFont name="a-14" color={theme.colors.black} />
                 <Text style={styles.text}>联系客服</Text>
               </View>
               <TouchableOpacity>
@@ -205,7 +217,7 @@ export const Settings = (props: DAppProps) => {
             </View>
             <View style={[styles.item, { paddingBottom: 0 }]}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <IconFont name="a-15" />
+                <IconFont name="a-15" color={theme.colors.black} />
                 <Text style={styles.text}>帮助中心</Text>
               </View>
               <TouchableOpacity>
@@ -218,7 +230,7 @@ export const Settings = (props: DAppProps) => {
             <Text style={styles.title}>加入我们</Text>
             <View style={styles.item}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <IconFont name="a-16" />
+                <IconFont name="a-16" color={theme.colors.black} />
                 <Text style={styles.text}>招募代理</Text>
               </View>
               <TouchableOpacity>
@@ -227,7 +239,7 @@ export const Settings = (props: DAppProps) => {
             </View>
             <View style={styles.item}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <IconFont name="a-17" />
+                <IconFont name="a-17" color={theme.colors.black} />
                 <Text style={styles.text}>全球社区</Text>
               </View>
               <TouchableOpacity>
@@ -236,7 +248,7 @@ export const Settings = (props: DAppProps) => {
             </View>
             <View style={[styles.item, { paddingBottom: 0 }]}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <IconFont name="a-181" />
+                <IconFont name="a-181" color={theme.colors.black} />
                 <Text style={styles.text}>工作机会</Text>
               </View>
               <TouchableOpacity>

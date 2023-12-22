@@ -13,10 +13,11 @@ module.exports = {
           '@api': './api',
           '@assets': './assets',
           '@common': './common',
+          '@i18n': './i18n',
           '@components': './components',
         },
       },
     ],
-    "react-native-reanimated/plugin"
+    'react-native-reanimated/plugin',
   ],
 };

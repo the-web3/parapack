@@ -18,6 +18,7 @@ import IconA91 from './IconA91';
 import IconA151 from './IconA151';
 import IconA261 from './IconA261';
 import IconA271 from './IconA271';
+import IconA272 from './IconA272';
 import IconA3 from './IconA3';
 import IconA41 from './IconA41';
 import IconA11 from './IconA11';
@@ -118,6 +119,7 @@ export { default as IconA91 } from './IconA91';
 export { default as IconA151 } from './IconA151';
 export { default as IconA261 } from './IconA261';
 export { default as IconA271 } from './IconA271';
+export { default as IconA272 } from './IconA272';
 export { default as IconA3 } from './IconA3';
 export { default as IconA41 } from './IconA41';
 export { default as IconA11 } from './IconA11';
@@ -205,7 +207,7 @@ export { default as IconZhuanchu } from './IconZhuanchu';
 export { default as IconWujilu } from './IconWujilu';
 export { default as IconALogopeise } from './IconALogopeise';
 
-export type IconNames = 'a-31' | 'a-112' | 'a-110' | 'a-29' | 'a-4' | 'a-121' | 'a-141' | 'a-251' | 'xingzhuangjiehe' | 'a-101' | 'a-91' | 'a-151' | 'a-261' | 'a-271' | 'a-3' | 'a-41' | 'a-11' | 'a-26' | 'a-27' | 'a-10' | 'a-13' | 'a-9' | 'a-111' | 'a-191' | 'a-16' | 'a-22' | 'a-15' | 'a-181' | 'a-23' | 'a-21' | 'a-24' | 'a-25' | 'a-14' | 'a-17' | 'a-12' | 'video' | 'money' | 'a-1' | 'a-2' | 'share' | 'heart' | 'link' | 'volume' | 'barchart' | 'clockcircleo' | 'bulb1' | 'pay-circle-o1' | 'medal' | 'logo' | 'people' | 'eye-open' | 'copy' | 'question-circle' | 'empty' | 'eye-close' | 'a-28' | 'a-18' | 'a-19' | 'a-Group217' | 'Vector' | 'a-lujing1' | 'a-huaban1' | 'vuesax_outline_arrow-3' | 'ziliaoshenhezhong' | 'liaotiandianjiqian' | 'zichandianjiqian' | 'huodongdianjiqian' | 'shengtaidianjiqian' | 'daishoukuan' | 'duihuanmaduihuan' | 'a-31-saoma' | 'bukejian' | 'charulianjie' | 'a-paixubeifen6' | 'shoukuanzhanghao' | 'erweima' | 'gengduoshezhi' | 'liulanqi' | 'zhuanzhang' | 'fuzhi' | 'genghuan' | 'icon' | 'xiangqing' | 'xuanxiangbeifen' | 'daikuanshuliang' | 'xiaoxi' | 'qianbao' | 'daikuanbao' | 'a-xiala' | 'kuanggong2' | 'lujing' | 'xiangshang' | 'tuite1' | 'lishishuju' | 'zhongmingming' | 'wujilu2' | 'yishouquan' | 'zhuanchu' | 'wujilu' | 'a-logopeise';
+export type IconNames = 'a-31' | 'a-112' | 'a-110' | 'a-29' | 'a-4' | 'a-121' | 'a-141' | 'a-251' | 'xingzhuangjiehe' | 'a-101' | 'a-91' | 'a-151' | 'a-261' | 'a-271' | 'a-272' | 'a-3' | 'a-41' | 'a-11' | 'a-26' | 'a-27' | 'a-10' | 'a-13' | 'a-9' | 'a-111' | 'a-191' | 'a-16' | 'a-22' | 'a-15' | 'a-181' | 'a-23' | 'a-21' | 'a-24' | 'a-25' | 'a-14' | 'a-17' | 'a-12' | 'video' | 'money' | 'a-1' | 'a-2' | 'share' | 'heart' | 'link' | 'volume' | 'barchart' | 'clockcircleo' | 'bulb1' | 'pay-circle-o1' | 'medal' | 'logo' | 'people' | 'eye-open' | 'copy' | 'question-circle' | 'empty' | 'eye-close' | 'a-28' | 'a-18' | 'a-19' | 'a-Group217' | 'Vector' | 'a-lujing1' | 'a-huaban1' | 'vuesax_outline_arrow-3' | 'ziliaoshenhezhong' | 'liaotiandianjiqian' | 'zichandianjiqian' | 'huodongdianjiqian' | 'shengtaidianjiqian' | 'daishoukuan' | 'duihuanmaduihuan' | 'a-31-saoma' | 'bukejian' | 'charulianjie' | 'a-paixubeifen6' | 'shoukuanzhanghao' | 'erweima' | 'gengduoshezhi' | 'liulanqi' | 'zhuanzhang' | 'fuzhi' | 'genghuan' | 'icon' | 'xiangqing' | 'xuanxiangbeifen' | 'daikuanshuliang' | 'xiaoxi' | 'qianbao' | 'daikuanbao' | 'a-xiala' | 'kuanggong2' | 'lujing' | 'xiangshang' | 'tuite1' | 'lishishuju' | 'zhongmingming' | 'wujilu2' | 'yishouquan' | 'zhuanchu' | 'wujilu' | 'a-logopeise';
 
 interface Props extends GProps, ViewProps {
   name: IconNames;
@@ -243,6 +245,8 @@ let IconFont: FunctionComponent<Props> = ({ name, ...rest }) => {
       return <IconA261 key="13" {...rest} />;
     case 'a-271':
       return <IconA271 key="14" {...rest} />;
+    case 'a-272':
+      return <IconA272 key="14" {...rest} />;
     case 'a-3':
       return <IconA3 key="15" {...rest} />;
     case 'a-41':
