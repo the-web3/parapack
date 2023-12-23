@@ -187,7 +187,7 @@ const Asset = (props: Props) => {
           </View>
         </View> */}
         <View style={{ marginTop: 14, justifyContent: 'center', flexDirection: 'row' }}>
-          <Text style={{ fontWeight: 500, color: '#333', fontSize: 16 }}>我的资产</Text>
+          <Text style={{ fontWeight: 500, color: '#333', fontSize: 16 }}>{t(`asset.myAssets`)}</Text>
         </View>
         <View style={styles.card}>
           <View style={styles.cardBetween}>
@@ -239,7 +239,9 @@ const Asset = (props: Props) => {
               >
                 <View style={styles.button}>
                   <Icon name="pluscircleo" size={12} style={{ marginRight: 3, color: '#000' }} />
-                  <Text style={{ lineHeight: 18, color: '#000' }}>去备份</Text>
+                  <Text style={{ lineHeight: 18, color: '#000' }}>
+                    {t(`asset.Backup`)}
+                  </Text>
                 </View>
               </TouchableOpacity>
             )}
@@ -285,7 +287,9 @@ const Asset = (props: Props) => {
                     return { fontSize: 12, marginVertical: 8, color: active ? '#3B28CC' : '#AEAEAE' };
                   }}
                 >
-                  <Tab.Item>资产</Tab.Item>
+                  <Tab.Item>
+                    {t(`asset.Assets`)}
+                  </Tab.Item>
                   <Tab.Item>DeFi</Tab.Item>
                   <Tab.Item>NFT</Tab.Item>
                 </Tab>

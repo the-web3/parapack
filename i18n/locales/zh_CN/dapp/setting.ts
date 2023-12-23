@@ -1,0 +1,20 @@
+export default {
+    myWallet: '我的钱包',
+    lucky: '红包',
+    airdrop: '空投',
+    invite: '邀请',
+    academy: '钱包学院',
+    account: '账户',
+    addressBook: '地址本',
+    cloudWallet: '云钱包',
+    activityNotifications: '活动通知',
+    seedBackup: '备份助记词',
+    securityAndPrivacy: '安全与隐私',
+    activitiesIParticipatedIn: '我参与的活动',
+    contactCustomerService: '联系客服',
+    helpCenter: '帮助中心',
+    joinUs: '加入我们',
+    recruitAgents: '招募代理',
+    globalCommunities: '全球社区',
+    jobOpportunities: '工作机会'
+}

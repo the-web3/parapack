@@ -95,7 +95,7 @@ export const DAppScreen = (props: DAppProps) => {
       const tagsRes = await getTags();
       console.log('tagRes:', JSON.stringify(tagsRes.data));
       setTags(tagsRes.data);
-    } catch (e) {}
+    } catch (e) { }
   };
 
   const onTagPress = (tag?: string, title?: string) => {
@@ -147,7 +147,7 @@ export const DAppScreen = (props: DAppProps) => {
             fontSize: 12,
           }}
           leftIcon={<Icon name="search1" />}
-          placeholder="输入Dapp网站"
+          placeholder={t("dApp.searchPlaceholder")}
           onChangeText={async (search) => {
             const dAppGroupRes = await getDAppGroup({
               pageNum: 1,

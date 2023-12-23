@@ -9,4 +9,7 @@ export default {
   receipt: '收款',
   purchase: '购买',
   flash: '闪兑',
+  myAssets: '我的资产',
+  Backup: '去备份',
+  Assets: '资产'
 };

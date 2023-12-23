@@ -6,6 +6,7 @@ export default {
   youlike: '猜你喜欢',
   '24h': '24时',
   '6h': '6时',
+  searchPlaceholder: '输入Dapp网站',
   more: '更多',
   aboutParapack: '关于 ParaPack',
   developerapplication: '开发者申请',

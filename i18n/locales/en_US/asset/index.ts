@@ -8,4 +8,7 @@ export default {
   receipt: 'receipt',
   purchase: 'purchase',
   flash: 'flash',
+  myAssets: 'My assets',
+  Backup: 'Backup',
+  Assets: 'Assets'
 };

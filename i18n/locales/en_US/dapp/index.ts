@@ -6,6 +6,7 @@ export default {
   youlike: 'You like',
   '24h': '24h',
   '6h': '6h',
+  searchPlaceholder: 'Enter DDAP name or URL.',
   more: 'More',
   aboutParapack: 'About ParaPack',
   developerapplication: 'Developer application',
