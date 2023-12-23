@@ -32,7 +32,7 @@ export function getValidLan() {
   return getData('GLOBAL_I18N_LANGUAGE')
     .then((value) => {
       if (isLanguageValid(value)) {
-        return value?.replace('-', '_');
+        return value;
       }
       const systemLanguages = RNLocalize.getLocales()?.[0];
       return `${systemLanguages.languageCode}_${systemLanguages.countryCode}`;
@@ -50,7 +50,7 @@ async function initializeI18n() {
     .use(initReactI18next) // 将 i18n 传递给 react-i18next
     .init({
       resources,
-      lng,
+      lng: lng?.replace('_', '-'),
       fallbackLng: [Languages.ZH_CN, Languages.EN_US],
       interpolation: {
         escapeValue: false, // react 已经保护了 XSS
