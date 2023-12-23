@@ -7,27 +7,31 @@ import { storeData } from '@common/utils/storage';
 import Toast from 'react-native-root-toast';
 import i18n from 'i18next';
 import { getValidLan } from '@i18n/index';
+import { Languages } from '@i18n/constants';
 type Props = {
   fullWidth?: boolean;
   navigation: any;
 };
+
+type LanguageItemType = {
+  label: string;
+  value: string;
+  added: boolean;
+}
+
 const Language = (props: Props) => {
   const styles = useStyles(props);
   const [languages, setLanguages] = useState<
-    {
-      label: string;
-      value: string;
-      added: boolean;
-    }[]
+    LanguageItemType[]
   >([
     {
       label: '中文',
-      value: 'zh_CN',
+      value: Languages.ZH_CN,
       added: false,
     },
     {
       label: '英文',
-      value: 'en_US',
+      value: Languages.EN_US,
       added: false,
     },
   ]);
@@ -54,6 +58,17 @@ const Language = (props: Props) => {
     setLanguages(newList);
   };
 
+  const switchLanguage = (item: LanguageItemType) => {
+    storeData('GLOBAL_I18N_LANGUAGE', item?.value).then(() => {
+      initLanguage()
+    });
+    Toast.show(`${item?.label}设置成功`);
+    i18n.changeLanguage(item?.value.replace('_', '-'), (err, t) => {
+      if (err) return console.log('something went wrong loading', err);
+      t('key'); // -> same as i18next.t
+    });
+  }
+
   return (
     <SafeAreaView style={{ backgroundColor: '#F6F7FC' }}>
       <View style={styles.body}>
@@ -65,14 +80,7 @@ const Language = (props: Props) => {
           {(languages || []).map((item) => (
             <TouchableOpacity
               key={`${item?.value}`}
-              onPress={() => {
-                storeData('GLOBAL_I18N_LANGUAGE', item?.value);
-                Toast.show(`${item?.label}设置成功`);
-                i18n.changeLanguage(item?.value.replace('_', '-'), (err, t) => {
-                  if (err) return console.log('something went wrong loading', err);
-                  t('key'); // -> same as i18next.t
-                });
-              }}
+              onPress={() => { switchLanguage(item) }}
             >
               <View
                 style={{
