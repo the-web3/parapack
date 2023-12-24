@@ -27,35 +27,36 @@ import { getFlush } from '@api/common';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { SUCCESS_CODE } from '@common/constants';
 import { useFocusEffect } from '@react-navigation/native';
-import Toast from 'react-native-root-toast';
+import i18next from 'i18next';
 
 const FEE_TYPE = [
   {
     type: 'low',
-    title: '慢',
+    title: i18next.t(`asset.slow`),
     price: '0.00073',
     usdtPrice: '3.27',
     time: '约60分钟',
   },
   {
     type: 'recommend',
-    title: '推荐',
+    title: i18next.t(`asset.avg`),
     price: '0.00073',
     usdtPrice: '$ 3.27',
     time: '约30分钟',
   },
   {
     type: 'fast',
-    title: '快',
+    title: i18next.t(`asset.fast`),
     price: '0.00073',
     usdtPrice: '3.27',
     time: '约10分钟',
   },
   {
     type: 'custom',
-    title: '自定义',
+    title: i18next.t(`asset.custom`),
   },
 ];
+// '0x69E74CF554c471B6D795bE1A9F243a3cf14b3d2c'
 const TransferPayment = (props: any) => {
   const { navigation, route } = props;
   const { t } = useTranslation();
@@ -131,7 +132,7 @@ const TransferPayment = (props: any) => {
             symbol: token?.symbol as string,
           });
           if (res.code === SUCCESS_CODE) {
-            showToast('转账成功', {
+            showToast(t(`asset.transferSuccess`), {
               onHide: () => {
                 navigation?.navigate('home', {
                   tab: 'asset',
@@ -242,7 +243,7 @@ const TransferPayment = (props: any) => {
                             res
                           );
                           if (res.code === SUCCESS_CODE) {
-                            showToast('转账成功', {
+                            showToast(t(`asset.transferSuccess`), {
                               onHide: () => {
                                 navigation?.navigate('home', {
                                   tab: 'asset',
@@ -250,10 +251,8 @@ const TransferPayment = (props: any) => {
                               },
                             });
                           }
-                          toggleOverlay();
                           setLoading(false);
                         } catch (e) {
-                          toggleOverlay();
                           showToast(`${e}`);
                           console.log('raw_tx', e);
                           setLoading(false);
@@ -430,13 +429,15 @@ const TransferPayment = (props: any) => {
     <Layout
       fixedChildren={
         <View style={styles.button}>
-          <Button onPress={handleOpen}>确定</Button>
+          <Button onPress={handleOpen}>{t(`common.confirm`)}</Button>
         </View>
       }
     >
       <SafeAreaView style={styles.layout}>
         <View style={styles.overview}>
-          <Text style={styles.overviewTitle}>{token?.symbol} 余额</Text>
+          <Text style={styles.overviewTitle}>
+            {token?.symbol} {t(`asset.balance`)}
+          </Text>
           <Text style={styles.money}>
             <Text style={styles.moneyStrong}>
               {token?.balance} {token?.symbol}
@@ -445,7 +446,7 @@ const TransferPayment = (props: any) => {
           </Text>
         </View>
         <View>
-          <Text style={styles.title}>收款账号</Text>
+          <Text style={styles.title}>{t('asset.recipientAccount')}</Text>
           <Input
             value={form.toAddr}
             onChangeText={(toAddr) => {
@@ -467,7 +468,7 @@ const TransferPayment = (props: any) => {
             }}
           >
             <View>
-              <Text style={styles.title}>转账金额</Text>
+              <Text style={styles.title}>{t('asset.transferAmount')}</Text>
             </View>
             <TouchableOpacity
               onPress={() => {
@@ -498,7 +499,7 @@ const TransferPayment = (props: any) => {
         </View>
         {!isbtc && (
           <View>
-            <Text style={styles.title}>矿工费用</Text>
+            <Text style={styles.title}>{t(`asset.minerFee`)}</Text>
             <View style={styles.group}>
               {(list || []).map((item) => {
                 const style =
@@ -589,33 +590,33 @@ const TransferPayment = (props: any) => {
             )}
           </View>
         )}
-        <BottomOverlay visible={visible} title={'交易详情'} onBackdropPress={toggleOverlay}>
+        <BottomOverlay visible={visible} title={t(`asset.transactionDetails`)} onBackdropPress={toggleOverlay}>
           <View style={{ marginTop: 16 }}>
             <View style={{ marginBottom: 16 }}>
               <Text style={{ fontSize: 16 }}>{token?.symbol}</Text>
             </View>
             <View style={{ marginBottom: 16 }}>
               <View>
-                <Text style={{ color: '#9397AF', fontSize: 14, marginRight: 2 }}>付款地址</Text>
+                <Text style={{ color: '#9397AF', fontSize: 14, marginRight: 2 }}>{t(`asset.paymentAddress`)}</Text>
               </View>
 
               <Text>{token?.address || ''}</Text>
             </View>
             <View style={{ marginBottom: 16 }}>
               <View>
-                <Text style={{ color: '#9397AF', fontSize: 14, marginRight: 2 }}>收款地址</Text>
+                <Text style={{ color: '#9397AF', fontSize: 14, marginRight: 2 }}>{t(`asset.recipientAddress`)}</Text>
               </View>
               <Text>{form.toAddr || ''}</Text>
             </View>
             {/* <View style={{ marginBottom: 16 }}>
               <View>
-                <Text style={{ color: '#9397AF', fontSize: 14, marginRight: 2 }}>转账金额</Text>
+                <Text style={{ color: '#9397AF', fontSize: 14, marginRight: 2 }}>{t('asset.transferAmount')}</Text>
               </View>
               <Text>{form.amount || ''}</Text>
             </View> */}
             <View style={{ marginBottom: 16 }}>
               <View>
-                <Text style={{ color: '#9397AF', fontSize: 14, marginRight: 2 }}>矿工费</Text>
+                <Text style={{ color: '#9397AF', fontSize: 14, marginRight: 2 }}>{t(`asset.minerFee`)}</Text>
               </View>
               <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                 <Text style={{ fontSize: 20 }}>{priceDetail?.price}</Text>
@@ -623,7 +624,7 @@ const TransferPayment = (props: any) => {
               </View>
             </View>
           </View>
-          <Button onPress={handleConfirmed}>确定</Button>
+          <Button onPress={handleConfirmed}>{t(`common.confirm`)}</Button>
         </BottomOverlay>
       </SafeAreaView>
       <Spinner visible={loading} />

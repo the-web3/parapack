@@ -16,5 +16,5 @@ export default {
     joinUs: '加入我们',
     recruitAgents: '招募代理',
     globalCommunities: '全球社区',
-    jobOpportunities: '工作机会'
-}
+    jobOpportunities: '工作机会',
+};

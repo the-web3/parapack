@@ -9,11 +9,13 @@ import Layout from '@components/Layout';
 import ValidatePassword from '@components/ValidatePassword';
 import { Avatar, Button, Dialog, Input, ListItem, Switch } from '@rneui/themed';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { View, Text, TouchableOpacity, Clipboard } from 'react-native';
 import { getUniqueId } from 'react-native-device-info';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/AntDesign';
 const SettingScreen = (props) => {
+  const { t } = useTranslation();
   const [walletInfo, setWalletInfo] = useState<DeviceBalanceData>();
   const [device_id, setDeviceId] = useState('');
   const [privateDialog, setPrivate] = useState({
@@ -139,7 +141,7 @@ const SettingScreen = (props) => {
             }}
             titleStyle={{ marginHorizontal: 20, color: 'rgba(208, 31, 31, 1)' }}
           >
-            删除钱包
+            {t('asset.deleteWallet')}
           </Button>
         </View>
       }
@@ -184,7 +186,7 @@ const SettingScreen = (props) => {
         </View>
         <ListItem onPress={toggleWalletName}>
           <ListItem.Content>
-            <ListItem.Title>修改钱包名</ListItem.Title>
+            <ListItem.Title>{t('asset.editWalletName')}</ListItem.Title>
           </ListItem.Content>
           <ListItem.Chevron />
         </ListItem>
@@ -231,7 +233,7 @@ const SettingScreen = (props) => {
           }}
         >
           <ListItem.Content>
-            <ListItem.Title>查看私钥</ListItem.Title>
+            <ListItem.Title>{t('asset.viewPrivateKey')}</ListItem.Title>
           </ListItem.Content>
           <ListItem.Chevron />
         </ListItem>
@@ -242,45 +244,49 @@ const SettingScreen = (props) => {
             }}
           >
             <ListItem.Content>
-              <ListItem.Title>备份钱包</ListItem.Title>
+              <ListItem.Title>{t('asset.backupWallet')}</ListItem.Title>
             </ListItem.Content>
             <ListItem.Chevron />
           </ListItem>
         )}
         <ListItem>
           <ListItem.Content>
-            <ListItem.Title>面容/指纹支付</ListItem.Title>
+            <ListItem.Title>{t('asset.FaceFingerprintPay')}</ListItem.Title>
           </ListItem.Content>
           <Switch />
         </ListItem>
         <ListItem>
           <ListItem.Content>
-            <ListItem.Title>免密支付</ListItem.Title>
+            <ListItem.Title>{t('asset.passwordlessPayment')}</ListItem.Title>
           </ListItem.Content>
           <Switch />
         </ListItem>
         <ListItem>
           <ListItem.Content>
-            <ListItem.Title>授权检测</ListItem.Title>
+            <ListItem.Title>{t('asset.authorizationVerification')}</ListItem.Title>
           </ListItem.Content>
           <ListItem.Chevron />
         </ListItem>
         <ListItem>
           <ListItem.Content>
-            <ListItem.Title>节点设置</ListItem.Title>
+            <ListItem.Title>{t('asset.nodeSettings')}</ListItem.Title>
           </ListItem.Content>
           <ListItem.Chevron />
         </ListItem>
       </SafeAreaView>
 
-      <BottomOverlay visible={deleteVisible} title={'确定要删除钱包吗？'} onBackdropPress={toggleDialogDelete}>
+      <BottomOverlay
+        visible={deleteVisible}
+        title={t('asset.confirmDeleteWallet')}
+        onBackdropPress={toggleDialogDelete}
+      >
         <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', marginBottom: 16 }}>
-          <Text>删除后，您可通过已备份的助记词重新导入钱包</Text>
+          <Text>{t('asset.confirmDeleteWalletDesc')}</Text>
         </View>
         <View style={{ marginBottom: 16 }}>
-          <Button title="确定" onPress={handleDelete} />
+          <Button title={t('common.confirm')} onPress={handleDelete} />
         </View>
-        <Button title="取消" onPress={toggleDialogDelete} type="outline" />
+        <Button title={t('common.cancel')} onPress={toggleDialogDelete} type="outline" />
       </BottomOverlay>
       <ValidatePassword
         visible={validate.visible}
@@ -289,7 +295,11 @@ const SettingScreen = (props) => {
           toggleValidate();
         }}
       />
-      <BottomOverlay visible={walletNameDialog.visible} title={'修改钱包名称'} onBackdropPress={toggleWalletName}>
+      <BottomOverlay
+        visible={walletNameDialog.visible}
+        title={t('asset.editWalletName')}
+        onBackdropPress={toggleWalletName}
+      >
         <View style={{ marginTop: 16 }}>
           <Input
             placeholder="请输入钱包名称"

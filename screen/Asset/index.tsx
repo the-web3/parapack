@@ -16,6 +16,7 @@ import { CreateAddress } from 'savourlabs-wallet-sdk/wallet';
 import { batchInsertOrUpdateAssetTable, updateWalletTable, addToken, getTableInfo } from '@common/wallet';
 import BottomOverlay from '@components/BottomOverlay';
 import { getFlush } from '@api/common';
+import Empty from '@components/Empty';
 
 type Props = {
   fullWidth?: boolean;
@@ -239,9 +240,7 @@ const Asset = (props: Props) => {
               >
                 <View style={styles.button}>
                   <Icon name="pluscircleo" size={12} style={{ marginRight: 3, color: '#000' }} />
-                  <Text style={{ lineHeight: 18, color: '#000' }}>
-                    {t(`asset.Backup`)}
-                  </Text>
+                  <Text style={{ lineHeight: 18, color: '#000' }}>{t(`asset.Backup`)}</Text>
                 </View>
               </TouchableOpacity>
             )}
@@ -270,7 +269,7 @@ const Asset = (props: Props) => {
         </View>
         <View style={styles.scrollContainer}>
           <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 32 }}>
-            <View style={{ flex: 1 }}>
+            <View style={{ width: 180 }}>
               <TouchableOpacity activeOpacity={1}>
                 <Tab
                   value={index}
@@ -282,14 +281,13 @@ const Asset = (props: Props) => {
                     backgroundColor: '#3B28CC',
                     height: 4,
                     borderRadius: 2,
+                    width: 60,
                   }}
                   titleStyle={(active: boolean) => {
                     return { fontSize: 12, marginVertical: 8, color: active ? '#3B28CC' : '#AEAEAE' };
                   }}
                 >
-                  <Tab.Item>
-                    {t(`asset.Assets`)}
-                  </Tab.Item>
+                  <Tab.Item>{t(`asset.Assets`)}</Tab.Item>
                   <Tab.Item>DeFi</Tab.Item>
                   <Tab.Item>NFT</Tab.Item>
                 </Tab>
@@ -360,34 +358,12 @@ const Asset = (props: Props) => {
               </TabView.Item>
               <TabView.Item style={{ width: '100%' }}>
                 <View>
-                  <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                    <View>
-                      <Image
-                        // source={BASE_URI}
-                        source={require('@assets/images/emptyRecord.png')}
-                        style={styles.img}
-                        // containerStyle={styles.item}
-                        PlaceholderContent={<ActivityIndicator />}
-                      />
-                    </View>
-                    <Text style={{ fontSize: 10, marginTop: 18, marginBottom: 28, color: '#AEAEAE' }}>暂无数据</Text>
-                  </View>
+                  <Empty />
                 </View>
               </TabView.Item>
               <TabView.Item style={{ width: '100%' }}>
                 <View>
-                  <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                    <View>
-                      <Image
-                        // source={BASE_URI}
-                        source={require('@assets/images/emptyRecord.png')}
-                        style={styles.img}
-                        // containerStyle={styles.item}
-                        PlaceholderContent={<ActivityIndicator />}
-                      />
-                    </View>
-                    <Text style={{ fontSize: 10, marginTop: 18, marginBottom: 28, color: '#AEAEAE' }}>暂无数据</Text>
-                  </View>
+                  <Empty />
                 </View>
               </TabView.Item>
             </TabView>

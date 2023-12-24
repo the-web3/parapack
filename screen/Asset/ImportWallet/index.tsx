@@ -11,6 +11,7 @@ import { CreateMnemonic, DecodeMnemonic, MnemonicToSeed, CreateAddress } from 's
 import { storeData } from '@common/utils/storage';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { executeQuery } from '@common/utils/sqlite';
+import i18next from 'i18next';
 type Props = {
   fullWidth?: boolean;
   navigation: any;
@@ -143,7 +144,7 @@ const ImportWallet = (props: Props) => {
     <Layout
       fixedChildren={
         <View style={styles.button}>
-          <Button onPress={handleImportWallet}>导入钱包</Button>
+          <Button onPress={handleImportWallet}>{i18next.t('asset.importWallet')}</Button>
         </View>
       }
     >

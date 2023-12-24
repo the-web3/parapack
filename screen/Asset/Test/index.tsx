@@ -20,12 +20,14 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import { executeQuery } from '@common/utils/sqlite';
 import { getUniqueId } from 'react-native-device-info';
 import { getSymbolSupport } from '@api/symbol';
+import { useTranslation } from 'react-i18next';
 type Props = {
   fullWidth?: boolean;
   navigation: any;
 };
 
 const Test = (props: Props) => {
+  const { t } = useTranslation();
   const [walletUuid, setWalletUuid] = useState('');
   const [uniqueId, setUniqueId] = useState('');
   const [encodeMnemonic, setEncodeMnemonic] = useState('');
@@ -85,7 +87,7 @@ const Test = (props: Props) => {
               props?.navigation?.navigate('guide');
             }}
           >
-            创建钱包
+            {t('asset.createWallet')}
           </Button>
           <Input
             label="wallet_uuid"

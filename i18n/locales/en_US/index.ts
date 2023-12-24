@@ -4,7 +4,7 @@ import product from './product';
 import asset from './asset';
 import misc from './misc';
 import dApp from './dapp';
-import dAppSetting from './dapp/setting'
+import dAppSetting from './dapp/setting';
 import swap from './swap';
 import activity from './activity';
 
@@ -17,5 +17,5 @@ export default {
   dApp,
   swap,
   activity,
-  dAppSetting
+  dAppSetting,
 };

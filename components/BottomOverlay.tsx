@@ -19,10 +19,8 @@ const BottomOverlay: FC<Props> = ({ visible, title, after, onBackdropPress, chil
   return (
     <Overlay isVisible={visible} onBackdropPress={onBackdropPress} overlayStyle={styles.container}>
       <RootSiblingParent>
-        <TouchableWithoutFeedback
-          onPress={onBackdropPress}
-        >
-          <View style={styles.maskBack}></View>
+        <TouchableWithoutFeedback onPress={onBackdropPress}>
+          <View style={styles.maskBack} />
         </TouchableWithoutFeedback>
         <View style={styles.contentBox}>
           <View style={styles.containerContent}>
@@ -58,7 +56,7 @@ const useStyles = makeStyles((theme: any) => {
       left: 0,
       right: 0,
       bottom: 0,
-      height: '100%'
+      height: '100%',
     },
     contentBox: {
       position: 'absolute',
@@ -66,7 +64,9 @@ const useStyles = makeStyles((theme: any) => {
       left: 0,
       right: 0,
       padding: 20,
-      backgroundColor: 'white'
+      backgroundColor: 'white',
+      borderTopLeftRadius: 20,
+      borderTopRightRadius: 20,
     },
     containerContent: {
       flexDirection: 'row',

@@ -10,12 +10,14 @@ import { createImportWallet } from '@common/wallet';
 import { CreateMnemonic } from 'savourlabs-wallet-sdk/wallet';
 import { storeData } from '@common/utils/storage';
 import Spinner from 'react-native-loading-spinner-overlay';
+import { useTranslation } from 'react-i18next';
 type Props = {
   fullWidth?: boolean;
   navigation: any;
 };
 
 const CreateWallet = (props: Props) => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [walletInfo, setWalletInfo] = useState<{
     wallet_name: string;
@@ -75,7 +77,7 @@ const CreateWallet = (props: Props) => {
     <Layout
       fixedChildren={
         <View style={styles.button}>
-          <Button onPress={handleCreateWallet}>创建钱包</Button>
+          <Button onPress={handleCreateWallet}>{t('asset.createWallet')}</Button>
         </View>
       }
     >

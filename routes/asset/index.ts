@@ -14,12 +14,12 @@ import SearchToken from '@screen/Asset/SearchToken';
 import SearchHistory from '@screen/Asset/SearchHistory';
 import ImportWallet from '@screen/Asset/ImportWallet';
 import Test from '@screen/Asset/Test';
-
+import i18next from 'i18next';
 const menus = [
   {
     name: 'tokenDetail',
     options: {
-      title: 'Token详情',
+      title: i18next.t('asset.tokenDetail'),
       headerStyle: {
         backgroundColor: '#3251EA', // 设置导航条的背景颜色
         // borderBottomWidth: 0,
@@ -35,7 +35,7 @@ const menus = [
   {
     name: 'createWallet',
     options: {
-      title: '创建钱包',
+      title: i18next.t('asset.createWallet'),
       headerShadowVisible: false,
     },
     component: CreateWallet, //（完成）
@@ -43,7 +43,7 @@ const menus = [
   {
     name: 'importWallet',
     options: {
-      title: '导入钱包',
+      title: i18next.t('asset.importWallet'),
       headerShadowVisible: false,
     },
     component: ImportWallet, //（完成）
@@ -51,7 +51,7 @@ const menus = [
   {
     name: 'asset',
     options: {
-      title: '我的资产',
+      title: i18next.t('asset.myAssets'),
       headerShadowVisible: false,
     },
     component: Asset, //（差一部分）
@@ -59,7 +59,7 @@ const menus = [
   {
     name: 'startBackup',
     options: {
-      title: '开始备份',
+      title: i18next.t('asset.startBackup'),
       // headerShown: false
       headerShadowVisible: false,
     },
@@ -68,7 +68,7 @@ const menus = [
   {
     name: 'backupMnemonics',
     options: {
-      title: '备份助记词',
+      title: i18next.t('asset.backupSeedPhrase'),
       headerShadowVisible: false,
     },
     component: BackupMnemonics, //（完成）
@@ -77,7 +77,7 @@ const menus = [
   {
     name: 'transferPayment',
     options: {
-      title: '转账',
+      title: i18next.t('asset.transferTitle'),
       headerShadowVisible: false,
     },
     component: TransferPayment, //（完成）
@@ -85,7 +85,7 @@ const menus = [
   {
     name: 'addToken',
     options: {
-      title: '添加币种',
+      title: i18next.t('asset.addAsset'),
       headerShown: false,
       headerShadowVisible: false,
     },
@@ -112,7 +112,7 @@ const menus = [
   {
     name: 'swap',
     options: {
-      title: '闪兑',
+      title: i18next.t('asset.flash'),
       headerShadowVisible: false,
     },
     component: Swap, //（完成）
@@ -120,7 +120,7 @@ const menus = [
   {
     name: 'verifyMnemonics',
     options: {
-      title: '验证助记词',
+      title: i18next.t('asset.verifyMnemonic'),
       headerShadowVisible: false,
     },
     component: VerifyMnemonics, //（完成）
@@ -128,7 +128,7 @@ const menus = [
   {
     name: 'coinDetail',
     options: {
-      title: '币种详情',
+      title: i18next.t('asset.tokenDetail'),
       headerShadowVisible: false,
     },
     component: CoinDetail,
@@ -136,7 +136,7 @@ const menus = [
   {
     name: 'settingScreen',
     options: {
-      title: '钱包设置',
+      title: i18next.t('asset.walletSettings'),
       headerShadowVisible: false,
     },
     component: SettingScreen,

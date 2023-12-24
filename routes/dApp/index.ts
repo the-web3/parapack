@@ -13,6 +13,7 @@ import News from '@screen/DApp/News';
 import { DAppDetails } from '@screen/DApp/DAppDetails';
 import Language from '@screen/DApp/Language';
 import SearchDapp from '@screen/DApp/SearchDapp';
+import i18next from 'i18next';
 
 // Just a simple option please optimize
 const _getOptions = (title: string) => {
@@ -40,27 +41,27 @@ const menus = [
   },
   {
     name: 'ReportQuestion',
-    options: _getOptions('报告问题'),
+    options: _getOptions(i18next.t('dApp.reportQuestion')),
     component: ReportQuestion,
   },
   {
     name: 'DevloperApplication',
-    options: _getOptions('入驻申请'),
+    options: _getOptions(i18next.t('dApp.listingApplication')),
     component: DevloperApplication,
   },
   {
     name: 'DeveloperOnboarding',
-    options: _getOptions('开发者入驻规则及协议'),
+    options: _getOptions(i18next.t('dApp.DeveloperOnboarding')),
     component: DeveloperOnboarding,
   },
   {
     name: 'SubmitScreen',
-    options: _getOptions('入驻申请'),
+    options: _getOptions(i18next.t('dApp.listingApplication')),
     component: SubmitScreen,
   },
   {
     name: 'Review',
-    options: _getOptions('入驻申请'),
+    options: _getOptions(i18next.t('dApp.listingApplication')),
     component: Review,
   },
   {
@@ -75,22 +76,22 @@ const menus = [
   },
   {
     name: 'NewsArticle',
-    options: _getOptions('信息中心'),
+    options: _getOptions(i18next.t('dApp.informationCenter')),
     component: NewsArticle,
   },
   {
     name: 'Setting',
-    options: _getOptions('设置'),
+    options: _getOptions(i18next.t('dApp.settings')),
     component: Setting,
   },
   {
     name: 'News',
-    options: _getOptions('公告详情'),
+    options: _getOptions(i18next.t('dApp.announcementDetails')),
     component: News,
   },
   {
     name: 'Language',
-    options: _getOptions('语言'),
+    options: _getOptions(i18next.t('dApp.language')),
     component: Language,
   },
   {

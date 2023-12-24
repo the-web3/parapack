@@ -10,6 +10,7 @@ import { showToast } from '@common/utils/platform';
 import HTML from 'react-native-render-html';
 import ReportBottom from '@components/ReportBottom';
 import IconFont from '@assets/iconfont';
+import { SwiperFlatList } from 'react-native-swiper-flatlist';
 
 interface DAppDetailParam {
   navigation?: any;
@@ -56,6 +57,7 @@ export const DAppDetail = (props: DAppDetailParam) => {
     //   setNotices(noticesRes.data);
     // });
   }, []);
+  console.log(111111, dAppProps?.banners);
 
   const initKLine = useCallback(async () => {
     const res = await getSymbolKline({
@@ -149,6 +151,33 @@ export const DAppDetail = (props: DAppDetailParam) => {
         </View>
         <View style={{ color: '#5D5D5D', fontSize: 10, marginHorizontal: 20, marginTop: 10 }}>
           <HTML source={{ html: dAppProps?.content }} />
+        </View>
+        <View
+          style={{
+            height: 140,
+            width: width - 40,
+            marginHorizontal: 20,
+          }}
+        >
+          <SwiperFlatList
+            autoplay
+            autoplayDelay={2}
+            autoplayLoop
+            data={dAppProps?.banners}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={{ height: 140, width: width, borderRadius: 12 }}
+                onPress={() => {
+                  props?.navigation.navigate('DAppWebView', { params: { uri: item.url, title: item?.title } });
+                }}
+              >
+                <Image
+                  source={{ uri: item?.img }}
+                  style={{ width: width - 40, height: '100%', resizeMode: 'contain', borderRadius: 12 }}
+                />
+              </TouchableOpacity>
+            )}
+          />
         </View>
 
         <ScrollView

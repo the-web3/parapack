@@ -1,25 +1,18 @@
-import { Button, Dialog, Input, ListItem, Switch } from '@rneui/themed';
+import { Button, Dialog, Input, ListItem } from '@rneui/themed';
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Clipboard } from 'react-native';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { DeviceBalanceData, deleteWallet, getDeviceBalance, updateWallet } from '@api/wallet';
 import { SUCCESS_CODE } from '@common/constants';
 import { showToast } from '@common/utils/platform';
-import { executeQuery } from '@common/utils/sqlite';
-import { getData, storeData } from '@common/utils/storage';
+import { getData } from '@common/utils/storage';
 import { updateWalletTable } from '@common/wallet';
 import BottomOverlay from '@components/BottomOverlay';
-import Layout from '@components/Layout';
 import ValidatePassword from '@components/ValidatePassword';
 import { getUniqueId } from 'react-native-device-info';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import Icon from 'react-native-vector-icons/AntDesign';
-import Toast from 'react-native-root-toast';
-import i18n from 'i18next';
+import { useTranslation } from 'react-i18next';
 
 const Setting = (props: any) => {
-  const [isEnabled, setIsEnabled] = React.useState(false);
-  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
+  const { t } = useTranslation();
   const [walletInfo, setWalletInfo] = useState<DeviceBalanceData>();
   const [device_id, setDeviceId] = useState('');
   const [privateDialog, setPrivate] = useState({
@@ -188,7 +181,11 @@ const Setting = (props: any) => {
           toggleValidate();
         }}
       />
-      <BottomOverlay visible={walletNameDialog.visible} title={'修改钱包名称'} onBackdropPress={toggleWalletName}>
+      <BottomOverlay
+        visible={walletNameDialog.visible}
+        title={t('asset.editWalletName')}
+        onBackdropPress={toggleWalletName}
+      >
         <View style={{ marginTop: 16 }}>
           <Input
             placeholder="请输入钱包名称"
