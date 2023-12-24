@@ -146,6 +146,9 @@ export const DAppScreen = (props: DAppProps) => {
           inputStyle={{
             fontSize: 12,
           }}
+          onFocus={() => {
+            props?.navigation.navigate('SearchDapp');
+          }}
           leftIcon={<Icon name="search1" />}
           placeholder={t("dApp.searchPlaceholder")}
           onChangeText={async (search) => {

@@ -12,6 +12,7 @@ import Setting from '@screen/DApp/Setting';
 import News from '@screen/DApp/News';
 import { DAppDetails } from '@screen/DApp/DAppDetails';
 import Language from '@screen/DApp/Language';
+import SearchDapp from '@screen/DApp/SearchDapp';
 
 // Just a simple option please optimize
 const _getOptions = (title: string) => {
@@ -91,6 +92,15 @@ const menus = [
     name: 'Language',
     options: _getOptions('语言'),
     component: Language,
+  },
+  {
+    name: 'SearchDapp',
+    options: {
+      title: '',
+      headerShown: false,
+      headerShadowVisible: false,
+    },
+    component: SearchDapp,
   },
 ];
 
