@@ -121,7 +121,7 @@ const TransferPayment = (props: any) => {
           ],
         };
         try {
-          const raw_tx = await SignTransaction('btc', {
+          const raw_tx = await SignTransaction('Bitcoin', {
             privateKey: '60164bec9512d004af7f71e7ed868c8e9ac2cc6234d8b682037ec80547595f2e',
             signObj: data,
             network: 'mainnet',
@@ -224,10 +224,7 @@ const TransferPayment = (props: any) => {
                           params
                         );
                         try {
-                          const raw_tx = await SignTransaction(
-                            CHAIN_MAP[token?.chain] || token?.chain?.toLocaleLowerCase(),
-                            params
-                          );
+                          const raw_tx = await SignTransaction(token?.chain, params);
                           const res = await transfer({
                             raw_tx: raw_tx as string,
                             chain: token?.chain as string,

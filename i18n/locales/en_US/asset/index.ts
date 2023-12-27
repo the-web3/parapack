@@ -52,4 +52,7 @@ export default {
   deleteWallet: 'Delete Wallet',
   confirmDeleteWallet: 'Confirm Delete Wallet？',
   confirmDeleteWalletDesc: 'After delete，You can use backup seed to import Wallet',
+  //add token
+  homeAssets: 'Home Assets',
+  popularCurrencies: 'Popular Currencies',
 };

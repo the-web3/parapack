@@ -21,4 +21,5 @@ export default {
   settings: 'Settings',
   announcementDetails: 'Announcement Details',
   language: 'Language',
+  aboutUs: 'About Us',
 };

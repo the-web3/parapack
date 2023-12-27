@@ -52,4 +52,7 @@ export default {
   deleteWallet: '删除钱包',
   confirmDeleteWallet: '确定要删除钱包吗？',
   confirmDeleteWalletDesc: '删除后，您可通过已备份的助记词重新导入钱包',
+  //add token
+  homeAssets: '首页资产',
+  popularCurrencies: '热门币种',
 };

@@ -1,5 +1,5 @@
 import IconFont from '@assets/iconfont';
-import { View, Text, StyleSheet, TouchableOpacity, Appearance, useWindowDimensions } from 'react-native';
+import { View, Text, StyleSheet, Appearance, useWindowDimensions } from 'react-native';
 
 const ParaPack = () => {
   const colorScheme = Appearance.getColorScheme();
@@ -34,7 +34,7 @@ const ParaPack = () => {
         苹方-简 常规体
       </Text>
       <Text style={{ marginBottom: width * 0.03, fontSize: isSmallScreen ? width * 0.02 : width * 0.03 }}>
-        Copyright ©️ 1998 - 2023
+        Copyright ©️ 2023 - 2023
       </Text>
     </View>
   );

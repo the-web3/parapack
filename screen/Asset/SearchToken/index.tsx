@@ -8,11 +8,13 @@ import _ from 'lodash';
 import { DeviceBalanceTokenList, getDeviceBalance } from '@api/wallet';
 import { getUniqueId } from 'react-native-device-info';
 import { getData, storeData } from '@common/utils/storage';
+import { useTranslation } from 'react-i18next';
 type Props = {
   fullWidth?: boolean;
   navigation: any;
 };
 const SearchToken = (props: Props) => {
+  const { t } = useTranslation();
   const styles = useStyles(props);
   const { theme }: { theme: CustomTheme<CustomColors> } = useTheme();
   const [search, setSearch] = useState('');
@@ -97,7 +99,7 @@ const SearchToken = (props: Props) => {
         </View>
         <TouchableOpacity onPress={goToAsset}>
           <View style={styles.assetInfo}>
-            <Text style={{ color: '#434343', fontSize: 14 }}>首页资产</Text>
+            <Text style={{ color: '#434343', fontSize: 14 }}>{t('asset.homeAssets')}</Text>
             <Icon name="right" color={'#434343'} size={14} />
           </View>
         </TouchableOpacity>

@@ -25,10 +25,10 @@ const walletInfoDemo = {
   checked: true,
 };
 const defaultWalletInfo = {
-  mnemonic: '',
-  wallet_name: '',
-  password: '',
-  confirmPassword: '',
+  mnemonic: 'unhappy budget guard spread clown zoo one worth result add guess pigeon',
+  wallet_name: 'M_13',
+  password: '1234567a',
+  confirmPassword: '1234567a',
   checked: false,
 };
 const ImportWallet = (props: Props) => {
@@ -63,7 +63,7 @@ const ImportWallet = (props: Props) => {
           );
         },
       });
-      console.log(111111, sqliteData);
+      console.log('sqliteData', sqliteData);
       if (sqliteData) {
         for (let item of sqliteData as any[]) {
           const mnemonic = await DecodeMnemonic({ encrytMnemonic: item?.mnemonic_code, language: 'english' });
@@ -117,28 +117,12 @@ const ImportWallet = (props: Props) => {
       }
     }
   };
-  const init = async () => {
-    const mnemonic = await DecodeMnemonic({
-      encrytMnemonic: '6abb1dbb18026cbfb007bc03ff4bd3c7',
-      language: 'english',
-    });
-    const seed = MnemonicToSeed({
-      mnemonic: 'height suggest human copy chat garlic scale wasp advance where visual monkey',
-      password: '1234567a',
-    });
-    let account = CreateAddress({
-      chain: 'eth',
-      seedHex: seed.toString('hex'),
-      index: 0,
-      receiveOrChange: 0,
-      network: 'mainnet',
-    });
-    console.log(seed, account, 'mnemonic');
-  };
-  React.useEffect(() => {
-    init();
-  }, []);
+
   const styles = useStyles(props);
+
+  React.useEffect(() => {
+    showToast('111111');
+  }, []);
 
   return (
     <Layout
@@ -149,7 +133,7 @@ const ImportWallet = (props: Props) => {
       }
     >
       <Spinner visible={loading} />
-      <SafeAreaView>
+      <SafeAreaView style={{ marginBottom: 120 }}>
         <View style={styles.item}>
           <Input
             label="助记词"

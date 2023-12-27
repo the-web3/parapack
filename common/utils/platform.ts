@@ -1,6 +1,4 @@
 import Toast from 'react-native-root-toast';
-import * as RNLocalize from 'react-native-localize';
-import { getValidLan } from '../../i18n/index';
 
 export const showToast = (
     msg: string,
@@ -8,6 +6,7 @@ export const showToast = (
         onHide: () => void;
     }
 ) => {
+    console.log('showToast');
     Toast.show(msg, {
         duration: Toast.durations.LONG,
         position: Toast.positions.CENTER,

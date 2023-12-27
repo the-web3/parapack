@@ -13,12 +13,14 @@ import _ from 'lodash';
 import IconFont from '@assets/iconfont';
 import { showToast } from '@common/utils/platform';
 import { SUCCESS_CODE } from '@common/constants';
+import { useTranslation } from 'react-i18next';
 type Props = {
   fullWidth?: boolean;
   navigation: any;
 };
 type ListItem = Token & { chainName: string; symbol: string };
 const AddToken = (props: Props) => {
+  const { t } = useTranslation();
   const styles = useStyles(props);
   const [search, setSearch] = useState('');
   const [list, setList] = useState<SymbolSupportDatum[]>([]);
@@ -124,13 +126,13 @@ const AddToken = (props: Props) => {
         </View>
         <TouchableOpacity onPress={goToAsset}>
           <View style={styles.assetInfo}>
-            <Text style={{ color: '#434343', fontSize: 14 }}>首页资产</Text>
+            <Text style={{ color: '#434343', fontSize: 14 }}>{t('asset.homeAssets')}</Text>
             <Icon name="right" color={'#434343'} size={14} />
           </View>
         </TouchableOpacity>
       </View>
       <View style={styles.body}>
-        <Text style={styles.title}>热门币种</Text>
+        <Text style={styles.title}>{t('asset.popularCurrencies')}</Text>
         <ScrollView
           style={{ minHeight: '100%' }}
           contentContainerStyle={{ paddingBottom: 300 }}
@@ -149,6 +151,7 @@ const AddToken = (props: Props) => {
                   };
                   try {
                     const res = await deleteWallet(params);
+                    console.log(1111111, params, res);
                     if (res.code === SUCCESS_CODE) {
                       showToast('删除成功', {
                         onHide: () => {
@@ -192,7 +195,7 @@ const AddToken = (props: Props) => {
                   </View>
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
                     <View style={{ flexDirection: 'row' }}>
-                      <Text style={styles.listPrice}>$ {item.usdtRate}</Text>
+                      <Text style={styles.listPrice}>{item.chainName}</Text>
                       {item.rose.indexOf('-') !== -1 ? (
                         <Text style={styles.red}> {item.rose}</Text>
                       ) : (

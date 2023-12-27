@@ -71,7 +71,6 @@ const Asset = (props: Props) => {
     const res = await getDeviceBalance({
       device_id,
     });
-    console.log('getDeviceBalance', JSON.stringify(res));
     if (res?.data?.token_list?.length <= 0) {
       props?.navigation?.navigate('guide');
       return;
@@ -375,6 +374,7 @@ const Asset = (props: Props) => {
           after={
             <TouchableOpacity
               onPress={() => {
+                setVisible(false);
                 props?.navigation.navigate('settingScreen', {
                   wallet_uuid: currentWallet?.wallet_uuid,
                 });
@@ -439,6 +439,7 @@ const Asset = (props: Props) => {
           <View style={{ marginTop: 16 }}>
             <Button
               onPress={async () => {
+                setVisible(false);
                 props?.navigation?.navigate('guide');
               }}
             >

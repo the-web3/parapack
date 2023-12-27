@@ -72,7 +72,6 @@ const CreateWallet = (props: Props) => {
     // });
   };
   const styles = useStyles(props);
-
   return (
     <Layout
       fixedChildren={
