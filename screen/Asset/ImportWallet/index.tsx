@@ -25,10 +25,10 @@ const walletInfoDemo = {
   checked: true,
 };
 const defaultWalletInfo = {
-  mnemonic: 'unhappy budget guard spread clown zoo one worth result add guess pigeon',
-  wallet_name: 'M_13',
-  password: '1234567a',
-  confirmPassword: '1234567a',
+  mnemonic: '',
+  wallet_name: '',
+  password: '',
+  confirmPassword: '',
   checked: false,
 };
 const ImportWallet = (props: Props) => {
@@ -119,10 +119,6 @@ const ImportWallet = (props: Props) => {
   };
 
   const styles = useStyles(props);
-
-  React.useEffect(() => {
-    showToast('111111');
-  }, []);
 
   return (
     <Layout
