@@ -14,7 +14,7 @@ import { View, Text, TouchableOpacity, Clipboard } from 'react-native';
 import { getUniqueId } from 'react-native-device-info';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/AntDesign';
-const SettingScreen = (props) => {
+const SettingScreen = (props: any) => {
   const { t } = useTranslation();
   const [walletInfo, setWalletInfo] = useState<DeviceBalanceData>();
   const [device_id, setDeviceId] = useState('');
@@ -106,13 +106,15 @@ const SettingScreen = (props) => {
           key: 'is_del = ?',
           value: [1],
         });
-        showToast('删除成功', {
-          onHide: () => {
-            props?.navigation?.navigate('home', {
-              tab: 'asset',
-            });
-          },
-        });
+        setTimeout(() => {
+          showToast('删除成功', {
+            onHide: () => {
+              props?.navigation?.navigate('home', {
+                tab: 'asset',
+              });
+            },
+          });
+        }, 0);
       }
     } catch (e) {
       console.log(111111, e);

@@ -666,7 +666,6 @@ export const createImportWallet = async (params: {
         };
         batchInsertOrUpdateAssetTable(unSubmitPrivateWallet as PrivateWalletStructure, 0);
       }
-      console.log('createImportWalletRes22222===>');
       return {
         success: res.code === SUCCESS_CODE,
         wallet_uuid,

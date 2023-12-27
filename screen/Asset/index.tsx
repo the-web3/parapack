@@ -374,7 +374,7 @@ const Asset = (props: Props) => {
           after={
             <TouchableOpacity
               onPress={() => {
-                setVisible(false);
+                toggleOverlay();
                 props?.navigation.navigate('settingScreen', {
                   wallet_uuid: currentWallet?.wallet_uuid,
                 });
@@ -420,6 +420,7 @@ const Asset = (props: Props) => {
                   {!item.backup && (
                     <TouchableOpacity
                       onPress={(e) => {
+                        toggleOverlay();
                         e.stopPropagation();
                         props?.navigation.navigate('startBackup');
                       }}
@@ -439,7 +440,7 @@ const Asset = (props: Props) => {
           <View style={{ marginTop: 16 }}>
             <Button
               onPress={async () => {
-                setVisible(false);
+                toggleOverlay();
                 props?.navigation?.navigate('guide');
               }}
             >

@@ -88,11 +88,19 @@ const TransferPayment = (props: any) => {
 
   const handleConfirmed = async () => {
     setLoading(true);
+    const [wallet_uuid, nonceRes] = await Promise.all([
+      getData('wallet_uuid'),
+      walletNonce({
+        chain: token?.chain as string,
+        symbol: token?.symbol as string,
+        address: token?.address as string,
+      }),
+    ]);
     try {
       if (isbtc) {
         const [utxoRes] = await Promise.all([
           getUtxo({
-            address: '35nzpRU2318VbDi5ARRGunTS7JujgEsTUQ' || (token?.address as string),
+            address: token?.address as string,
           }),
         ]);
         const pows = new Big(10).pow(8);
@@ -103,7 +111,7 @@ const TransferPayment = (props: any) => {
           inputs: (utxoRes.data || [])?.map((item: any) => {
             total_money += item?.value;
             return {
-              address: '35nzpRU2318VbDi5ARRGunTS7JujgEsTUQ' || (token?.address as string),
+              address: token?.address as string,
               txid: item?.tx_hash,
               amount: item?.value,
               vout: item?.tx_output_n,
@@ -112,36 +120,92 @@ const TransferPayment = (props: any) => {
           outputs: [
             {
               amount: Number(out_money),
-              address: '35nzpRU2318VbDi5ARRGunTS7JujgEsTUQ' || (token?.address as string),
+              address: token?.address as string,
             },
             {
               amount: Number(new Big(total_money).minus(gas_money).minus(out_money)),
-              address: '1H1oAqmdfTNECrrHFAJ4AhbTUyPcQjrf72' || (token?.address as string),
+              address: token?.address as string,
             },
           ],
         };
         try {
-          const raw_tx = await SignTransaction('Bitcoin', {
-            privateKey: '60164bec9512d004af7f71e7ed868c8e9ac2cc6234d8b682037ec80547595f2e',
-            signObj: data,
-            network: 'mainnet',
+          const sqliteData = await executeQuery({
+            customExec: (tx, resolve, reject) => {
+              tx.executeSql(
+                `
+                SELECT *
+                FROM asset
+                WHERE chain_id = (
+                  SELECT id
+                  FROM chain
+                  WHERE chainName = ?
+                )
+                AND tokenName = ?
+                AND contract_addr = ?
+            `,
+                [token?.chain, token?.symbol, token?.contract_addr],
+                (txObj, resultSet) => {
+                  if (resultSet.rows.length > 0) {
+                    tx.executeSql(
+                      `
+                          SELECT *
+                          FROM account
+                          WHERE wallet_id = (
+                            SELECT id
+                            FROM wallet
+                            WHERE wallet_uuid = ?
+                          )
+                          AND address = ?
+                      `,
+                      [wallet_uuid, token?.address],
+                      async (txObj2, resultSet2) => {
+                        if (resultSet2.rows.length > 0) {
+                          // 获取第一条数据
+                          const accountData = resultSet2.rows.item(0);
+                          const raw_tx = await SignTransaction('Bitcoin', {
+                            privateKey: accountData.priv_key,
+                            signObj: data,
+                            network: 'mainnet',
+                          });
+                          const res = await transfer({
+                            raw_tx: raw_tx as string,
+                            chain: token?.chain as string,
+                            symbol: token?.symbol as string,
+                          });
+                          if (res.code === SUCCESS_CODE) {
+                            showToast(t(`asset.transferSuccess`), {
+                              onHide: () => {
+                                navigation?.navigate('home', {
+                                  tab: 'asset',
+                                });
+                              },
+                            });
+                          }
+                          toggleOverlay();
+                          setLoading(false);
+                        } else {
+                          toggleOverlay();
+                          showToast(`Account not found.`);
+                          console.log('Account not found.');
+                          setLoading(false);
+                        }
+                      },
+                      (txObj) => {
+                        toggleOverlay();
+                        showToast(`Error executing SQL query:`);
+                        console.log('Error executing SQL query:', txObj);
+                        setLoading(false);
+                      }
+                    );
+                  }
+                },
+                (txObj) => {
+                  console.log('Error executing SQL query:', txObj);
+                  setLoading(false);
+                }
+              );
+            },
           });
-          const res = await transfer({
-            raw_tx: raw_tx as string,
-            chain: token?.chain as string,
-            symbol: token?.symbol as string,
-          });
-          if (res.code === SUCCESS_CODE) {
-            showToast(t(`asset.transferSuccess`), {
-              onHide: () => {
-                navigation?.navigate('home', {
-                  tab: 'asset',
-                });
-              },
-            });
-          }
-          toggleOverlay();
-          setLoading(false);
         } catch (e) {
           toggleOverlay();
           showToast(`${e}`);
@@ -149,14 +213,6 @@ const TransferPayment = (props: any) => {
           setLoading(false);
         }
       } else {
-        const [wallet_uuid, nonceRes] = await Promise.all([
-          getData('wallet_uuid'),
-          walletNonce({
-            chain: token?.chain as string,
-            symbol: token?.symbol as string,
-            address: token?.address as string,
-          }),
-        ]);
         const sqliteData = await executeQuery({
           customExec: (tx, resolve, reject) => {
             tx.executeSql(
@@ -294,7 +350,7 @@ const TransferPayment = (props: any) => {
       getData('current_token_detail'),
     ]);
     const currentTokenDetail = JSON.parse(current_token_detail || '{}');
-    if (currentTokenDetail?.chain === 'BITCOIN') {
+    if (currentTokenDetail?.chain === 'Bitcoin') {
       setBtc(true);
 
       const [addressBalanceRes, gasRes] = await Promise.all([
@@ -468,7 +524,7 @@ const TransferPayment = (props: any) => {
               <Text style={styles.title}>{t('asset.transferAmount')}</Text>
             </View>
             <TouchableOpacity
-              onPress={() => {
+              onPress={async () => {
                 navigation?.navigate('searchToken', {
                   go: 'transferPayment',
                 });
