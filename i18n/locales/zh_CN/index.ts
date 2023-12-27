@@ -4,6 +4,9 @@ import product from './product';
 import asset from './asset';
 import misc from './misc';
 import dApp from './dapp';
+import dAppSetting from './dapp/setting';
+import activity from './activity';
+import swap from './swap';
 
 export default {
   common,
@@ -11,5 +14,8 @@ export default {
   product,
   asset,
   misc,
-  dApp
+  dApp,
+  swap,
+  activity,
+  dAppSetting
 };
