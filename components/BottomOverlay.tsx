@@ -4,18 +4,27 @@ import { Text, Overlay, makeStyles, useTheme } from '@rneui/themed';
 import { ScrollView, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { RootSiblingParent } from 'react-native-root-siblings';
+import { useNavigation } from '@react-navigation/native';
 
 type Props = {
   visible: boolean;
   title: string;
   after?: React.ReactNode;
   children: React.ReactNode;
-  onBackdropPress?: () => void;
+  onBackdropPress: () => void;
 };
 
 const BottomOverlay: FC<Props> = ({ visible, title, after, onBackdropPress, children }) => {
   const { theme }: { theme: CustomTheme<CustomColors> } = useTheme();
+  const navigation = useNavigation();
   const styles = useStyles(theme);
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('blur', () => {
+      onBackdropPress()
+    });
+    return unsubscribe;
+  }, [navigation, onBackdropPress]);
+
   return (
     <Overlay isVisible={visible} onBackdropPress={onBackdropPress} overlayStyle={styles.container}>
       <RootSiblingParent>
