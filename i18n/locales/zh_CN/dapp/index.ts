@@ -20,4 +20,5 @@ export default {
   settings: '设置',
   announcementDetails: '公告详情',
   language: '语言',
+  aboutUs: '关于我们',
 };

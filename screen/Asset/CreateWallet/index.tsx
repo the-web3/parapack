@@ -48,7 +48,6 @@ const CreateWallet = (props: Props) => {
       number: 12,
       language: 'english',
     });
-    console.log(11111111, mnemonic);
     const createSuccess = await createImportWallet({
       wallet_name: walletInfo.wallet_name,
       password: walletInfo.password,
@@ -72,7 +71,6 @@ const CreateWallet = (props: Props) => {
     // });
   };
   const styles = useStyles(props);
-
   return (
     <Layout
       fixedChildren={

@@ -164,7 +164,7 @@ demo
 ```
 import { CreateAddress, DecodeMnemonic, EncodeMnemonic, MnemonicToSeed } from 'savourlabs-wallet-sdk/wallet';
 const account = CreateAddress({
-    chain: supportChian.symbol.toLowerCase(),
+    chain: supportChian.chainName,
     seedHex: seed.toString('hex'),
     index: 0,
     receiveOrChange: 0,

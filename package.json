@@ -75,7 +75,7 @@
     "react-native-view-shot": "^3.7.0",
     "react-native-webview": "^13.2.2",
     "readable-stream": "^4.4.0",
-    "savourlabs-wallet-sdk": "2.0.3",
+    "savourlabs-wallet-sdk": "2.0.4",
     "stream": "^0.0.2",
     "stream-browserify": "^3.0.0",
     "url": "~0.10.1",

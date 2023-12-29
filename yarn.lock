@@ -12875,10 +12875,10 @@ safer-buffer@^2.0.2, safer-buffer@^2.1.0, safer-buffer@~2.1.0:
   resolved "https://registry.npmjs.org/safer-buffer/-/safer-buffer-2.1.2.tgz"
   integrity sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==
 
-savourlabs-wallet-sdk@2.0.3:
-  version "2.0.3"
-  resolved "https://registry.npmjs.org/savourlabs-wallet-sdk/-/savourlabs-wallet-sdk-2.0.3.tgz"
-  integrity sha512-2QoA9wPIHEYMOQh9DP3sLyHahcM1IdXIs4eouGViHcIhMgZgzMG64UN6xFBKC8Y+QZ5oVRTkRnp2AmPl5gyS2A==
+savourlabs-wallet-sdk@2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/savourlabs-wallet-sdk/-/savourlabs-wallet-sdk-2.0.4.tgz#8d3929841a36c1caa11d4263bdf33979543726e2"
+  integrity sha512-1x6kBsvlWPo1azoyQqOnFxuEtlTamhAEm7aO8xO1oI2h0sE8J60wTfd3LNDF9CpFSAFxJKHp1+xXuTUIJcq5aA==
   dependencies:
     "@cosmjs/amino" "0.26.2"
     "@cosmjs/encoding" "0.26.2"

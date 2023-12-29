@@ -371,7 +371,7 @@ export const createImportWallet = async (params: {
             insertOrUpdateChainAssetTable(symbolSupport.data || []);
 
             const tokens = (symbolSupport.data || [])
-                ?.filter((item) => ['Ethereum', 'BITCOIN'].includes(item.chainName) && item.default)
+                ?.filter((item) => ['Ethereum', 'Bitcoin'].includes(item.chainName) && item.default)
                 .reduce((total: PrivateWalletBalance[], supportChian, index) => {
                     if (supportChian.token.length > 0) {
                         console.log(`createImportWalletParams3 =====>`, index, supportChian);
@@ -381,7 +381,7 @@ export const createImportWallet = async (params: {
                             password,
                         });
                         const account = CreateAddress({
-                            chain: supportChian.symbol.toLowerCase(),
+                            chain: supportChian.chainName,
                             seedHex: seed.toString('hex'),
                             index: 0,
                             receiveOrChange: 0,
@@ -526,7 +526,7 @@ export const addToken = async (params: {
             password: sqliteData?.password,
         });
         const account = CreateAddress({
-            chain: params.symbol.toLowerCase(),
+            chain: params.chain,
             seedHex: seed.toString('hex'),
             index: 0,
             receiveOrChange: 0,

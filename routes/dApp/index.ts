@@ -71,7 +71,7 @@ const menus = [
   },
   {
     name: 'Parapack',
-    options: _getOptions(''),
+    options: _getOptions(i18next.t('dApp.aboutUs')),
     component: Parapack,
   },
   {

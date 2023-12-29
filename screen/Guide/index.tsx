@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { ActivityIndicator, Image, View } from 'react-native';
 import { Button, Text, makeStyles } from '@rneui/themed';
-import { showToast } from '@common/utils/platform';
 import i18next from 'i18next';
+import { showToast } from '@common/utils/platform';
 // import {StackNavigationProp} from '@react-navigation/stack';
 // import {RootStackParamList} from './types';
 // type ScreenNavigationProp = StackNavigationProp<
@@ -16,14 +16,13 @@ type Props = {
 
 const Guide = (props: Props) => {
   const createNewWallet = () => {
-    console.log(1111111);
     props?.navigation.navigate('createWallet');
   };
   const handleImportWallet = () => {
-    console.log(222222);
     props?.navigation.navigate('importWallet');
   };
   const styles = useStyles(props);
+
   return (
     <View style={styles.container}>
       <View style={{ justifyContent: 'center', alignItems: 'center' }}>

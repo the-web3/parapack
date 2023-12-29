@@ -55,7 +55,7 @@ const Test = (props: Props) => {
               //   password: '',
               // });
               // let account = CreateAddress({
-              //   chain: 'btc',
+              //   chain: 'Bitcoin',
               //   seedHex: seed.toString('hex'),
               //   index: 0,
               //   receiveOrChange: 0,
@@ -152,6 +152,20 @@ const Test = (props: Props) => {
           >
             encodeMnemonic
           </Button>
+          <Text>{symbolSupport}</Text>
+          <Button
+            onPress={async () => {
+              try {
+                const aa = await getSymbolSupport({});
+                console.log(111111, JSON.stringify(aa));
+                setSymbolSupport(`getSymbolSupport=====>${JSON.stringify(aa)}`);
+              } catch (error) {
+                setSymbolSupport(`error getSymbolSupport=====>${JSON.stringify(error)}`);
+              }
+            }}
+          >
+            getSymbolSupport
+          </Button>
 
           <Button
             onPress={async () => {
@@ -163,19 +177,6 @@ const Test = (props: Props) => {
             }}
           >
             0x40b7e4d201d1d7230c4dc89728d23157c786f6da
-          </Button>
-          <Text>{symbolSupport}</Text>
-          <Button
-            onPress={async () => {
-              try {
-                const aa = await getSymbolSupport({});
-                setSymbolSupport(`getSymbolSupport=====>${JSON.stringify(aa)}`);
-              } catch (error) {
-                setSymbolSupport(`error getSymbolSupport=====>${JSON.stringify(error)}`);
-              }
-            }}
-          >
-            getSymbolSupport
           </Button>
         </ScrollView>
       </SafeAreaView>
