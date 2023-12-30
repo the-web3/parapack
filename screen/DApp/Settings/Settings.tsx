@@ -74,7 +74,7 @@ export const Settings = (props: DAppProps) => {
                 <IconFont name="a-261" />
               </TouchableOpacity>
               <TouchableOpacity onPress={changeColorTheme}>
-                <IconFont name={mode === 'dark' ? 'a-271' : 'a-272'} />
+                <IconFont name={mode === 'dark' ? 'a-271' : 'hei'} />
               </TouchableOpacity>
             </View>
           </View>
