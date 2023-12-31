@@ -217,7 +217,7 @@ const TokenDetail = (props: Props) => {
         });
         setActivity(activityRes.data);
       }
-    } catch (e) {}
+    } catch (e) { }
   }, [tokenInfo?.tokenDetail?.symbol]);
   useEffect(() => {
     // 在组件挂载或标题更新时执行
@@ -364,7 +364,7 @@ const TokenDetail = (props: Props) => {
                 <Image
                   source={{ uri: activity?.lists[0]?.coverPicture }}
                   style={styles.banner}
-                  // PlaceholderContent={<ActivityIndicator />}
+                // PlaceholderContent={<ActivityIndicator />}
                 />
               </TouchableOpacity>
             </View>
@@ -456,7 +456,10 @@ const TokenDetail = (props: Props) => {
 
                                 <View style={{ flex: 1, marginRight: 14, marginLeft: 10 }}>
                                   <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
-                                    <Text>{item.type === 0 ? '转出' : '转入'}</Text>
+                                    <Text>{item.type === 0 ?
+                                      t('searchHistory.transferOut') :
+                                      t('searchHistory.transferIn')
+                                    }</Text>
                                     <Text>{item.amount}</Text>
                                   </View>
                                   <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>

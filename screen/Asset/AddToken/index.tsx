@@ -104,7 +104,7 @@ const AddToken = (props: Props) => {
               height: 22,
             }}
             searchIcon={<IconFont name="a-110" size={16} />}
-            cancelButtonTitle={'取消'}
+            cancelButtonTitle={t("addToken.cancel") || ''}
             leftIconContainerStyle={{}}
             rightIconContainerStyle={{}}
             loadingProps={{}}
@@ -115,7 +115,6 @@ const AddToken = (props: Props) => {
             // onClearText={() => console.log(onClearText())}
             placeholder=""
             placeholderTextColor="#888"
-            // cancelButtonTitle="取消"
             // cancelButtonProps={{}}
             // onCancel={() => console.log(onCancel())}
             value={search}
@@ -153,7 +152,7 @@ const AddToken = (props: Props) => {
                     const res = await deleteWallet(params);
                     console.log(1111111, params, res);
                     if (res.code === SUCCESS_CODE) {
-                      showToast('删除成功', {
+                      showToast(t("addToken.deleteSuccessfully"), {
                         onHide: () => {
                           initList();
                         },

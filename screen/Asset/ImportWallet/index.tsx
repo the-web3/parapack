@@ -12,6 +12,8 @@ import { storeData } from '@common/utils/storage';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { executeQuery } from '@common/utils/sqlite';
 import i18next from 'i18next';
+import { useTranslation } from 'react-i18next';
+
 type Props = {
   fullWidth?: boolean;
   navigation: any;
@@ -40,6 +42,7 @@ const ImportWallet = (props: Props) => {
     confirmPassword: string;
     checked: boolean;
   }>(defaultWalletInfo);
+  const { t } = useTranslation();
   const getMnemonic = async () => {
     try {
       const sqliteData = await executeQuery({
@@ -68,14 +71,14 @@ const ImportWallet = (props: Props) => {
         for (let item of sqliteData as any[]) {
           const mnemonic = await DecodeMnemonic({ encrytMnemonic: item?.mnemonic_code, language: 'english' });
           if (mnemonic === walletInfo.mnemonic && item.is_del === 0) {
-            showToast('当前链已存在此助记词钱包');
+            showToast(t('importWallet.chainExistsThisMnemonicWallet'));
             return false;
           }
         }
         return true;
       }
     } catch (error) {
-      showToast('解析助记词时出错');
+      showToast(t('importWallet.errorDecodingMnemonics'));
       // console.error('解析助记词时出错:', error);
       return false;
     }
@@ -83,10 +86,10 @@ const ImportWallet = (props: Props) => {
 
   const handleImportWallet = async () => {
     if (!walletInfo.checked) {
-      return showToast('请同意条款');
+      return showToast(t('importWallet.pleaseAgreeToTerms'));
     }
     if (!walletInfo.mnemonic) {
-      return showToast('请填写助记词');
+      return showToast(t('importWallet.pleaseFillInMnemonic'));
     }
     if (!rules.walletName.isVaild(walletInfo.wallet_name)) {
       return showToast(rules.walletName.message);
@@ -95,7 +98,7 @@ const ImportWallet = (props: Props) => {
       return showToast(rules.password.message);
     }
     if (walletInfo.password !== walletInfo.confirmPassword) {
-      return showToast('密码不一致');
+      return showToast(t('importWallet.passwordMismatch'));
     }
     const validateMnemonic = await getMnemonic();
     if (validateMnemonic) {
@@ -132,11 +135,11 @@ const ImportWallet = (props: Props) => {
       <SafeAreaView style={{ marginBottom: 120 }}>
         <View style={styles.item}>
           <Input
-            label="助记词"
+            label={t('importWallet.mnemonics')}
             multiline
             numberOfLines={2}
             value={walletInfo.mnemonic}
-            placeholder="输入助记词，用空格做分隔"
+            placeholder={t('importWallet.inputMnemonicSeparator')}
             onChangeText={(mnemonic) => {
               setWalletInfo((prev) => {
                 return {
@@ -149,9 +152,9 @@ const ImportWallet = (props: Props) => {
         </View>
         <View style={styles.item}>
           <Input
-            label="设置身份钱包名"
+            label={t('importWallet.setIdentityWalletName')}
             value={walletInfo.wallet_name}
-            placeholder="大小写字母+数字+下划线"
+            placeholder={`${t('importWallet.caseLetters')}+${t('importWallet.numbers')}+${t('importWallet.underline')}`}
             onChangeText={(wallet_name) => {
               setWalletInfo((prev) => {
                 return {
@@ -164,10 +167,10 @@ const ImportWallet = (props: Props) => {
         </View>
         <View style={styles.item}>
           <Input
-            label="设置密码"
+            label={t('importWallet.setPassword')}
             secureTextEntry={true}
             value={walletInfo.password}
-            placeholder="不少于8位,至少包含1个字母和1个数字"
+            placeholder={t('importWallet.notLessThanEightDigits') || ''}
             onChangeText={(password) => {
               setWalletInfo((prev) => {
                 return {
@@ -180,10 +183,10 @@ const ImportWallet = (props: Props) => {
         </View>
         <View style={styles.item}>
           <Input
-            label="确认密码"
+            label={t('importWallet.confirmPassword')}
             secureTextEntry={true}
             value={walletInfo.confirmPassword}
-            placeholder="不少于8位,至少包含1个字母和1个数字"
+            placeholder={t('importWallet.notLessThanEightDigits') || ''}
             onChangeText={(confirmPassword) => {
               setWalletInfo((prev) => {
                 return {
@@ -192,8 +195,8 @@ const ImportWallet = (props: Props) => {
                 };
               });
             }}
-            // errorStyle={{color: 'red'}}
-            // errorMessage="ENTER A VALID ERROR HERE"
+          // errorStyle={{color: 'red'}}
+          // errorMessage="ENTER A VALID ERROR HERE"
           />
         </View>
         <View style={{ flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'center' }}>
@@ -225,9 +228,13 @@ const ImportWallet = (props: Props) => {
           </TouchableOpacity>
 
           <Text>
-            我已阅读并同意 <Text style={styles.protocol}>《用户协议》</Text>
-            以及
-            <Text style={styles.protocol}>《隐私政策》</Text>
+            {t('importWallet.iHaveRead')} <Text style={styles.protocol}>
+              {t('importWallet.userAgreement')}
+            </Text>
+            {t('importWallet.and')}
+            <Text style={styles.protocol}>
+              {t('importWallet.privacyPolicy')}
+            </Text>
           </Text>
         </View>
       </SafeAreaView>

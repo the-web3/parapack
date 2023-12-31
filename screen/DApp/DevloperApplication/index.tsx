@@ -119,9 +119,17 @@ const DeveloperApplication = (props: DAppProps) => {
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      <Text style={styles.text}>开发者申请</Text>
-      <Text style={styles.labels}>需 审核， 需 KYC， 需签署 免责协议</Text>
-      <Text style={[styles.label, { marginTop: 20 }]}>开发者联系邮箱</Text>
+      <Text style={styles.text}>{
+        t('developerApplication.developerApplication')
+      }</Text>
+      <Text style={styles.labels}>
+        {t('developerApplication.needAudit')}
+        ， KYC，
+        {t('developerApplication.needToSignADisclaimer')}
+      </Text>
+      <Text style={[styles.label, { marginTop: 20 }]}>
+        {t('developerApplication.developerContactEmail')}
+      </Text>
       <TextInput
         style={styles.input}
         placeholderTextColor={isDarkMode ? '#999' : '#ccc'}
@@ -129,7 +137,9 @@ const DeveloperApplication = (props: DAppProps) => {
         value={email}
       />
       <View style={styles.divider} />
-      <Text style={styles.label}>电话 (+082)</Text>
+      <Text style={styles.label}>
+        {t('developerApplication.phone')}
+        (+082)</Text>
       <TextInput
         style={styles.input}
         placeholderTextColor={isDarkMode ? '#999' : '#ccc'}
@@ -138,7 +148,9 @@ const DeveloperApplication = (props: DAppProps) => {
       />
       <View style={styles.divider} />
       <View>
-        <Text style={styles.label}>电报 (Telegram)</Text>
+        <Text style={styles.label}>
+          {t('developerApplication.telegram')}
+          (Telegram)</Text>
         <TextInput
           style={styles.input}
           placeholderTextColor={isDarkMode ? '#999' : '#ccc'}
@@ -159,7 +171,10 @@ const DeveloperApplication = (props: DAppProps) => {
       />
       <View style={styles.divider} />
 
-      <Text style={styles.label}>项目/应用名称</Text>
+      <Text style={styles.label}>
+        {t('developerApplication.project')}/
+        {t('developerApplication.applicationName')}
+      </Text>
       <TextInput
         style={styles.input}
         placeholderTextColor={isDarkMode ? '#999' : '#ccc'}
@@ -168,7 +183,10 @@ const DeveloperApplication = (props: DAppProps) => {
       />
       <View style={styles.divider} />
 
-      <Text style={styles.label}>项目/应用名称</Text>
+      <Text style={styles.label}>
+        {t('developerApplication.project')}/
+        {t('developerApplication.applicationName')}
+      </Text>
       <TextInput
         style={styles.input}
         placeholderTextColor={isDarkMode ? '#999' : '#ccc'}
@@ -176,7 +194,10 @@ const DeveloperApplication = (props: DAppProps) => {
         value={domain}
       />
       <View style={styles.divider} />
-      <Text style={styles.label}>项目/应用官网</Text>
+      <Text style={styles.label}>
+        {t('developerApplication.project')}/
+        {t('developerApplication.applicationName')}
+      </Text>
       <TextInput
         style={styles.input}
         placeholderTextColor={isDarkMode ? '#999' : '#ccc'}
@@ -185,7 +206,9 @@ const DeveloperApplication = (props: DAppProps) => {
       />
       <View style={styles.divider} />
 
-      <Text style={styles.label}>应⽤团队创始⼈kyc，及对应⽩⽪书</Text>
+      <Text style={styles.label}>
+        {t('developerApplication.applicationFounderKYCandCorrespondingWhitePaper')}
+      </Text>
       <TextInput
         style={styles.input}
         placeholderTextColor={isDarkMode ? '#999' : '#ccc'}
@@ -194,7 +217,9 @@ const DeveloperApplication = (props: DAppProps) => {
       />
       <View style={styles.divider} />
 
-      <Text style={styles.label}>Token名称</Text>
+      <Text style={styles.label}>
+        {t('developerApplication.tokenName')}
+      </Text>
       <TextInput
         style={styles.input}
         placeholderTextColor={isDarkMode ? '#999' : '#ccc'}
@@ -203,7 +228,9 @@ const DeveloperApplication = (props: DAppProps) => {
       />
       <View style={styles.divider} />
 
-      <Text style={styles.label}>Token合约</Text>
+      <Text style={styles.label}>
+        {t('developerApplication.contractToken')}
+      </Text>
       <TextInput
         style={styles.input}
         placeholderTextColor={isDarkMode ? '#999' : '#ccc'}
@@ -212,7 +239,9 @@ const DeveloperApplication = (props: DAppProps) => {
       />
       <View style={styles.divider} />
 
-      <Text style={styles.label}>Token上所信息</Text>
+      <Text style={styles.label}>
+        {t('developerApplication.tokenInformation')}
+      </Text>
       <TextInput
         style={styles.input}
         placeholderTextColor={isDarkMode ? '#999' : '#ccc'}
@@ -221,7 +250,9 @@ const DeveloperApplication = (props: DAppProps) => {
       />
       <View style={styles.divider} />
 
-      <Text style={styles.label}>资本机构信息</Text>
+      <Text style={styles.label}>
+        {t('developerApplication.capitalInstitutionInformation')}
+      </Text>
       <TextInput
         style={styles.input}
         placeholderTextColor={isDarkMode ? '#999' : '#ccc'}
@@ -230,7 +261,9 @@ const DeveloperApplication = (props: DAppProps) => {
       />
       <View style={styles.divider} />
 
-      <Text style={styles.labels}>*需签署免责声明及协议（平台免责，且有权下架）等法律⽂件</Text>
+      <Text style={styles.labels}>*
+        {t('developerApplication.needToSignADisclaimerAndAgreement')}
+      </Text>
       <View style={{ height: 20 }} />
       <View style={{ paddingBottom: isSmallScreen ? 30 : 50 }}>
         <Button onPress={() => onConfirm()} style={styles.button}>

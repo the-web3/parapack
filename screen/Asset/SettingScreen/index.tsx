@@ -77,7 +77,7 @@ const SettingScreen = (props: any) => {
           visible: false,
         };
       });
-      showToast('修改成功');
+      showToast(t('settingScreen.successfulModification'));
     }
   };
   const toggleDialogDelete = () => {
@@ -107,7 +107,7 @@ const SettingScreen = (props: any) => {
           value: [1],
         });
         setTimeout(() => {
-          showToast('删除成功', {
+          showToast(t('settingScreen.successfullyDeleted'), {
             onHide: () => {
               props?.navigation?.navigate('home', {
                 tab: 'asset',
@@ -180,7 +180,9 @@ const SettingScreen = (props: any) => {
                     justifyContent: 'center',
                   }}
                 >
-                  <Text style={{ lineHeight: 17, fontSize: 12, color: 'rgba(0, 0, 0, 1)' }}>修改</Text>
+                  <Text style={{ lineHeight: 17, fontSize: 12, color: 'rgba(0, 0, 0, 1)' }}>
+                    {t('settingScreen.modify')}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -304,7 +306,7 @@ const SettingScreen = (props: any) => {
       >
         <View style={{ marginTop: 16 }}>
           <Input
-            placeholder="请输入钱包名称"
+            placeholder={t('settingScreen.pleaseInputWalletName') || ''}
             value={walletNameDialog.wallet_name}
             onChangeText={(wallet_name) => {
               setWalletNameDialog((prev) => {
@@ -316,19 +318,21 @@ const SettingScreen = (props: any) => {
             }}
           />
         </View>
-        <Button onPress={handleEditor}>确定</Button>
+        <Button onPress={handleEditor}>
+          {t('settingScreen.confirm')}
+        </Button>
       </BottomOverlay>
       <Dialog isVisible={privateDialog.visible} onBackdropPress={toggleDialog}>
-        <Dialog.Title title="私钥" />
+        <Dialog.Title title={t('settingScreen.privateKey') || ''} />
         <Text>{privateDialog.text}</Text>
         <Dialog.Actions>
           <Dialog.Button
-            title="复制"
+            title={t('settingScreen.copy') || ''}
             onPress={() => {
               Clipboard.setString(privateDialog?.text || '');
             }}
           />
-          <Dialog.Button title="取消" onPress={toggleDialog} />
+          <Dialog.Button title={t('settingScreen.cancel') || ''} onPress={toggleDialog} />
         </Dialog.Actions>
       </Dialog>
     </Layout>

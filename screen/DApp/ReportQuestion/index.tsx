@@ -10,6 +10,7 @@ import { report } from '@api/dApp';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { SUCCESS_CODE } from '@common/constants';
 import { showToast } from '@common/utils/platform';
+import { useTranslation } from 'react-i18next';
 const FormData = require('form-data');
 
 interface DAppProps {
@@ -45,7 +46,7 @@ const typeList = [
 ];
 const ReportQuestion = (props: DAppProps) => {
   const [imgs, setImgs] = useState<Array<string>>([]);
-
+  const { t } = useTranslation();
   const handleImagePicker = () => {
     const options: ImageLibraryOptions = {
       mediaType: 'photo',

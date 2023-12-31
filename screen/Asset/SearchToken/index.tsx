@@ -81,7 +81,7 @@ const SearchToken = (props: Props) => {
               height: 22,
             }}
             searchIcon={<IconFont name="a-110" size={16} />}
-            cancelButtonTitle={'取消'}
+            cancelButtonTitle={t('searchToken.cancel') || ''}
             leftIconContainerStyle={{}}
             rightIconContainerStyle={{}}
             loadingProps={{}}

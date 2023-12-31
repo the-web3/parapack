@@ -1,7 +1,9 @@
 import IconFont from '@assets/iconfont';
 import { View, Text, StyleSheet, Appearance, useWindowDimensions } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 const ParaPack = () => {
+  const { t } = useTranslation();
   const colorScheme = Appearance.getColorScheme();
   const isDarkMode = colorScheme === 'dark';
   const { width, height } = useWindowDimensions();
@@ -28,10 +30,10 @@ const ParaPack = () => {
           fontSize: isSmallScreen ? width * 0.025 : width * 0.03,
         }}
       >
-        当前已是最新版本
+        {t('paraPack.currentVersionIsLatest')}
       </Text>
       <Text style={{ marginBottom: width * 0.03, fontSize: isSmallScreen ? width * 0.025 : width * 0.03 }}>
-        苹方-简 常规体
+        {t('paraPack.SFPro')}-{t('paraPack.simple')} {t('paraPack.regular')}
       </Text>
       <Text style={{ marginBottom: width * 0.03, fontSize: isSmallScreen ? width * 0.02 : width * 0.03 }}>
         Copyright ©️ 2023 - 2023

@@ -4,6 +4,7 @@ import { SafeAreaView, TextInput, View } from 'react-native';
 import { Avatar, Button, Text, makeStyles } from '@rneui/themed';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Layout from '@components/Layout';
+import { useTranslation } from 'react-i18next';
 // import {StackNavigationProp} from '@react-navigation/stack';
 // import {RootStackParamList} from './types';
 // type ScreenNavigationProp = StackNavigationProp<
@@ -16,6 +17,7 @@ type Props = {
 };
 
 const Swap = (props: Props) => {
+  const { t } = useTranslation();
   const [money, setMoney] = useState<{
     buy: string;
     sell: string;
@@ -34,8 +36,12 @@ const Swap = (props: Props) => {
         <View style={{ backgroundColor: '#F5F5F5', borderRadius: 12, marginBottom: 20 }}>
           <View style={{ padding: 13 }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-              <Text style={{ color: '#AEAEAE', fontSize: 12 }}>卖出</Text>
-              <Text style={{ color: '#5D5D5D', fontSize: 12 }}>余额：0.00</Text>
+              <Text style={{ color: '#AEAEAE', fontSize: 12 }}>
+                {t('assetSwap.sellOut')}
+              </Text>
+              <Text style={{ color: '#5D5D5D', fontSize: 12 }}>
+                {t('assetSwap.balance')}
+                ：0.00</Text>
             </View>
             <View
               style={{
@@ -109,8 +115,12 @@ const Swap = (props: Props) => {
           </View>
           <View style={{ padding: 13 }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-              <Text style={{ color: '#AEAEAE', fontSize: 12 }}>卖出</Text>
-              <Text style={{ color: '#5D5D5D', fontSize: 12 }}>余额：0.00</Text>
+              <Text style={{ color: '#AEAEAE', fontSize: 12 }}>
+                {t('assetSwap.sellOut')}
+              </Text>
+              <Text style={{ color: '#5D5D5D', fontSize: 12 }}>{
+                t('assetSwap.balance')
+              }：0.00</Text>
             </View>
             <View
               style={{
@@ -163,7 +173,9 @@ const Swap = (props: Props) => {
           </View>
         </View>
 
-        <Button>兑换</Button>
+        <Button>
+          {t('assetSwap.exchange')}
+        </Button>
         <View
           style={{
             flexDirection: 'row',
@@ -177,9 +189,13 @@ const Swap = (props: Props) => {
           <Text style={{ color: '#48AE60', fontSize: 8 }}>+0.56%</Text>
           <Icon name={'swap'} size={8} />
         </View>
-        <Button>交易</Button>
+        <Button>
+          {t('assetSwap.transaction')}
+        </Button>
         <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 8, marginBottom: 14 }}>
-          <Text style={{ color: '#2667FF', fontSize: 10 }}>* 跳转到支持交易的交易所</Text>
+          <Text style={{ color: '#2667FF', fontSize: 10 }}>*
+            {t('assetSwap.jumpToTheExchangeThatSupportsTheTransaction')}
+          </Text>
         </View>
       </SafeAreaView>
     </Layout>

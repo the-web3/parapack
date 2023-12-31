@@ -2,7 +2,10 @@ import * as React from 'react';
 import Layout from '@components/Layout';
 import { Button, Image, Text } from '@rneui/themed';
 import { ActivityIndicator, SafeAreaView, StyleSheet, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
+
 const StartBackup = ({ navigation, route }: any) => {
+  const { t } = useTranslation();
   const handleStartBackup = () => {
     navigation.navigate('backupMnemonics');
   };
@@ -10,7 +13,9 @@ const StartBackup = ({ navigation, route }: any) => {
     <Layout
       fixedChildren={
         <View style={styles.button}>
-          <Button onPress={handleStartBackup}>开始备份</Button>
+          <Button onPress={handleStartBackup}>
+            {t('startBackup.startBackup')}
+          </Button>
         </View>
       }
     >
@@ -24,9 +29,15 @@ const StartBackup = ({ navigation, route }: any) => {
               // containerStyle={styles.item}
               PlaceholderContent={<ActivityIndicator />}
             />
-            <Text style={styles.text}>如果您的手机丢失或损坏</Text>
-            <Text style={styles.text}>纸密码是你找回钱包的唯一途径</Text>
-            <Text style={styles.text2}>（安全起见，请不要截图形式）</Text>
+            <Text style={styles.text}>{
+              t('startBackup.ifYourMobileIsLostOrDamaged')
+            }</Text>
+            <Text style={styles.text}>
+              {t('startBackup.paperPasswordIsYourOnlyWayToRetrieveTheWallet')}
+            </Text>
+            <Text style={styles.text2}>
+              {t('startBackup.forSafetyDoNotTakeAScreenshot')}
+            </Text>
           </View>
         </View>
       </SafeAreaView>

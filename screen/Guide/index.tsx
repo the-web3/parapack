@@ -3,6 +3,7 @@ import { ActivityIndicator, Image, View } from 'react-native';
 import { Button, Text, makeStyles } from '@rneui/themed';
 import i18next from 'i18next';
 import { showToast } from '@common/utils/platform';
+import { useTranslation } from 'react-i18next';
 // import {StackNavigationProp} from '@react-navigation/stack';
 // import {RootStackParamList} from './types';
 // type ScreenNavigationProp = StackNavigationProp<
@@ -15,6 +16,7 @@ type Props = {
 };
 
 const Guide = (props: Props) => {
+  const { t } = useTranslation();
   const createNewWallet = () => {
     props?.navigation.navigate('createWallet');
   };
@@ -41,8 +43,8 @@ const Guide = (props: Props) => {
           onPress={createNewWallet}
           title={
             <View>
-              <Text style={{ color: '#fff', textAlign: 'center' }}>创建新钱包</Text>
-              <Text style={{ color: '#fff', fontSize: 10, textAlign: 'center', marginTop: 8 }}>第一次使用</Text>
+              <Text style={{ color: '#fff', textAlign: 'center' }}>{t('guide.createNewWallet')}</Text>
+              <Text style={{ color: '#fff', fontSize: 10, textAlign: 'center', marginTop: 8 }}>{t('guide.firstUse')}</Text>
             </View>
           }
           titleStyle={{ color: 'white', flexDirection: 'column' }}
@@ -56,7 +58,7 @@ const Guide = (props: Props) => {
           title={
             <View>
               <Text style={{ textAlign: 'center', color: '#000' }}>{i18next.t('asset.importWallet')}</Text>
-              <Text style={{ fontSize: 10, textAlign: 'center', marginTop: 8, color: '#000' }}>将已有钱包导入</Text>
+              <Text style={{ fontSize: 10, textAlign: 'center', marginTop: 8, color: '#000' }}>{t('guide.importExistingWallet')}</Text>
             </View>
           }
           titleStyle={{ color: 'white', flexDirection: 'column' }}

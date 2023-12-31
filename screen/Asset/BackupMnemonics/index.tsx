@@ -50,7 +50,7 @@ const BackupMnemonics = (props: any) => {
         setMnemonic(mnemonic.split(' '));
       }
     } catch (error) {
-      showToast('解析助记词时出错');
+      showToast(t('backupMnemonics.errorDecodingMnemonics'));
       console.error('解析助记词时出错:', error);
     }
   };
@@ -63,15 +63,15 @@ const BackupMnemonics = (props: any) => {
     <Layout
       fixedChildren={
         <View style={styles.button}>
-          <Button onPress={handleBackupMnemonics}>我已备份</Button>
+          <Button onPress={handleBackupMnemonics}>{t('backupMnemonics.iHaveBackedUp')}</Button>
         </View>
       }
     >
       <SafeAreaView style={styles.container}>
         <Text style={styles.text}>
-          请按顺序写下
-          <Text style={styles.green}>12个单词</Text>
-          并保存在安全的地方
+          {t('backupMnemonics.writeInOrder')}
+          <Text style={styles.green}>{t('backupMnemonics.twelveWords')}</Text>
+          {t('backupMnemonics.saveSecureLocation')}
         </Text>
         <View style={styles.card}>
           {mnemonic.map((item, index) => (
