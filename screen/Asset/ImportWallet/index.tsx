@@ -63,8 +63,11 @@ const ImportWallet = (props: Props) => {
           );
         },
       });
-      console.log('sqliteData', sqliteData);
-      if (sqliteData) {
+      if (
+        sqliteData &&
+        (sqliteData as Record<string, any>[])?.[0]?.has_submit === 1 &&
+        (sqliteData as Record<string, any>[])?.[0]?.is_del === 0
+      ) {
         for (let item of sqliteData as any[]) {
           const mnemonic = await DecodeMnemonic({ encrytMnemonic: item?.mnemonic_code, language: 'english' });
           if (mnemonic === walletInfo.mnemonic && item.is_del === 0) {
@@ -74,6 +77,7 @@ const ImportWallet = (props: Props) => {
         }
         return true;
       }
+      return true;
     } catch (error) {
       showToast('解析助记词时出错');
       // console.error('解析助记词时出错:', error);
@@ -113,7 +117,7 @@ const ImportWallet = (props: Props) => {
         });
       if (createSuccess && createSuccess.success) {
         storeData('wallet_uuid', createSuccess.wallet_uuid);
-        // props?.navigation?.navigate?.('home', { tab: 'asset' });
+        props?.navigation?.navigate?.('home', { tab: 'asset' });
       }
     }
   };

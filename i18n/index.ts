@@ -32,7 +32,7 @@ export function getValidLan() {
   return getData('GLOBAL_I18N_LANGUAGE')
     .then((value) => {
       if (isLanguageValid(value)) {
-        return value;
+        return value?.replace('-', '_');
       }
       const systemLanguages = RNLocalize.getLocales()?.[0];
       return `${systemLanguages.languageCode}_${systemLanguages.countryCode}`;

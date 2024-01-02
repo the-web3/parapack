@@ -220,7 +220,7 @@ const Asset = (props: Props) => {
           >
             <View style={styles.price}>
               <Text style={{ color: '#fff', fontSize: 40, lineHeight: 47 }}>
-                ¥{priceShow ? (Number(currentWallet?.wallet_asset_cny) || 0)?.toFixed?.(4) : '******'}
+                ¥{priceShow ? (Number(currentWallet?.wallet_asset_cny) || 0)?.toFixed?.(2) : '******'}
               </Text>
               <IconFont
                 name={priceShow ? 'eye-open' : 'eye-close'}

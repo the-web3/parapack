@@ -93,9 +93,9 @@ export const DAppScreen = (props: DAppProps) => {
       setNotices(noticesRes.data);
 
       const tagsRes = await getTags();
-      console.log('tagRes:', JSON.stringify(tagsRes.data));
+      // console.log('tagRes:', JSON.stringify(tagsRes.data));
       setTags(tagsRes.data);
-    } catch (e) { }
+    } catch (e) {}
   };
 
   const onTagPress = (tag?: string, title?: string) => {
@@ -150,7 +150,7 @@ export const DAppScreen = (props: DAppProps) => {
             props?.navigation.navigate('SearchDapp');
           }}
           leftIcon={<Icon name="search1" />}
-          placeholder={t("dApp.searchPlaceholder")}
+          placeholder={t('dApp.searchPlaceholder')}
           onChangeText={async (search) => {
             const dAppGroupRes = await getDAppGroup({
               pageNum: 1,

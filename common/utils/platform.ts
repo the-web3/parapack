@@ -6,7 +6,6 @@ export const showToast = (
         onHide: () => void;
     }
 ) => {
-    console.log('showToast');
     Toast.show(msg, {
         duration: Toast.durations.LONG,
         position: Toast.positions.CENTER,

@@ -6,9 +6,6 @@ import { getData } from '@common/utils/storage';
 import { executeQuery, BLOCK_CHAIN_ID_MAP } from '@common/utils/sqlite';
 import { getTableInfo } from '@common/wallet';
 
-//TODO TEMP Web3
-const web3 = new Web3(new Web3.providers.HttpProvider(Wallet.eth.uri));
-
 const getWallet = async (chainId: any) => {
   try {
     const wallet_uuid = await getData('wallet_uuid');
@@ -52,14 +49,14 @@ const getWallet = async (chainId: any) => {
   }
 };
 
-export const onBridgeMessage = async (event: any, webviewBridge: any) => {
+export const onBridgeMessage = async (event: any, webviewBridge: any, propsData: any) => {
   _webviewBridge = webviewBridge;
   let bridgeParamsJson = event.nativeEvent.data || '';
   const bridgeParams = JSON.parse(bridgeParamsJson);
   const { messageId } = bridgeParams || {};
   console.warn('onBridgeMessage');
-  const chainId = BLOCK_CHAIN_ID_MAP.Ethereum;
-  const sqliteData = (await getWallet(chainId)) ?? {};
+  const chainId = propsData?.chainId;
+  const sqliteData = (await getWallet(BLOCK_CHAIN_ID_MAP.Ethereum)) ?? {};
   try {
     console.warn('sqliteData:', sqliteData);
     // TODO temp Wallet.eth.x
@@ -67,9 +64,9 @@ export const onBridgeMessage = async (event: any, webviewBridge: any) => {
     const address = sqliteData?.account?.address;
     console.warn('privateKey:', privateKey);
     console.warn('address:', address);
-
+    //TODO TEMP Web3
+    const web3 = new Web3(new Web3.providers.HttpProvider(propsData?.uri));
     const bridge = useMetamaskBridge({ chainId, web3 });
-
     await handleBridge(bridge, {
       ...bridgeParams,
       activeWallet: address,

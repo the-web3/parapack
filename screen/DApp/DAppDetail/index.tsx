@@ -57,7 +57,6 @@ export const DAppDetail = (props: DAppDetailParam) => {
     //   setNotices(noticesRes.data);
     // });
   }, []);
-  console.log(111111, dAppProps?.banners);
 
   const initKLine = useCallback(async () => {
     const res = await getSymbolKline({
@@ -88,7 +87,22 @@ export const DAppDetail = (props: DAppDetailParam) => {
       showToast('No Wallet');
       return;
     }
-    props?.navigation.navigate('DAppWebView', { params: { uri: dAppProps.url, title: dAppProps?.title } });
+    //TODO: chain Bitcoin 就不跳转, DApp是和链强绑定的chain, chainId, wallet_uuid
+    if (dAppProps?.chainName === 'Bitcoin') {
+      showToast('not support');
+      return;
+    }
+    props?.navigation.navigate('DAppWebView', {
+      params: {
+        // uri: 'https://app.uniswap.org',
+        // // uri: 'https://cryptohuntsman.titanex.co',
+        uri: dAppProps.url,
+        title: dAppProps?.title,
+        chainId: dAppProps?.chainListId,
+        // chainId: 137,
+        wallet_uuid,
+      },
+    });
   };
 
   const onBuyPress = () => {
