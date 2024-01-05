@@ -59,7 +59,6 @@ export const DAppDetail = (props: DAppDetailParam) => {
     //   setNotices(noticesRes.data);
     // });
   }, []);
-  console.log(111111, dAppProps?.banners);
 
   const initKLine = useCallback(async () => {
     const res = await getSymbolKline({
@@ -90,7 +89,22 @@ export const DAppDetail = (props: DAppDetailParam) => {
       showToast('No Wallet');
       return;
     }
-    props?.navigation.navigate('DAppWebView', { params: { uri: dAppProps.url, title: dAppProps?.title } });
+    //TODO: chain Bitcoin 就不跳转, DApp是和链强绑定的chain, chainId, wallet_uuid
+    if (dAppProps?.chainName === 'Bitcoin') {
+      showToast('not support');
+      return;
+    }
+    props?.navigation.navigate('DAppWebView', {
+      params: {
+        // uri: 'https://app.uniswap.org',
+        // // uri: 'https://cryptohuntsman.titanex.co',
+        uri: dAppProps.url,
+        title: dAppProps?.title,
+        chainId: dAppProps?.chainListId,
+        // chainId: 137,
+        wallet_uuid,
+      },
+    });
   };
 
   const onBuyPress = () => {
@@ -111,7 +125,6 @@ export const DAppDetail = (props: DAppDetailParam) => {
   };
 
   const medium = useMemo(() => {
-    console.log('appDetail medium:', dAppProps?.medium);
     if (!dAppProps?.medium) {
       return [];
     }
@@ -154,33 +167,6 @@ export const DAppDetail = (props: DAppDetailParam) => {
         <View style={{ color: '#5D5D5D', fontSize: 10, marginHorizontal: 20, marginTop: 10 }}>
           <HTML source={{ html: dAppProps?.content }} />
         </View>
-        <View
-          style={{
-            height: 140,
-            width: width - 40,
-            marginHorizontal: 20,
-          }}
-        >
-          <SwiperFlatList
-            autoplay
-            autoplayDelay={2}
-            autoplayLoop
-            data={dAppProps?.banners}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                style={{ height: 140, width: width, borderRadius: 12 }}
-                onPress={() => {
-                  props?.navigation.navigate('DAppWebView', { params: { uri: item.url, title: item?.title } });
-                }}
-              >
-                <Image
-                  source={{ uri: item?.img }}
-                  style={{ width: width - 40, height: '100%', resizeMode: 'contain', borderRadius: 12 }}
-                />
-              </TouchableOpacity>
-            )}
-          />
-        </View>
 
         <ScrollView
           contentContainerStyle={{ gap: 5, paddingHorizontal: 20, flexDirection: 'row' }}
@@ -206,7 +192,7 @@ export const DAppDetail = (props: DAppDetailParam) => {
             </TouchableOpacity>
           ))}
         </ScrollView>
-        {dAppProps?.symbol !== '' && (
+        {dAppProps?.symbol && dAppProps?.symbol !== '' && (
           <>
             <View
               style={{
@@ -249,7 +235,36 @@ export const DAppDetail = (props: DAppDetailParam) => {
             )}
           </>
         )}
-
+        {dAppProps?.banners?.length > 0 && (
+          <View
+            style={{
+              height: 140,
+              width: width - 40,
+              marginHorizontal: 20,
+              marginTop: 16,
+            }}
+          >
+            <SwiperFlatList
+              autoplay
+              autoplayDelay={2}
+              autoplayLoop
+              data={dAppProps?.banners}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={{ height: 140, width: width, borderRadius: 12 }}
+                  onPress={() => {
+                    props?.navigation.navigate('DAppWebView', { params: { uri: item.url, title: item?.title } });
+                  }}
+                >
+                  <Image
+                    source={{ uri: item?.img }}
+                    style={{ width: width - 40, height: '100%', resizeMode: 'contain', borderRadius: 12 }}
+                  />
+                </TouchableOpacity>
+              )}
+            />
+          </View>
+        )}
         {(dAppProps?.news ?? []).map((v: any, i: number) => {
           return (
             <View style={{ flexDirection: 'column', backgroundColor: '#F2F3F6', borderRadius: 10, margin: 20 }} key={i}>

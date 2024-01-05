@@ -33,7 +33,7 @@ const BAR = [
   },
 ];
 const App = (props: any) => {
-  const { mode, setMode } = useThemeMode()
+  const { mode, setMode } = useThemeMode();
   const { theme }: { theme: CustomTheme<CustomColors> } = useTheme();
   const { t } = useTranslation();
   // 获取传递的参数
@@ -63,14 +63,14 @@ const App = (props: any) => {
 
   useEffect(() => {
     // init the color Theme
-    getData("colorTheme").then((value) => {
+    getData('colorTheme').then((value) => {
       if (value !== '{}') {
-        setMode(value as ThemeMode)
+        setMode(value as ThemeMode);
       } else {
-        setMode(mode)
+        setMode(mode);
       }
-    })
-  }, [])
+    });
+  }, []);
 
   return (
     <>
@@ -78,7 +78,7 @@ const App = (props: any) => {
         backgroundColor={theme.colors.background} // 替换为你想要的背景颜色
         barStyle={`${mode === 'light' ? 'dark' : 'light'}-content`} // 替换为你想要的图标和文字颜色
         translucent={false}
-      // backgroundColor="transparent"
+        // backgroundColor="transparent"
       />
       <LayoutNormal
         fixedStyle={styles.bottom}

@@ -26,14 +26,14 @@ const ReportBottom: FC<Props> = ({ navigation, style }) => {
   const onParapack = () => {
     navigation.navigate('Parapack');
   };
-  const onDevloperApplication = async () => {
+  const onDeveloperApplication = async () => {
     const [device_id] = await Promise.all([getUniqueId()]);
     const res = await getDevInfo({ device_id });
     // 0:已申请，1:已通过，2:已拒绝
     if (res.data?.status === 0) {
       navigation.navigate('SubmitScreen');
     } else {
-      navigation.navigate('DevloperApplication');
+      navigation.navigate('DeveloperApplication');
     }
   };
 
@@ -60,7 +60,7 @@ const ReportBottom: FC<Props> = ({ navigation, style }) => {
         containerStyle={{ paddingTop: 10, paddingBottom: 0, paddingLeft: 0, backgroundColor: 'transparent' }}
       >
         <TouchableOpacity onPress={() => onReport()}>
-          <Text style={styles.buttonTexts}>{t('dApp.reportquestion')}</Text>
+          <Text style={styles.buttonTexts}>{t('dApp.reportQuestion')}</Text>
         </TouchableOpacity>
       </ListItem>
       <ListItem containerStyle={{ paddingTop: 10, paddingBottom: 0, paddingLeft: 0, backgroundColor: 'transparent' }}>
@@ -69,13 +69,13 @@ const ReportBottom: FC<Props> = ({ navigation, style }) => {
         </TouchableOpacity>
       </ListItem>
       <Button
-        onPress={onDevloperApplication}
+        onPress={onDeveloperApplication}
         buttonStyle={{
           backgroundColor: '#F2F3F6',
           marginTop: 20,
         }}
       >
-        <Text style={{ color: '#695BD4' }}>{t('dApp.developerapplication')}</Text>
+        <Text style={{ color: '#695BD4' }}>{t('dApp.developerApplication')}</Text>
       </Button>
     </View>
   );

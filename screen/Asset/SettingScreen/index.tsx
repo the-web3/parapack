@@ -7,7 +7,7 @@ import { updateWalletTable } from '@common/wallet';
 import BottomOverlay from '@components/BottomOverlay';
 import Layout from '@components/Layout';
 import ValidatePassword from '@components/ValidatePassword';
-import { Avatar, Button, Dialog, Input, ListItem, Switch } from '@rneui/themed';
+import { makeStyles, Avatar, Button, Dialog, Input, ListItem, Switch } from '@rneui/themed';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View, Text, TouchableOpacity, Clipboard } from 'react-native';
@@ -16,6 +16,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/AntDesign';
 const SettingScreen = (props: any) => {
   const { t } = useTranslation();
+  const styles = useStyles();
   const [walletInfo, setWalletInfo] = useState<DeviceBalanceData>();
   const [device_id, setDeviceId] = useState('');
   const [privateDialog, setPrivate] = useState({
@@ -155,10 +156,10 @@ const SettingScreen = (props: any) => {
             <View style={{ flex: 1, marginRight: 14, marginLeft: 10, flexDirection: 'row' }}>
               <View style={{ flex: 1, flexDirection: 'column' }}>
                 <View>
-                  <Text>{walletInfo?.token_list[0]?.wallet_name}</Text>
+                  <Text style={styles.text}>{walletInfo?.token_list[0]?.wallet_name}</Text>
                 </View>
                 <View style={{ flexDirection: 'row', width: 150, alignItems: 'center' }}>
-                  <Text numberOfLines={1} ellipsizeMode="tail">
+                  <Text numberOfLines={1} ellipsizeMode="tail" style={styles.text}>
                     Id: {walletInfo?.token_list[0]?.wallet_uuid}
                   </Text>
                   <TouchableOpacity
@@ -338,5 +339,11 @@ const SettingScreen = (props: any) => {
     </Layout>
   );
 };
-
+const useStyles = makeStyles((theme: any) => {
+  return {
+    text: {
+      color: theme.colors.black,
+    },
+  };
+});
 export default SettingScreen;

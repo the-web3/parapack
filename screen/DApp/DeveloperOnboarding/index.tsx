@@ -47,8 +47,9 @@ const darkTheme = StyleSheet.create({
 });
 
 const DeveloperOnboarding = () => {
-  const { mode } = useThemeMode()
+  const { mode } = useThemeMode();
   const theme = mode === 'dark' ? darkTheme : lightTheme;
+
   return (
     <ScrollView style={theme.scrollContainer} showsVerticalScrollIndicator={false}>
       <View style={theme.container}>

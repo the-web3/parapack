@@ -80,9 +80,7 @@ export const Settings = (props: DAppProps) => {
           </View>
         </View>
         <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 20, marginBottom: 30 }}>
-          <Text style={{ fontSize: 24, fontWeight: 600, color: 'white' }}>
-            {t('dAppSetting.myWallet')}
-          </Text>
+          <Text style={{ fontSize: 24, fontWeight: 600, color: 'white' }}>{t('dAppSetting.myWallet')}</Text>
           <TouchableOpacity style={{ marginLeft: 10 }}>
             <AntdIcon name="caretright" size={14} color="white" />
           </TouchableOpacity>
@@ -112,27 +110,19 @@ export const Settings = (props: DAppProps) => {
           >
             <TouchableOpacity style={{ alignItems: 'center' }}>
               <Image style={styles.circle} source={require('@assets/images/38.png')} />
-              <Text style={styles.text1}>
-                {t('dAppSetting.lucky')}
-              </Text>
+              <Text style={styles.text1}>{t('dAppSetting.lucky')}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={{ alignItems: 'center' }}>
               <Image style={styles.circle} source={require('@assets/images/39.png')} />
-              <Text style={styles.text1}>
-                {t('dAppSetting.airdrop')}
-              </Text>
+              <Text style={styles.text1}>{t('dAppSetting.airdrop')}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={{ alignItems: 'center' }}>
               <Image style={styles.circle} source={require('@assets/images/40.png')} />
-              <Text style={styles.text1}>
-                {t('dAppSetting.invite')}
-              </Text>
+              <Text style={styles.text1}>{t('dAppSetting.invite')}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={{ alignItems: 'center' }}>
               <Image style={styles.circle} source={require('@assets/images/41.png')} />
-              <Text style={styles.text1}>
-                {t('dAppSetting.academy')}
-              </Text>
+              <Text style={styles.text1}>{t('dAppSetting.academy')}</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.bg}>
@@ -163,15 +153,11 @@ export const Settings = (props: DAppProps) => {
             </View>
           </View>
           <View style={styles.bg}>
-            <Text style={styles.title}>
-              {t('dAppSetting.account')}
-            </Text>
+            <Text style={styles.title}>{t('dAppSetting.account')}</Text>
             <View style={styles.item}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <IconFont name="a-9" color={theme.colors.black} />
-                <Text style={styles.text}>
-                  {t('dAppSetting.addressBook')}
-                </Text>
+                <Text style={styles.text}>{t('dAppSetting.addressBook')}</Text>
               </View>
               <TouchableOpacity>
                 <AntdIcon name="right" size={14} color={theme.colors.black} />
@@ -180,9 +166,7 @@ export const Settings = (props: DAppProps) => {
             <View style={styles.item}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <IconFont name="a-10" color={theme.colors.black} />
-                <Text style={styles.text}>
-                  {t('dAppSetting.cloudWallet')}
-                </Text>
+                <Text style={styles.text}>{t('dAppSetting.cloudWallet')}</Text>
               </View>
               <TouchableOpacity>
                 <AntdIcon name="right" size={14} color={theme.colors.black} />
@@ -191,9 +175,7 @@ export const Settings = (props: DAppProps) => {
             <View style={styles.item}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <IconFont name="a-111" color={theme.colors.black} />
-                <Text style={styles.text}>
-                  {t('dAppSetting.activityNotifications')}
-                </Text>
+                <Text style={styles.text}>{t('dAppSetting.activityNotifications')}</Text>
               </View>
               <TouchableOpacity>
                 <AntdIcon name="right" size={14} color={theme.colors.black} />
@@ -202,9 +184,7 @@ export const Settings = (props: DAppProps) => {
             <View style={styles.item}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <IconFont name="a-12" color={theme.colors.black} />
-                <Text style={styles.text}>
-                  {t('dAppSetting.seedBackup')}
-                </Text>
+                <Text style={styles.text}>{t('dAppSetting.seedBackup')}</Text>
               </View>
               <TouchableOpacity>
                 <AntdIcon name="right" size={14} color={theme.colors.black} />
@@ -214,9 +194,7 @@ export const Settings = (props: DAppProps) => {
             <View style={[styles.item, { paddingBottom: 0 }]}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <IconFont name="a-13" color={theme.colors.black} />
-                <Text style={styles.text}>
-                  {t('dAppSetting.securityAndPrivacy')}
-                </Text>
+                <Text style={styles.text}>{t('dAppSetting.securityAndPrivacy')}</Text>
               </View>
               <TouchableOpacity>
                 <AntdIcon name="right" size={14} color={theme.colors.black} />
@@ -224,9 +202,7 @@ export const Settings = (props: DAppProps) => {
             </View>
           </View>
           <View style={styles.bg}>
-            <Text style={styles.title}>
-              {t('dAppSetting.activitiesIParticipatedIn')}
-            </Text>
+            <Text style={styles.title}>{t('dAppSetting.activitiesIParticipatedIn')}</Text>
             <View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 20 }}>
               <Image style={{ width: 43, height: 43 }} source={require('@assets/images/2.png')} />
               <View style={{ marginLeft: 10 }}>
@@ -241,9 +217,7 @@ export const Settings = (props: DAppProps) => {
             <View style={[styles.item, { paddingTop: 0 }]}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <IconFont name="a-14" color={theme.colors.black} />
-                <Text style={styles.text}>
-                  {t('dAppSetting.contactCustomerService')}
-                </Text>
+                <Text style={styles.text}>{t('dAppSetting.contactCustomerService')}</Text>
               </View>
               <TouchableOpacity>
                 <AntdIcon name="right" size={14} color={theme.colors.black} />
@@ -252,9 +226,7 @@ export const Settings = (props: DAppProps) => {
             <View style={[styles.item, { paddingBottom: 0 }]}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <IconFont name="a-15" color={theme.colors.black} />
-                <Text style={styles.text}>
-                  {t('dAppSetting.helpCenter')}
-                </Text>
+                <Text style={styles.text}>{t('dAppSetting.helpCenter')}</Text>
               </View>
               <TouchableOpacity>
                 <AntdIcon name="right" size={14} color={theme.colors.black} />
@@ -263,15 +235,11 @@ export const Settings = (props: DAppProps) => {
           </View>
 
           <View style={styles.bg}>
-            <Text style={styles.title}>
-              {t('dAppSetting.joinUs')}
-            </Text>
+            <Text style={styles.title}>{t('dAppSetting.joinUs')}</Text>
             <View style={styles.item}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <IconFont name="a-16" color={theme.colors.black} />
-                <Text style={styles.text}>
-                  {t('dAppSetting.recruitAgents')}
-                </Text>
+                <Text style={styles.text}>{t('dAppSetting.recruitAgents')}</Text>
               </View>
               <TouchableOpacity>
                 <AntdIcon name="right" size={14} color={theme.colors.black} />
@@ -280,9 +248,7 @@ export const Settings = (props: DAppProps) => {
             <View style={styles.item}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <IconFont name="a-17" color={theme.colors.black} />
-                <Text style={styles.text}>
-                  {t('dAppSetting.globalCommunities')}
-                </Text>
+                <Text style={styles.text}>{t('dAppSetting.globalCommunities')}</Text>
               </View>
               <TouchableOpacity>
                 <AntdIcon name="right" size={14} color={theme.colors.black} />
@@ -291,9 +257,7 @@ export const Settings = (props: DAppProps) => {
             <View style={[styles.item, { paddingBottom: 0 }]}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <IconFont name="a-181" color={theme.colors.black} />
-                <Text style={styles.text}>
-                  {t('dAppSetting.jobOpportunities')}
-                </Text>
+                <Text style={styles.text}>{t('dAppSetting.jobOpportunities')}</Text>
               </View>
               <TouchableOpacity>
                 <AntdIcon name="right" size={14} color={theme.colors.black} />

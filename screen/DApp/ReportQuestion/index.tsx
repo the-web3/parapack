@@ -230,7 +230,7 @@ const ReportQuestion = (props: DAppProps) => {
                   marginLeft: 10,
                 }}
               >
-                注：手机号/微信/QQ
+                注：邮箱
               </Text>
             </View>
           </View>

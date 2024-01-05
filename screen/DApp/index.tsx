@@ -93,9 +93,9 @@ export const DAppScreen = (props: DAppProps) => {
       setNotices(noticesRes.data);
 
       const tagsRes = await getTags();
-      console.log('tagRes:', JSON.stringify(tagsRes.data));
+      // console.log('tagRes:', JSON.stringify(tagsRes.data));
       setTags(tagsRes.data);
-    } catch (e) { }
+    } catch (e) {}
   };
 
   const onTagPress = (tag?: string, title?: string) => {
@@ -150,7 +150,7 @@ export const DAppScreen = (props: DAppProps) => {
             props?.navigation.navigate('SearchDapp');
           }}
           leftIcon={<Icon name="search1" />}
-          placeholder={t("dApp.searchPlaceholder")}
+          placeholder={t('dApp.searchPlaceholder')}
           onChangeText={async (search) => {
             const dAppGroupRes = await getDAppGroup({
               pageNum: 1,
@@ -346,7 +346,7 @@ export const DAppScreen = (props: DAppProps) => {
               )
             }
           />
-          <ViewContent list={dAppGroupTime?.lists} navigation={props?.navigation} />
+          {/* <ViewContent list={dAppGroupTime?.lists} navigation={props?.navigation} /> */}
           <View style={{ marginVertical: 20, marginHorizontal: 20, backgroundColor: theme.colors.grey5, height: 1 }} />
         </View>
         {/* new ecosystem */}
@@ -398,7 +398,7 @@ export const DAppScreen = (props: DAppProps) => {
         >
           <TouchableOpacity onPress={() => onDeveloperOnboarding('DeveloperOnboarding')}>
             <Text style={styles.buttonTexts}>
-              {t('dApp.terms')} <Text style={styles.buttonTexts}>{'>'}</Text>
+              {t('dApp.termsAndRegulation')} <Text style={styles.buttonTexts}>{'>'}</Text>
             </Text>
           </TouchableOpacity>
         </View>

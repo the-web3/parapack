@@ -2,7 +2,7 @@ import { DAppList } from '@screen/DApp/DAppList';
 import { DAppWebView } from '@screen/DApp/WebView';
 import { DAppDetail } from '@screen/DApp/DAppDetail';
 import DeveloperOnboarding from '@screen/DApp/DeveloperOnboarding';
-import DevloperApplication from '@screen/DApp/DevloperApplication';
+import DeveloperApplication from '@screen/DApp/DeveloperApplication';
 import ReportQuestion from '@screen/DApp/ReportQuestion';
 import SubmitScreen from '@screen/DApp/Submit';
 import Review from '@screen/DApp/Review';
@@ -45,9 +45,9 @@ const menus = [
     component: ReportQuestion,
   },
   {
-    name: 'DevloperApplication',
-    options: _getOptions(i18next.t('dApp.listingApplication')),
-    component: DevloperApplication,
+    name: 'DeveloperApplication',
+    options: _getOptions(i18next.t('dApp.developerApplication')),
+    component: DeveloperApplication,
   },
   {
     name: 'DeveloperOnboarding',

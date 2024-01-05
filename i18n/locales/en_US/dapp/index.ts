@@ -9,7 +9,7 @@ export default {
   searchPlaceholder: 'Enter DDAP name or URL.',
   more: 'More',
   aboutParapack: 'About ParaPack',
-  developerapplication: 'Developer application',
+  developerApplication: 'Developer Application',
   reportQuestion: 'Report an issue',
   DeveloperOnboarding: 'Developer onboarding rules and agreements',
   submit: 'submit application',

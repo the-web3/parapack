@@ -15,7 +15,6 @@ const SearchDapp = (props: Props) => {
   const { t } = useTranslation();
   const styles = useStyles(props);
   const [dAppData, setDAppData] = useState<Record<string, any>>({});
-  const [show, setShow] = useState(false);
 
   const onPress = (params: any) => {
     props?.navigation.navigate('DAppDetail', { params });
@@ -50,24 +49,27 @@ const SearchDapp = (props: Props) => {
             const dAppGroupRes = await getDAppGroup({
               pageNum: 1,
               pageSize: 10,
-              symbol: 'eth',
               search,
             });
+            console.log(
+              11111,
+              {
+                pageNum: 1,
+                pageSize: 10,
+                search,
+              },
+              JSON.stringify(dAppGroupRes)
+            );
             setDAppData(dAppGroupRes?.data);
           }}
-          onFocus={() => {
-            setShow(true);
-          }}
         />
-        {show && (
-          <TouchableOpacity
-            onPress={() => {
-              setShow(false);
-            }}
-          >
-            <Text style={{ color: '#333333' }}>{t('searchDapp.cancel')}</Text>
-          </TouchableOpacity>
-        )}
+        <TouchableOpacity
+          onPress={() => {
+            props?.navigation.navigate('home', { type: 'ecology' });
+          }}
+        >
+          <Text style={{ color: '#333333' }}>取消</Text>
+        </TouchableOpacity>
       </View>
       <ScrollView contentContainerStyle={{ minHeight: '100%' }} showsVerticalScrollIndicator={false}>
         {(dAppData?.lists || []).map((v, i) => (

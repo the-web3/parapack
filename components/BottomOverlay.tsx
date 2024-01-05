@@ -18,12 +18,12 @@ const BottomOverlay: FC<Props> = ({ visible, title, after, onBackdropPress, chil
   const { theme }: { theme: CustomTheme<CustomColors> } = useTheme();
   const navigation = useNavigation();
   const styles = useStyles(theme);
-  React.useEffect(() => {
-    const unsubscribe = navigation.addListener('blur', () => {
-      onBackdropPress()
-    });
-    return unsubscribe;
-  }, [navigation, onBackdropPress]);
+  // React.useEffect(() => {
+  //   const unsubscribe = navigation.addListener('blur', () => {
+  //     onBackdropPress();
+  //   });
+  //   return unsubscribe;
+  // }, [navigation, onBackdropPress]);
 
   return (
     <Overlay isVisible={visible} onBackdropPress={onBackdropPress} overlayStyle={styles.container}>

@@ -17,13 +17,11 @@ type LanguageItemType = {
   label: string;
   value: string;
   added: boolean;
-}
+};
 
 const Language = (props: Props) => {
   const styles = useStyles(props);
-  const [languages, setLanguages] = useState<
-    LanguageItemType[]
-  >([
+  const [languages, setLanguages] = useState<LanguageItemType[]>([
     {
       label: '中文',
       value: Languages.ZH_CN,
@@ -43,7 +41,7 @@ const Language = (props: Props) => {
   const initLanguage = async () => {
     const cacheLan = await getValidLan();
     const newList = (languages || []).map((item) => {
-      if (item.value === cacheLan) {
+      if (item.value === cacheLan.replace('_', '-')) {
         return {
           ...item,
           added: true,
@@ -60,14 +58,14 @@ const Language = (props: Props) => {
 
   const switchLanguage = (item: LanguageItemType) => {
     storeData('GLOBAL_I18N_LANGUAGE', item?.value).then(() => {
-      initLanguage()
+      initLanguage();
     });
     Toast.show(`${item?.label}设置成功`);
     i18n.changeLanguage(item?.value.replace('_', '-'), (err, t) => {
       if (err) return console.log('something went wrong loading', err);
       t('key'); // -> same as i18next.t
     });
-  }
+  };
 
   return (
     <SafeAreaView style={{ backgroundColor: '#F6F7FC' }}>
@@ -80,7 +78,9 @@ const Language = (props: Props) => {
           {(languages || []).map((item) => (
             <TouchableOpacity
               key={`${item?.value}`}
-              onPress={() => { switchLanguage(item) }}
+              onPress={() => {
+                switchLanguage(item);
+              }}
             >
               <View
                 style={{

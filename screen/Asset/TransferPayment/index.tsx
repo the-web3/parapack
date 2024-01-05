@@ -19,7 +19,6 @@ import { getUniqueId } from 'react-native-device-info';
 import { getData } from '@common/utils/storage';
 import { executeQuery } from '@common/utils/sqlite';
 import { SignTransaction } from 'savourlabs-wallet-sdk/wallet';
-import { CHAIN_MAP } from '@common/constants';
 import Big from 'big.js';
 import BottomOverlay from '@components/BottomOverlay';
 import { showToast } from '@common/utils/platform';
@@ -27,35 +26,6 @@ import { getFlush } from '@api/common';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { SUCCESS_CODE } from '@common/constants';
 import { useFocusEffect } from '@react-navigation/native';
-import i18next, { t } from 'i18next';
-
-const FEE_TYPE = [
-  {
-    type: 'low',
-    title: i18next.t(`asset.slow`),
-    price: '0.00073',
-    usdtPrice: '3.27',
-    time: t(`transferPayment.about60Minutes`),
-  },
-  {
-    type: 'recommend',
-    title: i18next.t(`asset.avg`),
-    price: '0.00073',
-    usdtPrice: '$ 3.27',
-    time: t(`transferPayment.about30Minutes`),
-  },
-  {
-    type: 'fast',
-    title: i18next.t(`asset.fast`),
-    price: '0.00073',
-    usdtPrice: '3.27',
-    time: t(`transferPayment.about10Minutes`),
-  },
-  {
-    type: 'custom',
-    title: i18next.t(`asset.custom`),
-  },
-];
 // '0x69E74CF554c471B6D795bE1A9F243a3cf14b3d2c'
 const TransferPayment = (props: any) => {
   const { navigation, route } = props;
@@ -72,7 +42,33 @@ const TransferPayment = (props: any) => {
     sign: '',
     chain: '',
   });
-
+  const FEE_TYPE = [
+    {
+      type: 'low',
+      title: t(`asset.slow`),
+      price: '0.00073',
+      usdtPrice: '3.27',
+      time: '约60分钟',
+    },
+    {
+      type: 'recommend',
+      title: t(`asset.avg`),
+      price: '0.00073',
+      usdtPrice: '$ 3.27',
+      time: '约30分钟',
+    },
+    {
+      type: 'fast',
+      title: t(`asset.fast`),
+      price: '0.00073',
+      usdtPrice: '3.27',
+      time: '约10分钟',
+    },
+    {
+      type: 'custom',
+      title: t(`asset.custom`),
+    },
+  ];
   const [list, setList] = useState<any[]>([]);
   const [gasPrice, setGasPrice] = useState<string>('');
   const [gasLimit, setGasLimit] = useState<string>('');
@@ -231,7 +227,7 @@ const TransferPayment = (props: any) => {
               (txObj, resultSet) => {
                 if (resultSet.rows.length > 0) {
                   const { contractUnit, chainListId } = resultSet.rows.item(0);
-                  console.log(888888, resultSet.rows.item(0), nonceRes);
+                  console.log(888888, resultSet.rows.item(0), nonceRes, contractUnit);
                   tx.executeSql(
                     `
                         SELECT *
@@ -272,13 +268,7 @@ const TransferPayment = (props: any) => {
                           // chainId: 1,
                           // tokenAddress: '0x00',
                         };
-                        console.log(
-                          77777,
-                          JSON.stringify(token),
-                          token?.symbol.toLowerCase(),
-                          CHAIN_MAP[token?.chain] || token?.chain?.toLocaleLowerCase(),
-                          params
-                        );
+                        console.log(77777, JSON.stringify(token), token?.symbol.toLowerCase(), token?.chain, params);
                         try {
                           const raw_tx = await SignTransaction(token?.chain, params);
                           const res = await transfer({
@@ -388,6 +378,14 @@ const TransferPayment = (props: any) => {
           chain: currentTokenDetail?.chain as string,
         }),
       ]);
+      console.log(
+        2222222,
+        addressBalanceRes,
+        {
+          chain: currentTokenDetail?.chain as string,
+        },
+        gasRes
+      );
       if (addressBalanceRes.data) {
         seToken({
           ...addressBalanceRes.data,
@@ -435,6 +433,7 @@ const TransferPayment = (props: any) => {
     } else if (isbtc) {
       toggleOverlay();
     } else {
+      console.log('priceDetail', priceDetail);
       if (activeType === 'custom') {
         if (new Big(gasPrice) < (new Big(gas?.low) || 0)) {
           return showToast(`Gas Price${t(`transferPayment.atLeast`)}${gas?.low}`);

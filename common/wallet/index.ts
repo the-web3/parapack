@@ -405,10 +405,8 @@ export const insertWalletAsset = ({
  *
  * @param privateWalletInfo
  */
-export const batchInsertOrUpdateAssetTable = async (
-  privateWalletInfo: PrivateWalletStructure,
-  submitted?: number = 1
-) => {
+export const batchInsertOrUpdateAssetTable = async (privateWalletInfo: PrivateWalletStructure, submitted?: number) => {
+  submitted = submitted || 1;
   console.log(888888, privateWalletInfo);
   executeQuery({
     customExec: (tx) => {
@@ -641,7 +639,6 @@ export const createImportWallet = async (params: {
           console.log(`privateWallet =====>`, privateWallet);
 
           batchInsertOrUpdateAssetTable(privateWallet as PrivateWalletStructure);
-          //TODO: 跳转
         }
       } else {
         const unSubmitPrivateWallet = {
