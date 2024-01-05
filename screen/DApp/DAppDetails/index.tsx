@@ -96,7 +96,6 @@ export const DAppDetails = (props: DAppProps) => {
   }, []);
 
   const initKLine = useCallback(async () => {
-    console.log(111111, dAppProps);
     const res = await getSymbolKline({
       symbol: 'ETH',
     });
@@ -113,9 +112,6 @@ export const DAppDetails = (props: DAppProps) => {
       return;
     }
     props?.navigation.navigate('DAppWebView', { params: { uri: dAppProps.url, title: dAppProps?.title } });
-  };
-  const onShowAll = (type: string) => {
-    props?.navigation.navigate('DAppList', { params: { type } });
   };
   const medium = useMemo(() => {
     console.log('appDetail medium:', dAppProps?.medium);

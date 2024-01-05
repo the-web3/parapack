@@ -9,7 +9,7 @@ export default {
   searchPlaceholder: '输入Dapp网站',
   more: '更多',
   aboutParapack: '关于 ParaPack',
-  developerapplication: '开发者申请',
+  developerApplication: '开发者申请',
   reportQuestion: '报告问题',
   DeveloperOnboarding: '开发者入驻规则及协议',
   submit: '提交申请',

@@ -1,15 +1,7 @@
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
-import {
-  ActivityIndicator,
-  Dimensions,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import { Avatar, Button, Image, Tab, TabView, Text, makeStyles } from '@rneui/themed';
+import { Dimensions, SafeAreaView, ScrollView, StatusBar, TouchableOpacity, View } from 'react-native';
+import { Button, Image, Tab, TabView, Text, makeStyles } from '@rneui/themed';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Layout from '@components/LayoutNormal';
@@ -70,6 +62,7 @@ const TokenDetail = (props: Props) => {
   });
   const styles = useStyles(props);
   const { width } = Dimensions.get('window');
+
   const initData = useCallback(async () => {
     const { contract_addr: contract_address, ...rest } = tokenInfo?.tokenDetail || {};
     const res = await getAddressBalance({
@@ -81,12 +74,6 @@ const TokenDetail = (props: Props) => {
     if (res.data) {
       setAddressBalance(res.data || {});
     }
-    console.log(1111, res, {
-      wallet_uuid: tokenInfo?.wallet_uuid,
-      device_id: tokenInfo?.device_id,
-      ...rest,
-      contract_address,
-    });
   }, [tokenInfo]);
 
   const initKLine = useCallback(async () => {
@@ -134,7 +121,6 @@ const TokenDetail = (props: Props) => {
         params.type = type;
       }
       const res = await transferRecord(params);
-      console.log(2222222, res, params);
       if (res.data) {
         setRecord((prev: any) => {
           return {
@@ -219,6 +205,7 @@ const TokenDetail = (props: Props) => {
       }
     } catch (e) {}
   }, [tokenInfo?.tokenDetail?.symbol]);
+
   useEffect(() => {
     // 在组件挂载或标题更新时执行
     rqDatas();
