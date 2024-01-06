@@ -74,7 +74,7 @@ const Setting = (props: any) => {
           visible: false,
         };
       });
-      showToast('修改成功');
+      showToast(t('setting.successfulModification'));
     }
   };
   const toggleDialogDelete = () => {
@@ -130,7 +130,7 @@ const Setting = (props: any) => {
       <View style={styles.container}>
         <ListItem>
           <ListItem.Content>
-            <ListItem.Title>语言</ListItem.Title>
+            <ListItem.Title>{t('setting.language')}</ListItem.Title>
           </ListItem.Content>
           <ListItem.Content right style={{ flexDirection: 'row' }}>
             <TouchableOpacity
@@ -138,26 +138,34 @@ const Setting = (props: any) => {
                 props?.navigation?.navigate('Language');
               }}
             >
-              <Text style={{ fontSize: 14, color: '#8C8C8C', textAlign: 'right', width: 90 }}>设置语言版本</Text>
+              <Text style={{ fontSize: 14, color: '#8C8C8C', textAlign: 'right', width: 90 }}>
+                {t('setting.setLanguageVersion')}
+              </Text>
             </TouchableOpacity>
             <ListItem.Chevron />
           </ListItem.Content>
         </ListItem>
         <ListItem>
           <ListItem.Content>
-            <ListItem.Title>用户设置协议</ListItem.Title>
+            <ListItem.Title>
+              {t('setting.userSettingsAgreement')}
+            </ListItem.Title>
           </ListItem.Content>
           <ListItem.Chevron />
         </ListItem>
         <ListItem>
           <ListItem.Content>
-            <ListItem.Title>隐私协议</ListItem.Title>
+            <ListItem.Title>
+              {t('setting.privacyPolicy')}
+            </ListItem.Title>
           </ListItem.Content>
           <ListItem.Chevron />
         </ListItem>
         <ListItem>
           <ListItem.Content>
-            <ListItem.Title>关于</ListItem.Title>
+            <ListItem.Title>
+              {t('setting.about')}
+            </ListItem.Title>
           </ListItem.Content>
           <ListItem.Content right style={{ flexDirection: 'row' }}>
             <Text style={{ fontSize: 14, color: '#8C8C8C', textAlign: 'right', width: 90 }}>V7.3.4</Text>
@@ -165,14 +173,22 @@ const Setting = (props: any) => {
           </ListItem.Content>
         </ListItem>
       </View>
-      <BottomOverlay visible={deleteVisible} title={'确定要删除钱包吗？'} onBackdropPress={toggleDialogDelete}>
+      <BottomOverlay visible={deleteVisible} title={
+        t('setting.areYouSureToDeleteTheWallet')
+      } onBackdropPress={toggleDialogDelete}>
         <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', marginBottom: 16 }}>
-          <Text>删除后，您可通过已备份的助记词重新导入钱包</Text>
+          <Text>
+            {t('setting.afterDeletingYouCanReimportTheWalletThroughTheBackedUpMnemonic')}
+          </Text>
         </View>
         <View style={{ marginBottom: 16 }}>
-          <Button title="确定" onPress={handleDelete} />
+          <Button title=
+            {t('setting.confirm') || ''}
+            onPress={handleDelete} />
         </View>
-        <Button title="取消" onPress={toggleDialogDelete} type="outline" />
+        <Button title=
+          {t('setting.cancel') || ''}
+          onPress={toggleDialogDelete} type="outline" />
       </BottomOverlay>
       <ValidatePassword
         visible={validate.visible}
@@ -188,7 +204,8 @@ const Setting = (props: any) => {
       >
         <View style={{ marginTop: 16 }}>
           <Input
-            placeholder="请输入钱包名称"
+            placeholder=
+            {t('setting.pleaseInputWalletName') || ''}
             value={walletNameDialog.wallet_name}
             onChangeText={(wallet_name) => {
               setWalletNameDialog((prev) => {
@@ -200,19 +217,23 @@ const Setting = (props: any) => {
             }}
           />
         </View>
-        <Button onPress={handleEditor}>确定</Button>
+        <Button onPress={handleEditor}>
+          {t('setting.confirm')}
+        </Button>
       </BottomOverlay>
       <Dialog isVisible={privateDialog.visible} onBackdropPress={toggleDialog}>
-        <Dialog.Title title="私钥" />
+        <Dialog.Title title={t('setting.privateKey') || ''} />
         <Text>{privateDialog.text}</Text>
         <Dialog.Actions>
           <Dialog.Button
-            title="复制"
+            title={t('setting.copy') || ''}
             onPress={() => {
               Clipboard.setString(privateDialog?.text || '');
             }}
           />
-          <Dialog.Button title="取消" onPress={toggleDialog} />
+          <Dialog.Button title=
+            {t('setting.cancel') || ''}
+            onPress={toggleDialog} />
         </Dialog.Actions>
       </Dialog>
     </>

@@ -5,11 +5,14 @@ import { Input, Text, makeStyles } from '@rneui/themed';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { getDAppGroup } from '@api/dApp';
 import { DAppItem } from '../Components/DAppItem';
+import { useTranslation } from 'react-i18next';
+
 type Props = {
   fullWidth?: boolean;
   navigation: any;
 };
 const SearchDapp = (props: Props) => {
+  const { t } = useTranslation();
   const styles = useStyles(props);
   const [dAppData, setDAppData] = useState<Record<string, any>>({});
 
@@ -41,7 +44,7 @@ const SearchDapp = (props: Props) => {
             fontSize: 12,
           }}
           leftIcon={<Icon name="search1" />}
-          placeholder="输入Dapp网站"
+          placeholder={t('searchDapp.inputDAppWebsite') || ''}
           onChangeText={async (search) => {
             const dAppGroupRes = await getDAppGroup({
               pageNum: 1,

@@ -127,8 +127,10 @@ export const Settings = (props: DAppProps) => {
           </View>
           <View style={styles.bg}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={styles.title}>绑定社交媒体</Text>
-              <Text style={{ fontSize: 12, color: '#8C8C8C' }}>查看更多</Text>
+              <Text style={styles.title}>
+                {t('settings.bindingSocialMedia')}
+              </Text>
+              <Text style={{ fontSize: 12, color: '#8C8C8C' }}>{t('settings.seeMore')}</Text>
             </View>
 
             <View style={styles.item}>
@@ -204,8 +206,12 @@ export const Settings = (props: DAppProps) => {
             <View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 20 }}>
               <Image style={{ width: 43, height: 43 }} source={require('@assets/images/2.png')} />
               <View style={{ marginLeft: 10 }}>
-                <Text style={{ color: 'black', fontWeight: 'regular', fontSize: 13 }}>Bitget合约</Text>
-                <Text style={{ color: 'gray', fontSize: 11 }}>在银河系中最受欢迎的去中心化平台上交..</Text>
+                <Text style={{ color: 'black', fontWeight: 'regular', fontSize: 13 }}>
+                  {t('settings.BitgetContract')}
+                </Text>
+                <Text style={{ color: 'gray', fontSize: 11 }}>
+                  {t('settings.tradeOnTheMostPopularDecentralizedPlatformInTheGalaxy')}
+                </Text>
               </View>
             </View>
             <View style={[styles.item, { paddingTop: 0 }]}>

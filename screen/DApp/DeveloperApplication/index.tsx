@@ -121,7 +121,9 @@ const DeveloperApplication = (props: DAppProps) => {
       <TextInput style={styles.input} placeholderTextColor={theme.colors.grey1} onChangeText={setPhone} value={phone} />
       <View style={styles.divider} />
       <View>
-        <Text style={styles.label}>电报 (Telegram)</Text>
+        <Text style={styles.label}>
+          {t('developerApplication.telegram')}
+          (Telegram)</Text>
         <TextInput
           style={styles.input}
           placeholderTextColor={theme.colors.grey1}
@@ -142,7 +144,10 @@ const DeveloperApplication = (props: DAppProps) => {
       />
       <View style={styles.divider} />
 
-      <Text style={styles.label}>项目/应用名称</Text>
+      <Text style={styles.label}>
+        {t('developerApplication.project')}/
+        {t('developerApplication.applicationName')}
+      </Text>
       <TextInput
         style={styles.input}
         placeholderTextColor={theme.colors.grey1}
@@ -151,7 +156,10 @@ const DeveloperApplication = (props: DAppProps) => {
       />
       <View style={styles.divider} />
 
-      <Text style={styles.label}>项目/应用名称</Text>
+      <Text style={styles.label}>
+        {t('developerApplication.project')}/
+        {t('developerApplication.applicationName')}
+      </Text>
       <TextInput
         style={styles.input}
         placeholderTextColor={theme.colors.grey1}
@@ -163,7 +171,9 @@ const DeveloperApplication = (props: DAppProps) => {
       <TextInput style={styles.input} placeholderTextColor={theme.colors.grey1} onChangeText={setType} value={type} />
       <View style={styles.divider} />
 
-      <Text style={styles.label}>应⽤团队创始⼈kyc，及对应⽩⽪书</Text>
+      <Text style={styles.label}>
+        {t('developerApplication.applicationFounderKYCandCorrespondingWhitePaper')}
+      </Text>
       <TextInput
         style={styles.input}
         placeholderTextColor={theme.colors.grey1}
@@ -176,7 +186,9 @@ const DeveloperApplication = (props: DAppProps) => {
       <TextInput style={styles.input} placeholderTextColor={theme.colors.grey1} onChangeText={setToken} value={token} />
       <View style={styles.divider} />
 
-      <Text style={styles.label}>Token合约</Text>
+      <Text style={styles.label}>
+        {t('developerApplication.contractToken')}
+      </Text>
       <TextInput
         style={styles.input}
         placeholderTextColor={theme.colors.grey1}
@@ -185,7 +197,9 @@ const DeveloperApplication = (props: DAppProps) => {
       />
       <View style={styles.divider} />
 
-      <Text style={styles.label}>Token上所信息</Text>
+      <Text style={styles.label}>
+        {t('developerApplication.tokenInformation')}
+      </Text>
       <TextInput
         style={styles.input}
         placeholderTextColor={theme.colors.grey1}
@@ -194,7 +208,9 @@ const DeveloperApplication = (props: DAppProps) => {
       />
       <View style={styles.divider} />
 
-      <Text style={styles.label}>资本机构信息</Text>
+      <Text style={styles.label}>
+        {t('developerApplication.capitalInstitutionInformation')}
+      </Text>
       <TextInput
         style={styles.input}
         placeholderTextColor={theme.colors.grey1}
@@ -203,7 +219,9 @@ const DeveloperApplication = (props: DAppProps) => {
       />
       <View style={styles.divider} />
 
-      <Text style={styles.labels}>*需签署免责声明及协议（平台免责，且有权下架）等法律⽂件</Text>
+      <Text style={styles.labels}>*
+        {t('developerApplication.needToSignADisclaimerAndAgreement')}
+      </Text>
       <View style={{ height: 20 }} />
       <View style={{ paddingBottom: isSmallScreen ? 30 : 50 }}>
         <Button onPress={() => onConfirm()}>

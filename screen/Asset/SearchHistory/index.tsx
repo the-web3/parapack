@@ -60,7 +60,7 @@ const SearchHistory = (props: Props) => {
         backgroundColor={'#F6F7FC'} // 替换为你想要的背景颜色
         barStyle={`${mode === 'light' ? 'dark' : 'light'}-content`} // 替换为你想要的图标和文字颜色
         translucent={false}
-        // backgroundColor="transparent"
+      // backgroundColor="transparent"
       />
       <View style={styles.top}>
         <View style={{ flexDirection: 'row-reverse', alignItems: 'center' }}>
@@ -79,7 +79,7 @@ const SearchHistory = (props: Props) => {
               height: 22,
             }}
             searchIcon={<IconFont name="a-110" size={16} />}
-            cancelButtonTitle={'取消'}
+            cancelButtonTitle={t('searchHistory.cancel') || ''}
             leftIconContainerStyle={{}}
             rightIconContainerStyle={{}}
             loadingProps={{}}
@@ -138,7 +138,10 @@ const SearchHistory = (props: Props) => {
 
                   <View style={{ flex: 1, marginRight: 14, marginLeft: 10 }}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
-                      <Text>{item.type === 0 ? '转出' : '转入'}</Text>
+                      <Text>{item.type === 0 ?
+                        t('searchHistory.transferOut') :
+                        t('searchHistory.transferIn')
+                      }</Text>
                       <Text>{item.amount}</Text>
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>

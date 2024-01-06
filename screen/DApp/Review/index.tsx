@@ -3,6 +3,7 @@ import { Button } from '@rneui/themed';
 import { View, Text, StyleSheet, Appearance, Dimensions, SafeAreaView, Image } from 'react-native';
 import { getUniqueId } from 'react-native-device-info';
 import { cancelApplication } from '@api/dApp';
+import { useTranslation } from 'react-i18next';
 
 interface DAppProps {
   navigation?: any;
@@ -18,6 +19,7 @@ const Review = (props: DAppProps) => {
   const marginBottom = height * 0.05;
   const textsMarginBottom = height * 0.35;
   const marginTop = height * 0.01;
+  const { t } = useTranslation();
 
   const onCancel = async () => {
     const [device_id] = await Promise.all([getUniqueId()]);
@@ -37,7 +39,9 @@ const Review = (props: DAppProps) => {
     <Layout
       fixedChildren={
         <View>
-          <Button onPress={onCancel}>取消申请</Button>
+          <Button onPress={onCancel}>
+            {t('review.cancelApplication')}
+          </Button>
         </View>
       }
     >
@@ -49,10 +53,10 @@ const Review = (props: DAppProps) => {
               style={{ width: 130, height: 130, tintColor: 'blue' }}
             />
           </View>
-          <Text style={[styles.fonttext, { fontSize: fontTextSize, marginTop }]}>资料审核中...</Text>
+          <Text style={[styles.fonttext, { fontSize: fontTextSize, marginTop }]}>{t('review.materialsReview')}...</Text>
 
           <Text style={[styles.texts, { fontSize: textSize, marginBottom: textsMarginBottom }]}>
-            审核通过后, 会以邮件形式通知
+            {t('review.oncePassedWillNotifyByEmail')}
           </Text>
         </View>
       </SafeAreaView>

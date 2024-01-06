@@ -5,12 +5,15 @@ import { Button } from '@rneui/themed';
 import { View, Text, StyleSheet, TouchableOpacity, Appearance, Dimensions, SafeAreaView, Image } from 'react-native';
 import { getUniqueId } from 'react-native-device-info';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { useTranslation } from 'react-i18next';
+
 interface DAppProps {
   navigation?: any;
   mode?: string;
 }
 
 const SubmitScreen = (props: DAppProps) => {
+  const { t } = useTranslation();
   const colorScheme = Appearance.getColorScheme();
   const isDarkMode = colorScheme === 'dark';
   const { width, height } = Dimensions.get('window');
@@ -42,7 +45,9 @@ const SubmitScreen = (props: DAppProps) => {
     <Layout
       fixedChildren={
         <View>
-          <Button onPress={onCancel}>取消申请</Button>
+          <Button onPress={onCancel}>
+            {t('submit.cancelApplication')}
+          </Button>
         </View>
       }
     >
@@ -54,10 +59,12 @@ const SubmitScreen = (props: DAppProps) => {
               style={{ width: 130, height: 130, tintColor: 'blue' }}
             />
           </View>
-          <Text style={[styles.fonttext, { fontSize: fontTextSize, marginTop }]}>资料审核中...</Text>
+          <Text style={[styles.fonttext, { fontSize: fontTextSize, marginTop }]}>
+            {t('submit.materialsReview')}
+            ...</Text>
 
           <Text style={[styles.texts, { fontSize: textSize, marginBottom: textsMarginBottom }]}>
-            审核通过后, 会以邮件形式通知
+            {t('submit.oncePassedWillNotifyByEmail')}
           </Text>
         </View>
       </SafeAreaView>

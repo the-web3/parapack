@@ -26,7 +26,6 @@ import { getFlush } from '@api/common';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { SUCCESS_CODE } from '@common/constants';
 import { useFocusEffect } from '@react-navigation/native';
-
 // '0x69E74CF554c471B6D795bE1A9F243a3cf14b3d2c'
 const TransferPayment = (props: any) => {
   const { navigation, route } = props;
@@ -406,7 +405,7 @@ const TransferPayment = (props: any) => {
               const price = symbolPrice.times(gasRes.data.symbolRate);
               return {
                 ...item,
-                time: `约${gasRes.data[`${item?.type}Time`]}分钟`,
+                time: `${gasRes.data[`${item?.type}Time`]}${t(`transferPayment.aboutMinutes`)}`,
                 usdtPrice: `${price.toFixed(gasRes.data.amountUnit).toString()}`,
                 price: `${symbolPrice.toFixed(gasRes.data.amountUnit).toString()}`,
               };
@@ -428,19 +427,19 @@ const TransferPayment = (props: any) => {
 
   const handleOpen = () => {
     if (!form?.toAddr) {
-      return showToast(`输入或者黏贴钱包地址`);
+      return showToast(t(`transferPayment.inputOrPasteWalletAddress`));
     } else if (!form?.amount) {
-      return showToast(`输入正确的转出数量`);
+      return showToast(t('transferPayment.inputCorrectTransferOutQuantity'));
     } else if (isbtc) {
       toggleOverlay();
     } else {
       console.log('priceDetail', priceDetail);
       if (activeType === 'custom') {
         if (new Big(gasPrice) < (new Big(gas?.low) || 0)) {
-          return showToast(`Gas Price至少为${gas?.low}`);
+          return showToast(`Gas Price${t(`transferPayment.atLeast`)}${gas?.low}`);
         }
         if (Number(gasLimit) < 21000) {
-          return showToast(`Gas Limit至少为21000`);
+          return showToast(`Gas Limit${t(`transferPayment.atLeast`)}21000`);
         }
       }
       toggleOverlay();
@@ -558,9 +557,9 @@ const TransferPayment = (props: any) => {
                 const style =
                   activeType === item.type
                     ? {
-                        ...styles.item,
-                        ...styles.activeItem,
-                      }
+                      ...styles.item,
+                      ...styles.activeItem,
+                    }
                     : styles.item;
                 if (item.type === 'custom') {
                   return (

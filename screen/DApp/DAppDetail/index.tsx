@@ -11,6 +11,7 @@ import HTML from 'react-native-render-html';
 import ReportBottom from '@components/ReportBottom';
 import IconFont from '@assets/iconfont';
 import { SwiperFlatList } from 'react-native-swiper-flatlist';
+import { useTranslation } from 'react-i18next';
 
 interface DAppDetailParam {
   navigation?: any;
@@ -31,6 +32,7 @@ const chartConfig = {
 };
 
 export const DAppDetail = (props: DAppDetailParam) => {
+  const { t } = useTranslation();
   const { width } = Dimensions.get('window');
   const styles = useStyles();
   const [kLine, setKLine] = useState<{ labels: string[]; datasets: any[] }>({
@@ -154,7 +156,7 @@ export const DAppDetail = (props: DAppDetailParam) => {
                 onPress={onPress}
                 style={{ paddingHorizontal: 20, paddingVertical: 5, backgroundColor: '#5C43DC', borderRadius: 20 }}
               >
-                <Text style={{ color: '#FFF' }}>了解</Text>
+                <Text style={{ color: '#FFF' }}></Text>
               </TouchableOpacity>
               <TouchableOpacity>
                 <IconFont name="a-112" />
@@ -209,7 +211,8 @@ export const DAppDetail = (props: DAppDetailParam) => {
               </View>
               <Text style={{ color: '#8C8C8C', fontSize: 10 }}>{dAppProps?.symbol}/USDT</Text>
               <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={onBuyPress}>
-                <Text style={{ color: '#3B28CC', fontWeight: '500' }} children="去兑换 >" />
+                <Text style={{ color: '#3B28CC', fontWeight: '500' }} children={`${t('dAppDetail.goToExchange')
+                  } >`} />
               </TouchableOpacity>
             </View>
             {kLine.datasets.length > 0 && (
