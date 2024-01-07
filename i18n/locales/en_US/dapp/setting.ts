@@ -16,6 +16,6 @@ export default {
     joinUs: 'Join Us',
     recruitAgents: 'Recruit Agents',
     globalCommunities: 'Global Communities',
-    jobOpportunities: 'Job Opportunities'
-}
-
+    jobOpportunities: 'Job Opportunities',
+    settings: 'settings',
+};

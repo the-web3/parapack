@@ -131,7 +131,17 @@ const App = () => {
           >
             <Stack.Navigator>
               {menus.map((menu) => (
-                <Stack.Screen key={menu.name} {...menu} />
+                <Stack.Screen
+                  key={menu.name}
+                  {...menu}
+                  options={{
+                    ...menu.options,
+                    // headerStyle: {
+                    //   backgroundColor: mode === 'dark' ? 'white' : 'black',
+                    // },
+                    // headerTintColor: mode === 'dark' ? 'black' : 'white',
+                  }}
+                />
               ))}
             </Stack.Navigator>
             <Toast />

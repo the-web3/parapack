@@ -26,7 +26,7 @@ import { getFlush } from '@api/common';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { SUCCESS_CODE } from '@common/constants';
 import { useFocusEffect } from '@react-navigation/native';
-// '0x69E74CF554c471B6D795bE1A9F243a3cf14b3d2c'
+import Toast from 'react-native-root-toast';
 const TransferPayment = (props: any) => {
   const { navigation, route } = props;
   const { t } = useTranslation();
@@ -557,9 +557,9 @@ const TransferPayment = (props: any) => {
                 const style =
                   activeType === item.type
                     ? {
-                      ...styles.item,
-                      ...styles.activeItem,
-                    }
+                        ...styles.item,
+                        ...styles.activeItem,
+                      }
                     : styles.item;
                 if (item.type === 'custom') {
                   return (
@@ -624,6 +624,7 @@ const TransferPayment = (props: any) => {
                     value={gasPrice}
                     keyboardType="numeric"
                     onChangeText={(price) => {
+                      //目前是位，这里设置展示基位,
                       setGasPrice(price);
                     }}
                   />
@@ -634,6 +635,7 @@ const TransferPayment = (props: any) => {
                     value={gasLimit}
                     keyboardType="numeric"
                     onChangeText={(limit) => {
+                      //eth 21000
                       setGasLimit(limit);
                     }}
                   />
@@ -680,6 +682,7 @@ const TransferPayment = (props: any) => {
         </BottomOverlay>
       </SafeAreaView>
       <Spinner visible={loading} />
+      <Toast />
     </Layout>
   );
 };

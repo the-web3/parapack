@@ -67,5 +67,5 @@ export default {
   searchDapp,
   setting,
   settings,
-  submit
+  submit,
 };

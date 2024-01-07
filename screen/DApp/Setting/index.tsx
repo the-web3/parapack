@@ -1,4 +1,4 @@
-import { Button, Dialog, Input, ListItem } from '@rneui/themed';
+import { Button, Dialog, Input, ListItem, makeStyles } from '@rneui/themed';
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Clipboard } from 'react-native';
 import { DeviceBalanceData, deleteWallet, getDeviceBalance, updateWallet } from '@api/wallet';
@@ -19,6 +19,7 @@ const Setting = (props: any) => {
     visible: false,
     text: '',
   });
+  const styles = useStyles();
   const [walletNameDialog, setWalletNameDialog] = useState({
     visible: false,
     wallet_name: '',
@@ -147,25 +148,19 @@ const Setting = (props: any) => {
         </ListItem>
         <ListItem>
           <ListItem.Content>
-            <ListItem.Title>
-              {t('setting.userSettingsAgreement')}
-            </ListItem.Title>
+            <ListItem.Title>{t('setting.userSettingsAgreement')}</ListItem.Title>
           </ListItem.Content>
           <ListItem.Chevron />
         </ListItem>
         <ListItem>
           <ListItem.Content>
-            <ListItem.Title>
-              {t('setting.privacyPolicy')}
-            </ListItem.Title>
+            <ListItem.Title>{t('setting.privacyPolicy')}</ListItem.Title>
           </ListItem.Content>
           <ListItem.Chevron />
         </ListItem>
         <ListItem>
           <ListItem.Content>
-            <ListItem.Title>
-              {t('setting.about')}
-            </ListItem.Title>
+            <ListItem.Title>{t('setting.about')}</ListItem.Title>
           </ListItem.Content>
           <ListItem.Content right style={{ flexDirection: 'row' }}>
             <Text style={{ fontSize: 14, color: '#8C8C8C', textAlign: 'right', width: 90 }}>V7.3.4</Text>
@@ -173,22 +168,18 @@ const Setting = (props: any) => {
           </ListItem.Content>
         </ListItem>
       </View>
-      <BottomOverlay visible={deleteVisible} title={
-        t('setting.areYouSureToDeleteTheWallet')
-      } onBackdropPress={toggleDialogDelete}>
+      <BottomOverlay
+        visible={deleteVisible}
+        title={t('setting.areYouSureToDeleteTheWallet')}
+        onBackdropPress={toggleDialogDelete}
+      >
         <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', marginBottom: 16 }}>
-          <Text>
-            {t('setting.afterDeletingYouCanReimportTheWalletThroughTheBackedUpMnemonic')}
-          </Text>
+          <Text>{t('setting.afterDeletingYouCanReimportTheWalletThroughTheBackedUpMnemonic')}</Text>
         </View>
         <View style={{ marginBottom: 16 }}>
-          <Button title=
-            {t('setting.confirm') || ''}
-            onPress={handleDelete} />
+          <Button title={t('setting.confirm') || ''} onPress={handleDelete} />
         </View>
-        <Button title=
-          {t('setting.cancel') || ''}
-          onPress={toggleDialogDelete} type="outline" />
+        <Button title={t('setting.cancel') || ''} onPress={toggleDialogDelete} type="outline" />
       </BottomOverlay>
       <ValidatePassword
         visible={validate.visible}
@@ -204,8 +195,7 @@ const Setting = (props: any) => {
       >
         <View style={{ marginTop: 16 }}>
           <Input
-            placeholder=
-            {t('setting.pleaseInputWalletName') || ''}
+            placeholder={t('setting.pleaseInputWalletName') || ''}
             value={walletNameDialog.wallet_name}
             onChangeText={(wallet_name) => {
               setWalletNameDialog((prev) => {
@@ -217,9 +207,7 @@ const Setting = (props: any) => {
             }}
           />
         </View>
-        <Button onPress={handleEditor}>
-          {t('setting.confirm')}
-        </Button>
+        <Button onPress={handleEditor}>{t('setting.confirm')}</Button>
       </BottomOverlay>
       <Dialog isVisible={privateDialog.visible} onBackdropPress={toggleDialog}>
         <Dialog.Title title={t('setting.privateKey') || ''} />
@@ -231,46 +219,46 @@ const Setting = (props: any) => {
               Clipboard.setString(privateDialog?.text || '');
             }}
           />
-          <Dialog.Button title=
-            {t('setting.cancel') || ''}
-            onPress={toggleDialog} />
+          <Dialog.Button title={t('setting.cancel') || ''} onPress={toggleDialog} />
         </Dialog.Actions>
       </Dialog>
     </>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 15,
-    borderBottomWidth: 0.5,
-    borderColor: '#ccc',
-  },
-  backText: {
-    fontSize: 20,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  headerRight: {
-    width: 20, // to center the title
-  },
-  listItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 15,
-    borderBottomWidth: 0.5,
-    borderColor: '#ccc',
-  },
+const useStyles = makeStyles((theme: any) => {
+  return {
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors.white,
+    },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: 15,
+      borderBottomWidth: 0.5,
+      borderColor: '#ccc',
+    },
+    backText: {
+      fontSize: 20,
+    },
+    title: {
+      fontSize: 18,
+      fontWeight: 'bold',
+    },
+    headerRight: {
+      width: 20, // to center the title
+    },
+    listItem: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: 15,
+      borderBottomWidth: 0.5,
+      borderColor: '#ccc',
+    },
+  };
 });
 
 export default Setting;

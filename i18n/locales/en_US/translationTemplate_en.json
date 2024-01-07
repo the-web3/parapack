@@ -1,343 +1,343 @@
 {
-    "activity": {
-        "searchAbout": "Search for activities you want to know about..."
+  "activity": {
+    "searchAbout": "Search for activities you want to know about..."
+  },
+  "asset": {
+    "backup_tips_write": "It is recommended to manually transcribe.",
+    "backup_tips_copy": "Do not copy and save.",
+    "backup_tips_screenshot": "Do not take screenshots for preservation.",
+    "backup_tips": "Do not disclose the mnemonic phrase to anyone.\nOnce the mnemonic is lost, the assets cannot be recovered.",
+    "backup_verify_tips": "Please fill in the sequence according to the mnemonic you transcribed.",
+    "transfer": "Transfer",
+    "receipt": "Receipt",
+    "purchase": "Purchase",
+    "flash": "Flash Exchange",
+    "myAssets": "My Assets",
+    "Backup": "Go to Backup",
+    "Assets": "Assets",
+    "details": "Details",
+    "swap": "Go to Exchange",
+    "receive": "Receive",
+    "send": "Transfer",
+    "all": "All",
+    "received": "Received",
+    "sent": "Sent",
+    "transferTitle": "Transfer",
+    "transferSuccess": "Transfer Successful",
+    "transferAmount": "Transfer Amount",
+    "recipientAccount": "Recipient Account",
+    "minerFee": "Miner Fee",
+    "paymentAddress": "Payment Address",
+    "recipientAddress": "Recipient Address",
+    "transactionDetails": "Transaction Details",
+    "balance": "Balance",
+    "slow": "Slow",
+    "avg": "Recommended",
+    "fast": "Fast",
+    "custom": "Custom",
+    "createWallet": "Create Wallet",
+    "importWallet": "Import Wallet",
+    "startBackup": "Start Backup",
+    "backupSeedPhrase": "Backup Seed Phrase",
+    "verifyMnemonic": "Verify Mnemonic",
+    "addAsset": "Add Asset",
+    "tokenDetail": "Token Details",
+    "walletSettings": "Wallet Settings",
+    "editWalletName": "Edit Wallet Name",
+    "viewPrivateKey": "View Private Key",
+    "backupWallet": "Backup Wallet",
+    "FaceFingerprintPay": "Face/Fingerprint Payment",
+    "passwordlessPayment": "Passwordless Payment",
+    "authorizationVerification": "Authorization Verification",
+    "nodeSettings": "Node Settings",
+    "deleteWallet": "Delete Wallet",
+    "confirmDeleteWallet": "Are you sure you want to delete the wallet?",
+    "confirmDeleteWalletDesc": "After deletion, you can import the wallet again using the backed-up mnemonic phrase."
+  },
+  "common": {
+    "success": "Success",
+    "ecology": "Ecology",
+    "activity": "Activity",
+    "swap": "Exchange",
+    "video": "Video",
+    "asset": "Asset",
+    "emptyTransaction": "No transaction records yet",
+    "empty": "No data available",
+    "confirm": "Confirm",
+    "cancel": "Cancel"
+  },
+  "dapp": {
+    "index": {
+      "recommendList": "Recommended Ecology List",
+      "seeAll": "See All",
+      "hotActivity": "Hot Activity List",
+      "newEcosystems": "Newly Launched Ecology",
+      "youlike": "You Might Like",
+      "24h": "24h",
+      "6h": "6h",
+      "searchPlaceholder": "Enter Dapp website",
+      "more": "More",
+      "aboutParapack": "About ParaPack",
+      "developerapplication": "Developer Application",
+      "reportQuestion": "Report an Issue",
+      "DeveloperOnboarding": "Developer Onboarding Rules and Agreement",
+      "submit": "Submit Application",
+      "termsAndRegulation": "Terms and Regulations",
+      "reportAnIssue": "Report an Issue",
+      "listingApplication": "Listing Application",
+      "informationCenter": "Information Center",
+      "settings": "Settings",
+      "announcementDetails": "Announcement Details",
+      "language": "Language"
     },
-    "asset": {
-        "backup_tips_write": "It is recommended to manually transcribe.",
-        "backup_tips_copy": "Do not copy and save.",
-        "backup_tips_screenshot": "Do not take screenshots for preservation.",
-        "backup_tips": "Do not disclose the mnemonic phrase to anyone.\nOnce the mnemonic is lost, the assets cannot be recovered.",
-        "backup_verify_tips": "Please fill in the sequence according to the mnemonic you transcribed.",
-        "transfer": "Transfer",
-        "receipt": "Receipt",
-        "purchase": "Purchase",
-        "flash": "Flash Exchange",
-        "myAssets": "My Assets",
-        "Backup": "Go to Backup",
-        "Assets": "Assets",
-        "details": "Details",
-        "swap": "Go to Exchange",
-        "receive": "Receive",
-        "send": "Transfer",
-        "all": "All",
-        "received": "Received",
-        "sent": "Sent",
-        "transferTitle": "Transfer",
-        "transferSuccess": "Transfer Successful",
-        "transferAmount": "Transfer Amount",
-        "recipientAccount": "Recipient Account",
-        "minerFee": "Miner Fee",
-        "paymentAddress": "Payment Address",
-        "recipientAddress": "Recipient Address",
-        "transactionDetails": "Transaction Details",
-        "balance": "Balance",
-        "slow": "Slow",
-        "avg": "Recommended",
-        "fast": "Fast",
-        "custom": "Custom",
-        "createWallet": "Create Wallet",
-        "importWallet": "Import Wallet",
-        "startBackup": "Start Backup",
-        "backupSeedPhrase": "Backup Seed Phrase",
-        "verifyMnemonic": "Verify Mnemonic",
-        "addAsset": "Add Asset",
-        "tokenDetail": "Token Details",
-        "walletSettings": "Wallet Settings",
-        "editWalletName": "Edit Wallet Name",
-        "viewPrivateKey": "View Private Key",
-        "backupWallet": "Backup Wallet",
-        "FaceFingerprintPay": "Face/Fingerprint Payment",
-        "passwordlessPayment": "Passwordless Payment",
-        "authorizationVerification": "Authorization Verification",
-        "nodeSettings": "Node Settings",
-        "deleteWallet": "Delete Wallet",
-        "confirmDeleteWallet": "Are you sure you want to delete the wallet?",
-        "confirmDeleteWalletDesc": "After deletion, you can import the wallet again using the backed-up mnemonic phrase."
-    },
-    "common": {
-        "success": "Success",
-        "ecology": "Ecology",
-        "activity": "Activity",
-        "swap": "Exchange",
-        "video": "Video",
-        "asset": "Asset",
-        "emptyTransaction": "No transaction records yet",
-        "empty": "No data available",
-        "confirm": "Confirm",
-        "cancel": "Cancel"
-    },
-    "dapp": {
-        "index": {
-            "recommendList": "Recommended Ecology List",
-            "seeAll": "See All",
-            "hotActivity": "Hot Activity List",
-            "newEcosystems": "Newly Launched Ecology",
-            "youlike": "You Might Like",
-            "24h": "24h",
-            "6h": "6h",
-            "searchPlaceholder": "Enter Dapp website",
-            "more": "More",
-            "aboutParapack": "About ParaPack",
-            "developerapplication": "Developer Application",
-            "reportQuestion": "Report an Issue",
-            "DeveloperOnboarding": "Developer Onboarding Rules and Agreement",
-            "submit": "Submit Application",
-            "termsAndRegulation": "Terms and Regulations",
-            "reportAnIssue": "Report an Issue",
-            "listingApplication": "Listing Application",
-            "informationCenter": "Information Center",
-            "settings": "Settings",
-            "announcementDetails": "Announcement Details",
-            "language": "Language"
-        },
-        "setting": {
-            "myWallet": "My Wallet",
-            "lucky": "Red Packets",
-            "airdrop": "Airdrop",
-            "invite": "Invite",
-            "academy": "Wallet Academy",
-            "account": "Account",
-            "addressBook": "Address Book",
-            "cloudWallet": "Cloud Wallet",
-            "activityNotifications": "Activity Notifications",
-            "seedBackup": "Backup Seed Phrase",
-            "securityAndPrivacy": "Security and Privacy",
-            "activitiesIParticipatedIn": "Activities I Participated In",
-            "contactCustomerService": "Contact Customer Service",
-            "helpCenter": "Help Center",
-            "joinUs": "Join Us",
-            "recruitAgents": "Recruit Agents",
-            "globalCommunities": "Global Communities",
-            "jobOpportunities": "Job Opportunities"
-        }
-    },
-    "swap": {
-        "Swap": "Trade",
-        "Market": "Market",
-        "LaunchPad": "LaunchPad",
-        "Sell": "Sell",
-        "Balance": "Balance",
-        "Buy": "Buy",
-        "Exchange": "Exchange"
-    },
-    "screen": {
-        "Asset": {
-            "AddToken": {
-                "cancel": "Cancel",
-                "entryAssets": "Home Assets",
-                "hotCurrency": "Popular Currencies",
-                "deleteSuccessfully": "Successfully deleted"
-            },
-            "BackupMnemonics": {
-                "errorDecodingMnemonics": "Error decoding mnemonics",
-                "iHaveBackedUp": "I have backed up",
-                "writeInOrder": "Please write down in order",
-                "twelveWords": "12 words",
-                "saveSecureLocation": "and save in a secure location"
-            },
-            "CoinDetail": {
-                "activity": "Activity",
-                "overview": "Overview",
-                "tool": "Tool",
-                "noTransactionRecord": "No transaction record",
-                "viewInBrowser": "View in browser",
-                "coinInformation": "Coin Information",
-                "tokenName": "Token Name",
-                "projectName": "Project Name",
-                "totalEmission": "Total Emission",
-                "contractAddress": "Contract Address",
-                "resources": "Resources",
-                "blockExplorer": "Block Explorer"
-            },
-            "Collection": {
-                "receipt": "Receipt",
-                "scanQRPayment": "Scan QR code to pay me",
-                "copyAddress": "Copy Address",
-                "share": "Share"
-            },
-            "CreateWallet": {
-                "pleaseAgreeToTerms": "Please agree to terms",
-                "passwordMismatch": "Password mismatch",
-                "setIdentityWalletName": "Set identity wallet name",
-                "caseLetters": "Uppercase and lowercase letters",
-                "numbers": "Numbers",
-                "underline": "Underscore",
-                "setPassword": "Set password",
-                "notLessThanEightDigits": "Not less than 8 characters, including at least 1 letter and 1 number",
-                "confirmPassword": "Confirm password",
-                "iHaveRead": "I have read and agree to",
-                "userAgreement": "User Agreement",
-                "and": "and",
-                "privacyPolicy": "Privacy Policy"
-            },
-            "ImportWallet": {
-                "handleEachLineData": "Handle each line data",
-                "chainExistsThisMnemonicWallet": "This mnemonic wallet already exists for the current chain",
-                "errorDecodingMnemonics": "Error decoding mnemonics",
-                "pleaseAgreeToTerms": "Please agree to terms",
-                "pleaseFillInMnemonic": "Please fill in mnemonic",
-                "passwordMismatch": "Password mismatch",
-                "mnemonics": "Mnemonics",
-                "inputMnemonicSeparator": "Input mnemonics, separated by spaces",
-                "setIdentityWalletName": "Set identity wallet name",
-                "caseLetters": "Uppercase and lowercase letters",
-                "numbers": "Numbers",
-                "underline": "Underscore",
-                "setPassword": "Set password",
-                "notLessThanEightDigits": "Not less than 8 characters, including at least 1 letter and 1 number",
-                "confirmPassword": "Confirm password",
-                "iHaveRead": "I have read and agree to",
-                "userAgreement": "User Agreement",
-                "and": "and",
-                "privacyPolicy": "Privacy Policy"
-            },
-            "SearchHistory": {
-                "cancel": "Cancel",
-                "transferOut": "Transfer Out",
-                "transferIn": "Transfer In"
-            },
-            "SearchToken": {
-                "cancel": "Cancel",
-                "entryAssets": "Home Assets"
-            },
-            "SettingScreen": {
-                "successfulModification": "Modification successful",
-                "successfullyDeleted": "Successfully deleted",
-                "modify": "Modify",
-                "pleaseInputWalletName": "Please input wallet name",
-                "confirm": "Confirm",
-                "privateKey": "Private Key",
-                "copy": "Copy",
-                "cancel": "Cancel"
-            },
-            "StartBackup": {
-                "startBackup": "Start Backup",
-                "ifYourMobileIsLostOrDamaged": "If your mobile is lost or damaged",
-                "paperPasswordIsYourOnlyWayToRetrieveTheWallet": "paper password is your only way to retrieve the wallet",
-                "forSafetyDoNotTakeAScreenshot": "(For safety, do not take a screenshot)"
-            },
-            "Swap": {
-                "sellOut": "Sell Out",
-                "balance": "Balance",
-                "exchange": "Exchange",
-                "transaction": "Transaction",
-                "jumpToTheExchangeThatSupportsTheTransaction": "Jump to the exchange that supports the transaction"
-            },
-            "TokenDetail": {
-                "transferOut": "Transfer Out",
-                "transferIn": "Transfer In"
-            },
-            "TransferPayment": {
-                "about60Minutes": "Approximately 60 minutes",
-                "about30Minutes": "Approximately 30 minutes",
-                "about10Minutes": "Approximately 10 minutes",
-                "getTheFirstPieceOfData": "Get the first piece of data",
-                "aboutMinutes": "Approximately minutes",
-                "inputOrPasteWalletAddress": "Input or paste wallet address",
-                "inputCorrectTransferOutQuantity": "Input the correct transfer-out quantity",
-                "atLeast": "at least"
-            },
-            "VerifyMnemonics": {
-                "eighth": "Eighth",
-                "eleventh": "Eleventh",
-                "fourth": "Fourth",
-                "generateRandomNumberBetween": "Generate random number between",
-                "digit": "Digit",
-                "wrongOrderOfMnemonics": "Wrong order of mnemonics",
-                "mnemonicsSaveSqlite": "Mnemonics save SQLite",
-                "confirm": "Confirm"
-            }
-        },
-        "DApp": {
-            "DAppDetail": {
-                "know": "Know",
-                "goToExchange": "Go to Exchange"
-            },
-            "DAppDetails": {
-                "completeTheTaskWithOneClick": "Complete Task with One Click",
-                "cancelApplication": "Cancel Application",
-                "completeTasksOneByOne": "Complete Tasks One by One",
-                "post": "Post",
-                "like": "Like",
-                "forward": "Forward",
-                "747Join": "747 people joined"
-            },
-            "DeveloperApplication": {
-                "developerApplication": "Developer Application",
-                "needAudit": "Need Audit",
-                "needToSignADisclaimer": "Need to Sign a Disclaimer",
-                "developerContactEmail": "Developer Contact Email",
-                "phone": "Phone",
-                "telegram": "Telegram",
-                "project": "Project",
-                "applicationName": "Application Name",
-                "applicationFounderKYCandCorrespondingWhitePaper": "Application Founder KYC and Corresponding White Paper",
-                "tokenName": "Token Name",
-                "contractToken": "Token Contract",
-                "tokenInformation": "Token Information",
-                "capitalInstitutionInformation": "Capital Institution Information",
-                "needToSignADisclaimerAndAgreement": "Need to Sign a Disclaimer and Agreement (Platform Disclaimer, and the right to delist) and other legal documents"
-            },
-            "Parapack": {
-                "currentVersionIsLatest": "Current version is the latest",
-                "SFPro": "SF Pro",
-                "simple": "Simple",
-                "regular": "Regular"
-            },
-            "ReportQuestion": {
-                "pageFlashback": "Page Flashback",
-                "transactionProblem": "Transaction Problem",
-                "operatingExperience": "Operating Experience",
-                "featureSuggestion": "Feature Suggestion",
-                "otherFeedback": "Other Feedback",
-                "submitSuccessfully": "Submit Successfully",
-                "iWantFeedback": "I want feedback",
-                "contactInformation": "Contact Information",
-                "notePhoneNumberWeChat": "Note: Phone number, WeChat",
-                "pleaseLeaveAnyContactInformation": "Please leave any contact information",
-                "submit": "Submit"
-            },
-            "Review": {
-                "cancelApplication": "Cancel Application",
-                "materialsReview": "Materials Review",
-                "oncePassedWillNotifyByEmail": "Once passed, will notify by email"
-            },
-            "SearchDapp": {
-                "inputDAppWebsite": "Input DApp Website",
-                "cancel": "Cancel"
-            },
-            "Setting": {
-                "successfulModification": "Successful Modification",
-                "successfullyDeleted": "Successfully Deleted",
-                "language": "Language",
-                "setLanguageVersion": "Set Language Version",
-                "userSettingsAgreement": "User Settings Agreement",
-                "privacyPolicy": "Privacy Policy",
-                "about": "About",
-                "areYouSureToDeleteTheWallet": "Are you sure to delete the wallet?",
-                "afterDeletingYouCanReimportTheWalletThroughTheBackedUpMnemonic": "After deleting, you can reimport the wallet through the backed-up mnemonic",
-                "confirm": "Confirm",
-                "pleaseInputWalletName": "Please input wallet name",
-                "privateKey": "Private Key",
-                "copy": "Copy",
-                "cancel": "Cancel"
-            },
-            "Settings": {
-                "bindingSocialMedia": "Binding Social Media",
-                "seeMore": "See More",
-                "BitgetContract": "Bitget Contract",
-                "tradeOnTheMostPopularDecentralizedPlatformInTheGalaxy": "Trade on the most popular decentralized platform in the galaxy"
-            },
-            "Submit": {
-                "cancelApplication": "Cancel Application",
-                "materialsReview": "Materials Review",
-                "oncePassedWillNotifyByEmail": "Once passed, will notify by email"
-            },
-            "Guide": {
-                "createNewWallet": "Create New Wallet",
-                "firstUse": "First Use",
-                "importExistingWallet": "Import Existing Wallet"
-            }
-        }
+    "setting": {
+      "myWallet": "My Wallet",
+      "lucky": "Red Packets",
+      "airdrop": "Airdrop",
+      "invite": "Invite",
+      "academy": "Wallet Academy",
+      "account": "Account",
+      "addressBook": "Address Book",
+      "cloudWallet": "Cloud Wallet",
+      "activityNotifications": "Activity Notifications",
+      "seedBackup": "Backup Seed Phrase",
+      "securityAndPrivacy": "Security and Privacy",
+      "activitiesIParticipatedIn": "Activities I Participated In",
+      "contactCustomerService": "Contact Customer Service",
+      "helpCenter": "Help Center",
+      "joinUs": "Join Us",
+      "recruitAgents": "Recruit Agents",
+      "globalCommunities": "Global Communities",
+      "jobOpportunities": "Job Opportunities"
     }
+  },
+  "swap": {
+    "Swap": "Trade",
+    "Market": "Market",
+    "LaunchPad": "LaunchPad",
+    "Sell": "Sell",
+    "Balance": "Balance",
+    "Buy": "Buy",
+    "Exchange": "Exchange"
+  },
+  "screen": {
+    "Asset": {
+      "AddToken": {
+        "cancel": "Cancel",
+        "entryAssets": "Home Assets",
+        "hotCurrency": "Popular Currencies",
+        "deleteSuccessfully": "Successfully deleted"
+      },
+      "BackupMnemonics": {
+        "errorDecodingMnemonics": "Error decoding mnemonics",
+        "iHaveBackedUp": "I have backed up",
+        "writeInOrder": "Please write down in order",
+        "twelveWords": "12 words",
+        "saveSecureLocation": "and save in a secure location"
+      },
+      "CoinDetail": {
+        "activity": "Activity",
+        "overview": "Overview",
+        "tool": "Tool",
+        "noTransactionRecord": "No transaction record",
+        "viewInBrowser": "View in browser",
+        "coinInformation": "Coin Information",
+        "tokenName": "Token Name",
+        "projectName": "Project Name",
+        "totalEmission": "Total Emission",
+        "contractAddress": "Contract Address",
+        "resources": "Resources",
+        "blockExplorer": "Block Explorer"
+      },
+      "Collection": {
+        "receipt": "Receipt",
+        "scanQRPayment": "Scan QR code to pay me",
+        "copyAddress": "Copy Address",
+        "share": "Share"
+      },
+      "CreateWallet": {
+        "pleaseAgreeToTerms": "Please agree to terms",
+        "passwordMismatch": "Password mismatch",
+        "setIdentityWalletName": "Set identity wallet name",
+        "caseLetters": "Uppercase and lowercase letters",
+        "numbers": "Numbers",
+        "underline": "Underscore",
+        "setPassword": "Set password",
+        "notLessThanEightDigits": "Not less than 8 characters, including at least 1 letter and 1 number",
+        "confirmPassword": "Confirm password",
+        "iHaveRead": "I have read and agree to",
+        "userAgreement": "User Agreement",
+        "and": "and",
+        "privacyPolicy": "Privacy Policy"
+      },
+      "ImportWallet": {
+        "handleEachLineData": "Handle each line data",
+        "chainExistsThisMnemonicWallet": "This mnemonic wallet already exists for the current chain",
+        "errorDecodingMnemonics": "Error decoding mnemonics",
+        "pleaseAgreeToTerms": "Please agree to terms",
+        "pleaseFillInMnemonic": "Please fill in mnemonic",
+        "passwordMismatch": "Password mismatch",
+        "mnemonics": "Mnemonics",
+        "inputMnemonicSeparator": "Input mnemonics, separated by spaces",
+        "setIdentityWalletName": "Set identity wallet name",
+        "caseLetters": "Uppercase and lowercase letters",
+        "numbers": "Numbers",
+        "underline": "Underscore",
+        "setPassword": "Set password",
+        "notLessThanEightDigits": "Not less than 8 characters, including at least 1 letter and 1 number",
+        "confirmPassword": "Confirm password",
+        "iHaveRead": "I have read and agree to",
+        "userAgreement": "User Agreement",
+        "and": "and",
+        "privacyPolicy": "Privacy Policy"
+      },
+      "SearchHistory": {
+        "cancel": "Cancel",
+        "transferOut": "Transfer Out",
+        "transferIn": "Transfer In"
+      },
+      "SearchToken": {
+        "cancel": "Cancel",
+        "entryAssets": "Home Assets"
+      },
+      "SettingScreen": {
+        "successfulModification": "Modification successful",
+        "successfullyDeleted": "Successfully deleted",
+        "modify": "Modify",
+        "pleaseInputWalletName": "Please input wallet name",
+        "confirm": "Confirm",
+        "privateKey": "Private Key",
+        "copy": "Copy",
+        "cancel": "Cancel"
+      },
+      "StartBackup": {
+        "startBackup": "Start Backup",
+        "ifYourMobileIsLostOrDamaged": "If your mobile is lost or damaged",
+        "paperPasswordIsYourOnlyWayToRetrieveTheWallet": "paper password is your only way to retrieve the wallet",
+        "forSafetyDoNotTakeAScreenshot": "(For safety, do not take a screenshot)"
+      },
+      "Swap": {
+        "sellOut": "Sell Out",
+        "balance": "Balance",
+        "exchange": "Exchange",
+        "transaction": "Transaction",
+        "jumpToTheExchangeThatSupportsTheTransaction": "Jump to the exchange that supports the transaction"
+      },
+      "TokenDetail": {
+        "transferOut": "Transfer Out",
+        "transferIn": "Transfer In"
+      },
+      "TransferPayment": {
+        "about60Minutes": "Approximately 60 minutes",
+        "about30Minutes": "Approximately 30 minutes",
+        "about10Minutes": "Approximately 10 minutes",
+        "getTheFirstPieceOfData": "Get the first piece of data",
+        "aboutMinutes": "Approximately minutes",
+        "inputOrPasteWalletAddress": "Input or paste wallet address",
+        "inputCorrectTransferOutQuantity": "Input the correct transfer-out quantity",
+        "atLeast": "at least"
+      },
+      "VerifyMnemonics": {
+        "eighth": "Eighth",
+        "eleventh": "Eleventh",
+        "fourth": "Fourth",
+        "generateRandomNumberBetween": "Generate random number between",
+        "digit": "Digit",
+        "wrongOrderOfMnemonics": "Wrong order of mnemonics",
+        "mnemonicsSaveSqlite": "Mnemonics save SQLite",
+        "confirm": "Confirm"
+      }
+    },
+    "DApp": {
+      "DAppDetail": {
+        "know": "Know",
+        "goToExchange": "Go to Exchange"
+      },
+      "DAppDetails": {
+        "completeTheTaskWithOneClick": "Complete Task with One Click",
+        "cancelApplication": "Cancel Application",
+        "completeTasksOneByOne": "Complete Tasks One by One",
+        "post": "Post",
+        "like": "Like",
+        "forward": "Forward",
+        "747Join": "747 people joined"
+      },
+      "DeveloperApplication": {
+        "developerApplication": "Developer Application",
+        "needAudit": "Need Audit",
+        "needToSignADisclaimer": "Need to Sign a Disclaimer",
+        "developerContactEmail": "Developer Contact Email",
+        "phone": "Phone",
+        "telegram": "Telegram",
+        "project": "Project",
+        "applicationName": "Application Name",
+        "applicationFounderKYCandCorrespondingWhitePaper": "Application Founder KYC and Corresponding White Paper",
+        "tokenName": "Token Name",
+        "contractToken": "Token Contract",
+        "tokenInformation": "Token Information",
+        "capitalInstitutionInformation": "Capital Institution Information",
+        "needToSignADisclaimerAndAgreement": "Need to Sign a Disclaimer and Agreement (Platform Disclaimer, and the right to delist) and other legal documents"
+      },
+      "Parapack": {
+        "currentVersionIsLatest": "Current version is the latest",
+        "SFPro": "SF Pro",
+        "simple": "Simple",
+        "regular": "Regular"
+      },
+      "ReportQuestion": {
+        "pageFlashback": "Page Flashback",
+        "transactionProblem": "Transaction Problem",
+        "operatingExperience": "Operating Experience",
+        "featureSuggestion": "Feature Suggestion",
+        "otherFeedback": "Other Feedback",
+        "submitSuccessfully": "Submit Successfully",
+        "iWantFeedback": "I want feedback",
+        "contactInformation": "Contact Information",
+        "notePhoneNumberWeChat": "Note: Phone number, WeChat",
+        "pleaseLeaveAnyContactInformation": "Please leave any contact information",
+        "submit": "Submit"
+      },
+      "Review": {
+        "cancelApplication": "Cancel Application",
+        "materialsReview": "Materials Review",
+        "oncePassedWillNotifyByEmail": "Once passed, will notify by email"
+      },
+      "SearchDapp": {
+        "inputDAppWebsite": "Input DApp Website",
+        "cancel": "Cancel"
+      },
+      "Setting": {
+        "successfulModification": "Successful Modification",
+        "successfullyDeleted": "Successfully Deleted",
+        "language": "Language",
+        "setLanguageVersion": "Set Language Version",
+        "userSettingsAgreement": "User Settings Agreement",
+        "privacyPolicy": "Privacy Policy",
+        "about": "About",
+        "areYouSureToDeleteTheWallet": "Are you sure to delete the wallet?",
+        "afterDeletingYouCanReimportTheWalletThroughTheBackedUpMnemonic": "After deleting, you can reimport the wallet through the backed-up mnemonic",
+        "confirm": "Confirm",
+        "pleaseInputWalletName": "Please input wallet name",
+        "privateKey": "Private Key",
+        "copy": "Copy",
+        "cancel": "Cancel"
+      },
+      "Settings": {
+        "bindingSocialMedia": "Binding Social Media",
+        "seeMore": "See More",
+        "BitgetContract": "Bitget Contract",
+        "tradeOnTheMostPopularDecentralizedPlatformInTheGalaxy": "Trade on the most popular decentralized platform in the galaxy"
+      },
+      "Submit": {
+        "cancelApplication": "Cancel Application",
+        "materialsReview": "Materials Review",
+        "oncePassedWillNotifyByEmail": "Once passed, will notify by email"
+      },
+      "Guide": {
+        "createNewWallet": "Create New Wallet",
+        "firstUse": "First Use",
+        "importExistingWallet": "Import Existing Wallet"
+      }
+    }
+  }
 }

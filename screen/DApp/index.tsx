@@ -19,6 +19,7 @@ import { Button, Input, Text } from '@rneui/themed';
 import IconFont from '@assets/iconfont';
 import { SwiperFlatList } from 'react-native-swiper-flatlist';
 import ReportBottom from '@components/ReportBottom';
+import { useFocusEffect } from '@react-navigation/native';
 
 const screenHeight = Dimensions.get('window').height;
 
@@ -42,7 +43,7 @@ export const DAppScreen = (props: DAppProps) => {
   const [tags, setTags] = useState<string[]>([]);
   const [selectedTime, setSelectedTime] = useState('6h');
 
-  useEffect(() => {
+  useFocusEffect(() => {
     rqDatas();
   }, []);
 
@@ -281,7 +282,7 @@ export const DAppScreen = (props: DAppProps) => {
             {dAppGroup?.lists?.map((v, index) => (
               <TouchableOpacity style={style.recommendItem} onPress={() => onRecommendPress(v)} key={index}>
                 <View style={{ position: 'relative' }}>
-                  <Image source={{ uri: v.coverPicture }} style={{ height: 84, width: 84, borderRadius: 5 }} />
+                  <Image source={{ uri: v.miniCoverPicture }} style={{ height: 84, width: 84, borderRadius: 5 }} />
                   <IconFont name="medal" style={{ position: 'absolute', bottom: 0, right: 0 }} />
                 </View>
 

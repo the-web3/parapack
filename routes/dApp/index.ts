@@ -46,7 +46,7 @@ const menus = [
   },
   {
     name: 'DeveloperApplication',
-    options: _getOptions(i18next.t('dApp.developerApplication')),
+    options: _getOptions(i18next.t('developerApplication.developerApplication')),
     component: DeveloperApplication,
   },
   {
