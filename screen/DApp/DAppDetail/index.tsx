@@ -45,7 +45,6 @@ export const DAppDetail = (props: DAppDetailParam) => {
   });
   // const [notices, setNotices] = useState<Record<string, any>>({});
   const [dAppProps] = useState(props?.route?.params?.params);
-  console.log(11111, dAppProps);
 
   useEffect(() => {
     if (dAppProps?.symbol !== '') {
@@ -135,7 +134,7 @@ export const DAppDetail = (props: DAppDetailParam) => {
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.headerBg}>
           <Image
-            source={{ uri: dAppProps?.coverPicture ?? '' }}
+            source={{ uri: dAppProps?.miniCoverPicture ?? '' }}
             style={{ width: 100, height: 100, borderRadius: 15, overflow: 'hidden' }}
           />
           <View style={{ flex: 1, flexDirection: 'column', gap: 3, marginLeft: 15 }}>
@@ -156,7 +155,7 @@ export const DAppDetail = (props: DAppDetailParam) => {
                 onPress={onPress}
                 style={{ paddingHorizontal: 20, paddingVertical: 5, backgroundColor: '#5C43DC', borderRadius: 20 }}
               >
-                <Text style={{ color: '#FFF' }}></Text>
+                <Text style={{ color: '#FFF' }}>{t('dappDetail.know')}</Text>
               </TouchableOpacity>
               <TouchableOpacity>
                 <IconFont name="a-112" />
@@ -211,8 +210,7 @@ export const DAppDetail = (props: DAppDetailParam) => {
               </View>
               <Text style={{ color: '#8C8C8C', fontSize: 10 }}>{dAppProps?.symbol}/USDT</Text>
               <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={onBuyPress}>
-                <Text style={{ color: '#3B28CC', fontWeight: '500' }} children={`${t('dAppDetail.goToExchange')
-                  } >`} />
+                <Text style={{ color: '#3B28CC', fontWeight: '500' }} children={`${t('dappDetail.goToExchange')} >`} />
               </TouchableOpacity>
             </View>
             {kLine.datasets.length > 0 && (
@@ -270,7 +268,7 @@ export const DAppDetail = (props: DAppDetailParam) => {
             <View style={{ flexDirection: 'column', backgroundColor: '#F2F3F6', borderRadius: 10, margin: 20 }} key={i}>
               <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}>
                 <Image
-                  source={{ uri: v.coverPicture }}
+                  source={{ uri: v.miniCoverPicture }}
                   style={{
                     width: 20,
                     height: 20,

@@ -186,7 +186,8 @@ export const DAppScreen = (props: DAppProps) => {
               <TouchableOpacity
                 style={{ height: 140, width: width, borderRadius: 12 }}
                 onPress={() => {
-                  props?.navigation.navigate('DAppWebView', { params: { uri: item.url, title: item?.title } });
+                  // props?.navigation.navigate('DAppWebView', { params: { uri: item.url, title: item?.title } });
+                  props?.navigation.navigate('DAppDetail', { params: item.contentInfo });
                 }}
               >
                 <Image

@@ -34,8 +34,8 @@ const SearchToken = (props: Props) => {
   };
 
   const filterList = useMemo(() => {
-    return alltokenList?.wallet_balance;
-  }, [alltokenList]);
+    return tokenList?.wallet_balance;
+  }, [tokenList]);
 
   useEffect(() => {
     initList();
@@ -48,15 +48,20 @@ const SearchToken = (props: Props) => {
   };
 
   const handleSearch = (symbol: string) => {
-    const newObj = {
-      ...alltokenList,
-      wallet_balance: (tokenList?.wallet_balance || []).filter((item) => {
-        const regex = new RegExp(symbol, 'i');
-        const isMatch = regex.test(item.symbol);
-        return isMatch;
-      }),
-    };
-    setAllTokenList(newObj);
+    const newObj =
+      symbol === ''
+        ? {
+            ...alltokenList,
+          }
+        : {
+            ...alltokenList,
+            wallet_balance: (tokenList?.wallet_balance || []).filter((item) => {
+              const regex = new RegExp(symbol, 'i');
+              const isMatch = regex.test(item.symbol);
+              return isMatch;
+            }),
+          };
+    setTokenList(newObj);
   };
 
   const handleSearchDebounced = useCallback(_.debounce(handleSearch, 500), []);
