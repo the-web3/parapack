@@ -4,14 +4,14 @@
  *
  * @format
  */
-import React, { useCallback, useEffect } from 'react';
+import React, { createContext, useCallback, useEffect } from 'react';
 const Stack = createNativeStackNavigator();
 import { ThemeProvider, createTheme, useThemeMode } from '@rneui/themed';
 import { DarkTheme, DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { defineTheme } from './style/them';
-import i18n from './i18n';
-import { I18nextProvider } from 'react-i18next';
+import i18n, { getValidLan, t } from './i18n';
+import { I18nextProvider, useTranslation } from 'react-i18next';
 import menus from './routes';
 import { loadMetamaskExt } from '@common/bridge/inject';
 import { PrivateWalletStructure, TABLE_MAP, createTable, deleteTable, openDatabase } from '@common/utils/sqlite';
@@ -30,6 +30,39 @@ import Toast from 'react-native-root-toast';
 import { getData, storeData } from '@common/utils/storage';
 import { getFlush } from '@api/common';
 const RESET_SQLITE_TAG = '2';
+import { createStore, applyMiddleware } from 'redux';
+import { Provider, connect } from 'react-redux';
+import thunk from 'redux-thunk';
+import rootReducer from './reducers'; // 导入你的根Reducer
+
+const store = createStore(rootReducer, thunk);
+
+const AppContainer = ({ language }) => {
+  console.log('language', language, menus);
+  const { t } = useTranslation();
+  return (
+    <Stack.Navigator>
+      {menus.map((menu) => {
+        return (
+          <Stack.Screen
+            key={menu.name}
+            {...menu}
+            options={{
+              ...menu.options,
+              title: menu.options?.title && menu.options?.title !== '' ? t(menu.options?.title) : menu.options?.title,
+            }}
+          />
+        );
+      })}
+    </Stack.Navigator>
+  );
+};
+
+const mapStateToProps = (state) => ({
+  language: state.language.language,
+});
+
+const AppWithLanguage = connect(mapStateToProps)(AppContainer);
 
 const App = () => {
   const { mode, setMode } = useThemeMode();
@@ -113,7 +146,7 @@ const App = () => {
   }, []);
 
   return (
-    <RootSiblingParent>
+    <Provider store={store}>
       <I18nextProvider i18n={i18n}>
         <ThemeProvider theme={theme}>
           <NavigationContainer
@@ -129,26 +162,12 @@ const App = () => {
                   }
             }
           >
-            <Stack.Navigator>
-              {menus.map((menu) => (
-                <Stack.Screen
-                  key={menu.name}
-                  {...menu}
-                  options={{
-                    ...menu.options,
-                    // headerStyle: {
-                    //   backgroundColor: mode === 'dark' ? 'white' : 'black',
-                    // },
-                    // headerTintColor: mode === 'dark' ? 'black' : 'white',
-                  }}
-                />
-              ))}
-            </Stack.Navigator>
+            <AppWithLanguage />
             <Toast />
           </NavigationContainer>
         </ThemeProvider>
       </I18nextProvider>
-    </RootSiblingParent>
+    </Provider>
   );
 };
 

@@ -10,7 +10,6 @@ import BottomOverlay from '@components/BottomOverlay';
 import ValidatePassword from '@components/ValidatePassword';
 import { getUniqueId } from 'react-native-device-info';
 import { useTranslation } from 'react-i18next';
-
 const Setting = (props: any) => {
   const { t } = useTranslation();
   const [walletInfo, setWalletInfo] = useState<DeviceBalanceData>();

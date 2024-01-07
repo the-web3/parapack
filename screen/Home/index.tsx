@@ -10,6 +10,8 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, StatusBar, Text, TouchableOpacity, View } from 'react-native';
 import { getData } from '@common/utils/storage';
+import { connect } from 'react-redux';
+import { setLanguage } from 'reducers/languageActions';
 const BAR = [
   {
     icon: 'shengtaidianjiqian',
@@ -32,7 +34,7 @@ const BAR = [
     title: 'asset',
   },
 ];
-const App = (props: any) => {
+const Home = (props: any) => {
   const { mode, setMode } = useThemeMode();
   const { theme }: { theme: CustomTheme<CustomColors> } = useTheme();
   const { t } = useTranslation();
@@ -56,13 +58,8 @@ const App = (props: any) => {
         return null;
     }
   };
-  useEffect(() => {
-    // 在这里执行你想要的操作
-    console.log('Home 页面重新渲染了');
-  }, [props.navigation]);
 
   useEffect(() => {
-    // init the color Theme
     getData('colorTheme').then((value) => {
       if (value !== '{}') {
         setMode(value as ThemeMode);
@@ -150,4 +147,11 @@ const useStyles = makeStyles((theme) => {
     },
   };
 });
-export default App;
+const mapStateToProps = (state) => ({
+  language: state.language.language,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  setLanguage: (language) => dispatch(setLanguage(language)),
+});
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

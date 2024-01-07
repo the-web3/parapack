@@ -8,6 +8,8 @@ import Toast from 'react-native-root-toast';
 import i18n from 'i18next';
 import { getValidLan } from '@i18n/index';
 import { Languages } from '@i18n/constants';
+import { connect } from 'react-redux';
+import { setLanguage } from 'reducers/languageActions';
 type Props = {
   fullWidth?: boolean;
   navigation: any;
@@ -65,6 +67,7 @@ const Language = (props: Props) => {
       if (err) return console.log('something went wrong loading', err);
       t('key'); // -> same as i18next.t
     });
+    props?.navigation.navigate('Setting');
   };
 
   return (
@@ -80,6 +83,7 @@ const Language = (props: Props) => {
               key={`${item?.value}`}
               onPress={() => {
                 switchLanguage(item);
+                props?.setLanguage(item?.value);
               }}
             >
               <View
@@ -142,4 +146,11 @@ const useStyles = makeStyles((theme, props: Props) => {
     },
   };
 });
-export default Language;
+const mapStateToProps = (state) => ({
+  language: state.language.language,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  setLanguage: (language) => dispatch(setLanguage(language)),
+});
+export default connect(mapStateToProps, mapDispatchToProps)(Language);

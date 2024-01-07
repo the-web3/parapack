@@ -42,16 +42,15 @@ export const DAppScreen = (props: DAppProps) => {
   const [dAppGroupLike, setDAppGroupLike] = useState<Record<string, any>>({});
   const [tags, setTags] = useState<string[]>([]);
   const [selectedTime, setSelectedTime] = useState('6h');
-
-  useFocusEffect(() => {
+  useEffect(() => {
     rqDatas();
-  }, []);
+  }, [props?.language]);
 
   const rqDatas = async () => {
     try {
       const banners = await getBanners();
       setBanners(banners.data);
-      console.log('banners:', JSON.stringify(banners));
+      // console.log('banners:', JSON.stringify(banners));
 
       const dAppGroupRes = await getDAppGroup({
         pageNum: 1,

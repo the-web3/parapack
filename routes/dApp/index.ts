@@ -41,27 +41,27 @@ const menus = [
   },
   {
     name: 'ReportQuestion',
-    options: _getOptions(i18next.t('dApp.reportQuestion')),
+    options: _getOptions('dApp.reportQuestion'),
     component: ReportQuestion,
   },
   {
     name: 'DeveloperApplication',
-    options: _getOptions(i18next.t('developerApplication.developerApplication')),
+    options: _getOptions('developerApplication.developerApplication'),
     component: DeveloperApplication,
   },
   {
     name: 'DeveloperOnboarding',
-    options: _getOptions(i18next.t('dApp.DeveloperOnboarding')),
+    options: _getOptions('dApp.DeveloperOnboarding'),
     component: DeveloperOnboarding,
   },
   {
     name: 'SubmitScreen',
-    options: _getOptions(i18next.t('dApp.listingApplication')),
+    options: _getOptions('dApp.listingApplication'),
     component: SubmitScreen,
   },
   {
     name: 'Review',
-    options: _getOptions(i18next.t('dApp.listingApplication')),
+    options: _getOptions('dApp.listingApplication'),
     component: Review,
   },
   {
@@ -71,27 +71,27 @@ const menus = [
   },
   {
     name: 'Parapack',
-    options: _getOptions(i18next.t('dApp.aboutUs')),
+    options: _getOptions('dApp.aboutUs'),
     component: Parapack,
   },
   {
     name: 'NewsArticle',
-    options: _getOptions(i18next.t('dApp.informationCenter')),
+    options: _getOptions('dApp.informationCenter'),
     component: NewsArticle,
   },
   {
     name: 'Setting',
-    options: _getOptions(i18next.t('dApp.settings')),
+    options: _getOptions('dApp.settings'),
     component: Setting,
   },
   {
     name: 'News',
-    options: _getOptions(i18next.t('dApp.announcementDetails')),
+    options: _getOptions('dApp.announcementDetails'),
     component: News,
   },
   {
     name: 'Language',
-    options: _getOptions(i18next.t('dApp.language')),
+    options: _getOptions('dApp.language'),
     component: Language,
   },
   {
