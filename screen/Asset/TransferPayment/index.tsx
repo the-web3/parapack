@@ -26,14 +26,12 @@ import { getFlush } from '@api/common';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { SUCCESS_CODE } from '@common/constants';
 import { useFocusEffect } from '@react-navigation/native';
-import Toast from 'react-native-root-toast';
-import Web3 from 'web3';
+// '0x69E74CF554c471B6D795bE1A9F243a3cf14b3d2c'
 const TransferPayment = (props: any) => {
   const { navigation, route } = props;
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [token, seToken] = useState<WalletBalance>();
-  const web3 = new Web3('https://rpc.ankr.com/eth/7f3ae11204e03961b67c557c4996244f0a53222b23c31a7baf9ae91c6bd89702');
 
   const [form, setForm] = useState({
     fromAddr: '',
@@ -405,26 +403,11 @@ const TransferPayment = (props: any) => {
               // const pows = new Big(10).pow(gasRes.data.contractUnit);
               // const symbolPrice = new Big(gasRes.data[`${item?.type}`]).times(gasRes.data.gasLimit).div(pows);
               // const price = symbolPrice.times(gasRes.data.symbolRate);
-
-              const etherValue = web3.utils.fromWei(gasRes.data[`${item?.type}`]?.split('.')[0], 'ether');
-              const usdValue = etherValue * gasRes.data.symbolRate;
-              console.log(
-                111111,
-                gasRes.data[`${item?.type}`],
-                typeof etherValue,
-                new Big(etherValue).toFixed(gasRes.data.contractUnit),
-                // usdValue.toFixed(gasRes.data.contractUnit),
-                gasRes.data[`${item?.type}`],
-                gasRes.data.symbolRate,
-                gasRes.data.contractUnit
-              );
               return {
                 ...item,
                 time: `${gasRes.data[`${item?.type}Time`]}${t(`transferPayment.aboutMinutes`)}`,
-                // usdtPrice: `${price.toFixed(gasRes.data.amountUnit).toString()}`,
-                // price: `${symbolPrice.toFixed(gasRes.data.amountUnit).toString()}`,
-                usdtPrice: usdValue,
-                price: etherValue,
+                usdtPrice: `${gasRes.data[`${item?.type}EthValue`]}`,
+                price: `${gasRes.data[`${item?.type}EthAmount`]}`,
               };
             }
           })
@@ -475,11 +458,11 @@ const TransferPayment = (props: any) => {
         let price = 0;
         let usdtPrice = 0;
         if (gasLimit && gasPrice) {
-          // const pows = new Big(10).pow(gas.contractUnit);
-          // const symbolPrice = new Big(gasPrice).times(gasLimit).div(pows);
-          // const symbolUsdtPrice = symbolPrice.times(gas.symbolRate);
-          price = web3.utils.fromWei(gasPrice?.split('.')[0], 'ether');
-          usdtPrice = price * gas.symbolRate;
+          const pows = new Big(10).pow(18);
+          const symbolPrice = new Big(gasPrice).times(gasLimit).div(pows);
+          const symbolUsdtPrice = symbolPrice.times(gas.symbolRate);
+          price = symbolPrice.toFixed(gas.contractUnit);
+          usdtPrice = symbolUsdtPrice.toFixed(gas.contractUnit);
         }
         return {
           price,
@@ -619,7 +602,7 @@ const TransferPayment = (props: any) => {
                       <Text style={styles.groupSubTitle}>
                         {item.price} {token?.symbol}
                       </Text>
-                      {/* <Text style={styles.groupSubTitle}>$ {item.usdtPrice} Usdt</Text> */}
+                      <Text style={styles.groupSubTitle}>$ {item.usdtPrice} Usdt</Text>
                       <Text style={styles.time}>{item.time}</Text>
                       <Icon
                         // eslint-disable-next-line react-native/no-inline-styles
@@ -687,15 +670,14 @@ const TransferPayment = (props: any) => {
                 <Text style={{ fontSize: 20 }}>
                   {priceDetail?.price} {token?.symbol}
                 </Text>
+                <Text style={{ fontSize: 14 }}>≈$ {priceDetail?.usdtPrice}</Text>
               </View>
-              <Text style={{ fontSize: 14 }}>≈$ {priceDetail?.usdtPrice}</Text>
             </View>
           </View>
           <Button onPress={handleConfirmed}>{t(`common.confirm`)}</Button>
         </BottomOverlay>
       </SafeAreaView>
       <Spinner visible={loading} />
-      <Toast />
     </Layout>
   );
 };

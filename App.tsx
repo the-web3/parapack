@@ -37,34 +37,8 @@ import rootReducer from './reducers'; // 导入你的根Reducer
 
 const store = createStore(rootReducer, thunk);
 
-const AppContainer = ({ language }) => {
-  console.log('language', language, menus);
-  const { t } = useTranslation();
-  return (
-    <Stack.Navigator>
-      {menus.map((menu) => {
-        return (
-          <Stack.Screen
-            key={menu.name}
-            {...menu}
-            options={{
-              ...menu.options,
-              title: menu.options?.title && menu.options?.title !== '' ? t(menu.options?.title) : menu.options?.title,
-            }}
-          />
-        );
-      })}
-    </Stack.Navigator>
-  );
-};
-
-const mapStateToProps = (state) => ({
-  language: state.language.language,
-});
-
-const AppWithLanguage = connect(mapStateToProps)(AppContainer);
-
 const App = () => {
+  const { t } = useTranslation();
   const { mode, setMode } = useThemeMode();
   const theme = createTheme({
     ...defineTheme,
@@ -162,7 +136,24 @@ const App = () => {
                   }
             }
           >
-            <AppWithLanguage />
+            {/* <AppWithLanguage /> */}
+            <Stack.Navigator>
+              {menus.map((menu) => {
+                return (
+                  <Stack.Screen
+                    key={menu.name}
+                    {...menu}
+                    options={{
+                      ...menu.options,
+                      title:
+                        menu.options?.title && menu.options?.title !== ''
+                          ? t(menu.options?.title)
+                          : menu.options?.title,
+                    }}
+                  />
+                );
+              })}
+            </Stack.Navigator>
             <Toast />
           </NavigationContainer>
         </ThemeProvider>
