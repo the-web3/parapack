@@ -6,5 +6,5 @@ export default {
   "aboutMinutes": "Approximately minutes",
   "inputOrPasteWalletAddress": "Input or paste wallet address",
   "inputCorrectTransferOutQuantity": "Input the correct transfer-out quantity",
-  "atLeast": "At least",
+  "atLeast": "at least"
 };

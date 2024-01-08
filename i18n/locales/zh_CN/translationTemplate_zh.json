@@ -1,343 +1,343 @@
 {
-    "activity": {
-        "searchAbout": "搜索你想要了解的活动..."
+  "activity": {
+    "searchAbout": "搜索你想要了解的活动..."
+  },
+  "asset": {
+    "backup_tips_write": "建议手写抄录",
+    "backup_tips_copy": "请勿复制保存",
+    "backup_tips_screenshot": "请勿截屏保存",
+    "backup_tips": "请勿将助记词透露给任何人\n助记词一旦丢失，资产将无法恢复",
+    "backup_verify_tips": "请根据您抄写的助记词，按顺序选择填充",
+    "transfer": "转账",
+    "receipt": "收款",
+    "purchase": "购买",
+    "flash": "闪兑",
+    "myAssets": "我的资产",
+    "Backup": "去备份",
+    "Assets": "资产",
+    "details": "详情",
+    "swap": "去兑换",
+    "receive": "收款",
+    "send": "转账",
+    "all": "全部",
+    "received": "转入",
+    "sent": "转出",
+    "transferTitle": "转账",
+    "transferSuccess": "转账成功",
+    "transferAmount": "转账金额",
+    "recipientAccount": "收款账号",
+    "minerFee": "矿工费用",
+    "paymentAddress": "付款地址",
+    "recipientAddress": "收款地址",
+    "transactionDetails": "交易详情",
+    "balance": "余额",
+    "slow": "慢",
+    "avg": "推荐",
+    "fast": "快",
+    "custom": "自定义",
+    "createWallet": "创建钱包",
+    "importWallet": "导入钱包",
+    "startBackup": "开始备份",
+    "backupSeedPhrase": "备份助记词",
+    "verifyMnemonic": "验证助记词",
+    "addAsset": "添加币种",
+    "tokenDetail": "币种详情",
+    "walletSettings": "钱包设置",
+    "editWalletName": "修改钱包名",
+    "viewPrivateKey": "查看私钥",
+    "backupWallet": "备份钱包",
+    "FaceFingerprintPay": "面容/指纹支付",
+    "passwordlessPayment": "免密支付",
+    "authorizationVerification": "授权检测",
+    "nodeSettings": "节点设置",
+    "deleteWallet": "删除钱包",
+    "confirmDeleteWallet": "确定要删除钱包吗？",
+    "confirmDeleteWalletDesc": "删除后，您可通过已备份的助记词重新导入钱包"
+  },
+  "common": {
+    "success": "成功",
+    "ecology": "生态",
+    "activity": "活动",
+    "swap": "兑换",
+    "video": "视频",
+    "asset": "资产",
+    "emptyTransaction": "暂无交易记录",
+    "empty": "暂无数据",
+    "confirm": "确定",
+    "cancel": "取消"
+  },
+  "dapp": {
+    "index": {
+      "recommendList": "推荐生态榜",
+      "seeAll": "查看全部",
+      "hotActivity": "活动热力榜",
+      "newEcosystems": "首发上新生态",
+      "youlike": "猜你喜欢",
+      "24h": "24时",
+      "6h": "6时",
+      "searchPlaceholder": "输入Dapp网站",
+      "more": "更多",
+      "aboutParapack": "关于 ParaPack",
+      "developerapplication": "开发者申请",
+      "reportQuestion": "报告问题",
+      "DeveloperOnboarding": "开发者入驻规则及协议",
+      "submit": "提交申请",
+      "termsAndRegulation": "条款与条例",
+      "reportAnIssue": "报告问题",
+      "listingApplication": "入驻申请",
+      "informationCenter": "信息中心",
+      "settings": "设置",
+      "announcementDetails": "公告详情",
+      "language": "语言"
     },
-    "asset": {
-        "backup_tips_write": "建议手写抄录",
-        "backup_tips_copy": "请勿复制保存",
-        "backup_tips_screenshot": "请勿截屏保存",
-        "backup_tips": "请勿将助记词透露给任何人\n助记词一旦丢失，资产将无法恢复",
-        "backup_verify_tips": "请根据您抄写的助记词，按顺序选择填充",
-        "transfer": "转账",
-        "receipt": "收款",
-        "purchase": "购买",
-        "flash": "闪兑",
-        "myAssets": "我的资产",
-        "Backup": "去备份",
-        "Assets": "资产",
-        "details": "详情",
-        "swap": "去兑换",
-        "receive": "收款",
-        "send": "转账",
-        "all": "全部",
-        "received": "转入",
-        "sent": "转出",
-        "transferTitle": "转账",
-        "transferSuccess": "转账成功",
-        "transferAmount": "转账金额",
-        "recipientAccount": "收款账号",
-        "minerFee": "矿工费用",
-        "paymentAddress": "付款地址",
-        "recipientAddress": "收款地址",
-        "transactionDetails": "交易详情",
-        "balance": "余额",
-        "slow": "慢",
-        "avg": "推荐",
-        "fast": "快",
-        "custom": "自定义",
-        "createWallet": "创建钱包",
-        "importWallet": "导入钱包",
-        "startBackup": "开始备份",
-        "backupSeedPhrase": "备份助记词",
-        "verifyMnemonic": "验证助记词",
-        "addAsset": "添加币种",
-        "tokenDetail": "币种详情",
-        "walletSettings": "钱包设置",
-        "editWalletName": "修改钱包名",
-        "viewPrivateKey": "查看私钥",
-        "backupWallet": "备份钱包",
-        "FaceFingerprintPay": "面容/指纹支付",
-        "passwordlessPayment": "免密支付",
-        "authorizationVerification": "授权检测",
-        "nodeSettings": "节点设置",
-        "deleteWallet": "删除钱包",
-        "confirmDeleteWallet": "确定要删除钱包吗？",
-        "confirmDeleteWalletDesc": "删除后，您可通过已备份的助记词重新导入钱包"
-    },
-    "common": {
-        "success": "成功",
-        "ecology": "生态",
-        "activity": "活动",
-        "swap": "兑换",
-        "video": "视频",
-        "asset": "资产",
-        "emptyTransaction": "暂无交易记录",
-        "empty": "暂无数据",
-        "confirm": "确定",
-        "cancel": "取消"
-    },
-    "dapp": {
-        "index": {
-            "recommendList": "推荐生态榜",
-            "seeAll": "查看全部",
-            "hotActivity": "活动热力榜",
-            "newEcosystems": "首发上新生态",
-            "youlike": "猜你喜欢",
-            "24h": "24时",
-            "6h": "6时",
-            "searchPlaceholder": "输入Dapp网站",
-            "more": "更多",
-            "aboutParapack": "关于 ParaPack",
-            "developerapplication": "开发者申请",
-            "reportQuestion": "报告问题",
-            "DeveloperOnboarding": "开发者入驻规则及协议",
-            "submit": "提交申请",
-            "termsAndRegulation": "条款与条例",
-            "reportAnIssue": "报告问题",
-            "listingApplication": "入驻申请",
-            "informationCenter": "信息中心",
-            "settings": "设置",
-            "announcementDetails": "公告详情",
-            "language": "语言"
-        },
-        "setting": {
-            "myWallet": "我的钱包",
-            "lucky": "红包",
-            "airdrop": "空投",
-            "invite": "邀请",
-            "academy": "钱包学院",
-            "account": "账户",
-            "addressBook": "地址本",
-            "cloudWallet": "云钱包",
-            "activityNotifications": "活动通知",
-            "seedBackup": "备份助记词",
-            "securityAndPrivacy": "安全与隐私",
-            "activitiesIParticipatedIn": "我参与的活动",
-            "contactCustomerService": "联系客服",
-            "helpCenter": "帮助中心",
-            "joinUs": "加入我们",
-            "recruitAgents": "招募代理",
-            "globalCommunities": "全球社区",
-            "jobOpportunities": "工作机会"
-        }
-    },
-    "swap": {
-        "Swap": "交易",
-        "Market": "行情",
-        "LaunchPad": "LaunchPad",
-        "Sell": "卖出",
-        "Balance": "余额",
-        "Buy": "买入",
-        "Exchange": "兑换"
-    },
-    "screen": {
-        "Asset": {
-            "AddToken": {
-                "cancel": "取消",
-                "entryAssets": "首页资产",
-                "hotCurrency": "热门币种",
-                "deleteSuccessfully": "删除成功"
-            },
-            "BackupMnemonics": {
-                "errorDecodingMnemonics": "解析助记词时出错",
-                "iHaveBackedUp": "我已备份",
-                "writeInOrder": "请按顺序写下",
-                "twelveWords": "12个单词",
-                "saveSecureLocation": "并保存在安全的地方"
-            },
-            "CoinDetail": {
-                "activity": "活动",
-                "overview": "概览",
-                "tool": "工具",
-                "noTransactionRecord": "暂无交易记录",
-                "viewInBrowser": "在浏览器中查看",
-                "coinInformation": "币信息",
-                "tokenName": "代币名称",
-                "projectName": "项目名称",
-                "totalEmission": "总发行量",
-                "contractAddress": "合约地址",
-                "resources": "资源",
-                "blockExplorer": "区块浏览器"
-            },
-            "Collection": {
-                "receipt": "收款",
-                "scanQRPayment": "扫描二维码，向我支付",
-                "copyAddress": "复制地址",
-                "share": "分享"
-            },
-            "CreateWallet": {
-                "pleaseAgreeToTerms": "请同意条款",
-                "passwordMismatch": "密码不一致",
-                "setIdentityWalletName": "设置身份钱包名",
-                "caseLetters": "大小写字母",
-                "numbers": "数字",
-                "underline": "下划线",
-                "setPassword": "设置密码",
-                "notLessThanEightDigits": "不少于8位，至少包含1个字母和1个数字",
-                "confirmPassword": "确认密码",
-                "iHaveRead": "我已阅读并同意",
-                "userAgreement": "《用户协议》",
-                "and": "以及",
-                "privacyPolicy": "《隐私政策》"
-            },
-            "ImportWallet": {
-                "handleEachLineData": "处理每一行数据",
-                "chainExistsThisMnemonicWallet": "当前链已存在此助记词钱包",
-                "errorDecodingMnemonics": "解析助记词时出错",
-                "pleaseAgreeToTerms": "请同意条款",
-                "pleaseFillInMnemonic": "请填写助记词",
-                "passwordMismatch": "密码不一致",
-                "mnemonics": "助记词",
-                "inputMnemonicSeparator": "输入助记词，用空格做分隔",
-                "setIdentityWalletName": "设置身份钱包名",
-                "caseLetters": "大小写字母",
-                "numbers": "数字",
-                "underline": "下划线",
-                "setPassword": "设置密码",
-                "notLessThanEightDigits": "不少于8位，至少包含1个字母和1个数字",
-                "confirmPassword": "确认密码",
-                "iHaveRead": "我已阅读并同意",
-                "userAgreement": "《用户协议》",
-                "and": "以及",
-                "privacyPolicy": "《隐私政策》"
-            },
-            "SearchHistory": {
-                "cancel": "取消",
-                "transferOut": "转出",
-                "transferIn": "转入"
-            },
-            "SearchToken": {
-                "cancel": "取消",
-                "entryAssets": "首页资产"
-            },
-            "SettingScreen": {
-                "successfulModification": "修改成功",
-                "successfullyDeleted": "删除成功",
-                "modify": "修改",
-                "pleaseInputWalletName": "请输入钱包名称",
-                "confirm": "确定",
-                "privateKey": "私钥",
-                "copy": "复制",
-                "cancel": "取消"
-            },
-            "StartBackup": {
-                "startBackup": "开始备份",
-                "ifYourMobileIsLostOrDamaged": "如果您的手机丢失或损坏",
-                "paperPasswordIsYourOnlyWayToRetrieveTheWallet": "纸密码是你找回钱包的唯一途径",
-                "forSafetyDoNotTakeAScreenshot": "（安全起见，请不要截图形式）"
-            },
-            "Swap": {
-                "sellOut": "卖出",
-                "balance": "余额",
-                "exchange": "兑换",
-                "transaction": "交易",
-                "jumpToTheExchangeThatSupportsTheTransaction": "跳转到支持交易的交易所"
-            },
-            "TokenDetail": {
-                "transferOut": "转出",
-                "transferIn": "转入"
-            },
-            "TransferPayment": {
-                "about60Minutes": "约60分钟",
-                "about30Minutes": "约30Minutes",
-                "about10Minutes": "约10分钟",
-                "getTheFirstPieceOfData": "获取第一条数据",
-                "aboutMinutes": "约分钟",
-                "inputOrPasteWalletAddress": "输入或者黏贴钱包地址",
-                "inputCorrectTransferOutQuantity": "输入正确的转出数量",
-                "atLeast": "至少为"
-            },
-            "VerifyMnemonics": {
-                "eighth": "第8个",
-                "eleventh": "第11个",
-                "fourth": "第4个",
-                "generateRandomNumberBetween": "生成之间的随机数",
-                "digit": "第个",
-                "wrongOrderOfMnemonics": "助记词顺序有误",
-                "mnemonicsSaveSqlite": "助记词存sqlite",
-                "confirm": "确认"
-            }
-        },
-        "DApp": {
-            "DAppDetail": {
-                "know": "了解",
-                "goToExchange": "去兑换"
-            },
-            "DAppDetails": {
-                "completeTheTaskWithOneClick": "一键完成任务",
-                "cancelApplication": "取消申请",
-                "completeTasksOneByOne": "一项一项完成任务",
-                "post": "帖子",
-                "like": "喜欢",
-                "forward": "转发",
-                "747Join": "747人已加入"
-            },
-            "DeveloperApplication": {
-                "developerApplication": "开发者申请",
-                "needAudit": "需审核",
-                "needToSignADisclaimer": "需签署免责协议",
-                "developerContactEmail": "开发者联系邮箱",
-                "phone": "电话",
-                "telegram": "电报",
-                "project": "项目",
-                "applicationName": "应用名称",
-                "applicationFounderKYCandCorrespondingWhitePaper": "应用团队创始人kyc，及对应白皮书",
-                "tokenName": "Token名称",
-                "contractToken": "Token合约",
-                "tokenInformation": "Token上所信息",
-                "capitalInstitutionInformation": "资本机构信息",
-                "needToSignADisclaimerAndAgreement": "需签署免责声明及协议（平台免责，且有权下架）等法律文件"
-            },
-            "Parapack": {
-                "currentVersionIsLatest": "当前已是最新版本",
-                "SFPro": "苹方",
-                "simple": "简",
-                "regular": "常规体"
-            },
-            "ReportQuestion": {
-                "pageFlashback": "页面闪退",
-                "transactionProblem": "交易问题",
-                "operatingExperience": "操作体验",
-                "featureSuggestion": "功能建议",
-                "otherFeedback": "其他反馈",
-                "submitSuccessfully": "提交成功",
-                "iWantFeedback": "我要反馈",
-                "contactInformation": "联系方式",
-                "notePhoneNumberWeChat": "注：手机号、微信",
-                "pleaseLeaveAnyContactInformation": "请留下任意一个联系方式",
-                "submit": "提交"
-            },
-            "Review": {
-                "cancelApplication": "取消申请",
-                "materialsReview": "资料审核中",
-                "oncePassedWillNotifyByEmail": "审核通过后会以邮件形式通知"
-            },
-            "SearchDapp": {
-                "inputDAppWebsite": "输入Dapp网站",
-                "cancel": "取消"
-            },
-            "Setting": {
-                "successfulModification": "修改成功",
-                "successfullyDeleted": "删除成功",
-                "language": "语言",
-                "setLanguageVersion": "设置语言版本",
-                "userSettingsAgreement": "用户设置协议",
-                "privacyPolicy": "隐私协议",
-                "about": "关于",
-                "areYouSureToDeleteTheWallet": "确定要删除钱包吗？",
-                "afterDeletingYouCanReimportTheWalletThroughTheBackedUpMnemonic": "删除后，您可通过已备份的助记词重新导入钱包",
-                "confirm": "确定",
-                "pleaseInputWalletName": "请输入钱包名称",
-                "privateKey": "私钥",
-                "copy": "复制",
-                "cancel": "取消"
-            },
-            "Settings": {
-                "bindingSocialMedia": "绑定社交媒体",
-                "seeMore": "查看更多",
-                "BitgetContract": "Bitget合约",
-                "tradeOnTheMostPopularDecentralizedPlatformInTheGalaxy": "在银河系中最受欢迎的去中心化平台上交Settings"
-            },
-            "Submit": {
-                "cancelApplication": "取消申请",
-                "materialsReview": "资料审核中",
-                "oncePassedWillNotifyByEmail": "审核通过后会以邮件形式通知"
-            },
-            "Guide": {
-                "createNewWallet": "创建新钱包",
-                "firstUse": "第一次使用",
-                "importExistingWallet": "将已有钱包导入"
-            }
-        }
+    "setting": {
+      "myWallet": "我的钱包",
+      "lucky": "红包",
+      "airdrop": "空投",
+      "invite": "邀请",
+      "academy": "钱包学院",
+      "account": "账户",
+      "addressBook": "地址本",
+      "cloudWallet": "云钱包",
+      "activityNotifications": "活动通知",
+      "seedBackup": "备份助记词",
+      "securityAndPrivacy": "安全与隐私",
+      "activitiesIParticipatedIn": "我参与的活动",
+      "contactCustomerService": "联系客服",
+      "helpCenter": "帮助中心",
+      "joinUs": "加入我们",
+      "recruitAgents": "招募代理",
+      "globalCommunities": "全球社区",
+      "jobOpportunities": "工作机会"
     }
+  },
+  "swap": {
+    "Swap": "交易",
+    "Market": "行情",
+    "LaunchPad": "LaunchPad",
+    "Sell": "卖出",
+    "Balance": "余额",
+    "Buy": "买入",
+    "Exchange": "兑换"
+  },
+  "screen": {
+    "Asset": {
+      "AddToken": {
+        "cancel": "取消",
+        "entryAssets": "首页资产",
+        "hotCurrency": "热门币种",
+        "deleteSuccessfully": "删除成功"
+      },
+      "BackupMnemonics": {
+        "errorDecodingMnemonics": "解析助记词时出错",
+        "iHaveBackedUp": "我已备份",
+        "writeInOrder": "请按顺序写下",
+        "twelveWords": "12个单词",
+        "saveSecureLocation": "并保存在安全的地方"
+      },
+      "CoinDetail": {
+        "activity": "活动",
+        "overview": "概览",
+        "tool": "工具",
+        "noTransactionRecord": "暂无交易记录",
+        "viewInBrowser": "在浏览器中查看",
+        "coinInformation": "币信息",
+        "tokenName": "代币名称",
+        "projectName": "项目名称",
+        "totalEmission": "总发行量",
+        "contractAddress": "合约地址",
+        "resources": "资源",
+        "blockExplorer": "区块浏览器"
+      },
+      "Collection": {
+        "receipt": "收款",
+        "scanQRPayment": "扫描二维码，向我支付",
+        "copyAddress": "复制地址",
+        "share": "分享"
+      },
+      "CreateWallet": {
+        "pleaseAgreeToTerms": "请同意条款",
+        "passwordMismatch": "密码不一致",
+        "setIdentityWalletName": "设置身份钱包名",
+        "caseLetters": "大小写字母",
+        "numbers": "数字",
+        "underline": "下划线",
+        "setPassword": "设置密码",
+        "notLessThanEightDigits": "不少于8位，至少包含1个字母和1个数字",
+        "confirmPassword": "确认密码",
+        "iHaveRead": "我已阅读并同意",
+        "userAgreement": "《用户协议》",
+        "and": "以及",
+        "privacyPolicy": "《隐私政策》"
+      },
+      "ImportWallet": {
+        "handleEachLineData": "处理每一行数据",
+        "chainExistsThisMnemonicWallet": "当前链已存在此助记词钱包",
+        "errorDecodingMnemonics": "解析助记词时出错",
+        "pleaseAgreeToTerms": "请同意条款",
+        "pleaseFillInMnemonic": "请填写助记词",
+        "passwordMismatch": "密码不一致",
+        "mnemonics": "助记词",
+        "inputMnemonicSeparator": "输入助记词，用空格做分隔",
+        "setIdentityWalletName": "设置身份钱包名",
+        "caseLetters": "大小写字母",
+        "numbers": "数字",
+        "underline": "下划线",
+        "setPassword": "设置密码",
+        "notLessThanEightDigits": "不少于8位，至少包含1个字母和1个数字",
+        "confirmPassword": "确认密码",
+        "iHaveRead": "我已阅读并同意",
+        "userAgreement": "《用户协议》",
+        "and": "以及",
+        "privacyPolicy": "《隐私政策》"
+      },
+      "SearchHistory": {
+        "cancel": "取消",
+        "transferOut": "转出",
+        "transferIn": "转入"
+      },
+      "SearchToken": {
+        "cancel": "取消",
+        "entryAssets": "首页资产"
+      },
+      "SettingScreen": {
+        "successfulModification": "修改成功",
+        "successfullyDeleted": "删除成功",
+        "modify": "修改",
+        "pleaseInputWalletName": "请输入钱包名称",
+        "confirm": "确定",
+        "privateKey": "私钥",
+        "copy": "复制",
+        "cancel": "取消"
+      },
+      "StartBackup": {
+        "startBackup": "开始备份",
+        "ifYourMobileIsLostOrDamaged": "如果您的手机丢失或损坏",
+        "paperPasswordIsYourOnlyWayToRetrieveTheWallet": "纸密码是你找回钱包的唯一途径",
+        "forSafetyDoNotTakeAScreenshot": "（安全起见，请不要截图形式）"
+      },
+      "Swap": {
+        "sellOut": "卖出",
+        "balance": "余额",
+        "exchange": "兑换",
+        "transaction": "交易",
+        "jumpToTheExchangeThatSupportsTheTransaction": "跳转到支持交易的交易所"
+      },
+      "TokenDetail": {
+        "transferOut": "转出",
+        "transferIn": "转入"
+      },
+      "TransferPayment": {
+        "about60Minutes": "约60分钟",
+        "about30Minutes": "约30Minutes",
+        "about10Minutes": "约10分钟",
+        "getTheFirstPieceOfData": "获取第一条数据",
+        "aboutMinutes": "约分钟",
+        "inputOrPasteWalletAddress": "输入或者黏贴钱包地址",
+        "inputCorrectTransferOutQuantity": "输入正确的转出数量",
+        "atLeast": "至少为"
+      },
+      "VerifyMnemonics": {
+        "eighth": "第8个",
+        "eleventh": "第11个",
+        "fourth": "第4个",
+        "generateRandomNumberBetween": "生成之间的随机数",
+        "digit": "第个",
+        "wrongOrderOfMnemonics": "助记词顺序有误",
+        "mnemonicsSaveSqlite": "助记词存sqlite",
+        "confirm": "确认"
+      }
+    },
+    "DApp": {
+      "DAppDetail": {
+        "know": "了解",
+        "goToExchange": "去兑换"
+      },
+      "DAppDetails": {
+        "completeTheTaskWithOneClick": "一键完成任务",
+        "cancelApplication": "取消申请",
+        "completeTasksOneByOne": "一项一项完成任务",
+        "post": "帖子",
+        "like": "喜欢",
+        "forward": "转发",
+        "747Join": "747人已加入"
+      },
+      "DeveloperApplication": {
+        "developerApplication": "开发者申请",
+        "needAudit": "需审核",
+        "needToSignADisclaimer": "需签署免责协议",
+        "developerContactEmail": "开发者联系邮箱",
+        "phone": "电话",
+        "telegram": "电报",
+        "project": "项目",
+        "applicationName": "应用名称",
+        "applicationFounderKYCandCorrespondingWhitePaper": "应用团队创始人kyc，及对应白皮书",
+        "tokenName": "Token名称",
+        "contractToken": "Token合约",
+        "tokenInformation": "Token上所信息",
+        "capitalInstitutionInformation": "资本机构信息",
+        "needToSignADisclaimerAndAgreement": "需签署免责声明及协议（平台免责，且有权下架）等法律文件"
+      },
+      "Parapack": {
+        "currentVersionIsLatest": "当前已是最新版本",
+        "SFPro": "苹方",
+        "simple": "简",
+        "regular": "常规体"
+      },
+      "ReportQuestion": {
+        "pageFlashback": "页面闪退",
+        "transactionProblem": "交易问题",
+        "operatingExperience": "操作体验",
+        "featureSuggestion": "功能建议",
+        "otherFeedback": "其他反馈",
+        "submitSuccessfully": "提交成功",
+        "iWantFeedback": "我要反馈",
+        "contactInformation": "联系方式",
+        "notePhoneNumberWeChat": "注：手机号、微信",
+        "pleaseLeaveAnyContactInformation": "请留下任意一个联系方式",
+        "submit": "提交"
+      },
+      "Review": {
+        "cancelApplication": "取消申请",
+        "materialsReview": "资料审核中",
+        "oncePassedWillNotifyByEmail": "审核通过后会以邮件形式通知"
+      },
+      "SearchDapp": {
+        "inputDAppWebsite": "输入Dapp网站",
+        "cancel": "取消"
+      },
+      "Setting": {
+        "successfulModification": "修改成功",
+        "successfullyDeleted": "删除成功",
+        "language": "语言",
+        "setLanguageVersion": "设置语言版本",
+        "userSettingsAgreement": "用户设置协议",
+        "privacyPolicy": "隐私协议",
+        "about": "关于",
+        "areYouSureToDeleteTheWallet": "确定要删除钱包吗？",
+        "afterDeletingYouCanReimportTheWalletThroughTheBackedUpMnemonic": "删除后，您可通过已备份的助记词重新导入钱包",
+        "confirm": "确定",
+        "pleaseInputWalletName": "请输入钱包名称",
+        "privateKey": "私钥",
+        "copy": "复制",
+        "cancel": "取消"
+      },
+      "Settings": {
+        "bindingSocialMedia": "绑定社交媒体",
+        "seeMore": "查看更多",
+        "BitgetContract": "Bitget合约",
+        "tradeOnTheMostPopularDecentralizedPlatformInTheGalaxy": "在银河系中最受欢迎的去中心化平台上交Settings"
+      },
+      "Submit": {
+        "cancelApplication": "取消申请",
+        "materialsReview": "资料审核中",
+        "oncePassedWillNotifyByEmail": "审核通过后会以邮件形式通知"
+      },
+      "Guide": {
+        "createNewWallet": "创建新钱包",
+        "firstUse": "第一次使用",
+        "importExistingWallet": "将已有钱包导入"
+      }
+    }
+  }
 }
