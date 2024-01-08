@@ -10,7 +10,7 @@ interface DAppItemProps {
   styles?: any;
   contentStyles?: any;
   summary?: any;
-  coverPicture?: any;
+  miniCoverPicture?: any;
 }
 interface DAppItemsProps {
   avatar: string;
@@ -20,7 +20,7 @@ interface DAppItemsProps {
   styles?: any;
   contentStyles?: any;
   summary?: any;
-  coverPicture?: any;
+  miniCoverPicture?: any;
 }
 export const DAppItem = (props: DAppItemProps) => {
   const styles = useStyles();
@@ -29,7 +29,7 @@ export const DAppItem = (props: DAppItemProps) => {
   return (
     <TouchableOpacity style={[styles.container, props?.styles]} key={props.title} onPress={props?.onPress}>
       <View style={[styles.content, props?.contentStyles]}>
-        <Image source={{ uri: props.coverPicture }} style={styles.avatar} />
+        <Image source={{ uri: props.miniCoverPicture }} style={styles.avatar} />
         <View style={styles.rightBg}>
           <Text children={title} style={styles.title} numberOfLines={1} />
           <Text children={summary} style={styles.description} numberOfLines={1} />
@@ -79,7 +79,7 @@ export const DAppItems = (props: DAppItemsProps) => {
   return (
     <TouchableOpacity style={[styles.container, props?.styles]} key={props.title} onPress={props?.onPress}>
       <View style={[styles.content, props?.contentStyles]}>
-        <Image source={{ uri: props.coverPicture }} style={styles.avatar} />
+        <Image source={{ uri: props.miniCoverPicture }} style={styles.avatar} />
         <View style={styles.rightBg}>
           <Text children={title} style={styles.title} />
           <Text children={summary} style={styles.description} />

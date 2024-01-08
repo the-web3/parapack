@@ -50,11 +50,17 @@ export const Settings = (props: DAppProps) => {
       <StatusBar backgroundColor="transparent" translucent={true} />
       <View style={{ paddingHorizontal: 30, marginTop: 34 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-          <IconFont
-            name="a-11"
-            style={{ marginRight: 35, marginTop: 11, backgroundColor: '#F0F0FF', borderRadius: 44 }}
-            size={43}
-          />
+          <TouchableOpacity
+            onPress={() => {
+              props?.navigation.goBack();
+            }}
+          >
+            <IconFont
+              name="a-11"
+              style={{ marginRight: 35, marginTop: 11, backgroundColor: '#F0F0FF', borderRadius: 44 }}
+              size={43}
+            />
+          </TouchableOpacity>
           <View>
             <View
               style={{
@@ -127,9 +133,7 @@ export const Settings = (props: DAppProps) => {
           </View>
           <View style={styles.bg}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={styles.title}>
-                {t('settings.bindingSocialMedia')}
-              </Text>
+              <Text style={styles.title}>{t('settings.bindingSocialMedia')}</Text>
               <Text style={{ fontSize: 12, color: '#8C8C8C' }}>{t('settings.seeMore')}</Text>
             </View>
 

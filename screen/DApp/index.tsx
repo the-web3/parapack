@@ -19,6 +19,7 @@ import { Button, Input, Text } from '@rneui/themed';
 import IconFont from '@assets/iconfont';
 import { SwiperFlatList } from 'react-native-swiper-flatlist';
 import ReportBottom from '@components/ReportBottom';
+import { useFocusEffect } from '@react-navigation/native';
 
 const screenHeight = Dimensions.get('window').height;
 
@@ -41,16 +42,15 @@ export const DAppScreen = (props: DAppProps) => {
   const [dAppGroupLike, setDAppGroupLike] = useState<Record<string, any>>({});
   const [tags, setTags] = useState<string[]>([]);
   const [selectedTime, setSelectedTime] = useState('6h');
-
   useEffect(() => {
     rqDatas();
-  }, []);
+  }, [props?.language]);
 
   const rqDatas = async () => {
     try {
       const banners = await getBanners();
       setBanners(banners.data);
-      console.log('banners:', JSON.stringify(banners));
+      // console.log('banners:', JSON.stringify(banners));
 
       const dAppGroupRes = await getDAppGroup({
         pageNum: 1,
@@ -186,7 +186,8 @@ export const DAppScreen = (props: DAppProps) => {
               <TouchableOpacity
                 style={{ height: 140, width: width, borderRadius: 12 }}
                 onPress={() => {
-                  props?.navigation.navigate('DAppWebView', { params: { uri: item.url, title: item?.title } });
+                  // props?.navigation.navigate('DAppWebView', { params: { uri: item.url, title: item?.title } });
+                  props?.navigation.navigate('DAppDetail', { params: item.contentInfo });
                 }}
               >
                 <Image
@@ -281,7 +282,7 @@ export const DAppScreen = (props: DAppProps) => {
             {dAppGroup?.lists?.map((v, index) => (
               <TouchableOpacity style={style.recommendItem} onPress={() => onRecommendPress(v)} key={index}>
                 <View style={{ position: 'relative' }}>
-                  <Image source={{ uri: v.coverPicture }} style={{ height: 84, width: 84, borderRadius: 5 }} />
+                  <Image source={{ uri: v.miniCoverPicture }} style={{ height: 84, width: 84, borderRadius: 5 }} />
                   <IconFont name="medal" style={{ position: 'absolute', bottom: 0, right: 0 }} />
                 </View>
 

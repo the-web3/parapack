@@ -14,12 +14,11 @@ import SearchToken from '@screen/Asset/SearchToken';
 import SearchHistory from '@screen/Asset/SearchHistory';
 import ImportWallet from '@screen/Asset/ImportWallet';
 import Test from '@screen/Asset/Test';
-import i18next from 'i18next';
 const menus = [
   {
     name: 'tokenDetail',
     options: {
-      title: i18next.t('asset.tokenDetail'),
+      title: 'asset.tokenDetail',
       headerStyle: {
         backgroundColor: '#3251EA', // 设置导航条的背景颜色
         // borderBottomWidth: 0,
@@ -35,7 +34,7 @@ const menus = [
   {
     name: 'createWallet',
     options: {
-      title: i18next.t('asset.createWallet'),
+      title: 'asset.createWallet',
       headerShadowVisible: false,
     },
     component: CreateWallet, //（完成）
@@ -43,7 +42,7 @@ const menus = [
   {
     name: 'importWallet',
     options: {
-      title: i18next.t('asset.importWallet'),
+      title: 'asset.importWallet',
       headerShadowVisible: false,
     },
     component: ImportWallet, //（完成）
@@ -51,7 +50,7 @@ const menus = [
   {
     name: 'asset',
     options: {
-      title: i18next.t('asset.myAssets'),
+      title: 'asset.myAssets',
       headerShadowVisible: false,
     },
     component: Asset, //（差一部分）
@@ -59,7 +58,7 @@ const menus = [
   {
     name: 'startBackup',
     options: {
-      title: i18next.t('asset.startBackup'),
+      title: 'asset.startBackup',
       // headerShown: false
       headerShadowVisible: false,
     },
@@ -68,7 +67,7 @@ const menus = [
   {
     name: 'backupMnemonics',
     options: {
-      title: i18next.t('asset.backupSeedPhrase'),
+      title: 'asset.backupSeedPhrase',
       headerShadowVisible: false,
     },
     component: BackupMnemonics, //（完成）
@@ -77,7 +76,7 @@ const menus = [
   {
     name: 'transferPayment',
     options: {
-      title: i18next.t('asset.transferTitle'),
+      title: 'asset.transferTitle',
       headerShadowVisible: false,
     },
     component: TransferPayment, //（完成）
@@ -85,7 +84,7 @@ const menus = [
   {
     name: 'addToken',
     options: {
-      title: i18next.t('asset.addAsset'),
+      title: 'asset.addAsset',
       headerShown: false,
       headerShadowVisible: false,
     },
@@ -112,7 +111,7 @@ const menus = [
   {
     name: 'swap',
     options: {
-      title: i18next.t('asset.flash'),
+      title: 'asset.flash',
       headerShadowVisible: false,
     },
     component: Swap, //（完成）
@@ -120,7 +119,7 @@ const menus = [
   {
     name: 'verifyMnemonics',
     options: {
-      title: i18next.t('asset.verifyMnemonic'),
+      title: 'asset.verifyMnemonic',
       headerShadowVisible: false,
     },
     component: VerifyMnemonics, //（完成）
@@ -128,7 +127,7 @@ const menus = [
   {
     name: 'coinDetail',
     options: {
-      title: i18next.t('asset.tokenDetail'),
+      title: 'asset.tokenDetail',
       headerShadowVisible: false,
     },
     component: CoinDetail,
@@ -136,7 +135,7 @@ const menus = [
   {
     name: 'settingScreen',
     options: {
-      title: i18next.t('asset.walletSettings'),
+      title: 'asset.walletSettings',
       headerShadowVisible: false,
     },
     component: SettingScreen,

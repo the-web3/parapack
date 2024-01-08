@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, Dimensions } from 'react-native';
 import moment from 'moment';
 import RenderHTML from 'react-native-render-html';
 import { makeStyles } from '@rneui/themed';
@@ -11,6 +11,7 @@ interface DAppProps {
 
 const NewsScreen = (props: DAppProps) => {
   const styles = useStyles(props);
+  const { width } = Dimensions.get('window');
   const [notice] = useState<{
     id: number;
     title: string;
@@ -36,7 +37,7 @@ const NewsScreen = (props: DAppProps) => {
             <Image style={styles.image} source={{ uri: notice.miniCoverPicture }} />
           </View>
           <View>
-            <RenderHTML contentWidth={320} source={{ html: notice.content }} />
+            <RenderHTML contentWidth={width - 32} source={{ html: notice.content }} />
           </View>
         </View>
       </View>
@@ -48,10 +49,9 @@ const useStyles = makeStyles((theme, props: DAppProps) => {
   return {
     wrap: { backgroundColor: theme.colors.white },
     container: {
-      flex: 1,
-      padding: 10,
-      marginLeft: 15,
-      marginBottom: 40.5,
+      // flex: 1,
+      paddingHorizontal: 16,
+      overflow: 'hidden',
     },
     noticeContainer: {
       color: 'black',
