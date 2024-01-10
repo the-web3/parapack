@@ -253,7 +253,7 @@ const Asset = (props: Props) => {
                       go: item.go,
                     });
                   } else {
-                    showToast('暂不支持此功能');
+                    showToast(t('common.notSupport'));
                   }
                 }}
               >

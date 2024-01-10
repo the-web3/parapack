@@ -93,11 +93,22 @@ export const DAppDetail = (props: DAppDetailParam) => {
       showToast('not support');
       return;
     }
-    props?.navigation.navigate('DAppWebView', {
+    console.log(111111, {
       params: {
         // uri: 'https://app.uniswap.org',
         // // uri: 'https://cryptohuntsman.titanex.co',
         uri: dAppProps.url,
+        title: dAppProps?.title,
+        chainId: dAppProps?.chainListId,
+        // chainId: 137,
+        wallet_uuid,
+      },
+    });
+    props?.navigation.navigate('DAppWebView', {
+      params: {
+        // uri: 'https://app.uniswap.org',
+        uri: 'https://cryptohuntsman.titanex.co',
+        // uri: dAppProps.url,
         title: dAppProps?.title,
         chainId: dAppProps?.chainListId,
         // chainId: 137,
@@ -129,6 +140,7 @@ export const DAppDetail = (props: DAppDetailParam) => {
     }
     return (JSON.parse(dAppProps?.medium ?? '[]') ?? []).filter((v: any) => v.url !== '');
   }, [dAppProps]);
+  console.log(111111, medium);
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -236,9 +248,7 @@ export const DAppDetail = (props: DAppDetailParam) => {
         {dAppProps?.banners?.length > 0 && (
           <View
             style={{
-              height: 140,
-              width: width - 40,
-              marginHorizontal: 20,
+              flex: 1,
               marginTop: 16,
             }}
           >
@@ -247,16 +257,17 @@ export const DAppDetail = (props: DAppDetailParam) => {
               autoplayDelay={2}
               autoplayLoop
               data={dAppProps?.banners}
+              style={{ height: 140 }}
               renderItem={({ item }) => (
                 <TouchableOpacity
-                  style={{ height: 140, width: width, borderRadius: 12 }}
+                  style={{ height: 140, justifyContent: 'center', flex: 1, marginHorizontal: 20 }}
                   onPress={() => {
                     props?.navigation.navigate('DAppWebView', { params: { uri: item.url, title: item?.title } });
                   }}
                 >
                   <Image
                     source={{ uri: item?.img }}
-                    style={{ width: width - 40, height: '100%', resizeMode: 'contain', borderRadius: 12 }}
+                    style={{ width: width - 40, height: '100%', resizeMode: 'cover', borderRadius: 12 }}
                   />
                 </TouchableOpacity>
               )}

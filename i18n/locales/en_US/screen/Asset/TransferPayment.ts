@@ -3,8 +3,8 @@ export default {
   "about30Minutes": "Approximately 30 minutes",
   "about10Minutes": "Approximately 10 minutes",
   "getTheFirstPieceOfData": "Get the first piece of data",
-  "aboutMinutes": "Approximately minutes",
+  "aboutMinutes": "min {{time}} minutes",
   "inputOrPasteWalletAddress": "Input or paste wallet address",
   "inputCorrectTransferOutQuantity": "Input the correct transfer-out quantity",
-  "atLeast": "At least",
+  "atLeast": "at least"
 };

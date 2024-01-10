@@ -1,6 +1,8 @@
 {
   "activity": {
-    "searchAbout": "搜索你想要了解的活动..."
+    "searchAbout": "搜索你想要了解的活动...",
+    "join": "进入活动",
+    "entry": "完成"
   },
   "asset": {
     "backup_tips_write": "建议手写抄录",
@@ -64,7 +66,8 @@
     "emptyTransaction": "暂无交易记录",
     "empty": "暂无数据",
     "confirm": "确定",
-    "cancel": "取消"
+    "cancel": "取消",
+    "notSupport": "暂不支持此功能"
   },
   "dapp": {
     "index": {
@@ -232,7 +235,7 @@
         "about30Minutes": "约30Minutes",
         "about10Minutes": "约10分钟",
         "getTheFirstPieceOfData": "获取第一条数据",
-        "aboutMinutes": "约分钟",
+        "aboutMinutes": "约{{time}}分钟",
         "inputOrPasteWalletAddress": "输入或者黏贴钱包地址",
         "inputCorrectTransferOutQuantity": "输入正确的转出数量",
         "atLeast": "至少为"
@@ -264,13 +267,14 @@
       },
       "DeveloperApplication": {
         "developerApplication": "开发者申请",
-        "needAudit": "需审核",
+        "needAudit": "需审核, 需KYC，需签署免责协议",
         "needToSignADisclaimer": "需签署免责协议",
         "developerContactEmail": "开发者联系邮箱",
         "phone": "电话",
         "telegram": "电报",
         "project": "项目",
         "applicationName": "应用名称",
+        "applicationWebsite": "项目/应用官网",
         "applicationFounderKYCandCorrespondingWhitePaper": "应用团队创始人kyc，及对应白皮书",
         "tokenName": "Token名称",
         "contractToken": "Token合约",
@@ -337,6 +341,32 @@
         "createNewWallet": "创建新钱包",
         "firstUse": "第一次使用",
         "importExistingWallet": "将已有钱包导入"
+      },
+      "DeveloperOnboarding": {
+        "title": "ParaPack钱包开发者注入规则及协议",
+        "first": "1. 定义",
+        "first1": "1.1. ParaPack钱包：指由公司开发和维护的加密货币钱包应用程序，包括但不限于“ParaPack”钱包。",
+        "first2": "1.2. 开发者：指希望入驻ParaPack钱包并在其平台上开发或部署应用程序、智能合约或其他相关内容的个人或实体。",
+        "second": "2. 入驻申请",
+        "second1": "2.1. 条件：开发者须满足公司规定的入驻条件，并提交相关材料和信息。",
+        "second2": "2.2. 审批： 公司将酌情批准或拒绝开发者的入驻申请。公司有权自行决定批准或拒绝任何入驻申请，无需提供理由。",
+        "third": "3. 开发者注入 ",
+        "third1": "3.1. 条款：一旦入驻申请被批准，开发者可以向ParaPack钱包注入其开发的应用程序或内容。",
+        "third2": "3.2. 安全性：开发者必须确保其应用程序或内容不包含恶意代码、病毒、木马或其他可能对ParaPack钱包用户造成损害的内容。",
+        "third3": "3.3. 更新和维护：开发者有责任及时更新其应用程序或内容，以确保其与ParaPack钱包的最新版本兼容，并解决可能的安全漏洞或问题。",
+        "fourth": "4. 安全性和合规性",
+        "fourth1": "4.1. 法律遵从：开发者必须遵守所有适用的法律法规，并确保其应用程序或内容不涉及非法活动、侵犯知识产权或其他违法行为。",
+        "fourth2": "4.2. 安全审查：公司有权随时对开发者的应用程序或内容进行安全审查，以确保其不对ParaPack钱包的安全性产生不利影响。",
+        "fifth": "5. 免责声明",
+        "fifth1": "公司对于开发者注入的应用程序或内容不承担任何责任，包括但不限于直接或间接的损失或损害。开发者应自行承担其应用程序或内容可能带来的风险。",
+        "sixth": "6. 终止",
+        "sixth1": "公司有权随时终止开发者的入驻资格，无需提前通知，如果开发者违反了本协议的任何规定或公司认为其应用程序或内容对ParaPack钱包或其用户构成威胁。",
+        "seventh": "7. 修改",
+        "seventh1": " 公司有权随时修改本协议的内容，修改后的协议将在公司网站或ParaPack钱包内发布。开发者应定期查看协议变更。",
+        "eighth": "8. 适用法律",
+        "eighth1": "本协议受[您所在地区]法律管辖，并应按其解释和执行。",
+        "ninth": "9. 生效",
+        "ninth1": "本协议自[日期]起生效，自开发者首次入驻ParaPack钱包起生效。"
       }
     }
   }

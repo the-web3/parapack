@@ -112,18 +112,19 @@ const DeveloperApplication = (props: DAppProps) => {
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      <Text style={styles.text}>开发者申请</Text>
-      <Text style={styles.labels}>需审核， 需 KYC， 需签署 免责协议</Text>
-      <Text style={[styles.label, { marginTop: 20 }]}>开发者联系邮箱</Text>
+      <Text style={styles.text}>{t('developerApplication.developerApplication')}</Text>
+      <Text style={styles.labels}>{t('developerApplication.needAudit')}</Text>
+      <Text style={[styles.label, { marginTop: 20 }]}>{t('developerApplication.developerContactEmail')}</Text>
       <TextInput style={styles.input} placeholderTextColor={theme.colors.grey1} onChangeText={setEmail} value={email} />
       <View style={styles.divider} />
-      <Text style={styles.label}>电话 (+082)</Text>
+      <Text style={styles.label}>{t('developerApplication.phone')} (+082)</Text>
       <TextInput style={styles.input} placeholderTextColor={theme.colors.grey1} onChangeText={setPhone} value={phone} />
       <View style={styles.divider} />
       <View>
         <Text style={styles.label}>
           {t('developerApplication.telegram')}
-          (Telegram)</Text>
+          (Telegram)
+        </Text>
         <TextInput
           style={styles.input}
           placeholderTextColor={theme.colors.grey1}
@@ -145,8 +146,7 @@ const DeveloperApplication = (props: DAppProps) => {
       <View style={styles.divider} />
 
       <Text style={styles.label}>
-        {t('developerApplication.project')}/
-        {t('developerApplication.applicationName')}
+        {t('developerApplication.project')}/{t('developerApplication.applicationName')}
       </Text>
       <TextInput
         style={styles.input}
@@ -157,8 +157,7 @@ const DeveloperApplication = (props: DAppProps) => {
       <View style={styles.divider} />
 
       <Text style={styles.label}>
-        {t('developerApplication.project')}/
-        {t('developerApplication.applicationName')}
+        {t('developerApplication.project')}/{t('developerApplication.applicationName')}
       </Text>
       <TextInput
         style={styles.input}
@@ -167,13 +166,11 @@ const DeveloperApplication = (props: DAppProps) => {
         value={domain}
       />
       <View style={styles.divider} />
-      <Text style={styles.label}>项目/应用官网</Text>
+      <Text style={styles.label}>{t('developerApplication.applicationWebsite')}</Text>
       <TextInput style={styles.input} placeholderTextColor={theme.colors.grey1} onChangeText={setType} value={type} />
       <View style={styles.divider} />
 
-      <Text style={styles.label}>
-        {t('developerApplication.applicationFounderKYCandCorrespondingWhitePaper')}
-      </Text>
+      <Text style={styles.label}>{t('developerApplication.applicationFounderKYCandCorrespondingWhitePaper')}</Text>
       <TextInput
         style={styles.input}
         placeholderTextColor={theme.colors.grey1}
@@ -182,13 +179,11 @@ const DeveloperApplication = (props: DAppProps) => {
       />
       <View style={styles.divider} />
 
-      <Text style={styles.label}>Token名称</Text>
+      <Text style={styles.label}>{t('developerApplication.tokenName')}</Text>
       <TextInput style={styles.input} placeholderTextColor={theme.colors.grey1} onChangeText={setToken} value={token} />
       <View style={styles.divider} />
 
-      <Text style={styles.label}>
-        {t('developerApplication.contractToken')}
-      </Text>
+      <Text style={styles.label}>{t('developerApplication.contractToken')}</Text>
       <TextInput
         style={styles.input}
         placeholderTextColor={theme.colors.grey1}
@@ -197,9 +192,7 @@ const DeveloperApplication = (props: DAppProps) => {
       />
       <View style={styles.divider} />
 
-      <Text style={styles.label}>
-        {t('developerApplication.tokenInformation')}
-      </Text>
+      <Text style={styles.label}>{t('developerApplication.tokenInformation')}</Text>
       <TextInput
         style={styles.input}
         placeholderTextColor={theme.colors.grey1}
@@ -208,9 +201,7 @@ const DeveloperApplication = (props: DAppProps) => {
       />
       <View style={styles.divider} />
 
-      <Text style={styles.label}>
-        {t('developerApplication.capitalInstitutionInformation')}
-      </Text>
+      <Text style={styles.label}>{t('developerApplication.capitalInstitutionInformation')}</Text>
       <TextInput
         style={styles.input}
         placeholderTextColor={theme.colors.grey1}
@@ -219,9 +210,7 @@ const DeveloperApplication = (props: DAppProps) => {
       />
       <View style={styles.divider} />
 
-      <Text style={styles.labels}>*
-        {t('developerApplication.needToSignADisclaimerAndAgreement')}
-      </Text>
+      <Text style={styles.labels}>*{t('developerApplication.needToSignADisclaimerAndAgreement')}</Text>
       <View style={{ height: 20 }} />
       <View style={{ paddingBottom: isSmallScreen ? 30 : 50 }}>
         <Button onPress={() => onConfirm()}>

@@ -18,6 +18,7 @@ export const DAppWebView = (props: DAppWebViewProps) => {
   }, [props]);
 
   const onMessage = (event: any) => {
+    console.log(898989);
     onBridgeMessage(event, webviewBridge, propsData);
   };
 

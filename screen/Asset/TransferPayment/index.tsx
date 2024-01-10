@@ -405,7 +405,7 @@ const TransferPayment = (props: any) => {
               // const price = symbolPrice.times(gasRes.data.symbolRate);
               return {
                 ...item,
-                time: `${gasRes.data[`${item?.type}Time`]}${t(`transferPayment.aboutMinutes`)}`,
+                time: `${t(`transferPayment.aboutMinutes`, { time: gasRes.data[`${item?.type}Time`] })}`,
                 usdtPrice: `${gasRes.data[`${item?.type}EthValue`]}`,
                 price: `${gasRes.data[`${item?.type}EthAmount`]}`,
               };

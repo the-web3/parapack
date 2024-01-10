@@ -32,6 +32,7 @@ import searchDapp from './screen/DApp/SearchDapp';
 import setting from './screen/DApp/Setting';
 import settings from './screen/DApp/Settings';
 import submit from './screen/DApp/Submit';
+import developerOnboarding from './screen/DApp/DeveloperOnboarding';
 
 export default {
   common,
@@ -68,4 +69,5 @@ export default {
   setting,
   settings,
   submit,
+  developerOnboarding,
 };

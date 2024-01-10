@@ -74,7 +74,7 @@
     "react-native-ui-lib": "^7.5.2",
     "react-native-vector-icons": "^9.2.0",
     "react-native-view-shot": "^3.7.0",
-    "react-native-webview": "^13.2.2",
+    "react-native-webview": "^13.6.4",
     "react-redux": "^9.0.4",
     "readable-stream": "^4.4.0",
     "redux": "^5.0.1",

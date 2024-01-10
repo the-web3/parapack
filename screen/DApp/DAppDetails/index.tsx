@@ -11,7 +11,6 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { DAppItem } from '../Components/DAppItem';
 import { useTranslation } from 'react-i18next';
 
-
 interface DAppProps {
   navigation?: any;
   mode?: string;
@@ -70,7 +69,7 @@ export const DAppDetails = (props: DAppProps) => {
         tag: 'hot',
       });
       setDAppGroupHot(dAppGroupHotRes.data);
-    } catch (e) { }
+    } catch (e) {}
   };
 
   const [dAppGroupHot, setDAppGroupHot] = useState<Record<string, any>>({});
@@ -130,7 +129,7 @@ export const DAppDetails = (props: DAppProps) => {
           key={0}
           style={styles.banner}
           autoplay={true}
-          pageWidth={width - 30}
+          pageWidth={width - 40}
           itemSpacings={0}
           containerMarginHorizontal={0}
           initialPage={0}
@@ -142,7 +141,7 @@ export const DAppDetails = (props: DAppProps) => {
               source={{ uri: v.img }}
               style={{
                 height: 150,
-                width: width - 30,
+                width: width - 40,
                 borderRadius: 10,
               }}
             />
@@ -204,7 +203,7 @@ export const DAppDetails = (props: DAppProps) => {
           onPress={onPress}
         >
           <Text style={[styles.buttonText, { fontSize: fontTextSize, fontWeight: 'bold', color: '#fff' }]}>
-            {t('dAppDetails.cancelApplication')}
+            {t('activity.searchAbout')}
           </Text>
         </TouchableOpacity>
         <Text style={{ fontWeight: 'bold', fontSize: 18, color: 'black', marginLeft: 25, marginBottom: 16 }}>
@@ -218,9 +217,7 @@ export const DAppDetails = (props: DAppProps) => {
             <TouchableOpacity style={{ marginLeft: 10 }}>
               <FontAwesome name="share" size={20} color="#00ba7c" />
             </TouchableOpacity>
-            <Text style={{ marginLeft: 5, color: '#03bb7e' }}>{
-              t('dAppDetails.forward')
-            }</Text>
+            <Text style={{ marginLeft: 5, color: '#03bb7e' }}>{t('dAppDetails.forward')}</Text>
           </View>
         </View>
         {/* like */}
@@ -231,9 +228,7 @@ export const DAppDetails = (props: DAppProps) => {
             <TouchableOpacity style={{ marginLeft: 10 }}>
               <FontAwesome name="heart" size={20} color="#f9187f" />
             </TouchableOpacity>
-            <Text style={{ marginLeft: 5, color: '#f9187f' }}>{
-              t('dAppDetails.like')
-            }</Text>
+            <Text style={{ marginLeft: 5, color: '#f9187f' }}>{t('dAppDetails.like')}</Text>
           </View>
         </View>
         {/* follow */}

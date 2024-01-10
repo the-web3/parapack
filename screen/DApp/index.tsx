@@ -19,7 +19,6 @@ import { Button, Input, Text } from '@rneui/themed';
 import IconFont from '@assets/iconfont';
 import { SwiperFlatList } from 'react-native-swiper-flatlist';
 import ReportBottom from '@components/ReportBottom';
-import { useFocusEffect } from '@react-navigation/native';
 
 const screenHeight = Dimensions.get('window').height;
 
@@ -172,9 +171,7 @@ export const DAppScreen = (props: DAppProps) => {
       <ScrollView contentContainerStyle={{ paddingBottom: 20, minHeight: 200 }} showsVerticalScrollIndicator={false}>
         <View
           style={{
-            height: 140,
-            width: width - 40,
-            marginHorizontal: 20,
+            flex: 1,
           }}
         >
           <SwiperFlatList
@@ -182,22 +179,35 @@ export const DAppScreen = (props: DAppProps) => {
             autoplayDelay={2}
             autoplayLoop
             data={banners.lists}
+            style={{ height: 140 }}
             renderItem={({ item }) => (
               <TouchableOpacity
-                style={{ height: 140, width: width, borderRadius: 12 }}
+                style={{
+                  height: 140,
+                  justifyContent: 'center',
+                  flex: 1,
+                  marginHorizontal: 20,
+                }}
                 onPress={() => {
-                  // props?.navigation.navigate('DAppWebView', { params: { uri: item.url, title: item?.title } });
                   props?.navigation.navigate('DAppDetail', { params: item.contentInfo });
                 }}
               >
                 <Image
                   source={{ uri: item?.img }}
-                  style={{ width: width - 40, height: '100%', resizeMode: 'contain', borderRadius: 12 }}
+                  style={{
+                    width: width - 40,
+                    resizeMode: 'cover',
+                    height: '100%',
+                    flex: 1,
+                    borderRadius: 12,
+                    // resizeMode: 'contain',
+                  }}
                 />
               </TouchableOpacity>
             )}
           />
         </View>
+
         <View style={style.notice}>
           <Button
             icon={<IconFont name="volume" size={9} />}
@@ -218,7 +228,18 @@ export const DAppScreen = (props: DAppProps) => {
                     props?.navigation.navigate('News', { ...item });
                   }}
                 >
-                  <Text style={{ color: '#8c8c8c', fontSize: 12, lineHeight: 26 }} numberOfLines={1}>
+                  <Text
+                    style={{
+                      color: '#8c8c8c',
+                      width: width - 40,
+                      // resizeMode: 'cover',
+                      height: '100%',
+                      flex: 1,
+                      borderRadius: 12,
+                      resizeMode: 'contain',
+                    }}
+                    numberOfLines={1}
+                  >
                     {item.summary}
                   </Text>
                 </TouchableOpacity>

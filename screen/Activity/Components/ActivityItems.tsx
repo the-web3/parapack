@@ -3,6 +3,7 @@ import React from 'react';
 import { Button, makeStyles } from '@rneui/themed';
 import IconFont from '@assets/iconfont';
 import moment from 'moment';
+import { useTranslation } from 'react-i18next';
 
 interface ActivityItemsProps {
   item: Record<string, any>;
@@ -10,6 +11,7 @@ interface ActivityItemsProps {
 }
 
 export const ActivityItems = ({ item, navigation }: ActivityItemsProps) => {
+  const { t } = useTranslation();
   const styles = useStyles();
   return (
     <View style={styles.card}>
@@ -42,7 +44,7 @@ export const ActivityItems = ({ item, navigation }: ActivityItemsProps) => {
             navigation.navigate('DAppDetails', { params: item });
           }}
         >
-          进入活动
+          {t('activity.join')}
         </Button>
       </View>
     </View>

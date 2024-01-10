@@ -199,8 +199,8 @@ const ImportWallet = (props: Props) => {
                 };
               });
             }}
-          // errorStyle={{color: 'red'}}
-          // errorMessage="ENTER A VALID ERROR HERE"
+            // errorStyle={{color: 'red'}}
+            // errorMessage="ENTER A VALID ERROR HERE"
           />
         </View>
         <View style={{ flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'center' }}>
@@ -232,13 +232,9 @@ const ImportWallet = (props: Props) => {
           </TouchableOpacity>
 
           <Text>
-            {t('importWallet.iHaveRead')} <Text style={styles.protocol}>
-              {t('importWallet.userAgreement')}
-            </Text>
+            {t('importWallet.iHaveRead')} <Text style={styles.protocol}>{t('importWallet.userAgreement')}</Text>
             {t('importWallet.and')}
-            <Text style={styles.protocol}>
-              {t('importWallet.privacyPolicy')}
-            </Text>
+            <Text style={styles.protocol}>{t('importWallet.privacyPolicy')}</Text>
           </Text>
         </View>
       </SafeAreaView>
