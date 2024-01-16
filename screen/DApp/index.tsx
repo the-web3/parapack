@@ -47,53 +47,59 @@ export const DAppScreen = (props: DAppProps) => {
 
   const rqDatas = async () => {
     try {
-      const banners = await getBanners();
-      setBanners(banners.data);
-      // console.log('banners:', JSON.stringify(banners));
+      getBanners().then((res) => {
+        // console.log('banners:', JSON.stringify(banners));
+        setBanners(res.data);
+      });
 
-      const dAppGroupRes = await getDAppGroup({
+      getDAppGroup({
         pageNum: 1,
         pageSize: 10,
         symbol: 'eth',
         tag: 'recommend',
+      }).then((res) => {
+        setDAppGroup(res.data);
       });
-      setDAppGroup(dAppGroupRes.data);
 
-      const dAppGroupLikeRes = await getDAppGroup({
+      getDAppGroup({
         pageNum: 1,
         pageSize: 10,
         symbol: 'eth',
         tag: 'guess',
+      }).then((res) => {
+        setDAppGroupLike(res.data);
       });
-      setDAppGroupLike(dAppGroupLikeRes.data);
 
-      const dAppGroupHotRes = await getDAppGroup({
+      getDAppGroup({
         pageNum: 1,
         pageSize: 10,
         symbol: 'eth',
         tag: 'hot',
+      }).then((res) => {
+        setDAppGroupHot(res.data);
       });
-      setDAppGroupHot(dAppGroupHotRes.data);
 
-      const dAppGroupNewRes = await getDAppGroup({
+      getDAppGroup({
         pageNum: 1,
         pageSize: 10,
         symbol: 'eth',
         tag: 'new',
+      }).then((res) => {
+        setDAppGroupNew(res.data);
       });
-      setDAppGroupNew(dAppGroupNewRes.data);
 
-      const noticesRes = await getNotices({
+      getNotices({
         pageNum: 1,
         pageSize: 10,
-        symbol: 'eth',
+      }).then((res) => {
+        // console.log('noticesRes', JSON.stringify(noticesRes));
+        setNotices(res.data);
       });
-      // console.log('noticesRes', JSON.stringify(noticesRes));
-      setNotices(noticesRes.data);
 
-      const tagsRes = await getTags();
-      // console.log('tagRes:', JSON.stringify(tagsRes.data));
-      setTags(tagsRes.data);
+      getTags().then((res) => {
+        // console.log('tagRes:', JSON.stringify(tagsRes.data));
+        setTags(res.data);
+      });
     } catch (e) {}
   };
 

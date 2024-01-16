@@ -9,6 +9,7 @@ import { DeviceBalanceTokenList, getDeviceBalance } from '@api/wallet';
 import { getUniqueId } from 'react-native-device-info';
 import { getData, storeData } from '@common/utils/storage';
 import { useTranslation } from 'react-i18next';
+import SearchInput from '@components/SearchInput';
 type Props = {
   fullWidth?: boolean;
   navigation: any;
@@ -17,9 +18,8 @@ const SearchToken = (props: Props) => {
   const { t } = useTranslation();
   const styles = useStyles(props);
   const { theme }: { theme: CustomTheme<CustomColors> } = useTheme();
-  const [search, setSearch] = useState('');
   const [tokenList, setTokenList] = useState<DeviceBalanceTokenList>({});
-  const [alltokenList, setAllTokenList] = useState<DeviceBalanceTokenList>({});
+  const [allTokenList, setAllTokenList] = useState<DeviceBalanceTokenList>({});
 
   const initList = async (params = {}) => {
     const [device_id, wallet_uuid] = await Promise.all([getUniqueId(), getData('wallet_uuid')]);
@@ -51,11 +51,11 @@ const SearchToken = (props: Props) => {
     const newObj =
       symbol === ''
         ? {
-            ...alltokenList,
+            ...allTokenList,
           }
         : {
-            ...alltokenList,
-            wallet_balance: (tokenList?.wallet_balance || []).filter((item) => {
+            ...allTokenList,
+            wallet_balance: (allTokenList?.wallet_balance || []).filter((item) => {
               const regex = new RegExp(symbol, 'i');
               const isMatch = regex.test(item.symbol);
               return isMatch;
@@ -64,48 +64,22 @@ const SearchToken = (props: Props) => {
     setTokenList(newObj);
   };
 
-  const handleSearchDebounced = useCallback(_.debounce(handleSearch, 500), []);
+  const handleSearchDebounced = useCallback(_.debounce(handleSearch, 1000), []);
 
   return (
     <SafeAreaView style={{ backgroundColor: '#F6F7FC' }}>
       <StatusBar backgroundColor={'#F6F7FC'} barStyle={`dark-content`} translucent={false} />
       <View style={styles.top}>
-        <View style={{ flexDirection: 'row-reverse', alignItems: 'center' }}>
-          <SearchBar
-            platform="ios"
-            containerStyle={{
-              backgroundColor: '#F6F7FC',
-            }}
-            inputContainerStyle={{
-              height: 22,
-              borderRadius: 20,
-              backgroundColor: 'rgba(255, 255, 255, 1)',
-              alignItems: 'center',
-            }}
-            inputStyle={{
-              height: 22,
-            }}
-            searchIcon={<IconFont name="a-110" size={16} />}
-            cancelButtonTitle={t('searchToken.cancel') || ''}
-            leftIconContainerStyle={{}}
-            rightIconContainerStyle={{}}
-            loadingProps={{}}
-            onChangeText={(newVal) => {
-              setSearch(newVal);
-              handleSearchDebounced(newVal);
-            }}
-            placeholder=""
-            placeholderTextColor="#888"
-            value={search}
-          />
-          <TouchableOpacity onPress={goToAsset}>
-            <Icon name="left" style={{ color: '#000', backgroundColor: '#F6F7FC', fontSize: 16 }} />
-          </TouchableOpacity>
-        </View>
+        <SearchInput
+          onChangeText={(newVal) => {
+            handleSearchDebounced(newVal);
+          }}
+          placeholder={''}
+          onCancel={goToAsset}
+        />
         <TouchableOpacity onPress={goToAsset}>
           <View style={styles.assetInfo}>
             <Text style={{ color: '#434343', fontSize: 14 }}>{t('asset.homeAssets')}</Text>
-            <Icon name="right" color={'#434343'} size={14} />
           </View>
         </TouchableOpacity>
       </View>

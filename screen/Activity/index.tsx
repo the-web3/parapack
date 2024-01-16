@@ -23,11 +23,13 @@ const Activity = ({ navigation }) => {
         ...params,
       });
       setActivity(activityRes.data);
-    } catch (e) { }
+    } catch (e) {}
   };
+
   useEffect(() => {
     rqDatas();
   }, []);
+
   const handleSearch = (symbol: string) => {
     rqDatas({
       symbol,

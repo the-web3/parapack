@@ -721,13 +721,7 @@ export const addToken = async (params: {
       mnemonic,
       password: '',
     });
-    console.log(44444, params, {
-      chain: params.symbol.toLowerCase(),
-      seedHex: seed.toString('hex'),
-      index: 0,
-      receiveOrChange: 0,
-      network: 'mainnet',
-    });
+    console.log(44444, params);
     const account = CreateAddress({
       chain: params.chain,
       seedHex: seed.toString('hex'),

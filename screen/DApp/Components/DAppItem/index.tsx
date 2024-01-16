@@ -42,7 +42,6 @@ export const DAppItem = (props: DAppItemProps) => {
 const useStyles = makeStyles((theme) => ({
   container: {
     paddingHorizontal: 20,
-    height: 60,
   },
   content: {
     paddingVertical: 10,
@@ -74,15 +73,13 @@ const useStyles = makeStyles((theme) => ({
 
 export const DAppItems = (props: DAppItemsProps) => {
   const styles = useStyle();
-  const summary = props.summary.substring(0, 7) + '...';
-  const title = props.title.substring(0, 10) + '...';
   return (
     <TouchableOpacity style={[styles.container, props?.styles]} key={props.title} onPress={props?.onPress}>
       <View style={[styles.content, props?.contentStyles]}>
         <Image source={{ uri: props.coverPicture }} style={styles.avatar} />
         <View style={styles.rightBg}>
-          <Text children={title} style={styles.title} />
-          <Text children={summary} style={styles.description} />
+          <Text style={styles.title} numberOfLines={1} />
+          <Text style={styles.description} numberOfLines={1} />
         </View>
       </View>
     </TouchableOpacity>

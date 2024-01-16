@@ -6,5 +6,6 @@ export default {
   "confirm": "Confirm",
   "privateKey": "Private Key",
   "copy": "Copy",
-  "cancel": "Cancel"
+  "cancel": "Cancel",
+  "viewMnemonics": "View Mnemonics"
 };

@@ -14,6 +14,7 @@ import IconFont from '@assets/iconfont';
 import { showToast } from '@common/utils/platform';
 import { SUCCESS_CODE } from '@common/constants';
 import { useTranslation } from 'react-i18next';
+import SearchInput from '@components/SearchInput';
 type Props = {
   fullWidth?: boolean;
   navigation: any;
@@ -22,7 +23,6 @@ type ListItem = Token & { chainName: string; symbol: string };
 const AddToken = (props: Props) => {
   const { t } = useTranslation();
   const styles = useStyles(props);
-  const [search, setSearch] = useState('');
   const [list, setList] = useState<SymbolSupportDatum[]>([]);
   const [supportList, setSupportList] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -36,7 +36,7 @@ const AddToken = (props: Props) => {
       wallet_uuid,
     });
     const [res, supportRes] = await Promise.all([getSymbolSupport(params), walletSymbols({ device_id, wallet_uuid })]);
-    // console.log(11111, JSON.stringify(res), JSON.stringify(supportRes), params);
+    // console.log(11111, JSON.stringify(res), params);
     if (res.data) {
       setList(res.data);
       setSupportList(supportRes.data);
@@ -82,51 +82,23 @@ const AddToken = (props: Props) => {
     initList({ symbol });
   };
 
-  const handleSearchDebounced = useCallback(_.debounce(handleSearch, 500), []);
+  const handleSearchDebounced = useCallback(_.debounce(handleSearch, 1000), []);
+
   return (
     <SafeAreaView style={{ backgroundColor: '#F6F7FC' }}>
       <StatusBar backgroundColor={'#F6F7FC'} barStyle={`dark-content`} />
       <Spinner visible={loading} />
       <View style={styles.top}>
-        <View style={{ flexDirection: 'row-reverse', alignItems: 'center' }}>
-          <SearchBar
-            platform="ios"
-            containerStyle={{
-              backgroundColor: '#F6F7FC',
-            }}
-            inputContainerStyle={{
-              height: 22,
-              borderRadius: 20,
-              backgroundColor: 'rgba(255, 255, 255, 1)',
-              alignItems: 'center',
-            }}
-            inputStyle={{
-              height: 22,
-            }}
-            searchIcon={<IconFont name="a-110" size={16} />}
-            cancelButtonTitle={t("addToken.cancel") || ''}
-            leftIconContainerStyle={{}}
-            rightIconContainerStyle={{}}
-            loadingProps={{}}
-            onChangeText={(newVal) => {
-              setSearch(newVal);
-              handleSearchDebounced(newVal);
-            }}
-            // onClearText={() => console.log(onClearText())}
-            placeholder=""
-            placeholderTextColor="#888"
-            // cancelButtonProps={{}}
-            // onCancel={() => console.log(onCancel())}
-            value={search}
-          />
-          <TouchableOpacity onPress={goToAsset}>
-            <Icon name="left" style={{ color: '#000', backgroundColor: '#F6F7FC', fontSize: 16 }} />
-          </TouchableOpacity>
-        </View>
+        <SearchInput
+          onChangeText={(newVal) => {
+            handleSearchDebounced(newVal);
+          }}
+          placeholder={''}
+          onCancel={goToAsset}
+        />
         <TouchableOpacity onPress={goToAsset}>
           <View style={styles.assetInfo}>
             <Text style={{ color: '#434343', fontSize: 14 }}>{t('asset.homeAssets')}</Text>
-            <Icon name="right" color={'#434343'} size={14} />
           </View>
         </TouchableOpacity>
       </View>
@@ -150,9 +122,8 @@ const AddToken = (props: Props) => {
                   };
                   try {
                     const res = await deleteWallet(params);
-                    console.log(1111111, params, res);
                     if (res.code === SUCCESS_CODE) {
-                      showToast(t("addToken.deleteSuccessfully"), {
+                      showToast(t('addToken.deleteSuccessfully'), {
                         onHide: () => {
                           initList();
                         },

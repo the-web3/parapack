@@ -14,7 +14,7 @@ import SearchToken from '@screen/Asset/SearchToken';
 import SearchHistory from '@screen/Asset/SearchHistory';
 import ImportWallet from '@screen/Asset/ImportWallet';
 import Test from '@screen/Asset/Test';
-import i18next from 'i18next';
+import TransferDetails from '@screen/Asset/TransferDetails';
 const menus = [
   {
     name: 'tokenDetail',
@@ -38,7 +38,7 @@ const menus = [
       title: 'asset.createWallet',
       headerShadowVisible: false,
     },
-    component: CreateWallet, //（完成）
+    component: CreateWallet,
   },
   {
     name: 'importWallet',
@@ -46,7 +46,7 @@ const menus = [
       title: 'asset.importWallet',
       headerShadowVisible: false,
     },
-    component: ImportWallet, //（完成）
+    component: ImportWallet,
   },
   {
     name: 'asset',
@@ -54,7 +54,7 @@ const menus = [
       title: 'asset.myAssets',
       headerShadowVisible: false,
     },
-    component: Asset, //（差一部分）
+    component: Asset,
   },
   {
     name: 'startBackup',
@@ -63,7 +63,7 @@ const menus = [
       // headerShown: false
       headerShadowVisible: false,
     },
-    component: StartBackup, //（完成）
+    component: StartBackup,
   },
   {
     name: 'backupMnemonics',
@@ -71,16 +71,23 @@ const menus = [
       title: 'asset.backupSeedPhrase',
       headerShadowVisible: false,
     },
-    component: BackupMnemonics, //（完成）
+    component: BackupMnemonics,
   },
-
   {
     name: 'transferPayment',
     options: {
       title: 'asset.transferTitle',
       headerShadowVisible: false,
     },
-    component: TransferPayment, //（完成）
+    component: TransferPayment,
+  },
+  {
+    name: 'transferDetails',
+    options: {
+      title: 'asset.transferDetails',
+      headerShadowVisible: false,
+    },
+    component: TransferDetails,
   },
   {
     name: 'addToken',

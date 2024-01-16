@@ -1,73 +1,82 @@
 {
   "activity": {
-    "searchAbout": "搜索你想要了解的活动...",
-    "join": "进入活动",
-    "entry": "完成"
+    "index": {
+      "searchAbout": "搜索你想要了解的活动...",
+      "join": "进入活动",
+      "entry": "完成"
+    }
   },
   "asset": {
-    "backup_tips_write": "建议手写抄录",
-    "backup_tips_copy": "请勿复制保存",
-    "backup_tips_screenshot": "请勿截屏保存",
-    "backup_tips": "请勿将助记词透露给任何人\n助记词一旦丢失，资产将无法恢复",
-    "backup_verify_tips": "请根据您抄写的助记词，按顺序选择填充",
-    "transfer": "转账",
-    "receipt": "收款",
-    "purchase": "购买",
-    "flash": "闪兑",
-    "myAssets": "我的资产",
-    "Backup": "去备份",
-    "Assets": "资产",
-    "details": "详情",
-    "swap": "去兑换",
-    "receive": "收款",
-    "send": "转账",
-    "all": "全部",
-    "received": "转入",
-    "sent": "转出",
-    "transferTitle": "转账",
-    "transferSuccess": "转账成功",
-    "transferAmount": "转账金额",
-    "recipientAccount": "收款账号",
-    "minerFee": "矿工费用",
-    "paymentAddress": "付款地址",
-    "recipientAddress": "收款地址",
-    "transactionDetails": "交易详情",
-    "balance": "余额",
-    "slow": "慢",
-    "avg": "推荐",
-    "fast": "快",
-    "custom": "自定义",
-    "createWallet": "创建钱包",
-    "importWallet": "导入钱包",
-    "startBackup": "开始备份",
-    "backupSeedPhrase": "备份助记词",
-    "verifyMnemonic": "验证助记词",
-    "addAsset": "添加币种",
-    "tokenDetail": "币种详情",
-    "walletSettings": "钱包设置",
-    "editWalletName": "修改钱包名",
-    "viewPrivateKey": "查看私钥",
-    "backupWallet": "备份钱包",
-    "FaceFingerprintPay": "面容/指纹支付",
-    "passwordlessPayment": "免密支付",
-    "authorizationVerification": "授权检测",
-    "nodeSettings": "节点设置",
-    "deleteWallet": "删除钱包",
-    "confirmDeleteWallet": "确定要删除钱包吗？",
-    "confirmDeleteWalletDesc": "删除后，您可通过已备份的助记词重新导入钱包"
+    "index": {
+      "backup_tips_write": "建议手写抄录",
+      "backup_tips_copy": "请勿复制保存",
+      "backup_tips_screenshot": "请勿截屏保存",
+      "backup_tips": "请勿将助记词透露给任何人\n助记词一旦丢失，资产将无法恢复",
+      "backup_verify_tips": "请根据您抄写的助记词，按顺序选择填充",
+      "transfer": "转账",
+      "receipt": "收款",
+      "purchase": "购买",
+      "flash": "闪兑",
+      "myAssets": "我的资产",
+      "Backup": "去备份",
+      "Assets": "资产",
+      "details": "详情",
+      "swap": "去兑换",
+      "receive": "收款",
+      "send": "转账",
+      "all": "全部",
+      "received": "转入",
+      "sent": "转出",
+      "transferTitle": "转账",
+      "transferDetails": "转账详情",
+      "transferSuccess": "转账成功",
+      "transferAmount": "转账金额",
+      "recipientAccount": "收款账号",
+      "minerFee": "矿工费用",
+      "paymentAddress": "付款地址",
+      "recipientAddress": "收款地址",
+      "transactionDetails": "交易详情",
+      "balance": "余额",
+      "slow": "慢",
+      "avg": "推荐",
+      "fast": "快",
+      "custom": "自定义",
+      "createWallet": "创建钱包",
+      "importWallet": "导入钱包",
+      "startBackup": "开始备份",
+      "backupSeedPhrase": "备份助记词",
+      "verifyMnemonic": "验证助记词",
+      "addAsset": "添加币种",
+      "tokenDetail": "币种详情",
+      "walletSettings": "钱包设置",
+      "editWalletName": "修改钱包名",
+      "viewPrivateKey": "查看私钥",
+      "backupWallet": "备份钱包",
+      "FaceFingerprintPay": "面容/指纹支付",
+      "passwordlessPayment": "免密支付",
+      "authorizationVerification": "授权检测",
+      "nodeSettings": "节点设置",
+      "deleteWallet": "删除钱包",
+      "confirmDeleteWallet": "确定要删除钱包吗？",
+      "confirmDeleteWalletDesc": "删除后，您可通过已备份的助记词重新导入钱包",
+      "homeAssets": "首页资产",
+      "popularCurrencies": "热门币种"
+    }
   },
   "common": {
-    "success": "成功",
-    "ecology": "生态",
-    "activity": "活动",
-    "swap": "兑换",
-    "video": "视频",
-    "asset": "资产",
-    "emptyTransaction": "暂无交易记录",
-    "empty": "暂无数据",
-    "confirm": "确定",
-    "cancel": "取消",
-    "notSupport": "暂不支持此功能"
+    "index": {
+      "success": "成功",
+      "ecology": "生态",
+      "activity": "活动",
+      "swap": "兑换",
+      "video": "视频",
+      "asset": "资产",
+      "emptyTransaction": "暂无交易记录",
+      "empty": "暂无数据",
+      "confirm": "确定",
+      "cancel": "取消",
+      "notSupport": "暂不支持此功能"
+    }
   },
   "dapp": {
     "index": {
@@ -81,7 +90,7 @@
       "searchPlaceholder": "输入Dapp网站",
       "more": "更多",
       "aboutParapack": "关于 ParaPack",
-      "developerapplication": "开发者申请",
+      "developerApplication": "开发者申请",
       "reportQuestion": "报告问题",
       "DeveloperOnboarding": "开发者入驻规则及协议",
       "submit": "提交申请",
@@ -91,7 +100,8 @@
       "informationCenter": "信息中心",
       "settings": "设置",
       "announcementDetails": "公告详情",
-      "language": "语言"
+      "language": "语言",
+      "aboutUs": "关于我们"
     },
     "setting": {
       "myWallet": "我的钱包",
@@ -115,13 +125,15 @@
     }
   },
   "swap": {
-    "Swap": "交易",
-    "Market": "行情",
-    "LaunchPad": "LaunchPad",
-    "Sell": "卖出",
-    "Balance": "余额",
-    "Buy": "买入",
-    "Exchange": "兑换"
+    "index": {
+      "Swap": "交易",
+      "Market": "行情",
+      "LaunchPad": "LaunchPad",
+      "Sell": "卖出",
+      "Balance": "余额",
+      "Buy": "买入",
+      "Exchange": "兑换"
+    }
   },
   "screen": {
     "Asset": {
@@ -211,7 +223,8 @@
         "confirm": "确定",
         "privateKey": "私钥",
         "copy": "复制",
-        "cancel": "取消"
+        "cancel": "取消",
+        "viewMnemonics": "查看助记词"
       },
       "StartBackup": {
         "startBackup": "开始备份",
@@ -266,6 +279,8 @@
         "747Join": "747人已加入"
       },
       "DeveloperApplication": {
+        "title": "Parapack",
+        "desc": "全球生态活动聚合平台",
         "developerApplication": "开发者申请",
         "needAudit": "需审核, 需KYC，需签署免责协议",
         "needToSignADisclaimer": "需签署免责协议",
@@ -275,12 +290,16 @@
         "project": "项目",
         "applicationName": "应用名称",
         "applicationWebsite": "项目/应用官网",
+        "applicationType": "项目/应用简介",
         "applicationFounderKYCandCorrespondingWhitePaper": "应用团队创始人kyc，及对应白皮书",
         "tokenName": "Token名称",
         "contractToken": "Token合约",
         "tokenInformation": "Token上所信息",
         "capitalInstitutionInformation": "资本机构信息",
-        "needToSignADisclaimerAndAgreement": "需签署免责声明及协议（平台免责，且有权下架）等法律文件"
+        "platformProtocol": "平台协议",
+        "clause": "条款",
+        "base": "我已阅读并自愿遵守",
+        "and": "及"
       },
       "Parapack": {
         "currentVersionIsLatest": "当前已是最新版本",
@@ -335,7 +354,12 @@
       "Submit": {
         "cancelApplication": "取消申请",
         "materialsReview": "资料审核中",
-        "oncePassedWillNotifyByEmail": "审核通过后会以邮件形式通知"
+        "oncePassedWillNotifyByEmail": "审核通过后会以邮件形式通知",
+        "materialsReject": "申请被驳回",
+        "materialsRejectDesc": "审核失败，您可以重新申请",
+        "reApply": "重新申请",
+        "materialsSuccess": "申请成功",
+        "materialsSuccessDesc": "该信息已同步以官方邮件通知，请您注意核对"
       },
       "Guide": {
         "createNewWallet": "创建新钱包",

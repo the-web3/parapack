@@ -33,7 +33,7 @@ const CoinDetail = (props: Props) => {
         // subTitle: '99999',
       });
       setCurrentTokenDetail(current_token_detail_obj);
-    } catch (e) { }
+    } catch (e) {}
   }, [navigation]);
 
   const rqDatas = React.useCallback(async () => {
@@ -47,7 +47,7 @@ const CoinDetail = (props: Props) => {
         });
         setActivity(activityRes.data);
       }
-    } catch (e) { }
+    } catch (e) {}
   }, [currentTokenDetail?.symbol]);
 
   const symbolInfo = React.useCallback(async () => {
@@ -143,7 +143,9 @@ const CoinDetail = (props: Props) => {
                     PlaceholderContent={<ActivityIndicator />}
                   />
                 </View>
-                <Text style={{ fontSize: 10, marginTop: 18, marginBottom: 28, color: '#AEAEAE' }}>{t('coinDetail.noTransactionRecord')}</Text>
+                <Text style={{ fontSize: 10, marginTop: 18, marginBottom: 28, color: '#AEAEAE' }}>
+                  {t('coinDetail.noTransactionRecord')}
+                </Text>
                 <View
                   style={{ backgroundColor: '#F1F1F1', paddingVertical: 4, paddingHorizontal: 12, borderRadius: 4 }}
                 >

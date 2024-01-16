@@ -29,8 +29,9 @@ const ReportBottom: FC<Props> = ({ navigation, style }) => {
   const onDeveloperApplication = async () => {
     const [device_id] = await Promise.all([getUniqueId()]);
     const res = await getDevInfo({ device_id });
+    console.log(11111, res);
     // 0:已申请，1:已通过，2:已拒绝
-    if (res.data?.status === 0) {
+    if ([0, 1, 2].includes(res.data?.status)) {
       navigation.navigate('SubmitScreen');
     } else {
       navigation.navigate('DeveloperApplication');
