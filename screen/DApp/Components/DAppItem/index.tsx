@@ -23,7 +23,7 @@ interface DAppItemsProps {
   coverPicture?: any;
 }
 export const DAppItem = (props: DAppItemProps) => {
-  const styles = useStyles();
+  const styles = useStyle();
   const summary = props.summary;
   const title = props.title;
   return (
@@ -38,10 +38,10 @@ export const DAppItem = (props: DAppItemProps) => {
     </TouchableOpacity>
   );
 };
-
-const useStyles = makeStyles((theme) => ({
+const useStyle = makeStyles((theme) => ({
   container: {
     paddingHorizontal: 20,
+    height: 60,
   },
   content: {
     paddingVertical: 10,
@@ -72,24 +72,24 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const DAppItems = (props: DAppItemsProps) => {
-  const styles = useStyle();
+  const styles = useStyles();
+  const summary = props.summary;
+  const title = props.title;
   return (
     <TouchableOpacity style={[styles.container, props?.styles]} key={props.title} onPress={props?.onPress}>
       <View style={[styles.content, props?.contentStyles]}>
-        <Image source={{ uri: props.coverPicture }} style={styles.avatar} />
+        <Image source={{ uri: props.miniCoverPicture }} style={styles.avatar} />
         <View style={styles.rightBg}>
-          <Text style={styles.title} numberOfLines={1} />
-          <Text style={styles.description} numberOfLines={1} />
+          <Text children={title} style={styles.title} numberOfLines={1} />
+          <Text children={summary} style={styles.description} numberOfLines={1} />
         </View>
       </View>
     </TouchableOpacity>
   );
 };
-
-const useStyle = makeStyles((theme) => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     paddingHorizontal: 20,
-    height: 60,
   },
   content: {
     paddingVertical: 10,

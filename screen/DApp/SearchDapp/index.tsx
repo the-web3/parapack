@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, TouchableOpacity, View } from 'react-native';
-import { Input, Text, makeStyles } from '@rneui/themed';
-import Icon from 'react-native-vector-icons/AntDesign';
+import { makeStyles } from '@rneui/themed';
 import { getDAppGroup } from '@api/dApp';
-import { DAppItem } from '../Components/DAppItem';
+import { DAppItems } from '../Components/DAppItem';
 import { useTranslation } from 'react-i18next';
 import SearchInput from '@components/SearchInput';
 
@@ -56,7 +55,7 @@ const SearchDapp = (props: Props) => {
         showsVerticalScrollIndicator={false}
       >
         {(dAppData?.lists || []).map((v, i) => (
-          <DAppItem
+          <DAppItems
             {...v}
             key={v.title + String(i)}
             contentStyles={{ paddingVertical: 14 }}
