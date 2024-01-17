@@ -36,17 +36,17 @@ const VerifyMnemonics = (props: Record<string, any>) => {
 
   const [selectMnemonics, setSelectMnemonics] = useState([
     {
-      label: '第8个',
+      label: t('verifyMnemonics.eighth'),
       value: '',
       key: 7,
     },
     {
-      label: '第11个',
+      label: t('verifyMnemonics.eleventh'),
       value: '',
       key: 10,
     },
     {
-      label: '第4个',
+      label: t('verifyMnemonics.fourth'),
       value: '',
       key: 3,
     },
@@ -63,7 +63,7 @@ const VerifyMnemonics = (props: Record<string, any>) => {
     }
 
     return numbers.map((key) => ({
-      label: `第${key + 1}个`,
+      label: `${key + 1}`,
       value: '',
       key,
     }));
@@ -78,7 +78,7 @@ const VerifyMnemonics = (props: Record<string, any>) => {
     for (let i = 0; i < selectMnemonics.length; i++) {
       const { key, value } = selectMnemonics[i];
       if (!value || originMnemonics[key] !== value) {
-        showToast('助记词顺序有误');
+        showToast(t('verifyMnemonics.wrongOrderOfMnemonics'));
         return;
       }
     }
@@ -136,7 +136,7 @@ const VerifyMnemonics = (props: Record<string, any>) => {
     <Layout
       fixedChildren={
         <View style={styles.button}>
-          <Button onPress={handleVerifyMnemonics}>确认</Button>
+          <Button onPress={handleVerifyMnemonics}>{t('verifyMnemonics.confirm')}</Button>
         </View>
       }
     >

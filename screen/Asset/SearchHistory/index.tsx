@@ -1,18 +1,22 @@
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, Image, SafeAreaView, ScrollView, StatusBar, TouchableOpacity, View } from 'react-native';
-import { SearchBar, Text, makeStyles, useTheme } from '@rneui/themed';
+import { SearchBar, Text, makeStyles, useTheme, useThemeMode } from '@rneui/themed';
 import Icon from 'react-native-vector-icons/AntDesign';
 import _ from 'lodash';
 import { transferRecord } from '@api/wallet';
 import { getData } from '@common/utils/storage';
 import moment from 'moment';
 import IconFont from '@assets/iconfont';
+import Empty from '@components/Empty';
+import { useTranslation } from 'react-i18next';
 type Props = {
   fullWidth?: boolean;
   navigation: any;
 };
 const SearchHistory = (props: Props) => {
+  const { t } = useTranslation();
+  const { mode } = useThemeMode();
   const styles = useStyles(props);
   const { theme }: { theme: CustomTheme<CustomColors> } = useTheme();
   const [search, setSearch] = useState('');
@@ -52,7 +56,12 @@ const SearchHistory = (props: Props) => {
 
   return (
     <SafeAreaView style={{ backgroundColor: '#F6F7FC' }}>
-      {/* <StatusBar backgroundColor="transparent" translucent={true} /> */}
+      <StatusBar
+        backgroundColor={'#F6F7FC'} // 替换为你想要的背景颜色
+        barStyle={`${mode === 'light' ? 'dark' : 'light'}-content`} // 替换为你想要的图标和文字颜色
+        translucent={false}
+      // backgroundColor="transparent"
+      />
       <View style={styles.top}>
         <View style={{ flexDirection: 'row-reverse', alignItems: 'center' }}>
           <SearchBar
@@ -70,7 +79,7 @@ const SearchHistory = (props: Props) => {
               height: 22,
             }}
             searchIcon={<IconFont name="a-110" size={16} />}
-            cancelButtonTitle={'取消'}
+            cancelButtonTitle={t('searchHistory.cancel') || ''}
             leftIconContainerStyle={{}}
             rightIconContainerStyle={{}}
             loadingProps={{}}
@@ -129,7 +138,10 @@ const SearchHistory = (props: Props) => {
 
                   <View style={{ flex: 1, marginRight: 14, marginLeft: 10 }}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
-                      <Text>{item.type === 0 ? '转出' : '转入'}</Text>
+                      <Text>{item.type === 0 ?
+                        t('searchHistory.transferOut') :
+                        t('searchHistory.transferIn')
+                      }</Text>
                       <Text>{item.amount}</Text>
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
@@ -145,16 +157,7 @@ const SearchHistory = (props: Props) => {
               </TouchableOpacity>
             ))
           ) : (
-            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-              <View>
-                <Image
-                  source={require('@assets/images/emptyRecord.png')}
-                  style={styles.img}
-                  PlaceholderContent={<ActivityIndicator />}
-                />
-              </View>
-              <Text style={{ fontSize: 10, marginTop: 18, marginBottom: 28, color: '#AEAEAE' }}>暂无数据</Text>
-            </View>
+            <Empty text={t(`common.empty`)} />
           )}
         </ScrollView>
       </View>

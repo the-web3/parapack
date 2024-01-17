@@ -2,7 +2,7 @@ import { DAppList } from '@screen/DApp/DAppList';
 import { DAppWebView } from '@screen/DApp/WebView';
 import { DAppDetail } from '@screen/DApp/DAppDetail';
 import DeveloperOnboarding from '@screen/DApp/DeveloperOnboarding';
-import DevloperApplication from '@screen/DApp/DevloperApplication';
+import DeveloperApplication from '@screen/DApp/DeveloperApplication';
 import ReportQuestion from '@screen/DApp/ReportQuestion';
 import SubmitScreen from '@screen/DApp/Submit';
 import Review from '@screen/DApp/Review';
@@ -11,6 +11,9 @@ import NewsArticle from '@screen/DApp/NewsArticle';
 import Setting from '@screen/DApp/Setting';
 import News from '@screen/DApp/News';
 import { DAppDetails } from '@screen/DApp/DAppDetails';
+import Language from '@screen/DApp/Language';
+import SearchDapp from '@screen/DApp/SearchDapp';
+import i18next from 'i18next';
 
 // Just a simple option please optimize
 const _getOptions = (title: string) => {
@@ -38,27 +41,27 @@ const menus = [
   },
   {
     name: 'ReportQuestion',
-    options: _getOptions('报告问题'),
+    options: _getOptions('dApp.reportQuestion'),
     component: ReportQuestion,
   },
   {
-    name: 'DevloperApplication',
-    options: _getOptions('入驻申请'),
-    component: DevloperApplication,
+    name: 'DeveloperApplication',
+    options: _getOptions('developerApplication.developerApplication'),
+    component: DeveloperApplication,
   },
   {
     name: 'DeveloperOnboarding',
-    options: _getOptions('开发者入驻规则及协议'),
+    options: _getOptions('dApp.DeveloperOnboarding'),
     component: DeveloperOnboarding,
   },
   {
     name: 'SubmitScreen',
-    options: _getOptions('入驻申请'),
+    options: _getOptions('dApp.listingApplication'),
     component: SubmitScreen,
   },
   {
     name: 'Review',
-    options: _getOptions('入驻申请'),
+    options: _getOptions('dApp.listingApplication'),
     component: Review,
   },
   {
@@ -68,23 +71,37 @@ const menus = [
   },
   {
     name: 'Parapack',
-    options: _getOptions(''),
+    options: _getOptions('dApp.aboutUs'),
     component: Parapack,
   },
   {
     name: 'NewsArticle',
-    options: _getOptions('信息中心'),
+    options: _getOptions('dApp.informationCenter'),
     component: NewsArticle,
   },
   {
     name: 'Setting',
-    options: _getOptions('设置'),
+    options: _getOptions('dApp.settings'),
     component: Setting,
   },
   {
     name: 'News',
-    options: _getOptions('公告详情'),
+    options: _getOptions('dApp.announcementDetails'),
     component: News,
+  },
+  {
+    name: 'Language',
+    options: _getOptions('dApp.language'),
+    component: Language,
+  },
+  {
+    name: 'SearchDapp',
+    options: {
+      title: '',
+      headerShown: false,
+      headerShadowVisible: false,
+    },
+    component: SearchDapp,
   },
 ];
 

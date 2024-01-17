@@ -5,6 +5,7 @@ import { Avatar, Button, Text, makeStyles, useTheme } from '@rneui/themed';
 import Icon from 'react-native-vector-icons/AntDesign';
 import IconFont from '@assets/iconfont';
 import { CustomColors } from 'style/them';
+import { useTranslation } from 'react-i18next';
 type Props = {
   fullWidth?: boolean;
   navigation: any;
@@ -14,6 +15,7 @@ const Swap = (props: Props) => {
   const styles = useStyles();
   const { theme } = useTheme();
   const [active] = useState('swap');
+  const { t } = useTranslation()
   const [money, setMoney] = useState<{
     buy: string;
     sell: string;
@@ -28,9 +30,15 @@ const Swap = (props: Props) => {
     <SafeAreaView style={styles.container}>
       <View style={styles.searchBar}>
         <View style={styles.tabs}>
-          <Text style={active === 'swap' ? styles.activeTabsTitle : styles.tabsTitle}>兑换</Text>
-          <Text style={styles.tabsTitle}>行情</Text>
-          <Text style={styles.tabsTitle}>LaunchPad</Text>
+          <Text style={active === 'swap' ? styles.activeTabsTitle : styles.tabsTitle}>
+            {t('swap.Swap')}
+          </Text>
+          <Text style={styles.tabsTitle}>
+            {t('swap.Market')}
+          </Text>
+          <Text style={styles.tabsTitle}>
+            {t('swap.LaunchPad')}
+          </Text>
         </View>
         <IconFont name="xiangqing" />
       </View>
@@ -38,8 +46,12 @@ const Swap = (props: Props) => {
         <View style={styles.swapCard}>
           <View>
             <View style={styles.swapCardTitle}>
-              <Text style={styles.sell}>卖出</Text>
-              <Text style={styles.balance}>余额：0.00</Text>
+              <Text style={styles.sell}>
+                {t('swap.Sell')}
+              </Text>
+              <Text style={styles.balance}>
+                {t('swap.Balance')}
+                ：0.00</Text>
             </View>
             <View
               style={{
@@ -86,8 +98,12 @@ const Swap = (props: Props) => {
           </View>
           <View>
             <View style={styles.swapCardTitle}>
-              <Text style={styles.sell}>买入</Text>
-              <Text style={styles.balance}>余额：0.00</Text>
+              <Text style={styles.sell}>
+                {t('swap.Buy')}
+              </Text>
+              <Text style={styles.balance}>
+                {t('swap.Balance')}
+                ：0.00</Text>
             </View>
             <View style={styles.chain}>
               <Avatar rounded source={{ uri: 'https://randomuser.me/api/portraits/men/36.jpg' }} />
@@ -115,7 +131,9 @@ const Swap = (props: Props) => {
           </View>
         </View>
 
-        <Button>兑换</Button>
+        <Button>
+          {t('swap.Swap')}
+        </Button>
         <View
           style={{
             flexDirection: 'row',
@@ -129,7 +147,9 @@ const Swap = (props: Props) => {
           <Text style={{ color: 'rgba(22, 196, 185, 1)', fontSize: 8 }}>+0.56%</Text>
           <Icon name={'swap'} size={8} />
         </View>
-        <Button>交易</Button>
+        <Button>
+          {t('swap.Exchange')}
+        </Button>
       </ScrollView>
     </SafeAreaView>
   );

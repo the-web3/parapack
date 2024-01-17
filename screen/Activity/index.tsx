@@ -6,8 +6,11 @@ import { View, ScrollView, SafeAreaView } from 'react-native';
 import { makeStyles, useTheme } from '@rneui/themed';
 import { ActivityItems } from './Components/ActivityItems';
 import _ from 'lodash';
+import { useTranslation } from 'react-i18next';
+
 const Activity = ({ navigation }) => {
   const styles = useStyles();
+  const { t } = useTranslation();
   const { theme } = useTheme();
   const [activity, setActivity] = useState<Record<string, any>>({});
   const [search, setSearch] = useState('');
@@ -22,9 +25,11 @@ const Activity = ({ navigation }) => {
       setActivity(activityRes.data);
     } catch (e) {}
   };
+
   useEffect(() => {
     rqDatas();
   }, []);
+
   const handleSearch = (symbol: string) => {
     rqDatas({
       symbol,
@@ -55,7 +60,7 @@ const Activity = ({ navigation }) => {
               fontSize: 12,
             }}
             rightIcon={<IconFont name="a-huaban1" />}
-            placeholder="搜索你想要了解的活动..."
+            placeholder={t('activity.searchAbout') || ''}
             onChangeText={(newVal) => {
               setSearch(newVal);
               handleSearchDebounced(newVal);

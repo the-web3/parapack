@@ -9,7 +9,7 @@ import { showToast } from '@common/utils/platform';
 import { Carousel } from 'react-native-ui-lib';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { DAppItem } from '../Components/DAppItem';
-import { t } from 'i18next';
+import { useTranslation } from 'react-i18next';
 
 interface DAppProps {
   navigation?: any;
@@ -56,6 +56,7 @@ const ContentHeader = (props: ContentHeaderProps) => {
 };
 
 export const DAppDetails = (props: DAppProps) => {
+  const { t } = useTranslation();
   useEffect(() => {
     rqDatas();
   }, []);
@@ -96,7 +97,6 @@ export const DAppDetails = (props: DAppProps) => {
   }, []);
 
   const initKLine = useCallback(async () => {
-    console.log(111111, dAppProps);
     const res = await getSymbolKline({
       symbol: 'ETH',
     });
@@ -114,9 +114,6 @@ export const DAppDetails = (props: DAppProps) => {
     }
     props?.navigation.navigate('DAppWebView', { params: { uri: dAppProps.url, title: dAppProps?.title } });
   };
-  const onShowAll = (type: string) => {
-    props?.navigation.navigate('DAppList', { params: { type } });
-  };
   const medium = useMemo(() => {
     console.log('appDetail medium:', dAppProps?.medium);
     if (!dAppProps?.medium) {
@@ -132,7 +129,7 @@ export const DAppDetails = (props: DAppProps) => {
           key={0}
           style={styles.banner}
           autoplay={true}
-          pageWidth={width - 30}
+          pageWidth={width - 40}
           itemSpacings={0}
           containerMarginHorizontal={0}
           initialPage={0}
@@ -144,7 +141,7 @@ export const DAppDetails = (props: DAppProps) => {
               source={{ uri: v.img }}
               style={{
                 height: 150,
-                width: width - 30,
+                width: width - 40,
                 borderRadius: 10,
               }}
             />
@@ -186,7 +183,9 @@ export const DAppDetails = (props: DAppProps) => {
           </View>
         </View>
         <View style={[styles.headerBg, { marginLeft: 5, marginBottom: 20 }]}>
-          <Text style={{ fontWeight: 'bold', fontSize: 18, color: 'black' }}>一键完成任务</Text>
+          <Text style={{ fontWeight: 'bold', fontSize: 18, color: 'black' }}>
+            {t('dAppDetails.completeTheTaskWithOneClick')}
+          </Text>
         </View>
         <TouchableOpacity
           style={[
@@ -204,11 +203,11 @@ export const DAppDetails = (props: DAppProps) => {
           onPress={onPress}
         >
           <Text style={[styles.buttonText, { fontSize: fontTextSize, fontWeight: 'bold', color: '#fff' }]}>
-            取消申请
+            {t('activity.searchAbout')}
           </Text>
         </TouchableOpacity>
         <Text style={{ fontWeight: 'bold', fontSize: 18, color: 'black', marginLeft: 25, marginBottom: 16 }}>
-          一项一项完成任务
+          {t('dAppDetails.completeTasksOneByOne')}
         </Text>
         {/* forward */}
         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 18, marginLeft: 25 }}>
@@ -218,7 +217,7 @@ export const DAppDetails = (props: DAppProps) => {
             <TouchableOpacity style={{ marginLeft: 10 }}>
               <FontAwesome name="share" size={20} color="#00ba7c" />
             </TouchableOpacity>
-            <Text style={{ marginLeft: 5, color: '#03bb7e' }}>转发</Text>
+            <Text style={{ marginLeft: 5, color: '#03bb7e' }}>{t('dAppDetails.forward')}</Text>
           </View>
         </View>
         {/* like */}
@@ -229,7 +228,7 @@ export const DAppDetails = (props: DAppProps) => {
             <TouchableOpacity style={{ marginLeft: 10 }}>
               <FontAwesome name="heart" size={20} color="#f9187f" />
             </TouchableOpacity>
-            <Text style={{ marginLeft: 5, color: '#f9187f' }}>喜欢</Text>
+            <Text style={{ marginLeft: 5, color: '#f9187f' }}>{t('dAppDetails.like')}</Text>
           </View>
         </View>
         {/* follow */}

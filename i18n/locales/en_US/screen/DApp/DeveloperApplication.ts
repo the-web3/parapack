@@ -1,0 +1,21 @@
+export default {
+  "developerApplication": "Developer Application",
+  "needAudit": "Need verification, KYC, and sign a waiver agreement.",
+  "needToSignADisclaimer": "Need to Sign a Disclaimer",
+  "developerContactEmail": "Developer Contact Email",
+  "phone": "Phone",
+  "telegram": "Telegram",
+  "project": "Project",
+  "applicationName": "Application Name",
+  "applicationWebsite": "Project/Application Website",
+  "applicationType": "Project/Application Brief",
+  "applicationFounderKYCandCorrespondingWhitePaper": "Application Founder KYC and Corresponding White Paper",
+  "tokenName": "Token Name",
+  "contractToken": "Token Contract",
+  "tokenInformation": "Token Information",
+  "capitalInstitutionInformation": "Capital Institution Information",
+  "platformProtocol": "Platform Protocol",
+  "clause": "Clause",
+  "base": "I have read and voluntarily comply",
+  "and": "and"
+};

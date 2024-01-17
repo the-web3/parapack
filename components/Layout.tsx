@@ -1,8 +1,8 @@
 import * as React from 'react';
 import type { FC } from 'react';
 import { makeStyles } from '@rneui/base';
-import { ScrollView, StatusBar, View, useColorScheme } from 'react-native';
-import { useTheme } from '@rneui/themed';
+import { ScrollView, StatusBar, View } from 'react-native';
+import { useTheme, useThemeMode } from '@rneui/themed';
 type Props = {
   children: React.ReactNode;
   fixedChildren?: React.ReactNode;
@@ -10,7 +10,7 @@ type Props = {
   containerStyle?: any;
 };
 const Layout: FC<Props> = ({ children, fixedChildren, fixedStyle = {}, containerStyle = {} }) => {
-  const mode = useColorScheme() || 'light';
+  const { mode } = useThemeMode()
   const { theme }: { theme: CustomTheme<CustomColors> } = useTheme();
   const styles = useStyles(theme);
   return (

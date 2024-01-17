@@ -1,7 +1,7 @@
 import { makeStyles } from '@rneui/themed';
 import { ScrollView, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { DAppItem } from '@screen/DApp/Components/DAppItem';
+import { DAppItems } from '@screen/DApp/Components/DAppItem';
 import { getActivity } from '@api/home';
 import { getDAppGroup } from '@api/dApp';
 
@@ -52,7 +52,7 @@ export const DAppList = (props: DAppListProps) => {
     <View style={styles.container}>
       <ScrollView contentContainerStyle={{ paddingBottom: 46 }} showsVerticalScrollIndicator={false}>
         {(dAppData?.lists || []).map((v, i) => (
-          <DAppItem
+          <DAppItems
             {...v}
             key={v.title + String(i)}
             contentStyles={{ paddingVertical: 14 }}

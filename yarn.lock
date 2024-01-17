@@ -3600,6 +3600,11 @@
   resolved "https://registry.npmjs.org/@types/urijs/-/urijs-1.19.19.tgz"
   integrity sha512-FDJNkyhmKLw7uEvTxx5tSXfPeQpO0iy73Ry+PmYZJvQy0QIWX8a7kJ4kLWRf+EbTPJEPDSgPXHaM7pzr5lmvCg==
 
+"@types/use-sync-external-store@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@types/use-sync-external-store/-/use-sync-external-store-0.0.3.tgz#b6725d5f4af24ace33b36fafd295136e75509f43"
+  integrity sha512-EwmlvuaxPNej9+T4v5AuBPJa2x2UOJVdjCtDHgcDqitUeOtjnJKJ+apYjVcAoBEMjKW1VVFGZLUb5+qqa09XFA==
+
 "@types/uuid@^9.0.2":
   version "9.0.2"
   resolved "https://registry.npmjs.org/@types/uuid/-/uuid-9.0.2.tgz"
@@ -12215,6 +12220,11 @@ react-native-screens@^3.20.0:
     react-freeze "^1.0.0"
     warn-once "^0.1.0"
 
+react-native-simple-toast@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/react-native-simple-toast/-/react-native-simple-toast-3.2.0.tgz#61ade1a87ffdc506855b7ecaa5a716f09b5e0e7d"
+  integrity sha512-aiv162Zr4fRAy1RY6fjrl3zZV1DVQJhvKAoS7d+Vylm7SgYEnt/MKrQcXDT21SVmunONvKx7KpDylzfSpgnDPw==
+
 react-native-size-matters@^0.4.0:
   version "0.4.0"
   resolved "https://registry.npmjs.org/react-native-size-matters/-/react-native-size-matters-0.4.0.tgz"
@@ -12274,10 +12284,10 @@ react-native-view-shot@^3.7.0:
   dependencies:
     html2canvas "^1.4.1"
 
-react-native-webview@^13.2.2:
-  version "13.2.3"
-  resolved "https://registry.npmjs.org/react-native-webview/-/react-native-webview-13.2.3.tgz"
-  integrity sha512-f2cJ61cfpNzry0KLJg3HiwrGhhVnOLwbcHeQVMRldWTwzqSptTzk1sTO8QulYt0nVkUNw1xeboD0SLkUeaQB9Q==
+react-native-webview@^13.6.4:
+  version "13.6.4"
+  resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-13.6.4.tgz#6ef66db9dd78b2a2ae1b4fe79e1e3597aa29186e"
+  integrity sha512-AdgmaMBHPcyERTvng9eSGgHX6AleyUlSusWAxngSOSdiYGgHW81T6C5A8j/ImJAF9oZg0bQDxp43Hu56tzENZQ==
   dependencies:
     escape-string-regexp "2.0.0"
     invariant "2.2.4"
@@ -12321,6 +12331,14 @@ react-native@0.71.8:
     use-sync-external-store "^1.0.0"
     whatwg-fetch "^3.0.0"
     ws "^6.2.2"
+
+react-redux@^9.0.4:
+  version "9.0.4"
+  resolved "https://registry.yarnpkg.com/react-redux/-/react-redux-9.0.4.tgz#6892d465f086507a517d4b53eb589876e6bc8344"
+  integrity sha512-9J1xh8sWO0vYq2sCxK2My/QO7MzUMRi3rpiILP/+tDr8krBHixC6JMM17fMK88+Oh3e4Ae6/sHIhNBgkUivwFA==
+  dependencies:
+    "@types/use-sync-external-store" "^0.0.3"
+    use-sync-external-store "^1.0.0"
 
 react-refresh@^0.4.0:
   version "0.4.3"
@@ -12459,6 +12477,16 @@ redent@^3.0.0:
   dependencies:
     indent-string "^4.0.0"
     strip-indent "^3.0.0"
+
+redux-thunk@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/redux-thunk/-/redux-thunk-3.1.0.tgz#94aa6e04977c30e14e892eae84978c1af6058ff3"
+  integrity sha512-NW2r5T6ksUKXCabzhL9z+h206HQw/NJkcLm1GPImRQ8IzfXwRGqjVhKJGauHirT0DAuyy6hjdnMZaRoAcy0Klw==
+
+redux@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/redux/-/redux-5.0.1.tgz#97fa26881ce5746500125585d5642c77b6e9447b"
+  integrity sha512-M9/ELqF6fy8FwmkpnF0S3YKOqMyoWJ4+CS5Efg2ct3oY9daQvd/Pc71FpGZsVsbl3Cpb+IIcjBDUnnyBdQbq4w==
 
 regenerate-unicode-properties@^10.1.0:
   version "10.1.0"
@@ -12875,10 +12903,10 @@ safer-buffer@^2.0.2, safer-buffer@^2.1.0, safer-buffer@~2.1.0:
   resolved "https://registry.npmjs.org/safer-buffer/-/safer-buffer-2.1.2.tgz"
   integrity sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==
 
-savourlabs-wallet-sdk@2.0.3:
-  version "2.0.3"
-  resolved "https://registry.npmjs.org/savourlabs-wallet-sdk/-/savourlabs-wallet-sdk-2.0.3.tgz"
-  integrity sha512-2QoA9wPIHEYMOQh9DP3sLyHahcM1IdXIs4eouGViHcIhMgZgzMG64UN6xFBKC8Y+QZ5oVRTkRnp2AmPl5gyS2A==
+savourlabs-wallet-sdk@2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/savourlabs-wallet-sdk/-/savourlabs-wallet-sdk-2.0.4.tgz#8d3929841a36c1caa11d4263bdf33979543726e2"
+  integrity sha512-1x6kBsvlWPo1azoyQqOnFxuEtlTamhAEm7aO8xO1oI2h0sE8J60wTfd3LNDF9CpFSAFxJKHp1+xXuTUIJcq5aA==
   dependencies:
     "@cosmjs/amino" "0.26.2"
     "@cosmjs/encoding" "0.26.2"

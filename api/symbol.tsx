@@ -1,5 +1,5 @@
 import http from '@common/utils/http';
-import { getLanguage } from '@common/utils/platform';
+import { getValidLan } from '@i18n/index';
 import { IResponse } from 'typings/global';
 export interface SymbolSupportDatum {
   /**
@@ -204,10 +204,11 @@ export interface SymbolInfoParams {
   symbol: 'string';
   contract_addr: 'string';
 }
-export function getSymbolInfo(data: SymbolInfoParams): Promise<IResponse<SymbolInfoData | null>> {
+export async function getSymbolInfo(data: SymbolInfoParams): Promise<IResponse<SymbolInfoData | null>> {
+  const language = await getValidLan();
   return http.post(`/symbol/info`, data, {
     headers: {
-      'wallet-language': getLanguage(),
+      'wallet-language': language,
     },
   });
 }

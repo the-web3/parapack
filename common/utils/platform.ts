@@ -1,5 +1,6 @@
-import Toast from 'react-native-root-toast';
-import * as RNLocalize from 'react-native-localize';
+// import { ToastAndroid } from 'react-native';
+// import Toast from 'react-native-root-toast';
+import Toast from 'react-native-simple-toast';
 
 export const showToast = (
     msg: string,
@@ -7,21 +8,22 @@ export const showToast = (
         onHide: () => void;
     }
 ) => {
-    Toast.show(msg, {
-        duration: Toast.durations.LONG,
-        position: Toast.positions.CENTER,
-        shadow: true,
-        animation: true,
-        hideOnPress: true,
-        delay: 0,
-        onHide: () => {
-            props?.onHide?.();
-        },
+    // Toast.show(msg, {
+    //     duration: Toast.durations.LONG,
+    //     position: Toast.positions.CENTER,
+    //     shadow: true,
+    //     animation: true,
+    //     hideOnPress: true,
+    //     delay: 0,
+    //     onHide: () => {
+    //         props?.onHide?.();
+    //     },
+    // });
+    Toast.showWithGravity(msg, Toast.LONG, Toast.CENTER, {
+        backgroundColor: 'rgba(0,0,0,0.5)',
     });
-};
-
-export const getLanguage = () => {
-    const systemLanguages = RNLocalize.getLocales()?.[0];
-    // return `${systemLanguages.languageCode}_${systemLanguages.countryCode}`;
-    return `zh_CN`;
+    setTimeout(() => {
+        props?.onHide?.();
+    }, Toast.LONG);
+    // ToastAndroid.show('A pikachu appeared nearby !', ToastAndroid.SHORT, ToastAndroid.CENTER);
 };

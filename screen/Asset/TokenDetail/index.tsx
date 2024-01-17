@@ -1,15 +1,7 @@
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
-import {
-  ActivityIndicator,
-  Dimensions,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import { Avatar, Button, Image, Tab, TabView, Text, makeStyles } from '@rneui/themed';
+import { Dimensions, SafeAreaView, ScrollView, StatusBar, TouchableOpacity, View } from 'react-native';
+import { Button, Image, Tab, TabView, Text, makeStyles } from '@rneui/themed';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Layout from '@components/LayoutNormal';
@@ -20,6 +12,8 @@ import { LineChart } from 'react-native-chart-kit';
 import moment from 'moment';
 import { getActivity } from '@api/home';
 import { getData } from '@common/utils/storage';
+import { useTranslation } from 'react-i18next';
+import Empty from '@components/Empty';
 type Props = {
   fullWidth?: boolean;
   navigation: any;
@@ -38,6 +32,7 @@ const chartConfig = {
   labelColor: (opacity = 1) => `#C8C8C8`,
 };
 const TokenDetail = (props: Props) => {
+  const { t } = useTranslation();
   const [activity, setActivity] = useState<Record<string, any>>({});
   const [index, setIndex] = useState(0);
   const [kLine, setKLine] = useState<{ labels: string[]; datasets: any[] }>({
@@ -67,6 +62,7 @@ const TokenDetail = (props: Props) => {
   });
   const styles = useStyles(props);
   const { width } = Dimensions.get('window');
+
   const initData = useCallback(async () => {
     const { contract_addr: contract_address, ...rest } = tokenInfo?.tokenDetail || {};
     const res = await getAddressBalance({
@@ -78,12 +74,6 @@ const TokenDetail = (props: Props) => {
     if (res.data) {
       setAddressBalance(res.data || {});
     }
-    console.log(1111, res, {
-      wallet_uuid: tokenInfo?.wallet_uuid,
-      device_id: tokenInfo?.device_id,
-      ...rest,
-      contract_address,
-    });
   }, [tokenInfo]);
 
   const initKLine = useCallback(async () => {
@@ -175,7 +165,7 @@ const TokenDetail = (props: Props) => {
     ]);
     const current_token_detail_obj = JSON.parse(current_token_detail);
     props.navigation?.setOptions({
-      title: `${current_token_detail_obj?.symbol}详情`,
+      title: `${current_token_detail_obj?.symbol} ${t(`asset.details`)}`,
     });
     setTokenInfo({
       device_id,
@@ -215,6 +205,7 @@ const TokenDetail = (props: Props) => {
       }
     } catch (e) {}
   }, [tokenInfo?.tokenDetail?.symbol]);
+
   useEffect(() => {
     // 在组件挂载或标题更新时执行
     rqDatas();
@@ -230,7 +221,7 @@ const TokenDetail = (props: Props) => {
             alignItems: 'center',
             justifyContent: 'space-between',
             backgroundColor: 'rgba(255, 255, 255, 1)',
-            paddingHorizontal: 23,
+            paddingHorizontal: 21,
             paddingVertical: 13,
           }}
         >
@@ -242,10 +233,10 @@ const TokenDetail = (props: Props) => {
               // backgroundColor: '#8B7FEA',
               alignItems: 'baseline',
               display: 'flex',
-              paddingHorizontal: 27,
+              paddingHorizontal: 21,
             }}
           >
-            <Icon name={'creditcard'} color={'#fff'} /> 转账
+            <Icon name={'creditcard'} color={'#fff'} /> {t(`asset.send`)}
           </Button>
           <Button
             onPress={() => {
@@ -255,10 +246,10 @@ const TokenDetail = (props: Props) => {
               backgroundColor: '#2667FF',
               alignItems: 'baseline',
               display: 'flex',
-              paddingHorizontal: 27,
+              paddingHorizontal: 21,
             }}
           >
-            <Icon name={'qrcode'} color={'#fff'} /> 收款
+            <Icon name={'qrcode'} color={'#fff'} /> {t(`asset.receive`)}
           </Button>
           <Button
             onPress={() => {
@@ -271,11 +262,11 @@ const TokenDetail = (props: Props) => {
               overflow: 'hidden',
               alignItems: 'baseline',
               display: 'flex',
-              paddingHorizontal: 27,
+              paddingHorizontal: 23,
             }}
           >
             <Icon name="swap" color="#252525" />
-            <Text style={{ color: '#252525' }}>兑换</Text>
+            <Text style={{ color: '#252525' }}>{t(`asset.swap`)}</Text>
           </Button>
         </View>
       }
@@ -325,7 +316,7 @@ const TokenDetail = (props: Props) => {
                   }}
                 >
                   <Text style={{ color: '#3B28CC', fontSize: 12 }}>
-                    去兑换 <Icon name="right" />
+                    {t(`asset.swap`)} <Icon name="right" />
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -333,7 +324,7 @@ const TokenDetail = (props: Props) => {
                 <LineChart
                   data={kLine}
                   height={170}
-                  width={width + 60}
+                  width={width + 50}
                   withOuterLines={false}
                   chartConfig={chartConfig as any}
                   yAxisInterval={3}
@@ -367,7 +358,7 @@ const TokenDetail = (props: Props) => {
           )}
           <View style={styles.scrollContainer1}>
             <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 32 }}>
-              <View style={{ flex: 1 }}>
+              <View style={{ width: 210 }}>
                 <Tab
                   value={index}
                   onChange={handleChange}
@@ -376,14 +367,15 @@ const TokenDetail = (props: Props) => {
                     backgroundColor: '#3B28CC',
                     height: 4,
                     borderRadius: 2,
+                    width: 70,
                   }}
                   titleStyle={(active: boolean) => {
                     return { fontSize: 12, marginVertical: 8, color: active ? '#3B28CC' : '#AEAEAE' };
                   }}
                 >
-                  <Tab.Item>全部</Tab.Item>
-                  <Tab.Item>转出</Tab.Item>
-                  <Tab.Item>转入</Tab.Item>
+                  <Tab.Item>{t(`asset.all`)}</Tab.Item>
+                  <Tab.Item>{t(`asset.received`)}</Tab.Item>
+                  <Tab.Item>{t(`asset.sent`)}</Tab.Item>
                 </Tab>
               </View>
               <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
@@ -419,7 +411,9 @@ const TokenDetail = (props: Props) => {
                             <TouchableOpacity
                               key={item}
                               onPress={() => {
-                                props?.navigation.navigate('coinDetail');
+                                props?.navigation.navigate('transferDetails', {
+                                  ...item,
+                                });
                               }}
                             >
                               <View
@@ -431,7 +425,6 @@ const TokenDetail = (props: Props) => {
                                   paddingVertical: 10,
                                 }}
                               >
-                                {/* <Avatar rounded source={{ uri: 'https://randomuser.me/api/portraits/men/36.jpg' }} /> */}
                                 <View
                                   style={{
                                     backgroundColor: 'rgba(240, 240, 255, 1)',
@@ -451,7 +444,9 @@ const TokenDetail = (props: Props) => {
 
                                 <View style={{ flex: 1, marginRight: 14, marginLeft: 10 }}>
                                   <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
-                                    <Text>{item.type === 0 ? '转出' : '转入'}</Text>
+                                    <Text>
+                                      {item.type === 0 ? t('searchHistory.transferOut') : t('searchHistory.transferIn')}
+                                    </Text>
                                     <Text>{item.amount}</Text>
                                   </View>
                                   <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
@@ -467,24 +462,8 @@ const TokenDetail = (props: Props) => {
                             </TouchableOpacity>
                           ))
                         ) : (
-                          <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                            <View>
-                              <Image
-                                source={require('@assets/images/emptyRecord.png')}
-                                style={styles.img}
-                                PlaceholderContent={<ActivityIndicator />}
-                              />
-                            </View>
-                            <Text style={{ fontSize: 10, marginTop: 18, marginBottom: 28, color: '#AEAEAE' }}>
-                              暂无数据
-                            </Text>
-                          </View>
+                          <Empty />
                         )}
-                        {/* {record[item].loading && (
-                        <View style={{ justifyContent: 'center', alignItems: 'center', paddingVertical: 16 }}>
-                          <Text>Loading...</Text>
-                        </View>
-                      )} */}
                       </ScrollView>
                     </TabView.Item>
                   );

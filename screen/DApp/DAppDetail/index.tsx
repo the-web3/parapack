@@ -10,6 +10,8 @@ import { showToast } from '@common/utils/platform';
 import HTML from 'react-native-render-html';
 import ReportBottom from '@components/ReportBottom';
 import IconFont from '@assets/iconfont';
+import { SwiperFlatList } from 'react-native-swiper-flatlist';
+import { useTranslation } from 'react-i18next';
 
 interface DAppDetailParam {
   navigation?: any;
@@ -30,6 +32,7 @@ const chartConfig = {
 };
 
 export const DAppDetail = (props: DAppDetailParam) => {
+  const { t } = useTranslation();
   const { width } = Dimensions.get('window');
   const styles = useStyles();
   const [kLine, setKLine] = useState<{ labels: string[]; datasets: any[] }>({
@@ -42,7 +45,6 @@ export const DAppDetail = (props: DAppDetailParam) => {
   });
   // const [notices, setNotices] = useState<Record<string, any>>({});
   const [dAppProps] = useState(props?.route?.params?.params);
-  console.log(11111, dAppProps);
 
   useEffect(() => {
     if (dAppProps?.symbol !== '') {
@@ -86,7 +88,33 @@ export const DAppDetail = (props: DAppDetailParam) => {
       showToast('No Wallet');
       return;
     }
-    props?.navigation.navigate('DAppWebView', { params: { uri: dAppProps.url, title: dAppProps?.title } });
+    //TODO: chain Bitcoin 就不跳转, DApp是和链强绑定的chain, chainId, wallet_uuid
+    if (dAppProps?.chainName === 'Bitcoin') {
+      showToast('not support');
+      return;
+    }
+    // console.log(111111, {
+    //   params: {
+    //     // uri: 'https://app.uniswap.org',
+    //     // // uri: 'https://cryptohuntsman.titanex.co',
+    //     uri: dAppProps.url,
+    //     title: dAppProps?.title,
+    //     chainId: dAppProps?.chainListId,
+    //     // chainId: 137,
+    //     wallet_uuid,
+    //   },
+    // });
+    props?.navigation.navigate('DAppWebView', {
+      params: {
+        // uri: 'https://app.uniswap.org',
+        // uri: 'https://cryptohuntsman.titanex.co',
+        uri: dAppProps.url,
+        title: dAppProps?.title,
+        chainId: dAppProps?.chainListId,
+        // chainId: 137,
+        wallet_uuid,
+      },
+    });
   };
 
   const onBuyPress = () => {
@@ -107,18 +135,18 @@ export const DAppDetail = (props: DAppDetailParam) => {
   };
 
   const medium = useMemo(() => {
-    console.log('appDetail medium:', dAppProps?.medium);
     if (!dAppProps?.medium) {
       return [];
     }
     return (JSON.parse(dAppProps?.medium ?? '[]') ?? []).filter((v: any) => v.url !== '');
   }, [dAppProps]);
+
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.headerBg}>
           <Image
-            source={{ uri: dAppProps?.coverPicture ?? '' }}
+            source={{ uri: dAppProps?.miniCoverPicture ?? '' }}
             style={{ width: 100, height: 100, borderRadius: 15, overflow: 'hidden' }}
           />
           <View style={{ flex: 1, flexDirection: 'column', gap: 3, marginLeft: 15 }}>
@@ -139,7 +167,7 @@ export const DAppDetail = (props: DAppDetailParam) => {
                 onPress={onPress}
                 style={{ paddingHorizontal: 20, paddingVertical: 5, backgroundColor: '#5C43DC', borderRadius: 20 }}
               >
-                <Text style={{ color: '#FFF' }}>了解</Text>
+                <Text style={{ color: '#FFF' }}>{t('dappDetail.know')}</Text>
               </TouchableOpacity>
               <TouchableOpacity>
                 <IconFont name="a-112" />
@@ -175,7 +203,7 @@ export const DAppDetail = (props: DAppDetailParam) => {
             </TouchableOpacity>
           ))}
         </ScrollView>
-        {dAppProps?.symbol !== '' && (
+        {dAppProps?.symbol && dAppProps?.symbol !== '' && (
           <>
             <View
               style={{
@@ -194,14 +222,14 @@ export const DAppDetail = (props: DAppDetailParam) => {
               </View>
               <Text style={{ color: '#8C8C8C', fontSize: 10 }}>{dAppProps?.symbol}/USDT</Text>
               <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={onBuyPress}>
-                <Text style={{ color: '#3B28CC', fontWeight: '500' }} children="去兑换 >" />
+                <Text style={{ color: '#3B28CC', fontWeight: '500' }} children={`${t('dappDetail.goToExchange')} >`} />
               </TouchableOpacity>
             </View>
             {kLine.datasets.length > 0 && (
               <LineChart
                 data={kLine}
                 height={170}
-                width={width + 60}
+                width={width + 50}
                 withOuterLines={false}
                 chartConfig={chartConfig as any}
                 withHorizontalLines={false}
@@ -217,13 +245,41 @@ export const DAppDetail = (props: DAppDetailParam) => {
             )}
           </>
         )}
-
+        {dAppProps?.banners?.length > 0 && (
+          <View
+            style={{
+              flex: 1,
+              marginTop: 16,
+            }}
+          >
+            <SwiperFlatList
+              autoplay
+              autoplayDelay={2}
+              autoplayLoop
+              data={dAppProps?.banners}
+              style={{ height: 140 }}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={{ height: 140, justifyContent: 'center', flex: 1, marginHorizontal: 20 }}
+                  onPress={() => {
+                    props?.navigation.navigate('DAppWebView', { params: { uri: item.url, title: item?.title } });
+                  }}
+                >
+                  <Image
+                    source={{ uri: item?.img }}
+                    style={{ width: width - 40, height: '100%', resizeMode: 'cover', borderRadius: 12 }}
+                  />
+                </TouchableOpacity>
+              )}
+            />
+          </View>
+        )}
         {(dAppProps?.news ?? []).map((v: any, i: number) => {
           return (
             <View style={{ flexDirection: 'column', backgroundColor: '#F2F3F6', borderRadius: 10, margin: 20 }} key={i}>
               <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}>
                 <Image
-                  source={{ uri: v.coverPicture }}
+                  source={{ uri: v.miniCoverPicture }}
                   style={{
                     width: 20,
                     height: 20,

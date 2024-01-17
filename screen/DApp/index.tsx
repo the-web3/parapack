@@ -41,60 +41,65 @@ export const DAppScreen = (props: DAppProps) => {
   const [dAppGroupLike, setDAppGroupLike] = useState<Record<string, any>>({});
   const [tags, setTags] = useState<string[]>([]);
   const [selectedTime, setSelectedTime] = useState('6h');
-
   useEffect(() => {
     rqDatas();
-  }, []);
+  }, [props?.language]);
 
   const rqDatas = async () => {
     try {
-      const banners = await getBanners();
-      setBanners(banners.data);
-      // console.log('banners:', JSON.stringify(banners));
+      getBanners().then((res) => {
+        // console.log('banners:', JSON.stringify(banners));
+        setBanners(res.data);
+      });
 
-      const dAppGroupRes = await getDAppGroup({
+      getDAppGroup({
         pageNum: 1,
         pageSize: 10,
         symbol: 'eth',
         tag: 'recommend',
+      }).then((res) => {
+        setDAppGroup(res.data);
       });
-      setDAppGroup(dAppGroupRes.data);
 
-      const dAppGroupLikeRes = await getDAppGroup({
+      getDAppGroup({
         pageNum: 1,
         pageSize: 10,
         symbol: 'eth',
         tag: 'guess',
+      }).then((res) => {
+        setDAppGroupLike(res.data);
       });
-      setDAppGroupLike(dAppGroupLikeRes.data);
 
-      const dAppGroupHotRes = await getDAppGroup({
+      getDAppGroup({
         pageNum: 1,
         pageSize: 10,
         symbol: 'eth',
         tag: 'hot',
+      }).then((res) => {
+        setDAppGroupHot(res.data);
       });
-      setDAppGroupHot(dAppGroupHotRes.data);
 
-      const dAppGroupNewRes = await getDAppGroup({
+      getDAppGroup({
         pageNum: 1,
         pageSize: 10,
         symbol: 'eth',
         tag: 'new',
+      }).then((res) => {
+        setDAppGroupNew(res.data);
       });
-      setDAppGroupNew(dAppGroupNewRes.data);
 
-      const noticesRes = await getNotices({
+      getNotices({
         pageNum: 1,
         pageSize: 10,
-        symbol: 'eth',
+      }).then((res) => {
+        // console.log('noticesRes', JSON.stringify(noticesRes));
+        setNotices(res.data);
       });
-      // console.log('noticesRes', JSON.stringify(noticesRes));
-      setNotices(noticesRes.data);
 
-      const tagsRes = await getTags();
-      console.log('tagRes:', JSON.stringify(tagsRes.data));
-      setTags(tagsRes.data);
+      getTags().then((res) => {
+        // console.log('tagRes:', JSON.stringify(tagsRes.data));
+        setTags(res.data);
+      });
     } catch (e) {}
   };
 
@@ -146,8 +151,11 @@ export const DAppScreen = (props: DAppProps) => {
           inputStyle={{
             fontSize: 12,
           }}
+          onFocus={() => {
+            props?.navigation.navigate('SearchDapp');
+          }}
           leftIcon={<Icon name="search1" />}
-          placeholder="输入Dapp网站"
+          placeholder={t('dApp.searchPlaceholder')}
           onChangeText={async (search) => {
             const dAppGroupRes = await getDAppGroup({
               pageNum: 1,
@@ -169,9 +177,7 @@ export const DAppScreen = (props: DAppProps) => {
       <ScrollView contentContainerStyle={{ paddingBottom: 20, minHeight: 200 }} showsVerticalScrollIndicator={false}>
         <View
           style={{
-            height: 140,
-            width: width - 40,
-            marginHorizontal: 20,
+            flex: 1,
           }}
         >
           <SwiperFlatList
@@ -179,21 +185,35 @@ export const DAppScreen = (props: DAppProps) => {
             autoplayDelay={2}
             autoplayLoop
             data={banners.lists}
+            style={{ height: 140 }}
             renderItem={({ item }) => (
               <TouchableOpacity
-                style={{ height: 140, width: width, borderRadius: 12 }}
+                style={{
+                  height: 140,
+                  justifyContent: 'center',
+                  flex: 1,
+                  marginHorizontal: 20,
+                }}
                 onPress={() => {
-                  props?.navigation.navigate('DAppWebView', { params: { uri: item.url, title: item?.title } });
+                  props?.navigation.navigate('DAppDetail', { params: item.contentInfo });
                 }}
               >
                 <Image
                   source={{ uri: item?.img }}
-                  style={{ width: width - 40, height: '100%', resizeMode: 'contain', borderRadius: 12 }}
+                  style={{
+                    width: width - 40,
+                    resizeMode: 'cover',
+                    height: '100%',
+                    flex: 1,
+                    borderRadius: 12,
+                    // resizeMode: 'contain',
+                  }}
                 />
               </TouchableOpacity>
             )}
           />
         </View>
+
         <View style={style.notice}>
           <Button
             icon={<IconFont name="volume" size={9} />}
@@ -214,7 +234,18 @@ export const DAppScreen = (props: DAppProps) => {
                     props?.navigation.navigate('News', { ...item });
                   }}
                 >
-                  <Text style={{ color: '#8c8c8c', fontSize: 12, lineHeight: 26 }} numberOfLines={1}>
+                  <Text
+                    style={{
+                      color: '#8c8c8c',
+                      width: width - 40,
+                      // resizeMode: 'cover',
+                      height: '100%',
+                      flex: 1,
+                      borderRadius: 12,
+                      resizeMode: 'contain',
+                    }}
+                    numberOfLines={1}
+                  >
                     {item.summary}
                   </Text>
                 </TouchableOpacity>
@@ -278,7 +309,7 @@ export const DAppScreen = (props: DAppProps) => {
             {dAppGroup?.lists?.map((v, index) => (
               <TouchableOpacity style={style.recommendItem} onPress={() => onRecommendPress(v)} key={index}>
                 <View style={{ position: 'relative' }}>
-                  <Image source={{ uri: v.coverPicture }} style={{ height: 84, width: 84, borderRadius: 5 }} />
+                  <Image source={{ uri: v.miniCoverPicture }} style={{ height: 84, width: 84, borderRadius: 5 }} />
                   <IconFont name="medal" style={{ position: 'absolute', bottom: 0, right: 0 }} />
                 </View>
 
@@ -343,7 +374,7 @@ export const DAppScreen = (props: DAppProps) => {
               )
             }
           />
-          <ViewContent list={dAppGroupTime?.lists} navigation={props?.navigation} />
+          {/* <ViewContent list={dAppGroupTime?.lists} navigation={props?.navigation} /> */}
           <View style={{ marginVertical: 20, marginHorizontal: 20, backgroundColor: theme.colors.grey5, height: 1 }} />
         </View>
         {/* new ecosystem */}
@@ -395,7 +426,7 @@ export const DAppScreen = (props: DAppProps) => {
         >
           <TouchableOpacity onPress={() => onDeveloperOnboarding('DeveloperOnboarding')}>
             <Text style={styles.buttonTexts}>
-              {t('dApp.terms')} <Text style={styles.buttonTexts}>{'>'}</Text>
+              {t('dApp.termsAndRegulation')} <Text style={styles.buttonTexts}>{'>'}</Text>
             </Text>
           </TouchableOpacity>
         </View>

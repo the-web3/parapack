@@ -8,6 +8,7 @@ import { getData } from '@common/utils/storage';
 import { ActivityItems } from '@screen/Activity/Components/ActivityItems';
 import { getSymbolInfo } from '@api/symbol';
 import { showToast } from '@common/utils/platform';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   fullWidth?: boolean;
@@ -16,6 +17,7 @@ type Props = {
 
 const CoinDetail = (props: Props) => {
   const { navigation } = props;
+  const { t } = useTranslation();
   const styles = useStyles(props);
   const [index, setIndex] = React.useState(0);
   const [activity, setActivity] = useState<Record<string, any>>({});
@@ -117,9 +119,9 @@ const CoinDetail = (props: Props) => {
             return { fontSize: 12, marginVertical: 8, color: active ? '#3B28CC' : '#AEAEAE' };
           }}
         >
-          <Tab.Item>活动</Tab.Item>
-          <Tab.Item>概览</Tab.Item>
-          <Tab.Item>工具</Tab.Item>
+          <Tab.Item>{t('coinDetail.activity')}</Tab.Item>
+          <Tab.Item>{t('coinDetail.overview')}</Tab.Item>
+          <Tab.Item>{t('coinDetail.tool')}</Tab.Item>
         </Tab>
       </View>
 
@@ -141,12 +143,14 @@ const CoinDetail = (props: Props) => {
                     PlaceholderContent={<ActivityIndicator />}
                   />
                 </View>
-                <Text style={{ fontSize: 10, marginTop: 18, marginBottom: 28, color: '#AEAEAE' }}>暂无交易记录</Text>
+                <Text style={{ fontSize: 10, marginTop: 18, marginBottom: 28, color: '#AEAEAE' }}>
+                  {t('coinDetail.noTransactionRecord')}
+                </Text>
                 <View
                   style={{ backgroundColor: '#F1F1F1', paddingVertical: 4, paddingHorizontal: 12, borderRadius: 4 }}
                 >
                   <Text style={{ fontSize: 10, color: '#5D5D5D' }}>
-                    在浏览器中查看 <Icon name="link" size={10} color={'#5D5D5D'} />
+                    {t('coinDetail.viewInBrowser')} <Icon name="link" size={10} color={'#5D5D5D'} />
                   </Text>
                 </View>
               </View>
@@ -155,28 +159,28 @@ const CoinDetail = (props: Props) => {
         </TabView.Item>
         <TabView.Item style={styles.viewItem}>
           <View style={{ marginTop: 20 }}>
-            <Text style={styles.title}>币信息</Text>
+            <Text style={styles.title}>{t('coinDetail.coinInformation')}</Text>
             <View style={styles.subRow}>
-              <Text style={styles.subTitle}>代币名称</Text>
+              <Text style={styles.subTitle}>{t('coinDetail.tokenName')}</Text>
               <Text style={styles.subDesc}>{symbolDetail?.tokenName}</Text>
             </View>
             <View style={styles.subRow}>
-              <Text style={styles.subTitle}>项目名称</Text>
+              <Text style={styles.subTitle}>{t('coinDetail.projectName')}</Text>
               <Text style={styles.subDesc}>{symbolDetail?.projectName}</Text>
             </View>
             <View style={styles.subRow}>
-              <Text style={styles.subTitle}>总发行量</Text>
+              <Text style={styles.subTitle}>{t('coinDetail.totalEmission')}</Text>
               <Text style={styles.subDesc}>{symbolDetail?.circulation}</Text>
             </View>
             <View style={styles.subRow}>
-              <Text style={styles.subTitle}>合约地址</Text>
+              <Text style={styles.subTitle}>{t('coinDetail.contractAddress')}</Text>
               <Text style={styles.subDesc}>{symbolDetail?.contractAddr}</Text>
             </View>
-            <Text style={styles.title}>币信息</Text>
+            <Text style={styles.title}>{t('coinDetail.coinInformation')}</Text>
             <View>
               <Text style={styles.desc}>{symbolDetail?.introduction}</Text>
             </View>
-            <Text style={styles.title}>资源</Text>
+            <Text style={styles.title}>{t('coinDetail.resources')}</Text>
             <View style={{ flexDirection: 'row', gap: 10 }}>
               {symbolDetail?.medium &&
                 (JSON.parse(symbolDetail?.medium) || []).map((value: any, i: number) => (
@@ -197,21 +201,21 @@ const CoinDetail = (props: Props) => {
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 32 }}>
               <View style={styles.toolItem}>
                 <Icon name="safari" size={21} />
-                <Text style={{ marginTop: 6 }}>区块浏览器</Text>
+                <Text style={{ marginTop: 6 }}>{t('coinDetail.blockExplorer')}</Text>
               </View>
               <View style={styles.toolItemRigth}>
                 <Icon name="safari" size={21} />
-                <Text style={{ marginTop: 6 }}>区块浏览器</Text>
+                <Text style={{ marginTop: 6 }}>{t('coinDetail.blockExplorer')}</Text>
               </View>
             </View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 10 }}>
               <View style={styles.toolItem}>
                 <Icon name="safari" size={21} />
-                <Text style={{ marginTop: 6 }}>区块浏览器</Text>
+                <Text style={{ marginTop: 6 }}>{t('coinDetail.blockExplorer')}</Text>
               </View>
               <View style={styles.toolItemRigth}>
                 <Icon name="safari" size={21} />
-                <Text style={{ marginTop: 6 }}>区块浏览器</Text>
+                <Text style={{ marginTop: 6 }}>{t('coinDetail.blockExplorer')}</Text>
               </View>
             </View>
           </>

@@ -18,13 +18,13 @@ export const DAppWebView = (props: DAppWebViewProps) => {
   }, [props]);
 
   const onMessage = (event: any) => {
-    onBridgeMessage(event, webviewBridge);
+    console.log(898989);
+    onBridgeMessage(event, webviewBridge, propsData);
   };
 
   useEffect(() => {
     (props as any)?.navigation.setOptions({ title: props.route?.params.params?.title ?? '' });
   }, []);
-  console.log(11111, props.route?.params.params);
   const injectJavaScript = useMemo(() => {
     return getMetamaskExt();
   }, []);

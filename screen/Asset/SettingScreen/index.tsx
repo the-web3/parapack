@@ -7,16 +7,24 @@ import { updateWalletTable } from '@common/wallet';
 import BottomOverlay from '@components/BottomOverlay';
 import Layout from '@components/Layout';
 import ValidatePassword from '@components/ValidatePassword';
-import { Avatar, Button, Dialog, Input, ListItem, Switch } from '@rneui/themed';
+import { makeStyles, Avatar, Button, Dialog, Input, ListItem, Switch } from '@rneui/themed';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { View, Text, TouchableOpacity, Clipboard } from 'react-native';
 import { getUniqueId } from 'react-native-device-info';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/AntDesign';
-const SettingScreen = (props) => {
+import { DecodeMnemonic } from 'savourlabs-wallet-sdk/wallet';
+const SettingScreen = (props: any) => {
+  const { t } = useTranslation();
+  const styles = useStyles();
   const [walletInfo, setWalletInfo] = useState<DeviceBalanceData>();
   const [device_id, setDeviceId] = useState('');
   const [privateDialog, setPrivate] = useState({
+    visible: false,
+    text: '',
+  });
+  const [mnemonicDialog, setMnemonic] = useState({
     visible: false,
     text: '',
   });
@@ -64,6 +72,13 @@ const SettingScreen = (props) => {
     });
   };
 
+  const toggleMnemonicDialog = () => {
+    setMnemonic({
+      visible: !mnemonicDialog.visible,
+      text: '',
+    });
+  };
+
   const handleEditor = async () => {
     const { visible, ...rest } = walletNameDialog;
     const res = await updateWallet(rest);
@@ -75,7 +90,7 @@ const SettingScreen = (props) => {
           visible: false,
         };
       });
-      showToast('修改成功');
+      showToast(t('settingScreen.successfulModification'));
     }
   };
   const toggleDialogDelete = () => {
@@ -104,13 +119,15 @@ const SettingScreen = (props) => {
           key: 'is_del = ?',
           value: [1],
         });
-        showToast('删除成功', {
-          onHide: () => {
-            props?.navigation?.navigate('home', {
-              tab: 'asset',
-            });
-          },
-        });
+        setTimeout(() => {
+          showToast(t('settingScreen.successfullyDeleted'), {
+            onHide: () => {
+              props?.navigation?.navigate('home', {
+                tab: 'asset',
+              });
+            },
+          });
+        }, 0);
       }
     } catch (e) {
       console.log(111111, e);
@@ -139,7 +156,7 @@ const SettingScreen = (props) => {
             }}
             titleStyle={{ marginHorizontal: 20, color: 'rgba(208, 31, 31, 1)' }}
           >
-            删除钱包
+            {t('asset.deleteWallet')}
           </Button>
         </View>
       }
@@ -151,10 +168,10 @@ const SettingScreen = (props) => {
             <View style={{ flex: 1, marginRight: 14, marginLeft: 10, flexDirection: 'row' }}>
               <View style={{ flex: 1, flexDirection: 'column' }}>
                 <View>
-                  <Text>{walletInfo?.token_list[0]?.wallet_name}</Text>
+                  <Text style={styles.text}>{walletInfo?.token_list[0]?.wallet_name}</Text>
                 </View>
                 <View style={{ flexDirection: 'row', width: 150, alignItems: 'center' }}>
-                  <Text numberOfLines={1} ellipsizeMode="tail">
+                  <Text numberOfLines={1} ellipsizeMode="tail" style={styles.text}>
                     Id: {walletInfo?.token_list[0]?.wallet_uuid}
                   </Text>
                   <TouchableOpacity
@@ -176,7 +193,9 @@ const SettingScreen = (props) => {
                     justifyContent: 'center',
                   }}
                 >
-                  <Text style={{ lineHeight: 17, fontSize: 12, color: 'rgba(0, 0, 0, 1)' }}>修改</Text>
+                  <Text style={{ lineHeight: 17, fontSize: 12, color: 'rgba(0, 0, 0, 1)' }}>
+                    {t('settingScreen.modify')}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -184,7 +203,7 @@ const SettingScreen = (props) => {
         </View>
         <ListItem onPress={toggleWalletName}>
           <ListItem.Content>
-            <ListItem.Title>修改钱包名</ListItem.Title>
+            <ListItem.Title>{t('asset.editWalletName')}</ListItem.Title>
           </ListItem.Content>
           <ListItem.Chevron />
         </ListItem>
@@ -231,56 +250,107 @@ const SettingScreen = (props) => {
           }}
         >
           <ListItem.Content>
-            <ListItem.Title>查看私钥</ListItem.Title>
+            <ListItem.Title>{t('asset.viewPrivateKey')}</ListItem.Title>
           </ListItem.Content>
           <ListItem.Chevron />
         </ListItem>
-        {!walletInfo?.token_list?.[0].backup && (
+        {!walletInfo?.token_list?.[0].backup ? (
           <ListItem
             onPress={() => {
               props?.navigation.navigate('startBackup');
             }}
           >
             <ListItem.Content>
-              <ListItem.Title>备份钱包</ListItem.Title>
+              <ListItem.Title>{t('asset.backupWallet')}</ListItem.Title>
+            </ListItem.Content>
+            <ListItem.Chevron />
+          </ListItem>
+        ) : (
+          <ListItem
+            onPress={async () => {
+              try {
+                const [wallet_uuid] = await Promise.all([getData('wallet_uuid')]);
+                const sqliteData = await executeQuery({
+                  customExec: (tx, resolve, reject) => {
+                    return tx.executeSql(
+                      `SELECT * FROM wallet WHERE wallet_uuid = ? `,
+                      [wallet_uuid],
+                      (txObj, resultSet) => {
+                        console.log(99999, resultSet);
+                        if (resultSet.rows.length > 0) {
+                          const walletData = resultSet.rows.item(0);
+                          resolve(walletData);
+                        } else {
+                          reject('Wallet not found.');
+                        }
+                      },
+                      (txObj, error) => {
+                        reject('Wallet Found Error.');
+                      }
+                    );
+                  },
+                });
+                if (sqliteData) {
+                  const mnemonic = await DecodeMnemonic({
+                    encrytMnemonic: sqliteData?.mnemonic_code,
+                    language: 'english',
+                  });
+                  setMnemonic({
+                    visible: true,
+                    text: mnemonic,
+                  });
+                }
+              } catch (error) {
+                showToast(t('backupMnemonics.errorDecodingMnemonics'));
+                console.error('解析助记词时出错:', error);
+              }
+            }}
+          >
+            <ListItem.Content>
+              <ListItem.Title>{t('settingScreen.viewMnemonics')}</ListItem.Title>
             </ListItem.Content>
             <ListItem.Chevron />
           </ListItem>
         )}
+
         <ListItem>
           <ListItem.Content>
-            <ListItem.Title>面容/指纹支付</ListItem.Title>
+            <ListItem.Title>{t('asset.FaceFingerprintPay')}</ListItem.Title>
           </ListItem.Content>
           <Switch />
         </ListItem>
         <ListItem>
           <ListItem.Content>
-            <ListItem.Title>免密支付</ListItem.Title>
+            <ListItem.Title>{t('asset.passwordlessPayment')}</ListItem.Title>
           </ListItem.Content>
           <Switch />
         </ListItem>
         <ListItem>
           <ListItem.Content>
-            <ListItem.Title>授权检测</ListItem.Title>
+            <ListItem.Title>{t('asset.authorizationVerification')}</ListItem.Title>
           </ListItem.Content>
           <ListItem.Chevron />
         </ListItem>
         <ListItem>
           <ListItem.Content>
-            <ListItem.Title>节点设置</ListItem.Title>
+            <ListItem.Title>{t('asset.nodeSettings')}</ListItem.Title>
           </ListItem.Content>
           <ListItem.Chevron />
         </ListItem>
       </SafeAreaView>
 
-      <BottomOverlay visible={deleteVisible} title={'确定要删除钱包吗？'} onBackdropPress={toggleDialogDelete}>
+      <BottomOverlay
+        visible={deleteVisible}
+        title={t('asset.confirmDeleteWallet')}
+        onBackdropPress={toggleDialogDelete}
+      >
         <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', marginBottom: 16 }}>
-          <Text>删除后，您可通过已备份的助记词重新导入钱包</Text>
+          <Text>{t('asset.confirmDeleteWalletDesc')}</Text>
         </View>
         <View style={{ marginBottom: 16 }}>
-          <Button title="确定" onPress={handleDelete} />
+          <Button title={t('common.confirm')} onPress={handleDelete} />
         </View>
-        <Button title="取消" onPress={toggleDialogDelete} type="outline" />
+        <Button title={t('common.cancel')} onPress={toggleDialogDelete} type="outline" />
       </BottomOverlay>
       <ValidatePassword
         visible={validate.visible}
@@ -289,10 +359,14 @@ const SettingScreen = (props) => {
           toggleValidate();
         }}
       />
-      <BottomOverlay visible={walletNameDialog.visible} title={'修改钱包名称'} onBackdropPress={toggleWalletName}>
+      <BottomOverlay
+        visible={walletNameDialog.visible}
+        title={t('asset.editWalletName')}
+        onBackdropPress={toggleWalletName}
+      >
         <View style={{ marginTop: 16 }}>
           <Input
-            placeholder="请输入钱包名称"
+            placeholder={t('settingScreen.pleaseInputWalletName') || ''}
             value={walletNameDialog.wallet_name}
             onChangeText={(wallet_name) => {
               setWalletNameDialog((prev) => {
@@ -304,23 +378,42 @@ const SettingScreen = (props) => {
             }}
           />
         </View>
-        <Button onPress={handleEditor}>确定</Button>
+        <Button onPress={handleEditor}>{t('settingScreen.confirm')}</Button>
       </BottomOverlay>
       <Dialog isVisible={privateDialog.visible} onBackdropPress={toggleDialog}>
-        <Dialog.Title title="私钥" />
+        <Dialog.Title title={t('settingScreen.privateKey') || ''} />
         <Text>{privateDialog.text}</Text>
         <Dialog.Actions>
           <Dialog.Button
-            title="复制"
+            title={t('settingScreen.copy') || ''}
             onPress={() => {
               Clipboard.setString(privateDialog?.text || '');
             }}
           />
-          <Dialog.Button title="取消" onPress={toggleDialog} />
+          <Dialog.Button title={t('settingScreen.cancel') || ''} onPress={toggleDialog} />
+        </Dialog.Actions>
+      </Dialog>
+      <Dialog isVisible={mnemonicDialog.visible} onBackdropPress={toggleMnemonicDialog}>
+        <Dialog.Title title={t('settingScreen.viewMnemonics') || ''} />
+        <Text>{mnemonicDialog.text}</Text>
+        <Dialog.Actions>
+          <Dialog.Button
+            title={t('settingScreen.copy') || ''}
+            onPress={() => {
+              Clipboard.setString(mnemonicDialog?.text || '');
+            }}
+          />
+          <Dialog.Button title={t('settingScreen.cancel') || ''} onPress={toggleMnemonicDialog} />
         </Dialog.Actions>
       </Dialog>
     </Layout>
   );
 };
-
+const useStyles = makeStyles((theme: any) => {
+  return {
+    text: {
+      color: theme.colors.black,
+    },
+  };
+});
 export default SettingScreen;

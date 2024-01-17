@@ -20,7 +20,6 @@ const NewsArticle = (props: DAppProps) => {
       const noticesRes = await getNotices({
         pageNum: 1,
         pageSize: 10,
-        symbol: 'eth',
       });
       setNotices(noticesRes.data.lists);
     };

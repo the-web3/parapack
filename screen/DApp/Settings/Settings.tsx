@@ -3,8 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, ImageBackground, Image, TouchableOpacity, ScrollView, StatusBar } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AntdIcon from 'react-native-vector-icons/AntDesign';
-import { makeStyles, useTheme } from '@rneui/themed';
-import { getData } from '@common/utils/storage';
+import { makeStyles, useTheme, useThemeMode } from '@rneui/themed';
+import { getData, storeData } from '@common/utils/storage';
+import { useTranslation } from 'react-i18next';
 
 interface DAppProps {
   navigation?: any;
@@ -12,7 +13,9 @@ interface DAppProps {
 }
 
 export const Settings = (props: DAppProps) => {
+  const { t } = useTranslation();
   const { theme }: { theme: CustomTheme<CustomColors> } = useTheme();
+  const { mode, setMode } = useThemeMode();
   const styles = useStyles();
   const [currentWallet, setCurrentWallet] = useState<DeviceBalanceTokenList>();
   const onSetting = () => {
@@ -23,6 +26,17 @@ export const Settings = (props: DAppProps) => {
     //   wallet_uuid: currentWallet?.wallet_uuid,
     // });
   };
+
+  const changeColorTheme = () => {
+    if (mode === 'dark') {
+      setMode('light');
+      storeData('colorTheme', 'light');
+    } else {
+      setMode('dark');
+      storeData('colorTheme', 'dark');
+    }
+  };
+
   useEffect(() => {
     getData('wallet_uuid').then((wallet_uuid) => {
       setCurrentWallet({
@@ -36,11 +50,17 @@ export const Settings = (props: DAppProps) => {
       <StatusBar backgroundColor="transparent" translucent={true} />
       <View style={{ paddingHorizontal: 30, marginTop: 34 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-          <IconFont
-            name="a-11"
-            style={{ marginRight: 35, marginTop: 11, backgroundColor: '#F0F0FF', borderRadius: 44 }}
-            size={43}
-          />
+          <TouchableOpacity
+            onPress={() => {
+              props?.navigation.goBack();
+            }}
+          >
+            <IconFont
+              name="a-11"
+              style={{ marginRight: 35, marginTop: 11, backgroundColor: '#F0F0FF', borderRadius: 44 }}
+              size={43}
+            />
+          </TouchableOpacity>
           <View>
             <View
               style={{
@@ -59,14 +79,14 @@ export const Settings = (props: DAppProps) => {
               <TouchableOpacity onPress={() => onSetting()}>
                 <IconFont name="a-261" />
               </TouchableOpacity>
-              <TouchableOpacity>
-                <IconFont name="a-271" />
+              <TouchableOpacity onPress={changeColorTheme}>
+                <IconFont name={mode === 'dark' ? 'a-271' : 'hei'} />
               </TouchableOpacity>
             </View>
           </View>
         </View>
         <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 20, marginBottom: 30 }}>
-          <Text style={{ fontSize: 24, fontWeight: 600, color: 'white' }}>我的钱包</Text>
+          <Text style={{ fontSize: 24, fontWeight: 600, color: 'white' }}>{t('dAppSetting.myWallet')}</Text>
           <TouchableOpacity style={{ marginLeft: 10 }}>
             <AntdIcon name="caretright" size={14} color="white" />
           </TouchableOpacity>
@@ -96,25 +116,25 @@ export const Settings = (props: DAppProps) => {
           >
             <TouchableOpacity style={{ alignItems: 'center' }}>
               <Image style={styles.circle} source={require('@assets/images/38.png')} />
-              <Text style={styles.text1}>红包</Text>
+              <Text style={styles.text1}>{t('dAppSetting.lucky')}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={{ alignItems: 'center' }}>
               <Image style={styles.circle} source={require('@assets/images/39.png')} />
-              <Text style={styles.text1}>空投</Text>
+              <Text style={styles.text1}>{t('dAppSetting.airdrop')}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={{ alignItems: 'center' }}>
               <Image style={styles.circle} source={require('@assets/images/40.png')} />
-              <Text style={styles.text1}>邀请</Text>
+              <Text style={styles.text1}>{t('dAppSetting.invite')}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={{ alignItems: 'center' }}>
               <Image style={styles.circle} source={require('@assets/images/41.png')} />
-              <Text style={styles.text1}>钱包学院</Text>
+              <Text style={styles.text1}>{t('dAppSetting.academy')}</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.bg}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={styles.title}>绑定社交媒体</Text>
-              <Text style={{ fontSize: 12, color: '#8C8C8C' }}>查看更多</Text>
+              <Text style={styles.title}>{t('settings.bindingSocialMedia')}</Text>
+              <Text style={{ fontSize: 12, color: '#8C8C8C' }}>{t('settings.seeMore')}</Text>
             </View>
 
             <View style={styles.item}>
@@ -137,11 +157,11 @@ export const Settings = (props: DAppProps) => {
             </View>
           </View>
           <View style={styles.bg}>
-            <Text style={styles.title}>账户</Text>
+            <Text style={styles.title}>{t('dAppSetting.account')}</Text>
             <View style={styles.item}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <IconFont name="a-9" />
-                <Text style={styles.text}>地址本</Text>
+                <IconFont name="a-9" color={theme.colors.black} />
+                <Text style={styles.text}>{t('dAppSetting.addressBook')}</Text>
               </View>
               <TouchableOpacity>
                 <AntdIcon name="right" size={14} color={theme.colors.black} />
@@ -149,8 +169,8 @@ export const Settings = (props: DAppProps) => {
             </View>
             <View style={styles.item}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <IconFont name="a-10" />
-                <Text style={styles.text}>云钱包</Text>
+                <IconFont name="a-10" color={theme.colors.black} />
+                <Text style={styles.text}>{t('dAppSetting.cloudWallet')}</Text>
               </View>
               <TouchableOpacity>
                 <AntdIcon name="right" size={14} color={theme.colors.black} />
@@ -158,8 +178,8 @@ export const Settings = (props: DAppProps) => {
             </View>
             <View style={styles.item}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <IconFont name="a-111" />
-                <Text style={styles.text}>活动通知</Text>
+                <IconFont name="a-111" color={theme.colors.black} />
+                <Text style={styles.text}>{t('dAppSetting.activityNotifications')}</Text>
               </View>
               <TouchableOpacity>
                 <AntdIcon name="right" size={14} color={theme.colors.black} />
@@ -167,8 +187,8 @@ export const Settings = (props: DAppProps) => {
             </View>
             <View style={styles.item}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <IconFont name="a-12" />
-                <Text style={styles.text}>备份助记词</Text>
+                <IconFont name="a-12" color={theme.colors.black} />
+                <Text style={styles.text}>{t('dAppSetting.seedBackup')}</Text>
               </View>
               <TouchableOpacity>
                 <AntdIcon name="right" size={14} color={theme.colors.black} />
@@ -177,8 +197,8 @@ export const Settings = (props: DAppProps) => {
 
             <View style={[styles.item, { paddingBottom: 0 }]}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <IconFont name="a-13" />
-                <Text style={styles.text}>安全与隐私</Text>
+                <IconFont name="a-13" color={theme.colors.black} />
+                <Text style={styles.text}>{t('dAppSetting.securityAndPrivacy')}</Text>
               </View>
               <TouchableOpacity>
                 <AntdIcon name="right" size={14} color={theme.colors.black} />
@@ -186,18 +206,22 @@ export const Settings = (props: DAppProps) => {
             </View>
           </View>
           <View style={styles.bg}>
-            <Text style={styles.title}>我参与的活动</Text>
+            <Text style={styles.title}>{t('dAppSetting.activitiesIParticipatedIn')}</Text>
             <View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 20 }}>
               <Image style={{ width: 43, height: 43 }} source={require('@assets/images/2.png')} />
               <View style={{ marginLeft: 10 }}>
-                <Text style={{ color: 'black', fontWeight: 'regular', fontSize: 13 }}>Bitget合约</Text>
-                <Text style={{ color: 'gray', fontSize: 11 }}>在银河系中最受欢迎的去中心化平台上交..</Text>
+                <Text style={{ color: 'black', fontWeight: 'regular', fontSize: 13 }}>
+                  {t('settings.BitgetContract')}
+                </Text>
+                <Text style={{ color: 'gray', fontSize: 11 }}>
+                  {t('settings.tradeOnTheMostPopularDecentralizedPlatformInTheGalaxy')}
+                </Text>
               </View>
             </View>
             <View style={[styles.item, { paddingTop: 0 }]}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <IconFont name="a-14" />
-                <Text style={styles.text}>联系客服</Text>
+                <IconFont name="a-14" color={theme.colors.black} />
+                <Text style={styles.text}>{t('dAppSetting.contactCustomerService')}</Text>
               </View>
               <TouchableOpacity>
                 <AntdIcon name="right" size={14} color={theme.colors.black} />
@@ -205,8 +229,8 @@ export const Settings = (props: DAppProps) => {
             </View>
             <View style={[styles.item, { paddingBottom: 0 }]}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <IconFont name="a-15" />
-                <Text style={styles.text}>帮助中心</Text>
+                <IconFont name="a-15" color={theme.colors.black} />
+                <Text style={styles.text}>{t('dAppSetting.helpCenter')}</Text>
               </View>
               <TouchableOpacity>
                 <AntdIcon name="right" size={14} color={theme.colors.black} />
@@ -215,11 +239,11 @@ export const Settings = (props: DAppProps) => {
           </View>
 
           <View style={styles.bg}>
-            <Text style={styles.title}>加入我们</Text>
+            <Text style={styles.title}>{t('dAppSetting.joinUs')}</Text>
             <View style={styles.item}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <IconFont name="a-16" />
-                <Text style={styles.text}>招募代理</Text>
+                <IconFont name="a-16" color={theme.colors.black} />
+                <Text style={styles.text}>{t('dAppSetting.recruitAgents')}</Text>
               </View>
               <TouchableOpacity>
                 <AntdIcon name="right" size={14} color={theme.colors.black} />
@@ -227,8 +251,8 @@ export const Settings = (props: DAppProps) => {
             </View>
             <View style={styles.item}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <IconFont name="a-17" />
-                <Text style={styles.text}>全球社区</Text>
+                <IconFont name="a-17" color={theme.colors.black} />
+                <Text style={styles.text}>{t('dAppSetting.globalCommunities')}</Text>
               </View>
               <TouchableOpacity>
                 <AntdIcon name="right" size={14} color={theme.colors.black} />
@@ -236,8 +260,8 @@ export const Settings = (props: DAppProps) => {
             </View>
             <View style={[styles.item, { paddingBottom: 0 }]}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <IconFont name="a-181" />
-                <Text style={styles.text}>工作机会</Text>
+                <IconFont name="a-181" color={theme.colors.black} />
+                <Text style={styles.text}>{t('dAppSetting.jobOpportunities')}</Text>
               </View>
               <TouchableOpacity>
                 <AntdIcon name="right" size={14} color={theme.colors.black} />

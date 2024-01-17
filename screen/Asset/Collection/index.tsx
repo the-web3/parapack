@@ -8,9 +8,11 @@ import { Clipboard, Image, Modal, StatusBar, Text, TouchableOpacity, View } from
 import QRCode from 'react-native-qrcode-svg';
 import Icon from 'react-native-vector-icons/AntDesign';
 import ViewShot from 'react-native-view-shot';
+import { useTranslation } from 'react-i18next';
 
 const Collection = (props) => {
   const viewShotRef = useRef(null);
+  const { t } = useTranslation();
   const [capture, setCapture] = useState({
     loading: false,
     url: '',
@@ -60,11 +62,11 @@ const Collection = (props) => {
                       fontSize: 18,
                     }}
                   >
-                    {tokenDetail?.symbol} ({tokenDetail?.chain}) 收款
+                    {tokenDetail?.symbol} ({tokenDetail?.chain}) {t('collection.receipt')}
                   </Text>
                 </View>
                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                  <Text style={styles.font}>扫描二维码，向我支付</Text>
+                  <Text style={styles.font}>{t('collection.scanQRPayment')}</Text>
                 </View>
                 <View style={{ justifyContent: 'center', alignItems: 'center', marginVertical: 20 }}>
                   {tokenDetail?.address && <QRCode value={tokenDetail?.address || ''} size={200} />}
@@ -90,10 +92,10 @@ const Collection = (props) => {
                     Clipboard.setString(tokenDetail?.address || '');
                   }}
                 >
-                  <Text style={styles.font}>复制地址</Text>
+                  <Text style={styles.font}>{t('collection.copyAddress')}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.item} onPress={captureImage}>
-                  <Text style={styles.font}>分享</Text>
+                  <Text style={styles.font}>{t('collection.share')}</Text>
                 </TouchableOpacity>
               </View>
             </View>

@@ -10,12 +10,14 @@ import { createImportWallet } from '@common/wallet';
 import { CreateMnemonic } from 'savourlabs-wallet-sdk/wallet';
 import { storeData } from '@common/utils/storage';
 import Spinner from 'react-native-loading-spinner-overlay';
+import { useTranslation } from 'react-i18next';
 type Props = {
   fullWidth?: boolean;
   navigation: any;
 };
 
 const CreateWallet = (props: Props) => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [walletInfo, setWalletInfo] = useState<{
     wallet_name: string;
@@ -30,7 +32,7 @@ const CreateWallet = (props: Props) => {
   });
   const handleCreateWallet = async () => {
     if (!walletInfo.checked) {
-      return showToast('请同意条款');
+      return showToast(t('createWallet.pleaseAgreeToTerms'));
     }
     if (!rules.walletName.isVaild(walletInfo.wallet_name)) {
       return showToast(rules.walletName.message);
@@ -39,14 +41,13 @@ const CreateWallet = (props: Props) => {
       return showToast(rules.password.message);
     }
     if (walletInfo.password !== walletInfo.confirmPassword) {
-      return showToast('密码不一致');
+      return showToast(t('createWallet.passwordMismatch'));
     }
     setLoading(true);
     const mnemonic = await CreateMnemonic({
       number: 12,
       language: 'english',
     });
-    console.log(11111111, mnemonic);
     const createSuccess = await createImportWallet({
       wallet_name: walletInfo.wallet_name,
       password: walletInfo.password,
@@ -70,12 +71,11 @@ const CreateWallet = (props: Props) => {
     // });
   };
   const styles = useStyles(props);
-
   return (
     <Layout
       fixedChildren={
         <View style={styles.button}>
-          <Button onPress={handleCreateWallet}>创建钱包</Button>
+          <Button onPress={handleCreateWallet}>{t('asset.createWallet')}</Button>
         </View>
       }
     >
@@ -83,9 +83,9 @@ const CreateWallet = (props: Props) => {
       <SafeAreaView>
         <View style={styles.item}>
           <Input
-            label="设置身份钱包名"
+            label={t('createWallet.setIdentityWalletName')}
             value={walletInfo.wallet_name}
-            placeholder="大小写字母+数字+下划线"
+            placeholder={`${t('createWallet.caseLetters')}+${t('createWallet.numbers')}+${t('createWallet.underline')}`}
             onChangeText={(wallet_name) => {
               setWalletInfo((prev) => {
                 return {
@@ -98,10 +98,10 @@ const CreateWallet = (props: Props) => {
         </View>
         <View style={styles.item}>
           <Input
-            label="设置密码"
+            label={t('createWallet.setPassword')}
             secureTextEntry={true}
             value={walletInfo.password}
-            placeholder="不少于8位,至少包含1个字母和1个数字"
+            placeholder={t('createWallet.notLessThanEightDigits') || ''}
             onChangeText={(password) => {
               setWalletInfo((prev) => {
                 return {
@@ -114,10 +114,10 @@ const CreateWallet = (props: Props) => {
         </View>
         <View style={styles.item}>
           <Input
-            label="确认密码"
+            label={t('createWallet.confirmPassword')}
             secureTextEntry={true}
             value={walletInfo.confirmPassword}
-            placeholder="不少于8位,至少包含1个字母和1个数字"
+            placeholder={t('createWallet.notLessThanEightDigits') || ''}
             onChangeText={(confirmPassword) => {
               setWalletInfo((prev) => {
                 return {
@@ -126,8 +126,8 @@ const CreateWallet = (props: Props) => {
                 };
               });
             }}
-            // errorStyle={{color: 'red'}}
-            // errorMessage="ENTER A VALID ERROR HERE"
+          // errorStyle={{color: 'red'}}
+          // errorMessage="ENTER A VALID ERROR HERE"
           />
         </View>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
@@ -159,9 +159,9 @@ const CreateWallet = (props: Props) => {
           </TouchableOpacity>
 
           <Text style={{ flexWrap: 'wrap', flex: 1 }}>
-            我已阅读并同意 <Text style={styles.protocol}>《用户协议》</Text>
-            以及
-            <Text style={styles.protocol}>《隐私政策》</Text>
+            {t('createWallet.iHaveRead')} <Text style={styles.protocol}>{t('createWallet.userAgreement')}</Text>
+            {t('createWallet.and')}
+            <Text style={styles.protocol}>{t('createWallet.privacyPolicy')}</Text>
           </Text>
         </View>
       </SafeAreaView>

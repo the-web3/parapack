@@ -9,7 +9,9 @@
       "@api/*": ["./api/*"],
       "@assets/*": ["./assets/*"],
       "@common/*": ["./common/*"],
+      "@i18n/*": ["./i18n/*"],
       "@components/*": ["./components/*"],
-    }
+    },
+    "types": ["redux-thunk"]
   }
 }

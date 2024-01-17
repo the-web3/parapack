@@ -405,10 +405,8 @@ export const insertWalletAsset = ({
  *
  * @param privateWalletInfo
  */
-export const batchInsertOrUpdateAssetTable = async (
-  privateWalletInfo: PrivateWalletStructure,
-  submitted?: number = 1
-) => {
+export const batchInsertOrUpdateAssetTable = async (privateWalletInfo: PrivateWalletStructure, submitted?: number) => {
+  submitted = submitted || 1;
   console.log(888888, privateWalletInfo);
   executeQuery({
     customExec: (tx) => {
@@ -546,7 +544,7 @@ export const createImportWallet = async (params: {
       insertOrUpdateChainAssetTable(symbolSupport?.data || []);
 
       const tokens = (symbolSupport?.data || [])
-        // ?.filter((item) => SUPPORT_CHAIN_NAME.includes(item.chainName) && item.default)
+        ?.filter((item) => item.default)
         .reduce((total: PrivateWalletBalance[], supportChian, index) => {
           if (supportChian.token.length > 0) {
             console.log(`createImportWalletParams3 =====>`, index, supportChian);
@@ -556,7 +554,7 @@ export const createImportWallet = async (params: {
               password: '',
             });
             let account = CreateAddress({
-              chain: supportChian.symbol.toLowerCase(),
+              chain: supportChian.chainName,
               seedHex: seed.toString('hex'),
               index: 0,
               receiveOrChange: 0,
@@ -723,15 +721,9 @@ export const addToken = async (params: {
       mnemonic,
       password: '',
     });
-    console.log(44444, params, {
-      chain: params.symbol.toLowerCase(),
-      seedHex: seed.toString('hex'),
-      index: 0,
-      receiveOrChange: 0,
-      network: 'mainnet',
-    });
+    console.log(44444, params);
     const account = CreateAddress({
-      chain: params.symbol.toLowerCase(),
+      chain: params.chain,
       seedHex: seed.toString('hex'),
       index: 0,
       receiveOrChange: 0,
