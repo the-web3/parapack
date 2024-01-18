@@ -1,12 +1,13 @@
 export default {
-  success: 'Success',
-  ecology: 'ecology',
-  activity: 'activity',
-  swap: 'swap',
-  video: 'video',
-  asset: 'asset',
-  emptyTransaction: 'No transaction records at the moment',
-  empty: 'Empty',
-  confirm: 'confirm',
-  cancel: 'cancel',
+  "success": "Success",
+  "ecology": "Ecology",
+  "activity": "Activity",
+  "swap": "Exchange",
+  "video": "Video",
+  "asset": "Asset",
+  "emptyTransaction": "No transaction records yet",
+  "empty": "No data available",
+  "confirm": "Confirm",
+  "cancel": "Cancel",
+  "notSupport": "not support"
 };

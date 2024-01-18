@@ -203,7 +203,7 @@ const TokenDetail = (props: Props) => {
         });
         setActivity(activityRes.data);
       }
-    } catch (e) { }
+    } catch (e) {}
   }, [tokenInfo?.tokenDetail?.symbol]);
 
   useEffect(() => {
@@ -324,7 +324,7 @@ const TokenDetail = (props: Props) => {
                 <LineChart
                   data={kLine}
                   height={170}
-                  width={width + 60}
+                  width={width + 50}
                   withOuterLines={false}
                   chartConfig={chartConfig as any}
                   yAxisInterval={3}
@@ -351,7 +351,7 @@ const TokenDetail = (props: Props) => {
                 <Image
                   source={{ uri: activity?.lists[0]?.coverPicture }}
                   style={styles.banner}
-                // PlaceholderContent={<ActivityIndicator />}
+                  // PlaceholderContent={<ActivityIndicator />}
                 />
               </TouchableOpacity>
             </View>
@@ -411,7 +411,9 @@ const TokenDetail = (props: Props) => {
                             <TouchableOpacity
                               key={item}
                               onPress={() => {
-                                props?.navigation.navigate('coinDetail');
+                                props?.navigation.navigate('transferDetails', {
+                                  ...item,
+                                });
                               }}
                             >
                               <View
@@ -423,7 +425,6 @@ const TokenDetail = (props: Props) => {
                                   paddingVertical: 10,
                                 }}
                               >
-                                {/* <Avatar rounded source={{ uri: 'https://randomuser.me/api/portraits/men/36.jpg' }} /> */}
                                 <View
                                   style={{
                                     backgroundColor: 'rgba(240, 240, 255, 1)',
@@ -443,10 +444,9 @@ const TokenDetail = (props: Props) => {
 
                                 <View style={{ flex: 1, marginRight: 14, marginLeft: 10 }}>
                                   <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
-                                    <Text>{item.type === 0 ?
-                                      t('searchHistory.transferOut') :
-                                      t('searchHistory.transferIn')
-                                    }</Text>
+                                    <Text>
+                                      {item.type === 0 ? t('searchHistory.transferOut') : t('searchHistory.transferIn')}
+                                    </Text>
                                     <Text>{item.amount}</Text>
                                   </View>
                                   <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
@@ -464,11 +464,6 @@ const TokenDetail = (props: Props) => {
                         ) : (
                           <Empty />
                         )}
-                        {/* {record[item].loading && (
-                        <View style={{ justifyContent: 'center', alignItems: 'center', paddingVertical: 16 }}>
-                          <Text>Loading...</Text>
-                        </View>
-                      )} */}
                       </ScrollView>
                     </TabView.Item>
                   );

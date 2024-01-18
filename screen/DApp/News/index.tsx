@@ -30,12 +30,6 @@ const NewsScreen = (props: DAppProps) => {
             <Text style={styles.title}>{notice.title}</Text>
           </View>
           <Text style={styles.date}>{moment(notice.ctime).format('yy/MM/DD')}</Text>
-          <View style={styles.summaryContainer}>
-            <Text style={styles.summary}>{notice.summary}</Text>
-          </View>
-          <View style={styles.dateImageContainer}>
-            <Image style={styles.image} source={{ uri: notice.miniCoverPicture }} />
-          </View>
           <View>
             <RenderHTML contentWidth={width - 32} source={{ html: notice.content }} />
           </View>
@@ -61,7 +55,6 @@ const useStyles = makeStyles((theme, props: DAppProps) => {
       flexDirection: 'row',
       color: 'black',
       alignItems: 'center',
-      marginBottom: 12,
     },
     title: {
       fontSize: 18,

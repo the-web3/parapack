@@ -93,22 +93,22 @@ export const DAppDetail = (props: DAppDetailParam) => {
       showToast('not support');
       return;
     }
-    console.log(111111, {
-      params: {
-        // uri: 'https://app.uniswap.org',
-        // // uri: 'https://cryptohuntsman.titanex.co',
-        uri: dAppProps.url,
-        title: dAppProps?.title,
-        chainId: dAppProps?.chainListId,
-        // chainId: 137,
-        wallet_uuid,
-      },
-    });
+    // console.log(111111, {
+    //   params: {
+    //     // uri: 'https://app.uniswap.org',
+    //     // // uri: 'https://cryptohuntsman.titanex.co',
+    //     uri: dAppProps.url,
+    //     title: dAppProps?.title,
+    //     chainId: dAppProps?.chainListId,
+    //     // chainId: 137,
+    //     wallet_uuid,
+    //   },
+    // });
     props?.navigation.navigate('DAppWebView', {
       params: {
         // uri: 'https://app.uniswap.org',
-        uri: 'https://cryptohuntsman.titanex.co',
-        // uri: dAppProps.url,
+        // uri: 'https://cryptohuntsman.titanex.co',
+        uri: dAppProps.url,
         title: dAppProps?.title,
         chainId: dAppProps?.chainListId,
         // chainId: 137,
@@ -140,7 +140,7 @@ export const DAppDetail = (props: DAppDetailParam) => {
     }
     return (JSON.parse(dAppProps?.medium ?? '[]') ?? []).filter((v: any) => v.url !== '');
   }, [dAppProps]);
-  console.log(111111, medium);
+
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -229,7 +229,7 @@ export const DAppDetail = (props: DAppDetailParam) => {
               <LineChart
                 data={kLine}
                 height={170}
-                width={width + 60}
+                width={width + 50}
                 withOuterLines={false}
                 chartConfig={chartConfig as any}
                 withHorizontalLines={false}

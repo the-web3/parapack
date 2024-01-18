@@ -6,5 +6,6 @@ export default {
   "confirm": "确定",
   "privateKey": "私钥",
   "copy": "复制",
-  "cancel": "取消"
+  "cancel": "取消",
+  "viewMnemonics": "查看助记词"
 };

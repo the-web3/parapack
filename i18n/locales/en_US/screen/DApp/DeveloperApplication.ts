@@ -8,10 +8,14 @@ export default {
   "project": "Project",
   "applicationName": "Application Name",
   "applicationWebsite": "Project/Application Website",
+  "applicationType": "Project/Application Brief",
   "applicationFounderKYCandCorrespondingWhitePaper": "Application Founder KYC and Corresponding White Paper",
   "tokenName": "Token Name",
   "contractToken": "Token Contract",
   "tokenInformation": "Token Information",
   "capitalInstitutionInformation": "Capital Institution Information",
-  "needToSignADisclaimerAndAgreement": "Need to Sign a Disclaimer and Agreement (Platform Disclaimer, and the right to delist) and other legal documents"
+  "platformProtocol": "Platform Protocol",
+  "clause": "Clause",
+  "base": "I have read and voluntarily comply",
+  "and": "and"
 };

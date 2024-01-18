@@ -1,73 +1,82 @@
 {
   "activity": {
-    "searchAbout": "Search for activities you want to know about...",
-    "join": "join",
-    "entry": "Entry"
+    "index": {
+      "searchAbout": "Search for activities you want to know about...",
+      "join": "join",
+      "entry": "Entry"
+    }
   },
   "asset": {
-    "backup_tips_write": "It is recommended to manually transcribe.",
-    "backup_tips_copy": "Do not copy and save.",
-    "backup_tips_screenshot": "Do not take screenshots for preservation.",
-    "backup_tips": "Do not disclose the mnemonic phrase to anyone.\nOnce the mnemonic is lost, the assets cannot be recovered.",
-    "backup_verify_tips": "Please fill in the sequence according to the mnemonic you transcribed.",
-    "transfer": "Transfer",
-    "receipt": "Receipt",
-    "purchase": "Purchase",
-    "flash": "Flash Exchange",
-    "myAssets": "My Assets",
-    "Backup": "Go to Backup",
-    "Assets": "Assets",
-    "details": "Details",
-    "swap": "Go to Exchange",
-    "receive": "Receive",
-    "send": "Transfer",
-    "all": "All",
-    "received": "Received",
-    "sent": "Sent",
-    "transferTitle": "Transfer",
-    "transferSuccess": "Transfer Successful",
-    "transferAmount": "Transfer Amount",
-    "recipientAccount": "Recipient Account",
-    "minerFee": "Miner Fee",
-    "paymentAddress": "Payment Address",
-    "recipientAddress": "Recipient Address",
-    "transactionDetails": "Transaction Details",
-    "balance": "Balance",
-    "slow": "Slow",
-    "avg": "Recommended",
-    "fast": "Fast",
-    "custom": "Custom",
-    "createWallet": "Create Wallet",
-    "importWallet": "Import Wallet",
-    "startBackup": "Start Backup",
-    "backupSeedPhrase": "Backup Seed Phrase",
-    "verifyMnemonic": "Verify Mnemonic",
-    "addAsset": "Add Asset",
-    "tokenDetail": "Token Details",
-    "walletSettings": "Wallet Settings",
-    "editWalletName": "Edit Wallet Name",
-    "viewPrivateKey": "View Private Key",
-    "backupWallet": "Backup Wallet",
-    "FaceFingerprintPay": "Face/Fingerprint Payment",
-    "passwordlessPayment": "Passwordless Payment",
-    "authorizationVerification": "Authorization Verification",
-    "nodeSettings": "Node Settings",
-    "deleteWallet": "Delete Wallet",
-    "confirmDeleteWallet": "Are you sure you want to delete the wallet?",
-    "confirmDeleteWalletDesc": "After deletion, you can import the wallet again using the backed-up mnemonic phrase."
+    "index": {
+      "backup_tips_write": "It is recommended to manually transcribe.",
+      "backup_tips_copy": "Do not copy and save.",
+      "backup_tips_screenshot": "Do not take screenshots for preservation.",
+      "backup_tips": "Do not disclose the mnemonic phrase to anyone.\nOnce the mnemonic is lost, the assets cannot be recovered.",
+      "backup_verify_tips": "Please fill in the sequence according to the mnemonic you transcribed.",
+      "transfer": "Transfer",
+      "receipt": "Receipt",
+      "purchase": "Purchase",
+      "flash": "Flash Exchange",
+      "myAssets": "My Assets",
+      "Backup": "Go to Backup",
+      "Assets": "Assets",
+      "details": "Details",
+      "swap": "Go to Exchange",
+      "receive": "Receive",
+      "send": "Transfer",
+      "all": "All",
+      "received": "Received",
+      "sent": "Sent",
+      "transferTitle": "Transfer",
+      "transferDetails": "Transfer Details",
+      "transferSuccess": "Transfer Successful",
+      "transferAmount": "Transfer Amount",
+      "recipientAccount": "Recipient Account",
+      "minerFee": "Miner Fee",
+      "paymentAddress": "Payment Address",
+      "recipientAddress": "Recipient Address",
+      "transactionDetails": "Transaction Details",
+      "balance": "Balance",
+      "slow": "Slow",
+      "avg": "Recommended",
+      "fast": "Fast",
+      "custom": "Custom",
+      "createWallet": "Create Wallet",
+      "importWallet": "Import Wallet",
+      "startBackup": "Start Backup",
+      "backupSeedPhrase": "Backup Seed Phrase",
+      "verifyMnemonic": "Verify Mnemonic",
+      "addAsset": "Add Asset",
+      "tokenDetail": "Token Details",
+      "walletSettings": "Wallet Settings",
+      "editWalletName": "Edit Wallet Name",
+      "viewPrivateKey": "View Private Key",
+      "backupWallet": "Backup Wallet",
+      "FaceFingerprintPay": "Face/Fingerprint Payment",
+      "passwordlessPayment": "Passwordless Payment",
+      "authorizationVerification": "Authorization Verification",
+      "nodeSettings": "Node Settings",
+      "deleteWallet": "Delete Wallet",
+      "confirmDeleteWallet": "Are you sure you want to delete the wallet?",
+      "confirmDeleteWalletDesc": "After deletion, you can import the wallet again using the backed-up mnemonic phrase.",
+      "homeAssets": "Home Assets",
+      "popularCurrencies": "Popular Currencies"
+    }
   },
   "common": {
-    "success": "Success",
-    "ecology": "Ecology",
-    "activity": "Activity",
-    "swap": "Exchange",
-    "video": "Video",
-    "asset": "Asset",
-    "emptyTransaction": "No transaction records yet",
-    "empty": "No data available",
-    "confirm": "Confirm",
-    "cancel": "Cancel",
-    "notSupport": "not support"
+    "index": {
+      "success": "Success",
+      "ecology": "Ecology",
+      "activity": "Activity",
+      "swap": "Exchange",
+      "video": "Video",
+      "asset": "Asset",
+      "emptyTransaction": "No transaction records yet",
+      "empty": "No data available",
+      "confirm": "Confirm",
+      "cancel": "Cancel",
+      "notSupport": "not support"
+    }
   },
   "dapp": {
     "index": {
@@ -81,7 +90,7 @@
       "searchPlaceholder": "Enter Dapp website",
       "more": "More",
       "aboutParapack": "About ParaPack",
-      "developerapplication": "Developer Application",
+      "developerApplication": "Developer Application",
       "reportQuestion": "Report an Issue",
       "DeveloperOnboarding": "Developer Onboarding Rules and Agreement",
       "submit": "Submit Application",
@@ -91,7 +100,8 @@
       "informationCenter": "Information Center",
       "settings": "Settings",
       "announcementDetails": "Announcement Details",
-      "language": "Language"
+      "language": "Language",
+      "aboutUs": "About Us"
     },
     "setting": {
       "myWallet": "My Wallet",
@@ -115,13 +125,15 @@
     }
   },
   "swap": {
-    "Swap": "Trade",
-    "Market": "Market",
-    "LaunchPad": "LaunchPad",
-    "Sell": "Sell",
-    "Balance": "Balance",
-    "Buy": "Buy",
-    "Exchange": "Exchange"
+    "index": {
+      "Swap": "Trade",
+      "Market": "Market",
+      "LaunchPad": "LaunchPad",
+      "Sell": "Sell",
+      "Balance": "Balance",
+      "Buy": "Buy",
+      "Exchange": "Exchange"
+    }
   },
   "screen": {
     "Asset": {
@@ -211,7 +223,8 @@
         "confirm": "Confirm",
         "privateKey": "Private Key",
         "copy": "Copy",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "viewMnemonics": "View Mnemonics"
       },
       "StartBackup": {
         "startBackup": "Start Backup",
@@ -275,12 +288,16 @@
         "project": "Project",
         "applicationName": "Application Name",
         "applicationWebsite": "Project/Application Website",
+        "applicationType": "Project/Application Brief",
         "applicationFounderKYCandCorrespondingWhitePaper": "Application Founder KYC and Corresponding White Paper",
         "tokenName": "Token Name",
         "contractToken": "Token Contract",
         "tokenInformation": "Token Information",
         "capitalInstitutionInformation": "Capital Institution Information",
-        "needToSignADisclaimerAndAgreement": "Need to Sign a Disclaimer and Agreement (Platform Disclaimer, and the right to delist) and other legal documents"
+        "platformProtocol": "Platform Protocol",
+        "clause": "Clause",
+        "base": "I have read and voluntarily comply",
+        "and": "and"
       },
       "Parapack": {
         "currentVersionIsLatest": "Current version is the latest",
@@ -304,7 +321,12 @@
       "Review": {
         "cancelApplication": "Cancel Application",
         "materialsReview": "Materials Review",
-        "oncePassedWillNotifyByEmail": "Once passed, will notify by email"
+        "oncePassedWillNotifyByEmail": "Once passed, will notify by email",
+        "materialsReject": "Application Is Rejected",
+        "materialsRejectDesc": "review fails, you can reapply",
+        "reApply": "Reapply",
+        "materialsSuccess": "application approved",
+        "materialsSuccessDesc": "This information has been synchronized to the official email notification, please pay attention to check"
       },
       "SearchDapp": {
         "inputDAppWebsite": "Input DApp Website",

@@ -1,11 +1,12 @@
+import IconFont from '@assets/iconfont';
 import instance from '@common/utils/http';
-import { Button, useTheme } from '@rneui/themed';
+import { showToast } from '@common/utils/platform';
+import { Button, Input, useTheme } from '@rneui/themed';
 import { useState } from 'react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, Text, TextInput, StyleSheet, View, Dimensions } from 'react-native';
+import { ScrollView, Text, StyleSheet, View, Dimensions, TouchableOpacity } from 'react-native';
 import { getUniqueId } from 'react-native-device-info';
-// replace with your button component
 interface DAppProps {
   navigation?: any;
   mode?: string;
@@ -24,9 +25,16 @@ const DeveloperApplication = (props: DAppProps) => {
   const [contract, setContract] = useState('');
   const [exchange, setExchange] = useState('');
   const [capital, setCapital] = useState('');
+  const [checked, setChecked] = useState(false);
   const { t } = useTranslation();
 
   const onConfirm = async () => {
+    if (!checked) {
+      return showToast('请勾选协议');
+    }
+    if (!email || !telegram || !project || !domain || !type) {
+      return showToast('请填写表单');
+    }
     const [device_id] = await Promise.all([getUniqueId()]);
     const data = {
       email,
@@ -46,12 +54,11 @@ const DeveloperApplication = (props: DAppProps) => {
     instance
       .post('/dev/apply', data)
       .then((response) => {
+        console.log({ data: response.data }, 'data is submitted');
         props?.navigation.navigate('SubmitScreen');
-        // console.log({ data: response.data }, 'data is submitted');
       })
       .catch((error) => {
-        // console.error('Error Response:', error.response);
-        // console.error('Error Details:', error.message);
+        console.error('Error Details:', error.message);
         props?.navigation.navigate('SubmitScreen');
       });
   };
@@ -65,37 +72,34 @@ const DeveloperApplication = (props: DAppProps) => {
     container: {
       flex: 1,
       backgroundColor: theme.colors.white,
-      paddingHorizontal: isSmallScreen ? 10 : 30,
-      paddingVertical: isSmallScreen ? 5 : 10,
-      paddingBottom: isSmallScreen ? 10 : 20,
-    },
-    label: {
-      color: theme.colors.black,
-      fontSize: isSmallScreen ? 8 : 10,
-      marginLeft: isSmallScreen ? 10 : 20,
-      marginBottom: isSmallScreen ? 5 : 10,
+      paddingHorizontal: 16,
     },
     text: {
-      color: theme.colors.black,
-      fontSize: isSmallScreen ? 12 : 14,
-      marginLeft: isSmallScreen ? 10 : 20,
-      marginBottom: isSmallScreen ? 5 : 10,
+      color: '#3B28CC',
+      fontSize: 18,
+      fontWeight: '500',
     },
     labels: {
-      color: theme.colors.grey1,
-      fontSize: isSmallScreen ? 10 : 12,
-      marginBottom: isSmallScreen ? 5 : 10,
-      marginLeft: isSmallScreen ? 10 : 20,
+      color: '#3B28CC',
+      marginBottom: 30,
+      fontSize: 18,
+      fontWeight: '600',
+    },
+    label: {
+      color: theme.colors.grey9,
+      fontSize: 14,
+      fontWeight: '400',
+      paddingLeft: 0,
     },
     input: {
-      // backgroundColor: isDarkMode ? '#333' : '#f2f2f2',
-      color: theme.colors.black,
-      // color: isDarkMode ? '#fff' : '#000',
-      borderRadius: 5,
-      padding: isSmallScreen ? 5 : 10,
-      marginLeft: isSmallScreen ? 10 : 20,
-      marginBottom: isSmallScreen ? 5 : 10, // Updated marginBottom
-      fontSize: isSmallScreen ? 12 : 14,
+      minHeight: 34,
+      height: 34,
+      paddingHorizontal: 0,
+      borderRadius: 0,
+      borderWidth: 0,
+      borderBottomWidth: 1,
+      borderColor: '#E5E5E5',
+      backgroundColor: 'background',
     },
     buttonText: {
       color: '#fff',
@@ -108,114 +112,175 @@ const DeveloperApplication = (props: DAppProps) => {
       marginLeft: isSmallScreen ? 10 : 20,
       marginBottom: isSmallScreen ? 5 : 10, // Updated marginBottom
     },
+    protocol: {
+      color: '#4D6EF5',
+    },
   });
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      <Text style={styles.text}>{t('developerApplication.developerApplication')}</Text>
-      <Text style={styles.labels}>{t('developerApplication.needAudit')}</Text>
-      <Text style={[styles.label, { marginTop: 20 }]}>{t('developerApplication.developerContactEmail')}</Text>
-      <TextInput style={styles.input} placeholderTextColor={theme.colors.grey1} onChangeText={setEmail} value={email} />
-      <View style={styles.divider} />
-      <Text style={styles.label}>{t('developerApplication.phone')} (+082)</Text>
-      <TextInput style={styles.input} placeholderTextColor={theme.colors.grey1} onChangeText={setPhone} value={phone} />
-      <View style={styles.divider} />
+      <Text style={styles.text}>{t('developerApplication.title')}</Text>
+      <Text style={styles.labels}>{t('developerApplication.desc')}</Text>
+      <Input
+        inputContainerStyle={styles.input}
+        onChangeText={setEmail}
+        value={email}
+        labelStyle={styles.label}
+        label={
+          <View style={{ flexDirection: 'row' }}>
+            <Text style={{ color: 'red' }}>* </Text>
+            <Text>{t('developerApplication.developerContactEmail')}</Text>
+          </View>
+        }
+      />
+
+      {/* <Input
+        inputContainerStyle={styles.input}
+        placeholderTextColor={theme.colors.grey1}
+        onChangeText={setPhone}
+        value={phone}
+        labelStyle={styles.label}
+        label={`${t('developerApplication.phone')} (+082)`}
+      /> */}
+
       <View>
-        <Text style={styles.label}>
-          {t('developerApplication.telegram')}
-          (Telegram)
-        </Text>
-        <TextInput
-          style={styles.input}
+        <Input
+          inputContainerStyle={styles.input}
           placeholderTextColor={theme.colors.grey1}
           onChangeText={setTelegram}
           value={telegram}
+          labelStyle={styles.label}
+          label={
+            <View style={{ flexDirection: 'row' }}>
+              <Text style={{ color: 'red' }}>* </Text>
+              <Text>{`${t('developerApplication.telegram')} (Telegram)`}</Text>
+            </View>
+          }
         />
       </View>
-      <View style={styles.divider} />
-      <Text style={styles.label}>Twitter</Text>
-      <TextInput style={styles.input} placeholderTextColor={theme.colors.grey1} />
-      <View style={styles.divider} />
-      <Text style={styles.label}>Discord</Text>
-      <TextInput
-        style={styles.input}
+
+      {/* <Input
+        inputContainerStyle={styles.input}
+        placeholderTextColor={theme.colors.grey1}
+        labelStyle={styles.label}
+        label={`Twitter`}
+      /> */}
+
+      {/* <Input
+        inputContainerStyle={styles.input}
         placeholderTextColor={theme.colors.grey1}
         onChangeText={setDiscord}
         value={discord}
-      />
-      <View style={styles.divider} />
+        labelStyle={styles.label}
+        label={`Discord`}
+      /> */}
 
-      <Text style={styles.label}>
-        {t('developerApplication.project')}/{t('developerApplication.applicationName')}
-      </Text>
-      <TextInput
-        style={styles.input}
+      <Input
+        inputContainerStyle={styles.input}
         placeholderTextColor={theme.colors.grey1}
         onChangeText={setProject}
         value={project}
+        labelStyle={styles.label}
+        label={
+          <View style={{ flexDirection: 'row' }}>
+            <Text style={{ color: 'red' }}>* </Text>
+            <Text>{`${t('developerApplication.project')}/${t('developerApplication.applicationName')}`}</Text>
+          </View>
+        }
       />
-      <View style={styles.divider} />
 
-      <Text style={styles.label}>
-        {t('developerApplication.project')}/{t('developerApplication.applicationName')}
-      </Text>
-      <TextInput
-        style={styles.input}
+      <Input
+        inputContainerStyle={styles.input}
         placeholderTextColor={theme.colors.grey1}
         onChangeText={setDomain}
         value={domain}
+        labelStyle={styles.label}
+        label={
+          <View style={{ flexDirection: 'row' }}>
+            <Text style={{ color: 'red' }}>* </Text>
+            <Text>{`${t('developerApplication.applicationWebsite')}`}</Text>
+          </View>
+        }
       />
-      <View style={styles.divider} />
-      <Text style={styles.label}>{t('developerApplication.applicationWebsite')}</Text>
-      <TextInput style={styles.input} placeholderTextColor={theme.colors.grey1} onChangeText={setType} value={type} />
-      <View style={styles.divider} />
 
-      <Text style={styles.label}>{t('developerApplication.applicationFounderKYCandCorrespondingWhitePaper')}</Text>
-      <TextInput
-        style={styles.input}
+      <Input
+        inputContainerStyle={styles.input}
+        placeholderTextColor={theme.colors.grey1}
+        onChangeText={setType}
+        value={type}
+        labelStyle={styles.label}
+        label={
+          <View style={{ flexDirection: 'row' }}>
+            <Text style={{ color: 'red' }}>* </Text>
+            <Text>{`${t('developerApplication.applicationType')}`}</Text>
+          </View>
+        }
+      />
+
+      {/* <Input
+        inputContainerStyle={styles.input}
         placeholderTextColor={theme.colors.grey1}
         onChangeText={setFounder}
         value={founder}
-      />
-      <View style={styles.divider} />
+        labelStyle={styles.label}
+        label={t('developerApplication.applicationFounderKYCandCorrespondingWhitePaper')}
+      /> */}
 
-      <Text style={styles.label}>{t('developerApplication.tokenName')}</Text>
-      <TextInput style={styles.input} placeholderTextColor={theme.colors.grey1} onChangeText={setToken} value={token} />
-      <View style={styles.divider} />
+      {/* <Input
+        inputContainerStyle={styles.input}
+        placeholderTextColor={theme.colors.grey1}
+        onChangeText={setToken}
+        value={token}
+        labelStyle={styles.label}
+        label={t('developerApplication.tokenName')}
+      /> */}
 
-      <Text style={styles.label}>{t('developerApplication.contractToken')}</Text>
-      <TextInput
-        style={styles.input}
+      {/* <Input
+        inputContainerStyle={styles.input}
         placeholderTextColor={theme.colors.grey1}
         onChangeText={setContract}
         value={contract}
-      />
-      <View style={styles.divider} />
+        labelStyle={styles.label}
+        label={t('developerApplication.contractToken')}
+      /> */}
 
-      <Text style={styles.label}>{t('developerApplication.tokenInformation')}</Text>
-      <TextInput
-        style={styles.input}
+      {/* <Input
+        inputContainerStyle={styles.input}
         placeholderTextColor={theme.colors.grey1}
         onChangeText={setExchange}
         value={exchange}
-      />
-      <View style={styles.divider} />
+        labelStyle={styles.label}
+        label={t('developerApplication.tokenInformation')}
+      /> */}
 
-      <Text style={styles.label}>{t('developerApplication.capitalInstitutionInformation')}</Text>
-      <TextInput
-        style={styles.input}
+      {/* <Input
+        inputContainerStyle={styles.input}
         placeholderTextColor={theme.colors.grey1}
         onChangeText={setCapital}
         value={capital}
-      />
-      <View style={styles.divider} />
-
-      <Text style={styles.labels}>*{t('developerApplication.needToSignADisclaimerAndAgreement')}</Text>
-      <View style={{ height: 20 }} />
-      <View style={{ paddingBottom: isSmallScreen ? 30 : 50 }}>
+        labelStyle={styles.label}
+        label={t('developerApplication.capitalInstitutionInformation')}
+      /> */}
+      <View style={{ marginBottom: 60 }}>
         <Button onPress={() => onConfirm()}>
           <Text style={styles.buttonText}>{t('dApp.submit')} </Text>
         </Button>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 10 }}>
+          <TouchableOpacity
+            onPress={() => {
+              setChecked(!checked);
+            }}
+          >
+            <IconFont name="a-101" color={checked ? '#3B28CC' : undefined} style={{ marginRight: 8 }} />
+          </TouchableOpacity>
+
+          <Text style={{ flexWrap: 'wrap' }}>
+            {t('developerApplication.base')}
+            <Text style={styles.protocol}>{t('developerApplication.platformProtocol')}</Text>
+            {t('developerApplication.and')}
+            <Text style={styles.protocol}>{t('developerApplication.clause')}</Text>
+          </Text>
+        </View>
       </View>
     </ScrollView>
   );

@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, TouchableOpacity, View } from 'react-native';
-import { Input, Text, makeStyles } from '@rneui/themed';
-import Icon from 'react-native-vector-icons/AntDesign';
+import { makeStyles } from '@rneui/themed';
 import { getDAppGroup } from '@api/dApp';
-import { DAppItem } from '../Components/DAppItem';
+import { DAppItems } from '../Components/DAppItem';
 import { useTranslation } from 'react-i18next';
+import SearchInput from '@components/SearchInput';
 
 type Props = {
   fullWidth?: boolean;
@@ -28,7 +28,6 @@ const SearchDapp = (props: Props) => {
     const dAppGroupRes = await getDAppGroup({
       pageNum: 1,
       pageSize: 50,
-      symbol: 'eth',
     });
     setDAppData(dAppGroupRes?.data);
   };
@@ -36,44 +35,27 @@ const SearchDapp = (props: Props) => {
   return (
     <SafeAreaView style={[styles.body]}>
       <View style={styles.searchBar}>
-        <Input
-          containerStyle={{ flex: 1 }}
-          inputContainerStyle={styles.inputContainer}
-          errorProps={{ display: 'none' }}
-          inputStyle={{
-            fontSize: 12,
-          }}
-          leftIcon={<Icon name="search1" />}
-          placeholder={t('searchDapp.inputDAppWebsite') || ''}
+        <SearchInput
           onChangeText={async (search) => {
             const dAppGroupRes = await getDAppGroup({
               pageNum: 1,
               pageSize: 10,
               search,
             });
-            console.log(
-              11111,
-              {
-                pageNum: 1,
-                pageSize: 10,
-                search,
-              },
-              JSON.stringify(dAppGroupRes)
-            );
             setDAppData(dAppGroupRes?.data);
           }}
-        />
-        <TouchableOpacity
-          onPress={() => {
+          placeholder={t('searchDapp.inputDAppWebsite') || ''}
+          onCancel={() => {
             props?.navigation.navigate('home', { type: 'ecology' });
           }}
-        >
-          <Text style={{ color: '#333333' }}>取消</Text>
-        </TouchableOpacity>
+        />
       </View>
-      <ScrollView contentContainerStyle={{ minHeight: '100%' }} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={{ minHeight: '100%', paddingBottom: 100 }}
+        showsVerticalScrollIndicator={false}
+      >
         {(dAppData?.lists || []).map((v, i) => (
-          <DAppItem
+          <DAppItems
             {...v}
             key={v.title + String(i)}
             contentStyles={{ paddingVertical: 14 }}

@@ -14,12 +14,17 @@ import { View, Text, TouchableOpacity, Clipboard } from 'react-native';
 import { getUniqueId } from 'react-native-device-info';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/AntDesign';
+import { DecodeMnemonic } from 'savourlabs-wallet-sdk/wallet';
 const SettingScreen = (props: any) => {
   const { t } = useTranslation();
   const styles = useStyles();
   const [walletInfo, setWalletInfo] = useState<DeviceBalanceData>();
   const [device_id, setDeviceId] = useState('');
   const [privateDialog, setPrivate] = useState({
+    visible: false,
+    text: '',
+  });
+  const [mnemonicDialog, setMnemonic] = useState({
     visible: false,
     text: '',
   });
@@ -63,6 +68,13 @@ const SettingScreen = (props: any) => {
   const toggleDialog = () => {
     setPrivate({
       visible: !privateDialog.visible,
+      text: '',
+    });
+  };
+
+  const toggleMnemonicDialog = () => {
+    setMnemonic({
+      visible: !mnemonicDialog.visible,
       text: '',
     });
   };
@@ -242,7 +254,7 @@ const SettingScreen = (props: any) => {
           </ListItem.Content>
           <ListItem.Chevron />
         </ListItem>
-        {!walletInfo?.token_list?.[0].backup && (
+        {!walletInfo?.token_list?.[0].backup ? (
           <ListItem
             onPress={() => {
               props?.navigation.navigate('startBackup');
@@ -253,7 +265,54 @@ const SettingScreen = (props: any) => {
             </ListItem.Content>
             <ListItem.Chevron />
           </ListItem>
+        ) : (
+          <ListItem
+            onPress={async () => {
+              try {
+                const [wallet_uuid] = await Promise.all([getData('wallet_uuid')]);
+                const sqliteData = await executeQuery({
+                  customExec: (tx, resolve, reject) => {
+                    return tx.executeSql(
+                      `SELECT * FROM wallet WHERE wallet_uuid = ? `,
+                      [wallet_uuid],
+                      (txObj, resultSet) => {
+                        console.log(99999, resultSet);
+                        if (resultSet.rows.length > 0) {
+                          const walletData = resultSet.rows.item(0);
+                          resolve(walletData);
+                        } else {
+                          reject('Wallet not found.');
+                        }
+                      },
+                      (txObj, error) => {
+                        reject('Wallet Found Error.');
+                      }
+                    );
+                  },
+                });
+                if (sqliteData) {
+                  const mnemonic = await DecodeMnemonic({
+                    encrytMnemonic: sqliteData?.mnemonic_code,
+                    language: 'english',
+                  });
+                  setMnemonic({
+                    visible: true,
+                    text: mnemonic,
+                  });
+                }
+              } catch (error) {
+                showToast(t('backupMnemonics.errorDecodingMnemonics'));
+                console.error('解析助记词时出错:', error);
+              }
+            }}
+          >
+            <ListItem.Content>
+              <ListItem.Title>{t('settingScreen.viewMnemonics')}</ListItem.Title>
+            </ListItem.Content>
+            <ListItem.Chevron />
+          </ListItem>
         )}
+
         <ListItem>
           <ListItem.Content>
             <ListItem.Title>{t('asset.FaceFingerprintPay')}</ListItem.Title>
@@ -319,9 +378,7 @@ const SettingScreen = (props: any) => {
             }}
           />
         </View>
-        <Button onPress={handleEditor}>
-          {t('settingScreen.confirm')}
-        </Button>
+        <Button onPress={handleEditor}>{t('settingScreen.confirm')}</Button>
       </BottomOverlay>
       <Dialog isVisible={privateDialog.visible} onBackdropPress={toggleDialog}>
         <Dialog.Title title={t('settingScreen.privateKey') || ''} />
@@ -334,6 +391,19 @@ const SettingScreen = (props: any) => {
             }}
           />
           <Dialog.Button title={t('settingScreen.cancel') || ''} onPress={toggleDialog} />
+        </Dialog.Actions>
+      </Dialog>
+      <Dialog isVisible={mnemonicDialog.visible} onBackdropPress={toggleMnemonicDialog}>
+        <Dialog.Title title={t('settingScreen.viewMnemonics') || ''} />
+        <Text>{mnemonicDialog.text}</Text>
+        <Dialog.Actions>
+          <Dialog.Button
+            title={t('settingScreen.copy') || ''}
+            onPress={() => {
+              Clipboard.setString(mnemonicDialog?.text || '');
+            }}
+          />
+          <Dialog.Button title={t('settingScreen.cancel') || ''} onPress={toggleMnemonicDialog} />
         </Dialog.Actions>
       </Dialog>
     </Layout>
