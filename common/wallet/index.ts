@@ -410,6 +410,7 @@ export const batchInsertOrUpdateAssetTable = async (privateWalletInfo: PrivateWa
   console.log(888888, privateWalletInfo);
   executeQuery({
     customExec: (tx) => {
+      tx.executeSql('COMMIT');
       tx.executeSql('BEGIN TRANSACTION');
       try {
         //wallet表 增加 backup
