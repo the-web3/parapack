@@ -90,6 +90,16 @@ export interface TokenList {
 export function getChainBalance(data: ChainBalanceParams): Promise<IResponse<ChainBalanceData | null>> {
   return http.post(`/wallet/chain/balance`, data);
 }
+
+export function getChainIdBalance(data: {
+  address: string;
+  device_id: string;
+  wallet_uuid: string;
+  chain_id: string;
+}): Promise<IResponse<ChainBalanceData | null>> {
+  return http.post(`/wallet/chainId/balance`, data);
+}
+
 export interface CreateWalletParams {
   device_id: string;
   mnemonic_code: string;

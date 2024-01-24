@@ -212,3 +212,7 @@ export async function getSymbolInfo(data: SymbolInfoParams): Promise<IResponse<S
     },
   });
 }
+
+export function getWeb3RpcUrl({ chainId }: { chainId: string; }): Promise<IResponse<string>> {
+  return http.post(`/symbol/nodeUrl`, { chain_id: chainId });
+}

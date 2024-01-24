@@ -203,7 +203,7 @@ const TokenDetail = (props: Props) => {
         });
         setActivity(activityRes.data);
       }
-    } catch (e) {}
+    } catch (e) { }
   }, [tokenInfo?.tokenDetail?.symbol]);
 
   useEffect(() => {
@@ -253,7 +253,9 @@ const TokenDetail = (props: Props) => {
           </Button>
           <Button
             onPress={() => {
-              props?.navigation.navigate('swap');
+              props?.navigation.navigate('searchToken', {
+                go: 'swap',
+              });
             }}
             buttonStyle={{
               backgroundColor: '#fff',
@@ -312,7 +314,9 @@ const TokenDetail = (props: Props) => {
                 </View>
                 <TouchableOpacity
                   onPress={() => {
-                    props?.navigation.navigate('swap');
+                    props?.navigation.navigate('searchToken', {
+                      go: 'swap',
+                    });
                   }}
                 >
                   <Text style={{ color: '#3B28CC', fontSize: 12 }}>
@@ -351,7 +355,7 @@ const TokenDetail = (props: Props) => {
                 <Image
                   source={{ uri: activity?.lists[0]?.coverPicture }}
                   style={styles.banner}
-                  // PlaceholderContent={<ActivityIndicator />}
+                // PlaceholderContent={<ActivityIndicator />}
                 />
               </TouchableOpacity>
             </View>

@@ -51,16 +51,16 @@ const SearchToken = (props: Props) => {
     const newObj =
       symbol === ''
         ? {
-            ...allTokenList,
-          }
+          ...allTokenList,
+        }
         : {
-            ...allTokenList,
-            wallet_balance: (allTokenList?.wallet_balance || []).filter((item) => {
-              const regex = new RegExp(symbol, 'i');
-              const isMatch = regex.test(item.symbol);
-              return isMatch;
-            }),
-          };
+          ...allTokenList,
+          wallet_balance: (allTokenList?.wallet_balance || []).filter((item) => {
+            const regex = new RegExp(symbol, 'i');
+            const isMatch = regex.test(item.symbol);
+            return isMatch;
+          }),
+        };
     setTokenList(newObj);
   };
 
@@ -91,7 +91,7 @@ const SearchToken = (props: Props) => {
               onPress={() => {
                 storeData('current_token_detail', JSON.stringify(item));
                 if (props?.route?.params.go) {
-                  props?.navigation.navigate(props?.route?.params.go);
+                  props?.navigation.navigate(props?.route?.params.go, { selectedToken: item });
                 } else {
                   props?.navigation.navigate('tokenDetail');
                 }
