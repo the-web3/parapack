@@ -30,8 +30,8 @@ type Props = {
 
 type TokenDetail = {
   address: string;
-  asset_cny: string;
-  asset_usd: string;
+  assetCny: string;
+  assetUsd: string;
   balance: string;
   chain: string;
   chainName: string;
@@ -39,7 +39,8 @@ type TokenDetail = {
   index: number;
   logo: string;
   symbol: string;
-  chainId: string;
+  chainId: number;
+  chainContractAddr: string;
 };
 
 const initTokenDetail = {
@@ -95,16 +96,19 @@ const Swap = (props: Props) => {
   }
 
   function getDecimals(chainName: string, contract_addr: string, symbol: string) {
-    return getSymbolSupport({
+    let params: { chain: string; symbol: string; contract_addr?: string; } = {
       chain: chainName,
       contract_addr: contract_addr,
       symbol: symbol
-    }).then(res => {
-      return res?.data[0].token[0].contractUnit || 0;
+    };
+    if (contract_addr === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
+      delete params.contract_addr;
     }
-    ).catch(error => {
+    return getSymbolSupport(params).then(res => {
+      return res?.data[0].token[0].contractUnit || 0;
+    }).catch(error => {
       console.error(error);
-      return 0
+      return 0;
     });
   }
 
@@ -208,7 +212,9 @@ const Swap = (props: Props) => {
   }
 
   function tokenSelected(item: TokenDetail) {
-    console.log(202, item);
+    if (!item.contract_addr) {
+      item.contract_addr = item.chainContractAddr
+    }
     if (tokenListState === "pay") {
       setPayToken(item);
     } else {
