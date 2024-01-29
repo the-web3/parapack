@@ -1,7 +1,8 @@
 import Web3 from 'web3';
-import http from '../../../common/utils/http';
+import http from '../../common/utils/http';
 import {
     symbolGas,
+    transfer
 } from '@api/wallet';
 import { executeQuery } from '@common/utils/sqlite';
 import { getUniqueId } from 'react-native-device-info';
@@ -9,6 +10,7 @@ import { getData } from '@common/utils/storage';
 import { DeviceBalanceData, deleteWallet, getDeviceBalance, updateWallet } from '@api/wallet';
 import { SUCCESS_CODE } from '@common/constants';
 import { getWeb3RpcUrl } from '@api/symbol';
+import { showToast } from '@common/utils/platform';
 
 /**
  * buildTxForApproveTradeWithRouter
@@ -17,7 +19,7 @@ import { getWeb3RpcUrl } from '@api/symbol';
  * @param chain_id 
  * @returns 
  */
-export async function buildTxForApproveTradeWithRouter(tokenAddress: string, walletAddress: string, chain_id: string) {
+export async function buildTxForApproveTradeWithRouter(tokenAddress: string, walletAddress: string, chain_id: string, chain: string) {
     const url = apiRequestUrl("/approve/transaction", { tokenAddress }, chain_id);
     const web3RPCUrl = await getWeb3RpcUrlReq(chain_id)
     const web3 = new Web3(new Web3.providers.HttpProvider(web3RPCUrl));
@@ -31,13 +33,19 @@ export async function buildTxForApproveTradeWithRouter(tokenAddress: string, wal
     }).then((res) => res).catch((err) => {
         console.error(24, err);
     })
+
     const gasLimit = await web3.eth.estimateGas({
         ...transaction,
-        from: walletAddress
+        from: walletAddress,
+    }).catch((err) => {
+        console.error(29, err.message);
+        showToast(err.message)
+        throw err
+        // throw {
+        //     code: 4001,
+        //     message: '交易失败：Gas不足。请提高您的Gas限制或检查您的账户余额。(Insufficient funds for gas)',
+        // };
     });
-
-    console.log(141, gasLimit, transaction);
-
     return {
         ...transaction,
         gas: gasLimit
@@ -61,16 +69,20 @@ export function apiRequestUrl(methodName: string, queryParams: any, chainId: str
  * @param chainId 
  * @returns 
  */
-export async function signAndSendTransaction(transaction: any, walletAddress: string, chainId: string) {
+export async function signAndSendTransaction(transaction: any, walletAddress: string, chainId: string, chain: string, symbol: string) {
     const web3RPCUrl = await getWeb3RpcUrlReq(chainId)
     const web3 = new Web3(new Web3.providers.HttpProvider(web3RPCUrl));
     const { privateKey } = await getPrivateKey()
+    // 获取账户的 nonce
+    const nonce = await web3.eth.getTransactionCount(walletAddress, "pending");
+    // 在交易对象中设定 nonce
+    transaction.nonce = nonce;
     const { rawTransaction } = await web3.eth.accounts.signTransaction({
         ...transaction,
         from: walletAddress,  // Add the sender's address
     }, privateKey);
 
-    return await broadCastRawTransaction(rawTransaction, chainId);
+    return await broadCastRawTransaction(rawTransaction, chainId, chain, symbol);
 }
 
 /**
@@ -79,19 +91,40 @@ export async function signAndSendTransaction(transaction: any, walletAddress: st
  * @param chain_id 
  * @returns 
  */
-export async function broadCastRawTransaction(rawTransaction: string, chain_id: string) {
-    return http.post('https://api.1inch.dev/tx-gateway/v1.1/' + chain_id + '/broadcast',
-        JSON.stringify({ rawTransaction }), {
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: 'MlYjlwvbhbqP0hI5wZB2FIKoQaCUzZuz',
-            Accept: 'application/json',
+export async function broadCastRawTransaction(rawTransaction: string, chain_id: string, chain: string, symbol: string) {
+    // const url = 'https://api.1inch.dev/tx-gateway/v1.1/' + chain_id + '/broadcast'
+    const params = {
+        raw_tx: rawTransaction as string,
+        chain: chain as string,
+        symbol: symbol as string,
+    }
+
+    return transfer(params).then((res) => {
+        if (res.code === 200) {
+            return res.data.txHash
+        } else {
+            throw res.message
         }
-    }).then((res) => {
-        return res.transactionHash;
-    }).catch((err) => {
-        console.error(84, err);
-    })
+    }).catch(err => {
+        console.error(112, err)
+        throw err
+    });
+    // return http.post(url,
+    //     JSON.stringify({ rawTransaction }), {
+    //     headers: {
+    //         "Content-Type": "application/json",
+    //         Authorization: 'MlYjlwvbhbqP0hI5wZB2FIKoQaCUzZuz',
+    //         Accept: 'application/json',
+    //     }
+    // }).then((res) => {
+    //     return res.transactionHash;
+    // }).catch((err) => {
+    //     console.error(84, err);
+    //     // throw {
+    //     //     code: 4001,
+    //     //     message: 'Try using higher than normal slippage and gas to ensure your transaction is completed. ',
+    //     // };
+    // })
 }
 /**
  * getTokenQuote
@@ -106,8 +139,6 @@ export function getTokenQuote(payToken: any, receiveToken: any, money: any, setM
         toTokenAddress: receiveToken.contract_addr,
         amount: String(money.sell * 10 ** tokenDecimals),
     }, payToken.chainId);
-    console.log(109, url);
-
     // Fetch the swap transaction details from the API
     return http.get("https://api.1inch.dev/swap/v5.2" + url, {
         headers: {
@@ -126,6 +157,7 @@ export function getTokenQuote(payToken: any, receiveToken: any, money: any, setM
             });
         }).catch((err) => {
             console.error(126, err);
+            throw err
         })
 }
 
@@ -209,3 +241,5 @@ function getWeb3RpcUrlReq(chainId) {
         return "";
     })
 }
+
+
