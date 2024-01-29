@@ -19,8 +19,8 @@ import { showToast } from '@common/utils/platform';
  * @param chain_id 
  * @returns 
  */
-export async function buildTxForApproveTradeWithRouter(tokenAddress: string, walletAddress: string, chain_id: string, chain: string) {
-    const url = apiRequestUrl("/approve/transaction", { tokenAddress }, chain_id);
+export async function buildTxForApproveTradeWithRouter(tokenAddress: string, walletAddress: string, chain_id: string, chain: string, approveAmount: string) {
+    const url = apiRequestUrl("/approve/transaction", { tokenAddress, amount: approveAmount }, chain_id);
     const web3RPCUrl = await getWeb3RpcUrlReq(chain_id)
     const web3 = new Web3(new Web3.providers.HttpProvider(web3RPCUrl));
     const baseUrl = "https://api.1inch.dev/swap/v5.2";
@@ -35,7 +35,8 @@ export async function buildTxForApproveTradeWithRouter(tokenAddress: string, wal
     })
 
     const gasLimit = await web3.eth.estimateGas({
-        ...transaction,
+        data: transaction.data,
+        to: transaction.to,
         from: walletAddress,
     }).catch((err) => {
         console.error(29, err.message);

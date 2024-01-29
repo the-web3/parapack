@@ -29,6 +29,7 @@ import SwapChainSelect from './SwapChainSelect';
 import SwapTokenSelect from './SwapTokenSelect';
 import SwapSetting from './SwapSetting';
 import IconFont from '@assets/iconfont';
+import { useFocusEffect } from '@react-navigation/native';
 
 type Props = {
     fullWidth?: boolean;
@@ -133,8 +134,8 @@ const SwapCom = ({ initChainId, initChain }) => {
      * 申请批准交易的额度
      * @returns 
      */
-    async function transactionForSignFun() {
-        const transactionForSign = await buildTxForApproveTradeWithRouter(payToken.contract_addr, walletAddress, swapTransactionParams.chainId, swapTransactionParams.chain);
+    async function transactionForSignFun(approveAmount: string) {
+        const transactionForSign = await buildTxForApproveTradeWithRouter(payToken.contract_addr, walletAddress, swapTransactionParams.chainId, swapTransactionParams.chain, approveAmount);
         console.log("Transaction for approve: ", transactionForSign);
         const approveTxHash = await signAndSendTransaction(transactionForSign, walletAddress, swapTransactionParams.chainId, swapTransactionParams.chain, payToken.symbol);
         console.log("Approve tx hash: ", approveTxHash);
@@ -182,7 +183,7 @@ const SwapCom = ({ initChainId, initChain }) => {
                 tokenDecimals
             )
             await delay(1000);
-            await transactionForSignFun();
+            await transactionForSignFun(toString(money.sell * 10 ** tokenDecimals));
             await delay(1500);
             // handle too many request
             const swapTransaction = await buildTxForSwap(swapParams);
@@ -205,8 +206,6 @@ const SwapCom = ({ initChainId, initChain }) => {
                 showToast('获取失败, 请稍后重试')
             }
         }
-        console.log(207, swapTransaction, walletAddress, swapTransactionParams.chainId);
-
     };
 
     const toggleDialogTokenSelect = () => {
@@ -411,32 +410,34 @@ const SwapCom = ({ initChainId, initChain }) => {
         }
     }, [swapTransactionParams.chainId])
 
+    // setPayToken(props?.route?.params.selectedToken);
+    async function initSwapData() {
+        const sqliteData = (await getWallet(BLOCK_CHAIN_ID_MAP.Ethereum)) ?? {};
+        const address = sqliteData?.account?.address;
+        if (!address) return navigation.navigate('guide')
+        setWalletAddress(address);
+        getSymbolSupport({}).then(res => {
+            if (res.data) {
+                const chainList = res.data || [initChainDetail];
+                setChainList(chainList);
+            }
+        })
+        reqTokenList(address).then(res => {
+            if (res.length > 0) {
+                const defaultToken = res[0];
+                if (!defaultToken.contract_addr) {
+                    defaultToken.contract_addr = defaultToken.chainContractAddr
+                }
+                setPayToken(res[0]);
+            }
+        })
+    }
 
-    useEffect(() => {
-        // setPayToken(props?.route?.params.selectedToken);
-        async function initSwapData() {
-            const sqliteData = (await getWallet(BLOCK_CHAIN_ID_MAP.Ethereum)) ?? {};
-            const address = sqliteData?.account?.address;
-            if (!address) navigation.navigate('guide')
-            setWalletAddress(address);
-            getSymbolSupport({}).then(res => {
-                if (res.data) {
-                    const chainList = res.data || [initChainDetail];
-                    setChainList(chainList);
-                }
-            })
-            reqTokenList(address).then(res => {
-                if (res.length > 0) {
-                    const defaultToken = res[0];
-                    if (!defaultToken.contract_addr) {
-                        defaultToken.contract_addr = defaultToken.chainContractAddr
-                    }
-                    setPayToken(res[0]);
-                }
-            })
-        }
-        initSwapData()
-    }, [])
+    useFocusEffect(
+        React.useCallback(() => {
+            initSwapData()
+        }, [])
+    )
 
     return (
         <Layout>
