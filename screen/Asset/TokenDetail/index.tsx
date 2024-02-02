@@ -275,7 +275,7 @@ const TokenDetail = (props: Props) => {
     >
       <StatusBar backgroundColor="transparent" translucent={true} />
       <SafeAreaView style={[styles.container, { height: Dimensions.get('window').height }]}>
-        <ScrollView>
+        <ScrollView bounces={false}>
           <LinearGradient
             colors={['#3251EA', '#3251EA']}
             start={{ x: 0, y: 0 }}
@@ -360,7 +360,7 @@ const TokenDetail = (props: Props) => {
               </TouchableOpacity>
             </View>
           )}
-          <View style={styles.scrollContainer1}>
+          <View style={[styles.scrollContainer1, { height: Dimensions.get('window').height }]}>
             <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 32 }}>
               <View style={{ width: 210 }}>
                 <Tab
@@ -404,16 +404,16 @@ const TokenDetail = (props: Props) => {
                 </TouchableOpacity>
               </View>
             </View>
-            <View style={{ flex: 1, paddingBottom: 380 }}>
+            <View style={{ flex: 1 }}>
               <TabView value={index} onChange={handleChange} animationType="spring">
                 {[-1, 0, 1].map((item) => {
                   return (
-                    <TabView.Item style={{ width: '100%' }} key={item}>
-                      <ScrollView style={{ paddingHorizontal: 25 }} showsVerticalScrollIndicator={false}>
+                    <TabView.Item style={{ flex: 1 }} key={item}>
+                      <ScrollView style={{ paddingHorizontal: 25 }} nestedScrollEnabled={true} showsVerticalScrollIndicator={false}>
                         {record[item]?.lists?.length > 0 ? (
-                          record[item]?.lists?.map((item) => (
+                          record[item]?.lists?.map((item, index) => (
                             <TouchableOpacity
-                              key={item}
+                              key={index}
                               onPress={() => {
                                 props?.navigation.navigate('transferDetails', {
                                   ...item,
@@ -468,6 +468,7 @@ const TokenDetail = (props: Props) => {
                         ) : (
                           <Empty />
                         )}
+                        <View style={{ height: 200 }}></View>
                       </ScrollView>
                     </TabView.Item>
                   );
@@ -531,7 +532,6 @@ const useStyles = makeStyles((theme, props: Props) => {
       shadowOpacity: 0.6,
       shadowRadius: 4,
       elevation: 4,
-      height: '100%',
     },
     img: {
       width: 156,
