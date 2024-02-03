@@ -217,19 +217,17 @@ const Asset = (props: Props) => {
               marginTop: 25,
             }}
           >
-            <View style={styles.price}>
+            <TouchableOpacity
+              style={styles.price}
+              onPress={() => {
+                setPriceShow(!priceShow);
+              }}
+            >
               <Text style={{ color: '#fff', fontSize: 40, lineHeight: 47 }}>
                 ¥{priceShow ? (Number(currentWallet?.wallet_asset_cny) || 0)?.toFixed?.(2) : '******'}
               </Text>
-              <IconFont
-                name={priceShow ? 'eye-open' : 'eye-close'}
-                style={{ marginLeft: 3 }}
-                size={12}
-                onPress={() => {
-                  setPriceShow(!priceShow);
-                }}
-              />
-            </View>
+              <IconFont name={priceShow ? 'eye-open' : 'eye-close'} style={{ marginLeft: 3 }} size={12} />
+            </TouchableOpacity>
             {!currentWallet?.backup && (
               <TouchableOpacity
                 onPress={() => {

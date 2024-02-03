@@ -233,7 +233,7 @@ const TokenDetail = (props: Props) => {
               // backgroundColor: '#8B7FEA',
               alignItems: 'baseline',
               display: 'flex',
-              paddingHorizontal: 21,
+              paddingHorizontal: 11,
             }}
           >
             <Icon name={'creditcard'} color={'#fff'} /> {t(`asset.send`)}
@@ -246,7 +246,7 @@ const TokenDetail = (props: Props) => {
               backgroundColor: '#2667FF',
               alignItems: 'baseline',
               display: 'flex',
-              paddingHorizontal: 21,
+              paddingHorizontal: 11,
             }}
           >
             <Icon name={'qrcode'} color={'#fff'} /> {t(`asset.receive`)}
@@ -262,7 +262,7 @@ const TokenDetail = (props: Props) => {
               overflow: 'hidden',
               alignItems: 'baseline',
               display: 'flex',
-              paddingHorizontal: 23,
+              paddingHorizontal: 11,
             }}
           >
             <Icon name="swap" color="#252525" />
@@ -358,7 +358,7 @@ const TokenDetail = (props: Props) => {
           )}
           <View style={[styles.scrollContainer1, { height: Dimensions.get('window').height }]}>
             <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 32 }}>
-              <View style={{ width: 210 }}>
+              <View style={{ width: 240 }}>
                 <Tab
                   value={index}
                   onChange={handleChange}
@@ -367,15 +367,15 @@ const TokenDetail = (props: Props) => {
                     backgroundColor: '#3B28CC',
                     height: 4,
                     borderRadius: 2,
-                    width: 70,
+                    width: 80,
                   }}
                   titleStyle={(active: boolean) => {
                     return { fontSize: 12, marginVertical: 8, color: active ? '#3B28CC' : '#AEAEAE' };
                   }}
                 >
                   <Tab.Item>{t(`asset.all`)}</Tab.Item>
-                  <Tab.Item>{t(`asset.received`)}</Tab.Item>
                   <Tab.Item>{t(`asset.sent`)}</Tab.Item>
+                  <Tab.Item>{t(`asset.received`)}</Tab.Item>
                 </Tab>
               </View>
               <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>

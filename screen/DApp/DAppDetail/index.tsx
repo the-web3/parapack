@@ -122,16 +122,21 @@ export const DAppDetail = (props: DAppDetailParam) => {
   };
 
   const onMedium = async (url: string) => {
-    try {
-      const canOpen = await Linking.canOpenURL(url);
-      if (canOpen) {
-        Linking.openURL(url);
-      } else {
-        showToast('can not open url:' + url);
-      }
-    } catch (e: any) {
-      showToast(e.message ?? e);
-    }
+    props?.navigation.navigate('DAppWebView', {
+      params: {
+        uri: url,
+      },
+    });
+    // try {
+    //   const canOpen = await Linking.canOpenURL(url);
+    //   if (canOpen) {
+    //     Linking.openURL(url);
+    //   } else {
+    //     showToast('can not open url:' + url);
+    //   }
+    // } catch (e: any) {
+    //   showToast(e.message ?? e);
+    // }
   };
 
   const medium = useMemo(() => {

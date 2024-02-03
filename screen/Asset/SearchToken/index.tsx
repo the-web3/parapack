@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { SafeAreaView, ScrollView, StatusBar, TouchableOpacity, View } from 'react-native';
-import { Avatar, SearchBar, Text, makeStyles, useTheme } from '@rneui/themed';
-import Icon from 'react-native-vector-icons/AntDesign';
-import IconFont from '@assets/iconfont';
+import { Avatar, Text, makeStyles, useTheme } from '@rneui/themed';
 import _ from 'lodash';
 import { DeviceBalanceTokenList, getDeviceBalance } from '@api/wallet';
 import { getUniqueId } from 'react-native-device-info';
@@ -84,7 +82,7 @@ const SearchToken = (props: Props) => {
         </TouchableOpacity>
       </View>
       <View style={styles.body}>
-        <ScrollView style={{ minHeight: '100%' }} showsVerticalScrollIndicator={false}>
+        <ScrollView style={{ minHeight: 300, marginBottom: 150 }} showsVerticalScrollIndicator={false}>
           {(filterList || []).map((item: any, index) => (
             <TouchableOpacity
               key={`${item.symbol}${item.contract_addr}${item.address}${index}`}
