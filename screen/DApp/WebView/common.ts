@@ -4,7 +4,7 @@ let _webviewBridge: any = null;
 import Web3 from 'web3';
 import { getData } from '@common/utils/storage';
 import { executeQuery, BLOCK_CHAIN_ID_MAP } from '@common/utils/sqlite';
-import { getTableInfo } from '@common/wallet';
+import { getWeb3RpcUrl } from '@api/symbol';
 
 const getWallet = async (chainId: any) => {
   try {
@@ -48,14 +48,71 @@ const getWallet = async (chainId: any) => {
     return Promise.resolve({ account: {} });
   }
 };
-
-export const onBridgeMessage = async (event: any, webviewBridge: any, propsData: any) => {
+let testId: any = null;
+export const onBridgeMessage = async (event: any, webviewBridge: any, propsData: any, setwebviewUri: any) => {
   _webviewBridge = webviewBridge;
   let bridgeParamsJson = event.nativeEvent.data || '';
+  const url = event.nativeEvent.url;
   const bridgeParams = JSON.parse(bridgeParamsJson);
   const { messageId } = bridgeParams || {};
   console.warn('onBridgeMessage');
-  const chainId = propsData?.chainId;
+  console.warn('---->propsData', propsData);
+  console.log('----> url', url);
+  let chainId = testId || propsData?.chainId || 1;
+  if (bridgeParams?.payload?.method === 'wallet_switchEthereumChain') {
+    console.log('-----> bridgeParams', bridgeParams);
+    const switChainid = bridgeParams?.payload?.params[0]['chainId'] || '';
+    console.log('-----> switChainid', switChainid);
+    if (switChainid) {
+      testId = Number(switChainid);
+      chainId = testId;
+      const nodeRes: any = await getWeb3RpcUrl({ chainId: String(chainId) });
+      if (nodeRes?.data?.length > 0 && nodeRes?.data?.[0]) {
+        let tempUrl = '';
+        if (propsData?.uri?.indexOf('uniswap') > -1) {
+          // uniswap
+          let chainName = '';
+          switch (chainId) {
+            case 1:
+              chainName = 'mainnet';
+              break;
+            case 10:
+              chainName = 'optimism';
+              break;
+            case 56:
+              chainName = 'bnb';
+              break;
+            case 137:
+              chainName = 'polygon';
+              break;
+            case 8453:
+              chainName = 'base';
+              break;
+            case 42161:
+              chainName = 'arbitrum';
+              break;
+            case 59144:
+              chainName = 'linea';
+              break;
+            default:
+              break;
+          }
+          tempUrl = `${propsData?.uri}/?chain=${chainName}`;
+        } else {
+          tempUrl = `${propsData?.uri}/?chainId=${chainId}`;
+        }
+        console.log('----> tempUrl', tempUrl);
+        setwebviewUri(tempUrl);
+      } else {
+        const errmsg = `unsupport chainId: ${chainId} ${nodeRes}`;
+        console.log('---->', errmsg);
+        injectJavaScript(errorParams(messageId, errmsg));
+      }
+      return;
+    }
+    console.warn('_webviewBridge', _webviewBridge);
+  }
+  console.log('-----> chainId', chainId);
   const sqliteData = (await getWallet(BLOCK_CHAIN_ID_MAP.Ethereum)) ?? {};
   try {
     console.warn('sqliteData:', sqliteData);
@@ -65,7 +122,16 @@ export const onBridgeMessage = async (event: any, webviewBridge: any, propsData:
     console.warn('privateKey:', privateKey);
     console.warn('address:', address);
     //TODO TEMP Web3
-    const web3 = new Web3(new Web3.providers.HttpProvider(propsData?.uri));
+    const nodeRes: any = await getWeb3RpcUrl({ chainId: String(chainId) });
+    console.log('------> node:', nodeRes);
+    if (nodeRes?.data?.length > 0) {
+      //
+    } else {
+      const errmsg = `unsupport chainId: ${chainId} ${nodeRes}`;
+      console.log(errmsg);
+      throw errmsg;
+    }
+    const web3 = new Web3(new Web3.providers.HttpProvider(nodeRes.data[0]));
     const bridge = useMetamaskBridge({ chainId, web3 });
     await handleBridge(bridge, {
       ...bridgeParams,
