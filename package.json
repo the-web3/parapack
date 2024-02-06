@@ -58,6 +58,7 @@
     "react-native-linear-gradient": "^2.6.2",
     "react-native-loading-spinner-overlay": "^3.0.1",
     "react-native-localize": "^3.0.2",
+    "react-native-permissions": "3.0.4",
     "react-native-picker-select": "^8.0.4",
     "react-native-qrcode-scanner": "^1.5.5",
     "react-native-qrcode-svg": "^6.2.0",
