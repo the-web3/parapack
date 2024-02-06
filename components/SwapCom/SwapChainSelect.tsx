@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import BottomOverlay from '../BottomOverlay';
 import { Avatar, Button, Text, makeStyles } from '@rneui/themed';
 import { SafeAreaView, TextInput, View, TouchableWithoutFeedback } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 type ChainDetail = {
     address: string;
@@ -57,10 +58,11 @@ export default function SwapChainSelect({
     chainList,
     chainSelected
 }: SwapChainSelectType) {
+    const { t } = useTranslation();
     return (
         <BottomOverlay
             visible={chainSelectWindowVisible}
-            title={"选择链"}
+            title={t("swap.selectChain")}
             onBackdropPress={toggleDialogChainSelect}
         >
             <View>

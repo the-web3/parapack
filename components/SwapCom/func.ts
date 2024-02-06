@@ -19,7 +19,7 @@ import { showToast } from '@common/utils/platform';
  * @param chain_id 
  * @returns 
  */
-export async function buildTxForApproveTradeWithRouter(tokenAddress: string, walletAddress: string, chain_id: string, chain: string, approveAmount: string) {
+export async function buildTxForApproveTradeWithRouter(tokenAddress: string, walletAddress: string, chain_id: string, chain: string, approveAmount: string, authorizationKey: string) {
     const url = apiRequestUrl("/approve/transaction", { tokenAddress, amount: approveAmount }, chain_id);
     const web3RPCUrl = await getWeb3RpcUrlReq(chain_id)
     const web3 = new Web3(new Web3.providers.HttpProvider(web3RPCUrl));
@@ -27,7 +27,7 @@ export async function buildTxForApproveTradeWithRouter(tokenAddress: string, wal
     const transaction = await http.get(baseUrl + url, {
         headers: {
             "Content-Type": "application/json",
-            Authorization: 'MlYjlwvbhbqP0hI5wZB2FIKoQaCUzZuz',
+            Authorization: authorizationKey,
             Accept: 'application/json',
         }
     }).then((res) => res).catch((err) => {
@@ -132,9 +132,11 @@ export async function broadCastRawTransaction(rawTransaction: string, chain_id: 
  * @param payToken 
  * @param receiveToken 
  * @param money 
+ * @param receiveTokenDecimals
+ * @param authorizationKey
  * @returns 
  */
-export function getTokenQuote(payToken: any, receiveToken: any, money: any, setMoney: any, tokenDecimals: number) {
+export function getTokenQuote(payToken: any, receiveToken: any, money: any, setMoney: any, tokenDecimals: number, receiveTokenDecimals: number, authorizationKey: string) {
     const url = apiRequestUrl("/quote", {
         fromTokenAddress: payToken.contract_addr,
         toTokenAddress: receiveToken.contract_addr,
@@ -144,16 +146,15 @@ export function getTokenQuote(payToken: any, receiveToken: any, money: any, setM
     return http.get("https://api.1inch.dev/swap/v5.2" + url, {
         headers: {
             "Content-Type": "application/json",
-            Authorization: 'MlYjlwvbhbqP0hI5wZB2FIKoQaCUzZuz',
+            Authorization: authorizationKey,
             Accept: 'application/json',
         }
     })
         .then((res) => {
-            const num = handleDecimal(Web3.utils.fromWei(res.toAmount, 'ether'))
             setMoney((prev) => {
                 return {
                     ...prev,
-                    buy: num.toString(),
+                    buy: Number((res.toAmount / 10 ** receiveTokenDecimals).toPrecision(6)).toString(),
                 };
             });
         }).catch((err) => {
@@ -241,6 +242,15 @@ function getWeb3RpcUrlReq(chainId) {
         console.error(206, error);
         return "";
     })
+}
+
+export function getChainLogo(chainId: string, chainData: []) {
+    for (let item of chainData) {
+        if (item?.chainId === chainId) {
+            return item?.logo;
+        }
+    }
+    return null; // 若找不到匹配的chainId，返回null
 }
 
 

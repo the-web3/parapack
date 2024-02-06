@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import BottomOverlay from '../BottomOverlay';
 import { Avatar, Button, Text, makeStyles } from '@rneui/themed';
 import { SafeAreaView, TextInput, View, TouchableWithoutFeedback } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 type TokenDetail = {
     address: string;
@@ -32,11 +33,12 @@ export default function SwapTokenSelect({
     tokenList,
     tokenSelected
 }: SwapTokenSelectType) {
+    const { t } = useTranslation();
 
     return (
         <BottomOverlay
             visible={tokenSelectWindowVisible}
-            title={"选择币种"}
+            title={t("swap.selectCurrency")}
             onBackdropPress={toggleDialogTokenSelect}
         >
             <View>

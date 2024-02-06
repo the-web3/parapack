@@ -27,12 +27,10 @@ const Swap = () => {
     }, [])
 
     return (
-        <Layout>
-            <SwapCom
-                initChain={'Ethereum'}
-                initChainId={BLOCK_CHAIN_ID_MAP.Ethereum}
-            />
-        </Layout>
+        <SwapCom
+            initChain={'Ethereum'}
+            initChainId={BLOCK_CHAIN_ID_MAP.Ethereum}
+        />
     );
 };
 

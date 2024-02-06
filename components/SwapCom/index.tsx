@@ -1,14 +1,12 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { SafeAreaView, TextInput, View, TouchableWithoutFeedback } from 'react-native';
+import { SafeAreaView, TextInput, View, TouchableWithoutFeedback, StyleSheet } from 'react-native';
 import { Avatar, Button, Text, makeStyles } from '@rneui/themed';
-import Icon from 'react-native-vector-icons/AntDesign';
-import Layout from '@components/Layout';
 import { useTranslation } from 'react-i18next';
 import http from '@common/utils/http';
-import { getChainIdBalance } from '@api/wallet';
+import { getChainIdBalance, get1InchKey } from '@api/wallet';
 import { getUniqueId } from 'react-native-device-info';
-import { getData } from '@common/utils/storage';
+import { getData, storeData } from '@common/utils/storage';
 import { set, toString } from 'lodash';
 import BottomOverlay from '@components/BottomOverlay';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -19,6 +17,7 @@ import {
     apiRequestUrl,
     getGasPriceToUSD,
     delay,
+    getChainLogo
 } from './func'
 import { showToast } from '@common/utils/platform';
 import { getSymbolSupport } from '@api/symbol';
@@ -30,6 +29,8 @@ import SwapTokenSelect from './SwapTokenSelect';
 import SwapSetting from './SwapSetting';
 import IconFont from '@assets/iconfont';
 import { useFocusEffect } from '@react-navigation/native';
+import { useTheme, Colors } from '@rneui/themed';
+import { CustomColors } from 'style/them';
 
 type Props = {
     fullWidth?: boolean;
@@ -90,9 +91,13 @@ const initChainDetail = {
 
 
 
-const SwapCom = ({ initChainId, initChain }) => {
+const SwapCom = ({ pageStyle, initChainId, initChain }: {
+    pageStyle?: 'grey' | 'white', initChainId: string, initChain: string
+}) => {
     const { t } = useTranslation();
     const navigation = useNavigation();
+    const theme = useTheme();
+    const styles = useStyles(theme.theme);
     const [walletAddress, setWalletAddress] = useState<string>('');
     const [tokenSelectWindowVisible, setTokenSelectWindowVisible] = useState(false);
     const [chainSelectWindowVisible, setChainSelectWindowVisible] = useState(false);
@@ -103,11 +108,12 @@ const SwapCom = ({ initChainId, initChain }) => {
     const [receiveToken, setReceiveToken] = useState<TokenDetail>(initTokenDetail);
     const [showSwapWindow, setShowSwapWindow] = useState(false);
     const [chainList, setChainList] = useState<ChainDetailType[]>([initChainDetail]);
+    const [authorizationKey, setAuthorizationKey] = useState<string>('');
     const [gasFee, setGasFee] = useState(0);
     const [swapButtonState, setSwapButtonState] = useState({
         disabled: true,
         loading: false,
-        text: '获取报价'
+        text: t('swap.predExRes')
     });
     const [swapSignButtonLoading, setSwapSignButtonLoading] = useState(false)
     const [swapTransaction, setSwapTransaction] = useState<any>({});
@@ -118,6 +124,7 @@ const SwapCom = ({ initChainId, initChain }) => {
     const [swapTransactionParams, setSwapTransactionParams] = useState<{
         chainId: string,
         chain: string,
+        logo?: string
     }>({
         chainId: initChainId,
         chain: initChain,
@@ -135,7 +142,7 @@ const SwapCom = ({ initChainId, initChain }) => {
      * @returns 
      */
     async function transactionForSignFun(approveAmount: string) {
-        const transactionForSign = await buildTxForApproveTradeWithRouter(payToken.contract_addr, walletAddress, swapTransactionParams.chainId, swapTransactionParams.chain, approveAmount);
+        const transactionForSign = await buildTxForApproveTradeWithRouter(payToken.contract_addr, walletAddress, swapTransactionParams.chainId, swapTransactionParams.chain, approveAmount, authorizationKey);
         console.log("Transaction for approve: ", transactionForSign);
         const approveTxHash = await signAndSendTransaction(transactionForSign, walletAddress, swapTransactionParams.chainId, swapTransactionParams.chain, payToken.symbol);
         console.log("Approve tx hash: ", approveTxHash);
@@ -163,6 +170,7 @@ const SwapCom = ({ initChainId, initChain }) => {
     const handleSwap = async () => {
         setReqestLoading(true);
         const tokenDecimals = await getDecimals(swapTransactionParams.chain, payToken.contract_addr, payToken.symbol);
+        const receiveTokenDecimals = await getDecimals(swapTransactionParams.chain, receiveToken.contract_addr, receiveToken.symbol);
         const swapParams = {
             src: payToken.contract_addr, // The address of the token you want to swap from (USDC)
             dst: receiveToken.contract_addr, // The address of the token you want to swap to (USDT)
@@ -172,7 +180,6 @@ const SwapCom = ({ initChainId, initChain }) => {
             disableEstimate: false, // Set to true to disable estimation of swap details
             allowPartialFill: false // Set to true to allow partial filling of the swap order
         };
-        console.log(174, swapParams);
 
         try {
             await getTokenQuote(
@@ -180,7 +187,9 @@ const SwapCom = ({ initChainId, initChain }) => {
                 receiveToken,
                 money,
                 setMoney,
-                tokenDecimals
+                tokenDecimals,
+                receiveTokenDecimals,
+                authorizationKey
             )
             await delay(1000);
             await transactionForSignFun(toString(money.sell * 10 ** tokenDecimals));
@@ -203,7 +212,7 @@ const SwapCom = ({ initChainId, initChain }) => {
             if (error.message) {
                 showToast(error.message)
             } else {
-                showToast('获取失败, 请稍后重试')
+                showToast(t("swap.failRetry"))
             }
         }
     };
@@ -288,6 +297,10 @@ const SwapCom = ({ initChainId, initChain }) => {
         } else {
             setReceiveToken(item);
         }
+        setMoney({
+            buy: "",
+            sell: ""
+        })
         toggleDialogTokenSelect();
     }
 
@@ -297,9 +310,14 @@ const SwapCom = ({ initChainId, initChain }) => {
         setSwapTransactionParams({
             chainId: item.chainId,
             chain: item.chainName,
+            logo: item.logo
         });
         setPayToken(item.token[0]);
         setReceiveToken(item.token[1]);
+        setMoney({
+            buy: "",
+            sell: ""
+        })
         toggleDialogChainSelect();
     }
 
@@ -311,11 +329,13 @@ const SwapCom = ({ initChainId, initChain }) => {
         toggleDialogSwapSetting()
     }
 
-
-
     function reverseTokenPosition() {
         setPayToken(receiveToken);
         setReceiveToken(payToken);
+        setMoney({
+            buy: "",
+            sell: ""
+        })
     }
 
     async function buildTxForSwap(swapParams: any) {
@@ -326,7 +346,7 @@ const SwapCom = ({ initChainId, initChain }) => {
         return http.get("https://api.1inch.dev/swap/v5.2" + url, {
             headers: {
                 "Content-Type": "application/json",
-                Authorization: 'MlYjlwvbhbqP0hI5wZB2FIKoQaCUzZuz',
+                Authorization: authorizationKey,
                 Accept: 'application/json',
             }
         })
@@ -345,17 +365,17 @@ const SwapCom = ({ initChainId, initChain }) => {
                 };
             });
         } else {
-            if (amount > payToken.balance) {
+            if (Number(amount) > Number(payToken.balance)) {
                 setSwapButtonState({
                     disabled: true,
                     loading: false,
-                    text: '余额不足'
+                    text: t("swap.insufBal")
                 });
             } else {
                 setSwapButtonState({
                     disabled: false,
                     loading: false,
-                    text: '获取报价'
+                    text: t("swap.predExRes")
                 });
             }
             setMoney((prev) => {
@@ -369,31 +389,35 @@ const SwapCom = ({ initChainId, initChain }) => {
 
     async function signTransaction() {
         setSwapSignButtonLoading(true)
-        console.log(335, swapTransaction, walletAddress, swapTransactionParams.chainId);
-
         signAndSendTransaction(swapTransaction, walletAddress, swapTransactionParams.chainId, swapTransactionParams.chain, payToken.symbol).then(res => {
-            console.log(370, res);
             setSwapSignButtonLoading(false)
-            showToast('兑换成功')
+            showToast(t("swap.exchSuc"))
             toggleDialogSwap();
-            // navigation.navigate('home', {
-            //     tab: 'asset',
-            // });
+            navigation.navigate('home', { tab: 'asset' });
         }).catch((err) => {
             setSwapSignButtonLoading(false)
-            showToast('兑换失败, 请稍后重试')
+            showToast(t("swap.exchFailRetry"))
             console.error(err);
         });
     }
 
     function handleSwapDisabled() {
-        if (payToken?.balance < money.sell) return true
+        if (Number(money.sell) <= 0) return true;
+        if (Number(payToken?.balance) < Number(money.sell)) return true
         return (payToken?.contract_addr === receiveToken?.contract_addr) ||
             (payToken?.contract_addr === '' ||
                 receiveToken?.contract_addr === '') ||
             !payToken?.contract_addr ||
             !receiveToken?.contract_addr ||
             swapButtonState?.disabled
+    }
+
+    function request1inchKey() {
+        get1InchKey({}).then(res => {
+            if (res.code === 200) {
+                setAuthorizationKey(res.data.key)
+            }
+        })
     }
 
     useEffect(() => {
@@ -413,12 +437,19 @@ const SwapCom = ({ initChainId, initChain }) => {
     // setPayToken(props?.route?.params.selectedToken);
     async function initSwapData() {
         const sqliteData = (await getWallet(BLOCK_CHAIN_ID_MAP.Ethereum)) ?? {};
+
         const address = sqliteData?.account?.address;
         if (!address) return navigation.navigate('guide')
+        request1inchKey()
         setWalletAddress(address);
         getSymbolSupport({}).then(res => {
             if (res.data) {
                 const chainList = res.data || [initChainDetail];
+                const logo = getChainLogo(swapTransactionParams.chainId, chainList)
+                setSwapTransactionParams({
+                    ...swapTransactionParams,
+                    logo: logo
+                })
                 setChainList(chainList);
             }
         })
@@ -440,290 +471,430 @@ const SwapCom = ({ initChainId, initChain }) => {
     )
 
     return (
-        <Layout>
-            <SafeAreaView>
-                <View
-                    style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        marginBottom: 20,
-                    }}
-                >
-                    <TouchableWithoutFeedback onPress={toggleDialogChainSelect}>
-                        <View
-                            style={{
-                                borderRadius: 12,
-                                marginBottom: 20,
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                justifyContent: 'space-between',
-                                paddingHorizontal: 10,
-                            }}
-                        >
-                            <Text style={{ fontSize: 12 }}>
-                                {swapTransactionParams.chain}
-                            </Text>
+        <View style={{}}>
+            <View style={styles.headerRow}>
+                <TouchableWithoutFeedback onPress={toggleDialogChainSelect}>
+                    <View style={styles.chainSelectContainer}>
+                        <View style={styles.chainLogo}>
+                            {swapTransactionParams.logo && (
+                                <Avatar
+                                    containerStyle={styles.chainLogo}
+                                    rounded
+                                    source={{ uri: swapTransactionParams.logo }}
+                                />
+                            )}
                         </View>
-                    </TouchableWithoutFeedback>
-                    <TouchableWithoutFeedback onPress={swapSetting}>
-                        <IconFont name="a-261" />
-                    </TouchableWithoutFeedback>
-                </View>
-                <View style={{ backgroundColor: '#F5F5F5', borderRadius: 12, marginBottom: 20 }}>
-                    <View style={{ padding: 13 }}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                            <Text style={{ color: '#AEAEAE', fontSize: 12 }}>
-                                {/* {t('assetSwap.sellOut')} */}
-                                You pay
-                            </Text>
-                            <Text style={{ color: '#5D5D5D', fontSize: 12 }}>
-                                {t('assetSwap.balance')}
-                                ：{payToken.balance}</Text>
-                        </View>
-                        <TouchableWithoutFeedback onPress={payTokenSelected}>
 
-                            {
-                                !payToken?.contract_addr ?
-                                    (
-                                        <View
-                                            style={{
-                                                flexDirection: 'row',
-                                                alignItems: 'center',
-                                                borderBottomWidth: 1,
-                                                borderColor: '#F9F9F9',
-                                                paddingVertical: 10,
-                                            }}
-                                        >
-                                            <Text>Select token</Text>
-                                        </View>
-                                    ) :
-                                    (
-                                        <View
-                                            style={{
-                                                flexDirection: 'row',
-                                                alignItems: 'center',
-                                                borderBottomWidth: 1,
-                                                borderColor: '#F9F9F9',
-                                                paddingVertical: 10,
-                                            }}
-                                        >
-                                            {
-                                                payToken.logo && <Avatar rounded source={{ uri: payToken.logo }} />
-                                            }
-                                            <View style={{ flex: 1, marginRight: 10, marginLeft: 10 }}>
-                                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1, alignItems: 'center' }}>
-                                                    <View>
-                                                        <Text>{payToken.symbol}</Text>
-                                                        <Text
-                                                            style={{
-                                                                color: '#999999',
-                                                                fontWeight: '500',
-                                                                fontSize: 11,
-                                                                lineHeight: 16,
-                                                            }}
-                                                        >
-                                                            {payToken.chain || payToken.chainName}
-                                                        </Text>
-                                                    </View>
-                                                    <TextInput
-                                                        keyboardType="numeric"
-                                                        style={{
-                                                            // color: '#C8C8C8',
-                                                            fontSize: 26,
-                                                            lineHeight: 30,
-                                                            fontWeight: 'bold',
-                                                            minWidth: 100,
-                                                            textAlign: 'right',
-                                                        }}
-                                                        // placeholderTextColor={'gray'}
-                                                        onChangeText={(sell) => {
-                                                            editTokenAmount(sell, "sell");
-                                                        }}
-                                                        placeholder="0.00"
-                                                        value={money.sell}
-                                                    />
-                                                </View>
-                                            </View>
-                                        </View>
-                                    )
-                            }
-                        </TouchableWithoutFeedback>
-                        <View>
-                            <Text>~${((payToken.assetUsd / payToken.balance) * money.sell).toFixed(2)}</Text>
-                        </View>
+                        <Text style={styles.chainText}>
+                            {swapTransactionParams.chain}
+                        </Text>
                     </View>
-                    <TouchableWithoutFeedback onPress={reverseTokenPosition}>
-                        <View style={{ height: 3, backgroundColor: '#FFFFFF', position: 'relative' }}>
-                            <View
-                                style={{
-                                    width: 26,
-                                    height: 26,
-                                    backgroundColor: '#fff',
-                                    borderRadius: 100,
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    overflow: 'hidden',
-                                    position: 'absolute',
-                                    left: '50%',
-                                    marginLeft: -13,
-                                    top: -13,
-                                }}
-                            >
-                                <Icon name="swap" size={14} />
+                </TouchableWithoutFeedback>
+                <TouchableWithoutFeedback onPress={swapSetting}>
+                    <View style={styles.settingsIcon}>
+                        <IconFont size={14} name="a-261" />
+                    </View>
+                </TouchableWithoutFeedback>
+            </View>
+            <View style={styles.tokenSection}>
+                <View>
+                    <View style={styles.tokenLabelText}>
+                        <Text style={styles.tokenLabelText}>{t("swap.from")}</Text>
+                    </View>
+                    <TouchableWithoutFeedback onPress={payTokenSelected}>
+                        <View style={[styles.tokenTouchable,
+                        {
+                            backgroundColor: pageStyle === 'grey' ? theme.theme.colors.backgroundGrey : theme.theme.colors.backgroundWhite,
+                        }]}>
+                            <View style={styles.tokenImage}>
+                                {!payToken?.contract_addr ? (
+                                    <Text>Select token</Text>
+                                ) : (
+                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                        <Avatar
+                                            containerStyle={styles.tokenImage}
+                                            rounded
+                                            source={{ uri: payToken?.logo }}
+                                        />
+                                        <Text style={styles.tokenSymbolText}>{payToken.symbol}</Text>
+                                    </View>
+                                )}
+                                <IconFont style={{ marginHorizontal: 14 }} name='swap-select' size={10} />
+                            </View>
+                            <View style={styles.flexOne}>
+                                <TextInput
+                                    keyboardType="numeric"
+                                    style={styles.tokenInputStyle}
+                                    placeholderTextColor={theme.theme.colors.grey3}
+                                    onChangeText={(sell) => {
+                                        editTokenAmount(sell, "sell");
+                                    }}
+                                    placeholder="0.00"
+                                    value={money.sell}
+                                />
                             </View>
                         </View>
                     </TouchableWithoutFeedback>
-                    <View style={{ padding: 13 }}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                            <Text style={{ color: '#AEAEAE', fontSize: 12 }}>
-                                {/* {t('assetSwap.sellOut')} */}
-                                You receive
-                            </Text>
-                            <Text style={{ color: '#5D5D5D', fontSize: 12 }}>{
-                                t('assetSwap.balance')
-                            }：{receiveToken?.balance}</Text>
-                        </View>
-                        <TouchableWithoutFeedback onPress={receiveTokenSelected}>
-                            {
-                                !receiveToken?.contract_addr ?
-                                    (
-                                        <View
-                                            style={{
-                                                flexDirection: 'row',
-                                                alignItems: 'center',
-                                                borderBottomWidth: 1,
-                                                borderColor: '#F9F9F9',
-                                                paddingVertical: 10,
-                                            }}
-                                        >
-                                            <Text>Select token</Text>
-                                        </View>
-                                    ) :
-                                    (
-                                        <View
-                                            style={{
-                                                flexDirection: 'row',
-                                                alignItems: 'center',
-                                                borderBottomWidth: 1,
-                                                borderColor: '#F9F9F9',
-                                                paddingVertical: 10,
-                                            }}
-                                        >
-                                            {
-                                                receiveToken?.logo && <Avatar rounded source={{ uri: receiveToken?.logo }} />
-                                            }
-                                            {/* <Avatar rounded source={{ uri: receiveToken.logo }} /> */}
-                                            <View style={{ flex: 1, marginRight: 10, marginLeft: 10 }}>
-                                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1, alignItems: 'center' }}>
-                                                    <View>
-                                                        <Text>{receiveToken?.symbol}</Text>
-                                                        <Text
-                                                            style={{
-                                                                color: '#999999',
-                                                                fontWeight: '500',
-                                                                fontSize: 11,
-                                                                lineHeight: 16,
-                                                            }}
-                                                        >
-                                                            {receiveToken?.chainName}
-                                                        </Text>
-                                                    </View>
-                                                    <TextInput
-                                                        editable={false}
-                                                        keyboardType="numeric"
-                                                        style={{
-                                                            fontSize: 26,
-                                                            lineHeight: 30,
-                                                            fontWeight: 'bold',
-                                                            minWidth: 100,
-                                                            textAlign: 'right',
-                                                        }}
-                                                        onChangeText={(buy) => {
-                                                            editTokenAmount(buy, "buy");
-                                                        }}
-                                                        placeholder="0.00"
-                                                        value={money.buy}
-                                                    />
-                                                </View>
-                                            </View>
-                                        </View>
-                                    )
-                            }
-
-                        </TouchableWithoutFeedback>
+                    <View>
+                        <Text style={styles.balanceText}>
+                            {t('swap.availableBalance')}: {payToken.balance} {payToken.symbol}
+                        </Text>
                     </View>
                 </View>
-
-                <Button
-                    onPress={handleSwap}
-                    disabled={handleSwapDisabled()}
-                >
-                    {/* {t('assetSwap.exchange')} */}
+                <TouchableWithoutFeedback onPress={reverseTokenPosition}>
+                    <View style={styles.swapIconContainer}>
+                        <IconFont name="xingzhuangjiehe1" size={24} />
+                    </View>
+                </TouchableWithoutFeedback>
+                <View>
+                    <View style={styles.tokenLabelText}>
+                        <Text style={styles.tokenLabelText}>{t("swap.to")}</Text>
+                    </View>
+                    <TouchableWithoutFeedback onPress={receiveTokenSelected}>
+                        <View style={[styles.tokenTouchable,
+                        {
+                            backgroundColor: pageStyle === 'grey' ? theme.theme.colors.backgroundGrey : theme.theme.colors.backgroundWhite,
+                        }]}>
+                            <View style={styles.tokenImage}>
+                                {!receiveToken?.contract_addr ? (
+                                    <Text>Select token</Text>
+                                ) : (
+                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                        <Avatar
+                                            containerStyle={styles.tokenImage}
+                                            rounded
+                                            source={{ uri: receiveToken?.logo }}
+                                        />
+                                        <Text style={styles.tokenSymbolText}>{receiveToken?.symbol}</Text>
+                                    </View>
+                                )}
+                                <IconFont style={{ marginHorizontal: 14 }} name='swap-select' size={10} />
+                            </View>
+                            <View style={styles.flexOne}>
+                                <TextInput
+                                    keyboardType="numeric"
+                                    style={styles.tokenInputStyle}
+                                    placeholderTextColor={'#999999'}
+                                    onChangeText={(buy) => {
+                                        editTokenAmount(buy, "buy");
+                                    }}
+                                    placeholder="0.00"
+                                    value={money.buy}
+                                />
+                            </View>
+                        </View>
+                    </TouchableWithoutFeedback>
+                </View>
+            </View>
+            <Button
+                style={{ marginTop: 26 }}
+                onPress={handleSwap}
+                disabled={handleSwapDisabled()}
+                disabledStyle={{
+                    backgroundColor: theme.theme.colors.disabled,
+                }}
+            >
+                <Text style={styles.swapButtonText}>
                     {swapButtonState.text}
-                </Button>
-                <SwapTokenSelect
-                    tokenSelectWindowVisible={tokenSelectWindowVisible}
-                    toggleDialogTokenSelect={toggleDialogTokenSelect}
-                    tokenList={tokenList}
-                    tokenSelected={tokenSelected}
-                />
-                <SwapChainSelect
-                    chainSelectWindowVisible={chainSelectWindowVisible}
-                    toggleDialogChainSelect={toggleDialogChainSelect}
-                    chainList={chainList}
-                    chainSelected={chainSelected}
-                />
-                <SwapSetting
-                    swapSettingWindowVisible={swapSettingWindowVisible}
-                    toggleDialogSwapSetting={toggleDialogSwapSetting}
-                    swapSettingForm={swapSettingForm}
-                    changeSwapSettingForm={changeSwapSettingForm}
-                />
-                <BottomOverlay
-                    visible={showSwapWindow}
-                    title={"兑换"}
-                    onBackdropPress={toggleDialogSwap}
+                </Text>
+            </Button>
+            <SwapTokenSelect
+                tokenSelectWindowVisible={tokenSelectWindowVisible}
+                toggleDialogTokenSelect={toggleDialogTokenSelect}
+                tokenList={tokenList}
+                tokenSelected={tokenSelected}
+            />
+            <SwapChainSelect
+                chainSelectWindowVisible={chainSelectWindowVisible}
+                toggleDialogChainSelect={toggleDialogChainSelect}
+                chainList={chainList}
+                chainSelected={chainSelected}
+            />
+            <SwapSetting
+                swapSettingWindowVisible={swapSettingWindowVisible}
+                toggleDialogSwapSetting={toggleDialogSwapSetting}
+                swapSettingForm={swapSettingForm}
+                changeSwapSettingForm={changeSwapSettingForm}
+            />
+            <BottomOverlay
+                maxHeight={400}
+                visible={showSwapWindow}
+                title={t("swap.confExch")}
+                onBackdropPress={toggleDialogSwap}
+            >
+                <View
+                    style={styles.bottomOverlayContainer}
                 >
                     <View
                         style={{
-                            height: 300,
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            marginTop: 8,
-                            marginBottom: 14,
+                            alignItems: 'center'
                         }}
                     >
-                        <View>
-                            <Text>
-                                {money.sell} {payToken?.symbol}
-                            </Text>
-                            <Text>
-                                兑换
-                            </Text>
-                            <Text>
-                                {money.buy} {receiveToken?.symbol}
-                            </Text>
-
-                            <Text>
-                                Network Fee ~$
-                                {gasFee}
+                        <View style={{ width: 34, height: 34 }}>
+                            <Avatar size={34} rounded source={{ uri: payToken?.logo }} />
+                        </View>
+                        <Text style={styles.smallGrayText}>{t("swap.exchange")}</Text>
+                        <Text
+                            style={{
+                                fontSize: 14,
+                                marginTop: 9,
+                                fontWeight: '500'
+                            }}
+                        >
+                            {money.sell} {payToken?.symbol}
+                        </Text>
+                    </View>
+                    <View>
+                        <IconFont size={18} name="swap-to" />
+                    </View>
+                    <View
+                        style={{
+                            alignItems: 'center'
+                        }}
+                    >
+                        <View style={{ width: 34, height: 34 }}>
+                            <Avatar size={34} rounded source={{ uri: receiveToken?.logo }} />
+                        </View>
+                        <Text style={styles.smallGrayText}>{t("swap.received")}</Text>
+                        <Text
+                            style={{
+                                fontSize: 14,
+                                marginTop: 9,
+                                fontWeight: '500'
+                            }}
+                        >
+                            {money.buy} {receiveToken?.symbol}
+                        </Text>
+                    </View>
+                </View>
+                <View style={{
+                    marginTop: 16
+                }}>
+                    <View style={{ paddingTop: 20 }}>
+                        <View style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between'
+                        }}>
+                            <Text style={styles.grayText}>{t("swap.transFee")}</Text>
+                            <Text
+                                style={styles.blackText}
+                            >
+                                ${gasFee}
                             </Text>
                         </View>
-                        <Button onPress={signTransaction} disabled={swapSignButtonLoading}>
-                            {swapSignButtonLoading ? '兑换中...' : '兑换'}
+                        <View style={{ borderTopWidth: 1, borderColor: '#F7F7F7', marginTop: 20 }}></View>
+                    </View>
+                    <View style={{ paddingTop: 20 }}>
+                        <View style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between'
+                        }}>
+                            <Text style={styles.grayText}>{t("swap.exchRate")}</Text>
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'center'
+                                }}
+                            >
+                                <Text
+                                    style={[styles.blackText, { marginRight: 5 }]}
+                                >
+                                    1{payToken?.symbol} ≈ {Number(money?.buy) / Number(money?.sell)}{receiveToken?.symbol}
+                                </Text>
+                                <IconFont size={9} name="swap-swap" />
+                            </View>
+                        </View>
+                    </View>
+                </View>
+                <View
+                    style={{
+                        width: '100%',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginTop: 30,
+                        paddingHorizontal: 8,
+                        marginBottom: 32
+                    }}
+                >
+                    <View style={{ flex: 1, borderRadius: 10, backgroundColor: 'red' }}>
+                        <Button buttonStyle={styles.cancelButton} onPress={toggleDialogSwap}>
+                            <Text style={styles.cancelButtonText}>
+                                {t("swap.back")}
+                            </Text>
                         </Button>
                     </View>
-                </BottomOverlay>
-                <Spinner visible={reqestLoading} textContent='获取报价中' />
-            </SafeAreaView>
-        </Layout>
+                    <View style={{ flex: 1, backgroundColor: 'blue', borderRadius: 10, marginLeft: 8 }}>
+                        <Button onPress={signTransaction} disabled={swapSignButtonLoading}>
+                            <Text style={styles.confirmButtonText}>
+                                {swapSignButtonLoading ? `${t("swap.exchInProg")}...` : t("swap.exchange")}
+                            </Text>
+                        </Button>
+                    </View>
+                </View>
+            </BottomOverlay>
+            <Spinner visible={reqestLoading} />
+        </View>
     );
 };
 
-const useStyles = makeStyles((theme, props: Props) => {
-    return {};
+const useStyles = makeStyles((theme: CustomTheme<CustomColors>, props) => {
+    return {
+        viewContainer: {},
+        headerRow: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            paddingHorizontal: 6,
+        },
+        chainSelectContainer: {
+            display: 'flex',
+            alignContent: 'center',
+            flexDirection: 'row',
+            alignItems: 'center',
+        },
+        chainLogo: {
+            width: 20,
+            height: 20,
+        },
+        chainText: {
+            fontSize: 14,
+            color: theme.colors.grey3,
+            paddingLeft: 5,
+        },
+        settingsIcon: {
+            width: 32,
+            flexDirection: 'row-reverse',
+        },
+        tokenSection: {
+            marginTop: 26,
+        },
+        tokenLabelText: {
+            color: theme.colors.grey0,
+            fontSize: 14,
+            paddingLeft: 8,
+        },
+        tokenTouchable: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            borderRadius: 9,
+            padding: 15,
+            marginTop: 10,
+        },
+        tokenImageContainer: {
+            height: 3,
+            backgroundColor: '#fff',
+            position: 'relative'
+        },
+        tokenImage: {
+            height: 30,
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexDirection: 'row'
+        },
+        tokenSymbolText: {
+            color: theme.colors.grey0,
+            marginLeft: 10,
+        },
+        tokenInputStyle: {
+            color: theme.colors.grey0,
+            fontSize: 14,
+            lineHeight: 16,
+            minWidth: 150,
+            textAlign: 'left',
+        },
+        balanceText: {
+            color: theme.colors.grey2,
+            fontSize: 12,
+            marginTop: 8,
+        },
+        swapIconContainer: {
+            paddingVertical: 10,
+            alignItems: 'center',
+        },
+        swapButtonStyle: {
+            marginTop: 26,
+        },
+        swapButtonText: {
+            paddingVertical: 8,
+            fontSize: 14,
+            color: theme.colors.white,
+        },
+        bottomOverlayContainer: {
+            alignItems: 'center',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            paddingHorizontal: 46,
+            marginTop: 32,
+        },
+        avatarContainer: {
+            width: 34,
+            height: 34,
+        },
+        smallGrayText: {
+            fontSize: 12,
+            color: '#999999',
+            marginTop: 10,
+        },
+        mediumBlackText: {
+            fontSize: 14,
+            marginTop: 9,
+            fontWeight: '500',
+        },
+        horizontalLine: {
+            borderTopWidth: 1,
+            borderColor: '#F7F7F7',
+            marginTop: 20,
+        },
+        infoRow: {
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+        },
+        grayText: {
+            fontSize: 14,
+            color: '#AAAAAA',
+            fontWeight: '500',
+        },
+        blackText: {
+            fontSize: 14,
+            color: '#333333',
+            fontWeight: '500',
+        },
+        exchangeRateContainer: {
+            flexDirection: 'row',
+            alignItems: 'center',
+        },
+        overlayButtonContainer: {
+            width: '100%',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginTop: 30,
+            paddingHorizontal: 8,
+            marginBottom: 32,
+        },
+        cancelButton: {
+            backgroundColor: '#F5F5F5',
+            paddingVertical: 8,
+            borderRadius: 10,
+        },
+        cancelButtonText: {
+            color: '#000000',
+        },
+        confirmButton: {
+            backgroundColor: 'blue',
+            borderRadius: 10,
+            marginLeft: 8,
+        },
+        confirmButtonText: {
+            color: 'white',
+        },
+        flexOne: {
+            flex: 1,
+        },
+
+        // Add more styles if necessary
+    };
 });
 
 export default SwapCom;

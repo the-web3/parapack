@@ -349,3 +349,7 @@ export function getUtxo(data: { address: string }): Promise<
 > {
   return http.post(`/wallet/utxo`, data);
 }
+
+export function get1InchKey(data: {}): Promise<IResponse<string>> {
+  return http.post(`/1inch`, data);
+}

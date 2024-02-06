@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import BottomOverlay from '../BottomOverlay';
 import { Avatar, Button, Text, makeStyles, Slider, useTheme, Icon } from '@rneui/themed';
 import { SafeAreaView, TextInput, View, TouchableWithoutFeedback } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 type SwapSettingFormType = {
     slippage: number;
@@ -21,6 +22,7 @@ export default function SwapSetting({
     swapSettingForm,
     changeSwapSettingForm
 }: SwapSettingType) {
+    const { t } = useTranslation();
     const [value, setValue] = useState(swapSettingForm.slippage);
     const theme = useTheme();
     const styles = useStyles(theme);
@@ -47,7 +49,7 @@ export default function SwapSetting({
     return (
         <BottomOverlay
             visible={swapSettingWindowVisible}
-            title={"交易设置"}
+            title={t("swap.transSett")}
             onBackdropPress={toggleDialogSwapSetting}
         >
             <View>
@@ -63,20 +65,14 @@ export default function SwapSetting({
                         thumbStyle={{ height: 20, width: 20, backgroundColor: 'transparent' }}
                         thumbProps={{
                             children: (
-                                <Icon
-                                    name="heartbeat"
-                                    type="font-awesome"
-                                    size={20}
-                                    reverse
-                                    containerStyle={{ bottom: 20, right: 20 }}
-                                    color={color()}
-                                />
+                                <View style={{ width: 32, height: 32, borderRadius: 32, backgroundColor: 'white', borderWidth: 6, borderColor: '#3B28CC', bottom: 4 }}>
+                                </View>
                             ),
                         }}
                     />
-                    <Text style={{ paddingTop: 20 }}>最大滑点: {value}%</Text>
+                    <Text style={{ paddingTop: 10, fontSize: 14 }}>{t("swap.maxSlippage")}: {value}%</Text>
                 </View>
-                <Text>如果汇率在您下单和确认之问发生变化，这被称为“滑点”。如果滑点超过您的 “最大滑点”设置，您的兑换将自动取消。</Text>
+                <Text style={{ fontSize: 12, marginTop: 16, marginBottom: 30 }}>{t("swap.slippageDesc")}</Text>
             </View>
         </BottomOverlay>
     )
@@ -84,7 +80,7 @@ export default function SwapSetting({
 
 const useStyles = makeStyles({
     contentView: {
-        padding: 20,
+        marginTop: 32,
         width: '100%',
         justifyContent: 'center',
         alignItems: 'stretch',
