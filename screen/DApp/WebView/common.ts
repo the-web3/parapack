@@ -104,6 +104,7 @@ export const onBridgeMessage = async (event: any, webviewBridge: any, propsData:
         console.log('----> tempUrl', tempUrl);
         setwebviewUri(tempUrl);
       } else {
+        testId = propsData?.chainId || 1;
         const errmsg = `unsupport chainId: ${chainId} ${nodeRes}`;
         console.log('---->', errmsg);
         injectJavaScript(errorParams(messageId, errmsg));
