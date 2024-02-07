@@ -64,15 +64,13 @@ const SearchToken = (props: Props) => {
     setTokenList(newObj);
   };
 
-  const handleSearchDebounced = useCallback(_.debounce(handleSearch, 1000), []);
-
   return (
     <SafeAreaView style={{ backgroundColor: '#F6F7FC' }}>
       <StatusBar backgroundColor={'#F6F7FC'} barStyle={`dark-content`} translucent={false} />
       <View style={styles.top}>
         <SearchInput
           onChangeText={(newVal) => {
-            handleSearchDebounced(newVal);
+            handleSearch(newVal);
           }}
           placeholder={''}
           onCancel={goToAsset}
