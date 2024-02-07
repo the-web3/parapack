@@ -406,7 +406,7 @@ const TokenDetail = (props: Props) => {
             </View>
             <View style={{ flex: 1 }}>
               <TabView value={index} onChange={handleChange} animationType="spring">
-                {[-1, 0, 1].map((item) => {
+                {[-1, 1, 0].map((item) => {
                   return (
                     <TabView.Item style={{ flex: 1 }} key={item}>
                       <ScrollView style={{ paddingHorizontal: 25 }} nestedScrollEnabled={true} showsVerticalScrollIndicator={false}>
