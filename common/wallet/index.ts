@@ -34,6 +34,7 @@ export const SUPPORT_CHAIN_NAME = [
 export const insertOrUpdateChainAssetTable = (chainList: SymbolSupportDatum[] = []) => {
   executeQuery({
     customExec: (tx) => {
+      tx.executeSql('COMMIT');
       tx.executeSql('BEGIN TRANSACTION');
       try {
         // 循环插入chain表数据
