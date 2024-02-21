@@ -42,6 +42,11 @@ export const DAppWebView = (props: DAppWebViewProps) => {
   };
 
   const onProgress = () => {};
+  useEffect(() => {
+    if (webviewUri) {
+      console.warn(`webviewUri: ${webviewUri}`);
+    }
+  }, [webviewUri]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

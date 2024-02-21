@@ -4,7 +4,7 @@
  *
  * @format
  */
-import React, { createContext, useCallback, useEffect } from 'react';
+import React, { createContext, useCallback, useEffect, useRef } from 'react';
 const Stack = createNativeStackNavigator();
 import { ThemeProvider, createTheme, useThemeMode } from '@rneui/themed';
 import { DarkTheme, DefaultTheme, NavigationContainer } from '@react-navigation/native';
@@ -118,6 +118,8 @@ const App = () => {
     });
   }, []);
 
+  const routeNameRef = useRef();
+  const navigationRef = useRef();
   return (
     <Provider store={store}>
       <I18nextProvider i18n={i18n}>
@@ -134,6 +136,18 @@ const App = () => {
                     colors: DefaultTheme.colors,
                   }
             }
+            ref={navigationRef}
+            onReady={() => {
+              routeNameRef.current = (navigationRef as any)?.current?.getCurrentRoute()?.name;
+            }}
+            onStateChange={() => {
+              const previousRouteName = routeNameRef.current;
+              const currentRouteName = (navigationRef as any)?.current?.getCurrentRoute()?.name;
+              if (previousRouteName !== currentRouteName) {
+                console.log(`Navigated from ${previousRouteName} to------> ${currentRouteName}`);
+                routeNameRef.current = currentRouteName;
+              }
+            }}
           >
             <Stack.Navigator>
               {menus.map((menu) => {
