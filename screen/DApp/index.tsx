@@ -153,7 +153,7 @@ export const DAppScreen = (props: DAppProps) => {
           inputStyle={{
             fontSize: 12,
           }}
-          onFocus={() => {
+          onPressIn={() => {
             props?.navigation.navigate('SearchDapp');
           }}
           leftIcon={<Icon name="search1" />}
