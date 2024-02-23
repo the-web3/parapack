@@ -203,7 +203,7 @@ const TokenDetail = (props: Props) => {
         });
         setActivity(activityRes.data);
       }
-    } catch (e) { }
+    } catch (e) {}
   }, [tokenInfo?.tokenDetail?.symbol]);
 
   useEffect(() => {
@@ -215,61 +215,62 @@ const TokenDetail = (props: Props) => {
     <Layout
       containerStyle={{ paddingHorizontal: 0, paddingVertical: 0 }}
       fixedChildren={
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            backgroundColor: 'rgba(255, 255, 255, 1)',
-            paddingHorizontal: 21,
-            paddingVertical: 13,
-          }}
-        >
-          <Button
-            onPress={() => {
-              props?.navigation.navigate('transferPayment');
-            }}
-            buttonStyle={{
-              // backgroundColor: '#8B7FEA',
-              alignItems: 'baseline',
-              display: 'flex',
-              paddingHorizontal: 21,
+        <View style={{ paddingLeft: 10, paddingRight: 10, marginBottom: 10 }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-around',
+              backgroundColor: 'rgba(255, 255, 255, 1)',
+              gap: 10,
             }}
           >
-            <Icon name={'creditcard'} color={'#fff'} /> {t(`asset.send`)}
-          </Button>
-          <Button
-            onPress={() => {
-              props?.navigation.navigate('collection');
-            }}
-            buttonStyle={{
-              backgroundColor: '#2667FF',
-              alignItems: 'baseline',
-              display: 'flex',
-              paddingHorizontal: 21,
-            }}
-          >
-            <Icon name={'qrcode'} color={'#fff'} /> {t(`asset.receive`)}
-          </Button>
-          <Button
-            onPress={() => {
-              props?.navigation.navigate('searchToken', {
-                go: 'swap',
-              });
-            }}
-            buttonStyle={{
-              backgroundColor: '#fff',
-              borderWidth: 1,
-              borderColor: '#252525',
-              overflow: 'hidden',
-              alignItems: 'baseline',
-              display: 'flex',
-              paddingHorizontal: 23,
-            }}
-          >
-            <Icon name="swap" color="#252525" />
-            <Text style={{ color: '#252525' }}>{t(`asset.swap`)}</Text>
-          </Button>
+            <Button
+              onPress={() => {
+                props?.navigation.navigate('transferPayment');
+              }}
+              buttonStyle={{
+                // backgroundColor: '#8B7FEA',
+                alignItems: 'baseline',
+                display: 'flex',
+                paddingHorizontal: 21,
+              }}
+            >
+              <Icon name={'creditcard'} color={'#fff'} /> {t(`asset.send`)}
+            </Button>
+            <Button
+              onPress={() => {
+                props?.navigation.navigate('collection');
+              }}
+              buttonStyle={{
+                backgroundColor: '#2667FF',
+                alignItems: 'baseline',
+                display: 'flex',
+                paddingHorizontal: 21,
+              }}
+            >
+              <Icon name={'qrcode'} color={'#fff'} /> {t(`asset.receive`)}
+            </Button>
+            <Button
+              onPress={() => {
+                props?.navigation.navigate('searchToken', {
+                  go: 'swap',
+                });
+              }}
+              buttonStyle={{
+                backgroundColor: '#fff',
+                borderWidth: 1,
+                borderColor: '#252525',
+                overflow: 'hidden',
+                alignItems: 'baseline',
+                display: 'flex',
+                paddingHorizontal: 23,
+              }}
+            >
+              <Icon name="swap" color="#252525" />
+              <Text style={{ color: '#252525' }}>{t(`asset.swap`)}</Text>
+            </Button>
+          </View>
         </View>
       }
     >
@@ -355,7 +356,7 @@ const TokenDetail = (props: Props) => {
                 <Image
                   source={{ uri: activity?.lists[0]?.coverPicture }}
                   style={styles.banner}
-                // PlaceholderContent={<ActivityIndicator />}
+                  // PlaceholderContent={<ActivityIndicator />}
                 />
               </TouchableOpacity>
             </View>
@@ -409,7 +410,11 @@ const TokenDetail = (props: Props) => {
                 {[-1, 1, 0].map((item) => {
                   return (
                     <TabView.Item style={{ flex: 1 }} key={item}>
-                      <ScrollView style={{ paddingHorizontal: 25 }} nestedScrollEnabled={true} showsVerticalScrollIndicator={false}>
+                      <ScrollView
+                        style={{ paddingHorizontal: 25 }}
+                        nestedScrollEnabled={true}
+                        showsVerticalScrollIndicator={false}
+                      >
                         {record[item]?.lists?.length > 0 ? (
                           record[item]?.lists?.map((item, index) => (
                             <TouchableOpacity
