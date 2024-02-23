@@ -141,7 +141,9 @@ export const DAppScreen = (props: DAppProps) => {
     <SafeAreaView style={[style.container, { height: Dimensions.get('window').height - 100 }]}>
       <View style={style.searchBar}>
         <TouchableOpacity onPress={() => onIcon()}>
-          <IconFont name="a-11" style={{ backgroundColor: '#F0F0FF', borderRadius: 44 }} size={34} />
+          <View style={{ backgroundColor: '#F0F0FF', borderRadius: 10 }}>
+            <IconFont name="a-11" size={34} />
+          </View>
         </TouchableOpacity>
 
         <Input
