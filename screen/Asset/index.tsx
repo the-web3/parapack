@@ -223,7 +223,11 @@ const Asset = (props: Props) => {
               </Text>
               <IconFont
                 name={priceShow ? 'eye-open' : 'eye-close'}
-                style={{ marginLeft: 3 }}
+                style={{
+                  marginLeft: 3,
+                  paddingHorizontal: 20,
+                  paddingVertical: 5,
+                }}
                 size={12}
                 onPress={() => {
                   setPriceShow(!priceShow);
