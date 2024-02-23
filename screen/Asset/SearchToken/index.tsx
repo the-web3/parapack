@@ -100,7 +100,7 @@ const SearchToken = (props: Props) => {
                 <View style={{ flex: 1, marginRight: 14, marginLeft: 10 }}>
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
                     <Text>{item.symbol}</Text>
-                    <Text>{item.asset_usd}</Text>
+                    <Text>{item.balance}</Text>
                   </View>
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
                     <View style={{ flexDirection: 'row' }}>
