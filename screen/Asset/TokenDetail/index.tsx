@@ -363,7 +363,7 @@ const TokenDetail = (props: Props) => {
           )}
           <View style={[styles.scrollContainer1, { height: Dimensions.get('window').height }]}>
             <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 32 }}>
-              <View style={{ width: 210 }}>
+              <View style={{ width: 230 }}>
                 <Tab
                   value={index}
                   onChange={handleChange}
