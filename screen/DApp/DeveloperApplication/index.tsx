@@ -120,7 +120,7 @@ const DeveloperApplication = (props: DAppProps) => {
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <Text style={styles.text}>{t('developerApplication.title')}</Text>
-      <Text style={styles.labels}>{t('developerApplication.desc')}</Text>
+      <Text style={{ ...styles.labels, fontSize: 14 }}>{t('developerApplication.desc')}</Text>
       <Input
         inputContainerStyle={styles.input}
         onChangeText={setEmail}

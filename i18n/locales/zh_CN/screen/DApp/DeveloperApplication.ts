@@ -1,6 +1,6 @@
 export default {
   "title": "Parapack",
-  "desc": "全球生态活动聚合平台",
+  "desc": "Global ecological activity aggregation platform",
   "developerApplication": "开发者申请",
   "needAudit": "需审核, 需KYC，需签署免责协议",
   "needToSignADisclaimer": "需签署免责协议",
