@@ -177,7 +177,7 @@ const ReportQuestion = (props: DAppProps) => {
               }}
               value={content}
               onChangeText={setContent}
-              placeholder="Write your review here"
+              placeholder={`${t('Write your review here')}`}
               placeholderTextColor={'#999b9a'}
               multiline
             />

@@ -9,4 +9,5 @@ export default {
     "email": "邮箱",
     "Please leave any contact information": "请留下任意一个联系方式",
     "Submit": "提交",
+    "Write your review here": "在此描述您的问题",
 }
