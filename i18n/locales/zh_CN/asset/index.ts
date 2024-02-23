@@ -51,5 +51,7 @@ export default {
   "confirmDeleteWallet": "确定要删除钱包吗？",
   "confirmDeleteWalletDesc": "删除后，您可通过已备份的助记词重新导入钱包",
   "homeAssets": "首页资产",
-  "popularCurrencies": "热门币种"
+  "popularCurrencies": "热门币种",
+  "Choose Wallet": "选择钱包",
+  "Add Wallet": "添加钱包",
 };

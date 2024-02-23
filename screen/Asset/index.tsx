@@ -370,7 +370,7 @@ const Asset = (props: Props) => {
 
         <BottomOverlay
           visible={visible}
-          title="选择钱包"
+          title={t('Choose Wallet')}
           after={
             <TouchableOpacity
               onPress={() => {
@@ -443,7 +443,7 @@ const Asset = (props: Props) => {
                 props?.navigation?.navigate('guide');
               }}
             >
-              添加钱包
+              <Text style={{ fontSize: 14, color: 'white' }}> {t('Add Wallet')}</Text>
             </Button>
           </View>
         </BottomOverlay>
