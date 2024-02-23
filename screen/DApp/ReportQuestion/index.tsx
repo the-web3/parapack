@@ -166,13 +166,14 @@ const ReportQuestion = (props: DAppProps) => {
               flexDirection: 'column',
               alignItems: 'flex-start',
               paddingHorizontal: 15,
+              paddingTop: 20,
             }}
           >
             <TextInput
               style={{
-                color: '#999b9a',
+                color: '#000000',
                 fontSize: 16,
-                paddingVertical: 20,
+                paddingVertical: 40,
               }}
               value={content}
               onChangeText={setContent}
@@ -243,6 +244,7 @@ const ReportQuestion = (props: DAppProps) => {
               backgroundColor: '#f5f5f5',
               borderRadius: 8,
               marginBottom: 40.5,
+              paddingTop: 8,
             }}
           >
             <TextInput
