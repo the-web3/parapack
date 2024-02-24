@@ -94,9 +94,9 @@ const Collection = (props) => {
                 >
                   <Text style={styles.font}>{t('collection.copyAddress')}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.item} onPress={captureImage}>
+                {/* <TouchableOpacity style={styles.item} onPress={captureImage}>
                   <Text style={styles.font}>{t('collection.share')}</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
             </View>
           </ViewShot>
