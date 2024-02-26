@@ -376,7 +376,7 @@ export const DAppScreen = (props: DAppProps) => {
               )
             }
           />
-          {/* <ViewContent list={dAppGroupTime?.lists} navigation={props?.navigation} /> */}
+          {dAppGroupTime?.lists && <ViewContent list={dAppGroupTime?.lists} navigation={props?.navigation} />}
           <View style={{ marginVertical: 20, marginHorizontal: 20, backgroundColor: theme.colors.grey5, height: 1 }} />
         </View>
         {/* new ecosystem */}
