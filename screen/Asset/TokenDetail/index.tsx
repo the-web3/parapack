@@ -215,7 +215,7 @@ const TokenDetail = (props: Props) => {
     <Layout
       containerStyle={{ paddingHorizontal: 0, paddingVertical: 0 }}
       fixedChildren={
-        <View style={{ paddingLeft: 10, paddingRight: 10, marginBottom: 10 }}>
+        <View style={{ paddingLeft: 10, paddingRight: 10, marginBottom: 30 }}>
           <View
             style={{
               flexDirection: 'row',
