@@ -166,14 +166,13 @@ const ReportQuestion = (props: DAppProps) => {
               flexDirection: 'column',
               alignItems: 'flex-start',
               paddingHorizontal: 15,
-              paddingTop: 20,
+              paddingTop: 10,
             }}
           >
             <TextInput
               style={{
                 color: '#000000',
                 fontSize: 16,
-                paddingVertical: 40,
               }}
               value={content}
               onChangeText={setContent}
