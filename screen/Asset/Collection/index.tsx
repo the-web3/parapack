@@ -54,7 +54,7 @@ const Collection = (props) => {
               <View style={{ paddingHorizontal: 52, paddingVertical: 32 }}>
                 <View style={{ justifyContent: 'center', alignItems: 'center', marginBottom: 12 }}>
                   <View style={{ width: 40, height: 40, backgroundColor: 'rgba(249, 249, 249, 1)', marginBottom: 10 }}>
-                    <Image style={{ width: 40, height: 40 }} source={{ uri: tokenDetail?.logo }} />
+                    <Image style={{ width: 40, height: 40, borderRadius: 10 }} source={{ uri: tokenDetail?.logo }} />
                   </View>
                   <Text
                     style={{

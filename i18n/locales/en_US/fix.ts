@@ -10,4 +10,5 @@ export default {
     "Please leave any contact information": "Please leave any contact information",
     "Submit": "Submit",
     "Write your review here": "Write your review here",
+    "Go to Backup": "Go to Backup"
 }

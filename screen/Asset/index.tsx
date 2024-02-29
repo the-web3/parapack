@@ -431,7 +431,7 @@ const Asset = (props: Props) => {
                     >
                       <View style={styles.button}>
                         <Icon name="exclamationcircleo" size={12} style={{ marginRight: 3 }} color={'#3B2ACE'} />
-                        <Text style={{ lineHeight: 18, color: '#3B2ACE' }}>未备份</Text>
+                        <Text style={{ lineHeight: 18, color: '#3B2ACE' }}>{t('Go to Backup')}</Text>
                       </View>
                     </TouchableOpacity>
                   )}
