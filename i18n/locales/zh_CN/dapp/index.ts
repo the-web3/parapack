@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 export default {
   "recommendList": "推荐生态榜",
   "seeAll": "查看全部",

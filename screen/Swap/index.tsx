@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import IconFont from '@assets/iconfont';
 import { CustomColors } from 'style/them';
 import { useTranslation } from 'react-i18next';
+import SwapPage from './components/SwapPage';
 type Props = {
   fullWidth?: boolean;
   navigation: any;
@@ -43,113 +44,7 @@ const Swap = (props: Props) => {
         <IconFont name="xiangqing" />
       </View>
       <ScrollView style={styles.main} showsVerticalScrollIndicator={false}>
-        <View style={styles.swapCard}>
-          <View>
-            <View style={styles.swapCardTitle}>
-              <Text style={styles.sell}>
-                {t('swap.Sell')}
-              </Text>
-              <Text style={styles.balance}>
-                {t('swap.Balance')}
-                ：0.00</Text>
-            </View>
-            <View
-              style={{
-                ...styles.chain,
-                borderBottomWidth: 1,
-                borderColor: theme.colors.grey0,
-                borderStyle: 'dashed',
-              }}
-            >
-              <Avatar rounded source={{ uri: 'https://randomuser.me/api/portraits/men/36.jpg' }} />
-              <View style={styles.chainRight}>
-                <View>
-                  <Text style={styles.chainTitle}>BTC</Text>
-                  <Text style={styles.chainSubTitle}>Bitcoin</Text>
-                </View>
-                <TextInput
-                  keyboardType="numeric"
-                  style={styles.money}
-                  onChangeText={(sell) => {
-                    setMoney((prev) => {
-                      return {
-                        ...prev,
-                        sell,
-                      };
-                    });
-                  }}
-                  placeholder="0.00"
-                  value={money.sell}
-                />
-              </View>
-            </View>
-          </View>
-          <View style={{ position: 'relative' }}>
-            <IconFont
-              name="a-Group217"
-              size={30}
-              style={{
-                position: 'absolute',
-                left: '50%',
-                marginLeft: -15,
-                top: -15,
-              }}
-            />
-          </View>
-          <View>
-            <View style={styles.swapCardTitle}>
-              <Text style={styles.sell}>
-                {t('swap.Buy')}
-              </Text>
-              <Text style={styles.balance}>
-                {t('swap.Balance')}
-                ：0.00</Text>
-            </View>
-            <View style={styles.chain}>
-              <Avatar rounded source={{ uri: 'https://randomuser.me/api/portraits/men/36.jpg' }} />
-              <View style={styles.chainRight}>
-                <View>
-                  <Text style={styles.chainTitle}>BTC</Text>
-                  <Text style={styles.chainSubTitle}>Bitcoin</Text>
-                </View>
-                <TextInput
-                  keyboardType="numeric"
-                  style={styles.money}
-                  onChangeText={(sell) => {
-                    setMoney((prev) => {
-                      return {
-                        ...prev,
-                        sell,
-                      };
-                    });
-                  }}
-                  placeholder="0.00"
-                  value={money.sell}
-                />
-              </View>
-            </View>
-          </View>
-        </View>
-
-        <Button>
-          {t('swap.Swap')}
-        </Button>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginTop: 8,
-            marginBottom: 26,
-          }}
-        >
-          <Text style={{ color: theme.colors.black, fontSize: 10 }}>1 ETH = 2084.62 USDT</Text>
-          <Text style={{ color: 'rgba(22, 196, 185, 1)', fontSize: 8 }}>+0.56%</Text>
-          <Icon name={'swap'} size={8} />
-        </View>
-        <Button>
-          {t('swap.Exchange')}
-        </Button>
+        <SwapPage />
       </ScrollView>
     </SafeAreaView>
   );

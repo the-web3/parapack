@@ -16,12 +16,12 @@
       "transfer": "Transfer",
       "receipt": "Receipt",
       "purchase": "Purchase",
-      "flash": "Flash Exchange",
+      "flash": "Swap",
       "myAssets": "My Assets",
       "Backup": "Go to Backup",
       "Assets": "Assets",
       "details": "Details",
-      "swap": "Go to Exchange",
+      "swap": "Swap",
       "receive": "Receive",
       "send": "Transfer",
       "all": "All",
@@ -279,6 +279,7 @@
         "747Join": "747 people joined"
       },
       "DeveloperApplication": {
+        "desc": "Global ecological activity aggregation platform",
         "developerApplication": "Developer Application",
         "needAudit": "Need verification, KYC, and sign a waiver agreement.",
         "needToSignADisclaimer": "Need to Sign a Disclaimer",

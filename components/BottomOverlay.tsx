@@ -9,13 +9,14 @@ type Props = {
   visible: boolean;
   title: string;
   after?: React.ReactNode;
+  maxHeight?: number;
   children: React.ReactNode;
   onBackdropPress: () => void;
 };
 
-const BottomOverlay: FC<Props> = ({ visible, title, after, onBackdropPress, children }) => {
-  const { theme }: { theme: CustomTheme<CustomColors> } = useTheme();
+const BottomOverlay: FC<Props> = ({ visible, title, after, maxHeight, onBackdropPress, children }) => {
   const navigation = useNavigation();
+  const theme = useTheme();
   const styles = useStyles(theme);
 
   return (
@@ -32,14 +33,14 @@ const BottomOverlay: FC<Props> = ({ visible, title, after, onBackdropPress, chil
           <Text style={styles.title}>{title}</Text>
           {after && after}
         </View>
-        <View style={{ maxHeight: 300 }}>
+        <View style={{ maxHeight: maxHeight || 300 }}>
           <ScrollView showsVerticalScrollIndicator={false}>{children}</ScrollView>
         </View>
       </View>
     </Overlay>
   );
 };
-const useStyles = makeStyles((theme: any) => {
+const useStyles = makeStyles((theme) => {
   return {
     container: {
       height: '100%',
@@ -64,7 +65,7 @@ const useStyles = makeStyles((theme: any) => {
       left: 0,
       right: 0,
       padding: 20,
-      backgroundColor: 'white',
+      backgroundColor: theme.colors.background,
       borderTopLeftRadius: 20,
       borderTopRightRadius: 20,
     },

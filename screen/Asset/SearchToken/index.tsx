@@ -51,20 +51,18 @@ const SearchToken = (props: Props) => {
     const newObj =
       symbol === ''
         ? {
-            ...allTokenList,
-          }
+          ...allTokenList,
+        }
         : {
-            ...allTokenList,
-            wallet_balance: (allTokenList?.wallet_balance || []).filter((item) => {
-              const regex = new RegExp(symbol, 'i');
-              const isMatch = regex.test(item.symbol);
-              return isMatch;
-            }),
-          };
+          ...allTokenList,
+          wallet_balance: (allTokenList?.wallet_balance || []).filter((item) => {
+            const regex = new RegExp(symbol, 'i');
+            const isMatch = regex.test(item.symbol);
+            return isMatch;
+          }),
+        };
     setTokenList(newObj);
   };
-
-  const handleSearchDebounced = useCallback(_.debounce(handleSearch, 1000), []);
 
   return (
     <SafeAreaView style={{ backgroundColor: '#F6F7FC' }}>
@@ -72,7 +70,7 @@ const SearchToken = (props: Props) => {
       <View style={styles.top}>
         <SearchInput
           onChangeText={(newVal) => {
-            handleSearchDebounced(newVal);
+            handleSearch(newVal);
           }}
           placeholder={''}
           onCancel={goToAsset}
@@ -91,7 +89,7 @@ const SearchToken = (props: Props) => {
               onPress={() => {
                 storeData('current_token_detail', JSON.stringify(item));
                 if (props?.route?.params.go) {
-                  props?.navigation.navigate(props?.route?.params.go);
+                  props?.navigation.navigate(props?.route?.params.go, { selectedToken: item });
                 } else {
                   props?.navigation.navigate('tokenDetail');
                 }
@@ -102,7 +100,7 @@ const SearchToken = (props: Props) => {
                 <View style={{ flex: 1, marginRight: 14, marginLeft: 10 }}>
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
                     <Text>{item.symbol}</Text>
-                    <Text>{item.asset_usd}</Text>
+                    <Text>{item.balance}</Text>
                   </View>
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
                     <View style={{ flexDirection: 'row' }}>

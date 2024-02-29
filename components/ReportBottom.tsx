@@ -66,7 +66,7 @@ const ReportBottom: FC<Props> = ({ navigation, style }) => {
       </ListItem>
       <ListItem containerStyle={{ paddingTop: 10, paddingBottom: 0, paddingLeft: 0, backgroundColor: 'transparent' }}>
         <TouchableOpacity onPress={() => onDeveloperOnboarding('DeveloperOnboarding')}>
-          <Text style={styles.buttonTexts}>{t('dApp.DeveloperOnboarding')}</Text>
+          <Text style={{ ...styles.buttonTexts, marginRight: 0 }}>{t('dApp.DeveloperOnboarding')}</Text>
         </TouchableOpacity>
       </ListItem>
       <Button

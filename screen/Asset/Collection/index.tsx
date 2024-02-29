@@ -17,7 +17,7 @@ const Collection = (props) => {
     loading: false,
     url: '',
   });
-  const [tokenDetail, setTokenDetail] = useState({});
+  const [tokenDetail, setTokenDetail] = useState<any>({});
   const styles = useStyles(props);
   const { navigation, route } = props;
   const captureImage = async () => {
@@ -53,9 +53,9 @@ const Collection = (props) => {
             <View style={styles.main}>
               <View style={{ paddingHorizontal: 52, paddingVertical: 32 }}>
                 <View style={{ justifyContent: 'center', alignItems: 'center', marginBottom: 12 }}>
-                  <View
-                    style={{ width: 40, height: 40, backgroundColor: 'rgba(249, 249, 249, 1)', marginBottom: 10 }}
-                  />
+                  <View style={{ width: 40, height: 40, backgroundColor: 'rgba(249, 249, 249, 1)', marginBottom: 10 }}>
+                    <Image style={{ width: 40, height: 40, borderRadius: 10 }} source={{ uri: tokenDetail?.logo }} />
+                  </View>
                   <Text
                     style={{
                       ...styles.font,
@@ -94,9 +94,9 @@ const Collection = (props) => {
                 >
                   <Text style={styles.font}>{t('collection.copyAddress')}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.item} onPress={captureImage}>
+                {/* <TouchableOpacity style={styles.item} onPress={captureImage}>
                   <Text style={styles.font}>{t('collection.share')}</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
             </View>
           </ViewShot>

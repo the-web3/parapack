@@ -223,7 +223,11 @@ const Asset = (props: Props) => {
               </Text>
               <IconFont
                 name={priceShow ? 'eye-open' : 'eye-close'}
-                style={{ marginLeft: 3 }}
+                style={{
+                  marginLeft: 3,
+                  paddingHorizontal: 20,
+                  paddingVertical: 5,
+                }}
                 size={12}
                 onPress={() => {
                   setPriceShow(!priceShow);
@@ -370,10 +374,11 @@ const Asset = (props: Props) => {
 
         <BottomOverlay
           visible={visible}
-          title="选择钱包"
+          title={t('Choose Wallet')}
           after={
             <TouchableOpacity
               onPress={() => {
+                toggleOverlay();
                 props?.navigation.navigate('settingScreen', {
                   wallet_uuid: currentWallet?.wallet_uuid,
                 });
@@ -389,6 +394,7 @@ const Asset = (props: Props) => {
               key={item.wallet_uuid}
               onPress={() => {
                 setNewWallet(walletInfo, item.wallet_uuid);
+                toggleOverlay();
               }}
             >
               <View
@@ -425,7 +431,7 @@ const Asset = (props: Props) => {
                     >
                       <View style={styles.button}>
                         <Icon name="exclamationcircleo" size={12} style={{ marginRight: 3 }} color={'#3B2ACE'} />
-                        <Text style={{ lineHeight: 18, color: '#3B2ACE' }}>未备份</Text>
+                        <Text style={{ lineHeight: 18, color: '#3B2ACE' }}>{t('Go to Backup')}</Text>
                       </View>
                     </TouchableOpacity>
                   )}
@@ -437,10 +443,11 @@ const Asset = (props: Props) => {
           <View style={{ marginTop: 16 }}>
             <Button
               onPress={async () => {
+                toggleOverlay();
                 props?.navigation?.navigate('guide');
               }}
             >
-              添加钱包
+              <Text style={{ fontSize: 14, color: 'white' }}> {t('Add Wallet')}</Text>
             </Button>
           </View>
         </BottomOverlay>

@@ -118,7 +118,9 @@ export const DAppDetail = (props: DAppDetailParam) => {
   };
 
   const onBuyPress = () => {
-    props?.navigation.navigate('swap');
+    props?.navigation.navigate('searchToken', {
+      go: 'swap',
+    });
   };
 
   const onMedium = async (url: string) => {

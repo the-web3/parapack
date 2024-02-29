@@ -141,7 +141,9 @@ export const DAppScreen = (props: DAppProps) => {
     <SafeAreaView style={[style.container, { height: Dimensions.get('window').height - 100 }]}>
       <View style={style.searchBar}>
         <TouchableOpacity onPress={() => onIcon()}>
-          <IconFont name="a-11" style={{ backgroundColor: '#F0F0FF', borderRadius: 44 }} size={34} />
+          <View style={{ backgroundColor: '#F0F0FF', borderRadius: 10 }}>
+            <IconFont name="a-11" size={34} />
+          </View>
         </TouchableOpacity>
 
         <Input
@@ -151,7 +153,7 @@ export const DAppScreen = (props: DAppProps) => {
           inputStyle={{
             fontSize: 12,
           }}
-          onFocus={() => {
+          onPressIn={() => {
             props?.navigation.navigate('SearchDapp');
           }}
           leftIcon={<Icon name="search1" />}
@@ -374,7 +376,7 @@ export const DAppScreen = (props: DAppProps) => {
               )
             }
           />
-          {/* <ViewContent list={dAppGroupTime?.lists} navigation={props?.navigation} /> */}
+          {dAppGroupTime?.lists && <ViewContent list={dAppGroupTime?.lists} navigation={props?.navigation} />}
           <View style={{ marginVertical: 20, marginHorizontal: 20, backgroundColor: theme.colors.grey5, height: 1 }} />
         </View>
         {/* new ecosystem */}

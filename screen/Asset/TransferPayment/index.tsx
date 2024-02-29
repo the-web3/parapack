@@ -77,6 +77,7 @@ const TransferPayment = (props: any) => {
   const [visible, setVisible] = useState(false);
   const [isbtc, setBtc] = useState(false);
   const [btcGas, setBtcGas] = useState({});
+  const [transferAmount, settransferAmount] = useState('0');
 
   const toggleOverlay = () => {
     setVisible(!visible);
@@ -427,6 +428,12 @@ const TransferPayment = (props: any) => {
   );
 
   const handleOpen = () => {
+    if (transferAmount && token?.balance && Number(transferAmount) < Number(token?.balance)) {
+      // 
+    } else {
+      showToast('Insufficient balance');
+      return;
+    }
     if (!form?.toAddr) {
       return showToast(t(`transferPayment.inputOrPasteWalletAddress`));
     } else if (!form?.amount) {
@@ -541,6 +548,7 @@ const TransferPayment = (props: any) => {
             value={form.amount}
             keyboardType="numeric"
             onChangeText={(amount) => {
+              settransferAmount(amount);
               setForm((prev) => {
                 return {
                   ...prev,

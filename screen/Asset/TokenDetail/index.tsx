@@ -215,65 +215,68 @@ const TokenDetail = (props: Props) => {
     <Layout
       containerStyle={{ paddingHorizontal: 0, paddingVertical: 0 }}
       fixedChildren={
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            backgroundColor: 'rgba(255, 255, 255, 1)',
-            paddingHorizontal: 21,
-            paddingVertical: 13,
-          }}
-        >
-          <Button
-            onPress={() => {
-              props?.navigation.navigate('transferPayment');
-            }}
-            buttonStyle={{
-              // backgroundColor: '#8B7FEA',
-              alignItems: 'baseline',
-              display: 'flex',
-              paddingHorizontal: 21,
+        <View style={{ paddingLeft: 10, paddingRight: 10, marginBottom: 30 }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-around',
+              backgroundColor: 'rgba(255, 255, 255, 1)',
+              gap: 10,
             }}
           >
-            <Icon name={'creditcard'} color={'#fff'} /> {t(`asset.send`)}
-          </Button>
-          <Button
-            onPress={() => {
-              props?.navigation.navigate('collection');
-            }}
-            buttonStyle={{
-              backgroundColor: '#2667FF',
-              alignItems: 'baseline',
-              display: 'flex',
-              paddingHorizontal: 21,
-            }}
-          >
-            <Icon name={'qrcode'} color={'#fff'} /> {t(`asset.receive`)}
-          </Button>
-          <Button
-            onPress={() => {
-              props?.navigation.navigate('swap');
-            }}
-            buttonStyle={{
-              backgroundColor: '#fff',
-              borderWidth: 1,
-              borderColor: '#252525',
-              overflow: 'hidden',
-              alignItems: 'baseline',
-              display: 'flex',
-              paddingHorizontal: 23,
-            }}
-          >
-            <Icon name="swap" color="#252525" />
-            <Text style={{ color: '#252525' }}>{t(`asset.swap`)}</Text>
-          </Button>
+            <Button
+              onPress={() => {
+                props?.navigation.navigate('transferPayment');
+              }}
+              buttonStyle={{
+                // backgroundColor: '#8B7FEA',
+                alignItems: 'baseline',
+                display: 'flex',
+                paddingHorizontal: 21,
+              }}
+            >
+              <Icon name={'creditcard'} color={'#fff'} /> {t(`asset.send`)}
+            </Button>
+            <Button
+              onPress={() => {
+                props?.navigation.navigate('collection');
+              }}
+              buttonStyle={{
+                backgroundColor: '#2667FF',
+                alignItems: 'baseline',
+                display: 'flex',
+                paddingHorizontal: 21,
+              }}
+            >
+              <Icon name={'qrcode'} color={'#fff'} /> {t(`asset.receive`)}
+            </Button>
+            <Button
+              onPress={() => {
+                props?.navigation.navigate('searchToken', {
+                  go: 'swap',
+                });
+              }}
+              buttonStyle={{
+                backgroundColor: '#fff',
+                borderWidth: 1,
+                borderColor: '#252525',
+                overflow: 'hidden',
+                alignItems: 'baseline',
+                display: 'flex',
+                paddingHorizontal: 23,
+              }}
+            >
+              <Icon name="swap" color="#252525" />
+              <Text style={{ color: '#252525' }}>{t(`asset.swap`)}</Text>
+            </Button>
+          </View>
         </View>
       }
     >
       <StatusBar backgroundColor="transparent" translucent={true} />
       <SafeAreaView style={[styles.container, { height: Dimensions.get('window').height }]}>
-        <ScrollView>
+        <ScrollView bounces={false}>
           <LinearGradient
             colors={['#3251EA', '#3251EA']}
             start={{ x: 0, y: 0 }}
@@ -312,7 +315,9 @@ const TokenDetail = (props: Props) => {
                 </View>
                 <TouchableOpacity
                   onPress={() => {
-                    props?.navigation.navigate('swap');
+                    props?.navigation.navigate('searchToken', {
+                      go: 'swap',
+                    });
                   }}
                 >
                   <Text style={{ color: '#3B28CC', fontSize: 12 }}>
@@ -356,9 +361,9 @@ const TokenDetail = (props: Props) => {
               </TouchableOpacity>
             </View>
           )}
-          <View style={styles.scrollContainer1}>
+          <View style={[styles.scrollContainer1, { height: Dimensions.get('window').height }]}>
             <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 32 }}>
-              <View style={{ width: 210 }}>
+              <View style={{ width: 230 }}>
                 <Tab
                   value={index}
                   onChange={handleChange}
@@ -400,16 +405,20 @@ const TokenDetail = (props: Props) => {
                 </TouchableOpacity>
               </View>
             </View>
-            <View style={{ flex: 1, paddingBottom: 380 }}>
+            <View style={{ flex: 1 }}>
               <TabView value={index} onChange={handleChange} animationType="spring">
-                {[-1, 0, 1].map((item) => {
+                {[-1, 1, 0].map((item) => {
                   return (
-                    <TabView.Item style={{ width: '100%' }} key={item}>
-                      <ScrollView style={{ paddingHorizontal: 25 }} showsVerticalScrollIndicator={false}>
+                    <TabView.Item style={{ flex: 1 }} key={item}>
+                      <ScrollView
+                        style={{ paddingHorizontal: 25 }}
+                        nestedScrollEnabled={true}
+                        showsVerticalScrollIndicator={false}
+                      >
                         {record[item]?.lists?.length > 0 ? (
-                          record[item]?.lists?.map((item) => (
+                          record[item]?.lists?.map((item, index) => (
                             <TouchableOpacity
-                              key={item}
+                              key={index}
                               onPress={() => {
                                 props?.navigation.navigate('transferDetails', {
                                   ...item,
@@ -464,6 +473,7 @@ const TokenDetail = (props: Props) => {
                         ) : (
                           <Empty />
                         )}
+                        <View style={{ height: 200 }}></View>
                       </ScrollView>
                     </TabView.Item>
                   );
@@ -527,7 +537,6 @@ const useStyles = makeStyles((theme, props: Props) => {
       shadowOpacity: 0.6,
       shadowRadius: 4,
       elevation: 4,
-      height: '100%',
     },
     img: {
       width: 156,

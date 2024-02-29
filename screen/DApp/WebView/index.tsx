@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { SafeAreaView, View } from 'react-native';
 import RNWebView from 'react-native-webview';
 import { makeStyles } from '@rneui/themed';
@@ -16,18 +16,21 @@ export const DAppWebView = (props: DAppWebViewProps) => {
   const propsData = useMemo(() => {
     return props.route?.params.params ?? '';
   }, [props]);
-
+  const [webviewUri, setwebviewUri] = useState(propsData.uri);
   const onMessage = (event: any) => {
     console.log(898989);
-    onBridgeMessage(event, webviewBridge, propsData);
+    console.warn('----> event.nativeEvent', event.nativeEvent);
+    // console.warn('----> propsData ', JSON.stringify(propsData));
+    onBridgeMessage(event, webviewBridge, propsData, setwebviewUri);
   };
 
   useEffect(() => {
     (props as any)?.navigation.setOptions({ title: props.route?.params.params?.title ?? '' });
   }, []);
-  const injectJavaScript = useMemo(() => {
-    return getMetamaskExt();
-  }, []);
+  const injectJavaScript = () => {
+    const tempMask = getMetamaskExt();
+    return tempMask;
+  };
 
   const onError = (e: any) => {};
   const onRError = (e: any) => {
@@ -39,14 +42,21 @@ export const DAppWebView = (props: DAppWebViewProps) => {
   };
 
   const onProgress = () => {};
+  useEffect(() => {
+    if (webviewUri) {
+      console.warn(`webviewUri: ${webviewUri}`);
+    }
+  }, [webviewUri]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <RNWebView
         style={styles.container}
         containerStyle={styles.container}
-        source={{ uri: propsData.uri }}
+        // source={{ uri: propsData.uri }}
+        source={{ uri: webviewUri }}
         ref={(e) => (webviewBridge = e)}
+        // ref={webviewBridge}
         // onLoadStart={() => {
         //   Platform.OS === 'android' && webviewBridge.injectJavaScript(injectJavaScript ?? '');
         // }}
@@ -59,7 +69,7 @@ export const DAppWebView = (props: DAppWebViewProps) => {
         domStorageEnabled={true}
         decelerationRate="normal"
         useWebKit={true}
-        injectedJavaScriptBeforeContentLoaded={injectJavaScript}
+        injectedJavaScriptBeforeContentLoaded={injectJavaScript()}
         onMessage={onMessage}
         // injectedJavaScriptBeforeLoad={injectJavaScript}
         // injectedJavaScript={injectJavaScript}

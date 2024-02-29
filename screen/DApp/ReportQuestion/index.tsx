@@ -17,36 +17,37 @@ interface DAppProps {
   navigation?: any;
   mode?: string;
 }
-const typeList = [
-  {
-    icon: 'a-21',
-    text: '页面闪退',
-    type: 'broken',
-  },
-  {
-    icon: 'a-22',
-    text: '交易问题',
-    type: 'trade',
-  },
-  {
-    icon: 'a-23',
-    text: '操作体验',
-    type: 'operate',
-  },
-  {
-    icon: 'a-24',
-    text: '功能建议',
-    type: 'suggestion',
-  },
-  {
-    icon: 'a-25',
-    text: '其他反馈',
-    type: 'other',
-  },
-];
+
 const ReportQuestion = (props: DAppProps) => {
   const [imgs, setImgs] = useState<Array<string>>([]);
   const { t } = useTranslation();
+  const typeList = [
+    {
+      icon: 'a-21',
+      text: t('page crashes'),
+      type: 'broken',
+    },
+    {
+      icon: 'a-22',
+      text: t('trading issues'),
+      type: 'trade',
+    },
+    {
+      icon: 'a-23',
+      text: t('operation experience'),
+      type: 'operate',
+    },
+    {
+      icon: 'a-24',
+      text: t('feature suggestions'),
+      type: 'suggestion',
+    },
+    {
+      icon: 'a-25',
+      text: t('other feedback'),
+      type: 'other',
+    },
+  ];
   const handleImagePicker = () => {
     const options: ImageLibraryOptions = {
       mediaType: 'photo',
@@ -153,7 +154,7 @@ const ReportQuestion = (props: DAppProps) => {
                 marginTop: 30,
               }}
             >
-              我要反馈
+              {t('I want feedback')}
             </Text>
           </View>
 
@@ -165,17 +166,17 @@ const ReportQuestion = (props: DAppProps) => {
               flexDirection: 'column',
               alignItems: 'flex-start',
               paddingHorizontal: 15,
+              paddingTop: 10,
             }}
           >
             <TextInput
               style={{
-                color: '#999b9a',
+                color: '#000000',
                 fontSize: 16,
-                paddingVertical: 20,
               }}
               value={content}
               onChangeText={setContent}
-              placeholder="Write your review here"
+              placeholder={`${t('Write your review here')}`}
               placeholderTextColor={'#999b9a'}
               multiline
             />
@@ -221,7 +222,7 @@ const ReportQuestion = (props: DAppProps) => {
                   color: 'black',
                 }}
               >
-                联系方式
+                {t('Contact Information')}
               </Text>
               <Text
                 style={{
@@ -230,7 +231,7 @@ const ReportQuestion = (props: DAppProps) => {
                   marginLeft: 10,
                 }}
               >
-                注：邮箱
+                {t('email')}
               </Text>
             </View>
           </View>
@@ -242,10 +243,11 @@ const ReportQuestion = (props: DAppProps) => {
               backgroundColor: '#f5f5f5',
               borderRadius: 8,
               marginBottom: 40.5,
+              paddingTop: 8,
             }}
           >
             <TextInput
-              placeholder="请留下任意一个联系方式"
+              placeholder={`${t('Please leave any contact information')}`}
               placeholderTextColor={'#555'}
               multiline
               onChangeText={setContact}
@@ -256,7 +258,7 @@ const ReportQuestion = (props: DAppProps) => {
               }}
             />
           </View>
-          <Button onPress={handlePress}>提交</Button>
+          <Button onPress={handlePress}>{t('Submit')}</Button>
         </View>
       </SafeAreaView>
     </Layout>
